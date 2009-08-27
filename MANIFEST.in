@@ -1,0 +1,11 @@
+include COPYING
+include NEWS
+include README
+include TODO
+include *.txt
+global-include  *.txt *.py *.sh *.in
+recursive-include doc *
+recursive-include locale *.po
+recursive-include amarok *
+recursive-include templates *
+recursive-include media *

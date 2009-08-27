@@ -1,0 +1,131 @@
+= AutoRadio version 1.0 =
+http://autoradiobc.sourceforge.net/
+
+Radio automation software. Simple to use, starting from digital audio
+files manages on-air broadcasting over a radio-station or
+web-radio. The main components are:
+
+    * Player (Xmms): plays all your media files and send digital sound
+      to an audio device or audio server
+ 
+    * Scheduler: real time manager for emission of special audio files
+      like jingles, spots, playlist and programs; interact with player
+      like supervisor User
+
+    * inteface: WEB interface to monitor the player and scheduler and
+      admin the schedules for the complete control over your station
+      format
+
+Developed with Python, Django, Xmms it works in an production enviroment
+
+
+FEATURES
+--------
+
+ * manage ogg, mp3, wav and other media file format
+ * it's designed as client server
+ * do not averlap schedules: anticipate, postone or delete
+ * comples rules for schedule and period schedule
+ * player is monitored by web interface
+
+REQUIRES
+--------
+
+autoradio requires:
+
+mutagen
+muatgen version > 1.17
+http://code.google.com/p/mutagen/
+
+at this time (27-08-2009) you can obtain it only with svn:
+svn checkout http://mutagen.googlecode.com/svn/trunk/ mutagen
+
+django
+http://www.djangoproject.com/
+I suggest Django 1.1
+
+pyxmms
+http://people.via.ecp.fr/~flo/index.en.xhtml
+
+xmms
+http://www.xmms.org/
+
+
+HOW TO INSTALL
+--------------
+
+>>>>> Easy way:
+You can run autoradio daemon and web server from root distributed directory:
+
+change your preferred language in locale.setlocale in autoradio/autoradio_config.py and other in autoradio/settings.py
+
+./init.sh
+
+You have to respond to some question to setup database.
+
+This star daemon (that launch xmms and xmmsweb) an webserver on port 8080
+xmmsweb respond on port 8888
+
+You can use a browser pointing to localhost:8080
+
+
+>>>>> Installed way:
+python setup.py install
+
+Copy autoradio/settings.py and autoradio/autoradio_config.py in a
+working directory; specify your personal settings for installed files
+and after:
+
+django-admin.py syncdb
+autoradiod start
+django-admin.py runserver 8080
+
+You can run autoradiod and xmms in one host and webserver in other if
+you use client server DB like mysql and specify where autoradiod is
+running in autoradio_config.py
+
+For a pubblic web server do not use django internal web server; use
+apache instead
+http://docs.djangoproject.com/en/dev/howto/deployment/modpython/#howto-deployment-modpython
+
+
+HOW IT WORKS
+------------
+
+in xmms playlist you need a queue of media for a minumun of some hours
+and for this you have to program some playlist
+xmms cannot stay stopped or paused (if stopped it will be started, if paused it stay paused) for a corret work.
+When time will be right jingle, programs and spots will be placed in playlist the first position after the last file inserted before by autoradiod 
+
+
+CONTRIBUTED SOFTWARE
+--------------------
+
+module daemon come from http://www.livinglogic.de/Python/index.html
+## Copyright 2007-2009 by LivingLogic AG, Bayreuth/Germany.
+## Copyright 2007-2009 by Walter Dörwald
+## All Rights Reserved
+
+module mkplaylist come from http://bj.spline.de/mkplaylist-man.html
+# Author:        Marc 'BlackJack' Rintsch
+# Copyright:     (c) 2004-2009
+# Licence:       GPL
+
+module dir2ogg come from http://jak-linux.org/projects/dir2ogg/
+# Copyright (C) 2007-2009 Julian Andres Klode <jak@jak-linux.org>
+# Copyright (C) 2003-2006 Darren Kirby <d@badcomputer.org>
+# Licence:       GPL
+
+
+----------------------------------------------------------------------------
+
+Italiano:
+
+Autoradio è una suite di programmi che partendo da file audio digitali permette la gestione automatica dell'emissione di una stazione radiofonica.
+
+queste sono le componenti:
+
+    * Player: partendo da una playlist Ã¨ in grado di gestire differenti formati di audio digitali per poi inviare il suono o a una scheda audio o a un server audio
+    * Scheduler: gestisce in tempo reale l'emissione di particolari file
+          o audio quali i jingles, pubblicitÃ , playlist e programmi; interagisce col player controllandolo e impartendo comandi 
+    * L'intefaccia utente: utilizzando una interfaccia WEB pemette il monitoraggio dello scheduler e del player e permette la programmazione del palinsesto

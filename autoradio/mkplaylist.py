@@ -205,9 +205,11 @@ class PlaylistEntryFactory:
         :returns: `True` if known media file, `False` otherwise.
         :rtype: bool
         """
-        return not mutagen.File(path) is None
-
-
+        try:
+            return not mutagen.File(path) is None
+        except:
+            return False
+        
     def create_entry(self, path):
         """Reads metadata and returns PlaylistEntry objects.
         

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-27 12:47+0200\n"
+"POT-Creation-Date: 2009-08-29 02:50+0200\n"
 "PO-Revision-Date: 2009-08-27 02:14+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,196 +16,228 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: autoradio/jingles/models.py:23
+#: autoradio/jingles/models.py:23 build/lib/autoradio/jingles/models.py:23
 msgid "Activate Jingle"
 msgstr "Jingle attivi"
 
-#: autoradio/jingles/models.py:24
+#: autoradio/jingles/models.py:24 build/lib/autoradio/jingles/models.py:24
 msgid "Frequency"
 msgstr "Frequenza"
 
-#: autoradio/jingles/models.py:36
+#: autoradio/jingles/models.py:36 build/lib/autoradio/jingles/models.py:36
 msgid "Jingle name"
 msgstr "Nome jingle"
 
 #: autoradio/jingles/models.py:37 autoradio/playlists/models.py:35
-#: autoradio/spots/models.py:112 templates/schedule/index.html:15
+#: autoradio/spots/models.py:112 build/lib/autoradio/jingles/models.py:37
+#: build/lib/autoradio/playlists/models.py:35
+#: build/lib/autoradio/spots/models.py:112 templates/schedule/index.html:15
 msgid "File"
 msgstr ""
 
 #: autoradio/jingles/models.py:38 autoradio/programs/models.py:23
+#: build/lib/autoradio/jingles/models.py:38
+#: build/lib/autoradio/programs/models.py:23
 #, fuzzy
 msgid "Recording date"
 msgstr "Registrato oggi?"
 
 #: autoradio/jingles/models.py:39 autoradio/playlists/models.py:37
 #: autoradio/programs/models.py:24 autoradio/spots/models.py:76
-#: autoradio/spots/models.py:114
+#: autoradio/spots/models.py:114 build/lib/autoradio/jingles/models.py:39
+#: build/lib/autoradio/playlists/models.py:37
+#: build/lib/autoradio/programs/models.py:24
+#: build/lib/autoradio/spots/models.py:76
+#: build/lib/autoradio/spots/models.py:114
 msgid "Active"
 msgstr "Attivo"
 
-#: autoradio/jingles/models.py:41
+#: autoradio/jingles/models.py:41 build/lib/autoradio/jingles/models.py:41
 msgid "Emission starting date"
 msgstr "Data inizio emissione"
 
-#: autoradio/jingles/models.py:42
+#: autoradio/jingles/models.py:42 build/lib/autoradio/jingles/models.py:42
 #, fuzzy
 msgid "Emission end date"
 msgstr "emissione effettuata"
 
-#: autoradio/jingles/models.py:44
+#: autoradio/jingles/models.py:44 build/lib/autoradio/jingles/models.py:44
 #, fuzzy
 msgid "Emission start time"
 msgstr "Ora inizio programmazione"
 
-#: autoradio/jingles/models.py:45
+#: autoradio/jingles/models.py:45 build/lib/autoradio/jingles/models.py:45
 #, fuzzy
 msgid "Emission end time"
 msgstr "emissione effettuata"
 
-#: autoradio/jingles/models.py:47
+#: autoradio/jingles/models.py:47 build/lib/autoradio/jingles/models.py:47
 #, fuzzy
 msgid "Scheduled days"
 msgstr "Programmato per oggi?"
 
 #: autoradio/jingles/models.py:49 autoradio/spots/models.py:123
+#: build/lib/autoradio/jingles/models.py:49
+#: build/lib/autoradio/spots/models.py:123
 msgid "Priority"
 msgstr "Priorità"
 
 #: autoradio/jingles/models.py:51 autoradio/programs/models.py:44
+#: build/lib/autoradio/jingles/models.py:51
+#: build/lib/autoradio/programs/models.py:44
 msgid "emission done"
 msgstr "emissione effettuata"
 
 #: autoradio/jingles/models.py:57 autoradio/programs/models.py:29
-#: autoradio/spots/models.py:131
+#: autoradio/spots/models.py:131 build/lib/autoradio/jingles/models.py:57
+#: build/lib/autoradio/programs/models.py:29
+#: build/lib/autoradio/spots/models.py:131
 msgid "Recorded today?"
 msgstr "Registrato oggi?"
 
-#: autoradio/playlists/models.py:22
+#: autoradio/playlists/models.py:22 build/lib/autoradio/playlists/models.py:22
 msgid "Activate Playlist"
 msgstr "Playlist attive"
 
 #: autoradio/playlists/models.py:23 autoradio/playlists/models.py:24
 #: autoradio/playlists/models.py:96 autoradio/programs/models.py:10
-#: autoradio/spots/models.py:61
+#: autoradio/spots/models.py:61 build/lib/autoradio/playlists/models.py:23
+#: build/lib/autoradio/playlists/models.py:24
+#: build/lib/autoradio/playlists/models.py:96
+#: build/lib/autoradio/programs/models.py:10
+#: build/lib/autoradio/spots/models.py:61
 msgid "Programmed start time"
 msgstr "Ora inizio programmazione"
 
-#: autoradio/playlists/models.py:34
+#: autoradio/playlists/models.py:34 build/lib/autoradio/playlists/models.py:34
 msgid "Playlist name"
 msgstr "Nome Playlist"
 
-#: autoradio/playlists/models.py:36
+#: autoradio/playlists/models.py:36 build/lib/autoradio/playlists/models.py:36
 msgid "Generation date"
 msgstr "Data generazione"
 
-#: autoradio/playlists/models.py:43
+#: autoradio/playlists/models.py:43 build/lib/autoradio/playlists/models.py:43
 #, fuzzy
 msgid "Generated today?"
 msgstr "Registrato oggi?"
 
 #: autoradio/playlists/models.py:55 autoradio/playlists/models.py:92
+#: build/lib/autoradio/playlists/models.py:55
+#: build/lib/autoradio/playlists/models.py:92
 msgid "refer to playlist:"
 msgstr "riferito alla playlist"
 
 #: autoradio/playlists/models.py:57 autoradio/playlists/models.py:94
+#: build/lib/autoradio/playlists/models.py:57
+#: build/lib/autoradio/playlists/models.py:94
 msgid "Shuffle Playlist on start"
 msgstr "Disordina la playlist alla partenza"
 
 #: autoradio/playlists/models.py:58 autoradio/playlists/models.py:95
+#: build/lib/autoradio/playlists/models.py:58
+#: build/lib/autoradio/playlists/models.py:95
 msgid "Max time length (seconds)"
 msgstr "Durata massima (secondi)"
 
-#: autoradio/playlists/models.py:59
+#: autoradio/playlists/models.py:59 build/lib/autoradio/playlists/models.py:59
 #, fuzzy
 msgid "Programmed date"
 msgstr "data programmata"
 
 #: autoradio/playlists/models.py:67 autoradio/playlists/models.py:101
-#: autoradio/spots/models.py:77
+#: autoradio/spots/models.py:77 build/lib/autoradio/playlists/models.py:67
+#: build/lib/autoradio/playlists/models.py:101
+#: build/lib/autoradio/spots/models.py:77
 #, fuzzy
 msgid "Emission done"
 msgstr "emissione effettuata"
 
-#: autoradio/playlists/models.py:77
+#: autoradio/playlists/models.py:77 build/lib/autoradio/playlists/models.py:77
 #, fuzzy
 msgid "Programmed for today?"
 msgstr "Programmato per"
 
 #: autoradio/playlists/models.py:81 autoradio/playlists/models.py:110
+#: build/lib/autoradio/playlists/models.py:81
+#: build/lib/autoradio/playlists/models.py:110
 msgid "Linked Playlist"
 msgstr "Playlist correlata"
 
 #: autoradio/playlists/models.py:97 autoradio/programs/models.py:11
-#: autoradio/spots/models.py:62
+#: autoradio/spots/models.py:62 build/lib/autoradio/playlists/models.py:97
+#: build/lib/autoradio/programs/models.py:11
+#: build/lib/autoradio/spots/models.py:62
 msgid "Programmed end time"
 msgstr "Ora fine programmazione"
 
-#: autoradio/playlists/models.py:98
+#: autoradio/playlists/models.py:98 build/lib/autoradio/playlists/models.py:98
 #, fuzzy
 msgid "Programmed time"
 msgstr "Ora fine programmazione"
 
-#: autoradio/playlists/models.py:99
+#: autoradio/playlists/models.py:99 build/lib/autoradio/playlists/models.py:99
 #, fuzzy
 msgid "Programmed days"
 msgstr "data programmata"
 
-#: autoradio/programs/models.py:9
+#: autoradio/programs/models.py:9 build/lib/autoradio/programs/models.py:9
 msgid "Active programs"
 msgstr "Programmi attivi"
 
-#: autoradio/programs/models.py:21
+#: autoradio/programs/models.py:21 build/lib/autoradio/programs/models.py:21
 msgid "Program name"
 msgstr "Nome del programma"
 
 #: autoradio/programs/models.py:41 autoradio/programs/models.py:58
+#: build/lib/autoradio/programs/models.py:41
+#: build/lib/autoradio/programs/models.py:58
 #, fuzzy
 msgid "Linked program:"
 msgstr "Programma correlato"
 
-#: autoradio/programs/models.py:43
+#: autoradio/programs/models.py:43 build/lib/autoradio/programs/models.py:43
 #, fuzzy
 msgid "programmed date"
 msgstr "data programmata"
 
-#: autoradio/programs/models.py:54
+#: autoradio/programs/models.py:54 build/lib/autoradio/programs/models.py:54
 #, fuzzy
 msgid "Scheduled for today?"
 msgstr "Programmato per oggi?"
 
-#: autoradio/spots/models.py:60
+#: autoradio/spots/models.py:60 build/lib/autoradio/spots/models.py:60
 #, fuzzy
 msgid "Activate Spot"
 msgstr "Programmi attivi"
 
-#: autoradio/spots/models.py:111
+#: autoradio/spots/models.py:111 build/lib/autoradio/spots/models.py:111
 #, fuzzy
 msgid "Spot Name"
 msgstr "Nome Spot"
 
-#: autoradio/spots/models.py:113
+#: autoradio/spots/models.py:113 build/lib/autoradio/spots/models.py:113
 #, fuzzy
 msgid "Recordinf date"
 msgstr "Registrato oggi?"
 
-#: autoradio/spots/models.py:116
+#: autoradio/spots/models.py:116 build/lib/autoradio/spots/models.py:116
 msgid "Data inizio programmazione"
 msgstr ""
 
-#: autoradio/spots/models.py:117
+#: autoradio/spots/models.py:117 build/lib/autoradio/spots/models.py:117
 msgid "Data fine programmazione"
 msgstr ""
 
-#: autoradio/spots/models.py:121
+#: autoradio/spots/models.py:121 build/lib/autoradio/spots/models.py:121
 msgid "Giorni programmati"
 msgstr ""
 
-#: autoradio/spots/models.py:124
+#: autoradio/spots/models.py:124 build/lib/autoradio/spots/models.py:124
 msgid "Prologue"
 msgstr "Prologo"
 
-#: autoradio/spots/models.py:125
+#: autoradio/spots/models.py:125 build/lib/autoradio/spots/models.py:125
 msgid "Epilogue"
 msgstr "Epilogo"
 

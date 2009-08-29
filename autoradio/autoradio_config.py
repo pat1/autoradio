@@ -16,8 +16,9 @@ logfile='/tmp/autoradio.log'
 lockfile = "/tmp/autoradio.lock"
 timestampfile = "/tmp/autoradio.timestamp"
 
-# root path where to find software and media
-BASE_PATH=""
+# root path where to find media
+import os
+BASE_PATH=os.getcwd()
 
 # host xmms is running on
 XMMSHOST='localhost'

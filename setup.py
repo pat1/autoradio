@@ -1,6 +1,36 @@
 from distutils.core import setup
 import os
 
+from distutils.command.build import build as build_
+from setuptools.command.develop import develop as develop_
+from distutils.core import Command
+#from buildutils.cmd import Command
+#from distutils.cmd import Command
+
+from django.core import management
+from django.core.management import setup_environ
+from autoradio import settings
+
+setup_environ(settings)
+
+class build(build_):
+
+    sub_commands = build_.sub_commands[:]
+    sub_commands.append(('compilemessages', None))
+
+class compilemessages(Command):
+    description = "generate .mo files from .po"
+    user_options = []   
+    boolean_options = []
+
+    def initialize_options(self):
+        pass
+    
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        management.call_command("compilemessages")
 
 
 # Compile the list of files available, because distutils doesn't have
@@ -72,6 +102,7 @@ setup(name='autoradio',
       author_email='p.patruno@iperbole.bologna.it',
       platforms = ["any"],
       url='http://autoradiobc.sf.net',
+      cmdclass={'build': build,'compilemessages':compilemessages},
       packages=['autoradio', 'autoradio.playlists','autoradio.spots', 'autoradio.jingles', 'autoradio.programs'],
       scripts=['autoradiod'],
       data_files = data_files,

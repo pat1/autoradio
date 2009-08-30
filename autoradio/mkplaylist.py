@@ -4,7 +4,7 @@
 # Purpose:       ReCreate playlists from directory scans or m3u playlist.
 #
 # Author:        Marc 'BlackJack' Rintsch
-# Modified:      Paolo Patruno
+#                Paolo Patruno
 # Created:       2004-11-09
 # Last modified: 2009-08-11
 # Copyright:     (c) 2004-2009
@@ -90,21 +90,30 @@ def metadata_reader(path):
     
     info = dict()
 
-    try:
-        m=mutagen.File(path,easy=True)
-        # in seconds (type float).
+    if path[:5] == "http:":
+        info['TIME'] = None
+        info['ARTIST'] = "streaming"
+        info['ALBUM'] = "streaming"
+        info['TITLE'] = path
+        
+    else:
 
-        info['TIME'] = m.info.length
+        try:
+            m=mutagen.File(path,easy=True)
+            # in seconds (type float).
 
-        for value_name, key in (('artist', 'ARTIST'),
-                                ('album', 'ALBUM'),
-                                ('title', 'TITLE')):
-            value = m.get(value_name)
-            if value:
-                info[key] = value[0]
+            info['TIME'] = m.info.length
 
-    except:
-        log.info("Could not read info from file: %s ",path)
+            for value_name, key in (('artist', 'ARTIST'),
+                                    ('album', 'ALBUM'),
+                                    ('title', 'TITLE')):
+                value = m.get(value_name)
+                if value:
+                    info[key] = value[0]
+
+        except:
+            log.info("Could not read info from file: %s ",path)
+
 
     return info
 
@@ -139,7 +148,6 @@ class PlaylistEntry:
         :postcondition: The meta data contains the `path` as key.
         """
         self.path = path
-        self.time = os.stat(path).st_mtime
         
         if metadata is None:
             metadata = dict()
@@ -196,8 +204,7 @@ class PlaylistEntryFactory:
     def is_media_file(self, path):
         """Check file if it is a known media file.
 
-        The check is based on the filename extension and is case
-        insensitive.
+        The check is based on mutagen file test
 
         :param path: filename of the file to check.
         :type path: str
@@ -209,7 +216,20 @@ class PlaylistEntryFactory:
             return not mutagen.File(path) is None
         except:
             return False
-        
+
+    def is_media_url(self, path):
+        """Check file if it is a url.
+
+        The check is based on the prefix thet will be http:
+        :param path: filename of the file to check.
+        :type path: str
+
+        :returns: `True` if url, `False` otherwise.
+        :rtype: bool
+        """
+        return path[:5] == "http:"
+
+
     def create_entry(self, path):
         """Reads metadata and returns PlaylistEntry objects.
         
@@ -243,8 +263,9 @@ def write_m3u(playlist, outfile,timelen=None):
         if not  entry['TIME'] is None :
             totaltime += entry['TIME']
         else:
-            log.error("evaluate time length on file: %s ",entry )
-            continue
+            if not timelen is None :
+                log.error("error evalutate time length on file: %s ",entry )
+                continue
 
         if totaltime < timelen or timelen is None :
             print >> outfile, unicode(entry)
@@ -264,12 +285,15 @@ def write_extm3u(playlist, outfile,timelen=None):
         if not  entry['TIME'] is None :
             totaltime += entry['TIME']
         else:
-            log.error("evaluate time length on file: %s",entry )
-            continue
+            if not timelen is None :
+                log.error("error evalutate time length on file: %s",entry )
+                continue
 
         if totaltime < timelen  or timelen is None :
-            if entry['ARTIST'] and entry['TITLE'] and entry['TIME']:
-                print >> outfile, '#EXTINF:%s,%s - %s' % (entry['TIME'],
+            time=entry['TIME']
+            if time is None : time = -1
+            if entry['ARTIST'] and entry['TITLE']:
+                print >> outfile, '#EXTINF:%s,%s - %s' % (time,
                                                       entry['ARTIST'],
                                                       entry['TITLE'])
         
@@ -380,6 +404,9 @@ def read_playlist(infile, absolute_paths=True):
 
             yield factory.create_entry(full_name)
 
+        elif  factory.is_media_url(filename):
+            yield factory.create_entry(filename)
+
         else:
             log.info("ignore %s", filename)
 
@@ -442,6 +469,8 @@ def main():
                       help="write relative paths. (default: absolute paths)")
     parser.add_option("--shuffle", action="store_true", default=False,
                       help="shuffle the playlist before saving it.")
+    parser.add_option("--sort", action="store_true", default=False,
+                      help="sort the playlist before saving it.")
     parser.add_option("-v", "--verbose", action="store_true", default=False,
                       dest="verbose", help="be more verbose.")
     parser.add_option("-q", "--quiet", action="store_true", default=False,
@@ -479,7 +508,7 @@ def main():
     #
     if options.shuffle:
         random.shuffle(media_files)
-    else:
+    elif options.sort:
         media_files.sort()
 
 

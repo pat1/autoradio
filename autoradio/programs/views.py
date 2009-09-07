@@ -1,11 +1,11 @@
 # Create your views here.
 
 from django.shortcuts import render_to_response
-from programs.models import Schedule
+from models import Schedule
 from django.http import HttpResponse
 from datetime import datetime
-import autoradio_config
-import autoradio_core
+import autoradio.autoradio_config
+import autoradio.autoradio_core
 
 #def index_old(request):
 #    latest_schedule_list = Schedule.objects.filter(emission_date__gte=datetime.now()).order_by('emission_date')[:5]
@@ -19,7 +19,7 @@ import autoradio_core
 def index(request):
 
 
-    scheds=autoradio_core.schedules([])
+    scheds=autoradio.autoradio_core.schedules([])
 
     return render_to_response('schedule/index.html', {'schedule': scheds.get_all_refine(genfile=False)})
 
@@ -28,7 +28,7 @@ def stato(request):
     import urllib2
         
     xmmsweb=""
-    url=urllib2.urlopen("http://"+autoradio_config.XMMSHOST+":8888/")
+    url=urllib2.urlopen("http://"+autoradio.autoradio_config.XMMSHOST+":8888/")
     for line in url:
         xmmsweb=xmmsweb+line
 

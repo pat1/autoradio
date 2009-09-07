@@ -87,8 +87,8 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.admin',
-    'programs',
-    'jingles',
-    'spots',
-    'playlists',
+    'autoradio.programs',
+    'autoradio.jingles',
+    'autoradio.spots',
+    'autoradio.playlists',
 )

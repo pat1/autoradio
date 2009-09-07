@@ -17,8 +17,9 @@ urlpatterns = patterns('',
 
 #    Uncomment the next line to enable the admin:
     (r'^admin/(.*)', admin.site.root),
+    (r'^django/media/sito/(.*)', 'django.views.static.serve', {'document_root': '/usr/share/autoradio/media/sito', 'show_indexes': True}),
     (r'^django/media/(.*)', 'django.views.static.serve', {'document_root': 'media', 'show_indexes': True}),
-    (r'^', include('programs.urls')),
+    (r'^', include('autoradio.programs.urls')),
 
 
 )

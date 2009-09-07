@@ -1,7 +1,12 @@
 #!/usr/bin/python
 # GPL. (C) 2007-2009 Paolo Patruno.
 
-
+#####
+#import ConfigParser, os
+#
+#config = ConfigParser.ConfigParser()
+#config.readfp(open('/etc/autoradio/autoradio.cfg'))
+#config.read(['/etc/autoradio/site.cfg', os.path.expanduser('~/.autoradio.cfg')])
 ####
 
 # to use the amarok player (osolete)

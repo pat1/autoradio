@@ -1,4 +1,4 @@
-from playlists.models import Giorno, Configure, Playlist, Schedule, PeriodicSchedule
+from models import Giorno, Configure, Playlist, Schedule, PeriodicSchedule
 from django.contrib import admin
 
 

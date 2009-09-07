@@ -1,5 +1,5 @@
 from django.contrib import admin
-from programs.models import Configure, Program, Schedule
+from models import Configure, Program, Schedule
 
 
 

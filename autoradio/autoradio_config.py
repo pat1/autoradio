@@ -1,39 +1,61 @@
 #!/usr/bin/python
 # GPL. (C) 2007-2009 Paolo Patruno.
 
-#####
-#import ConfigParser, os
-#
-#config = ConfigParser.ConfigParser()
-#config.readfp(open('/etc/autoradio/autoradio.cfg'))
-#config.read(['/etc/autoradio/site.cfg', os.path.expanduser('~/.autoradio.cfg')])
-####
+import os
+from configobj import ConfigObj,flatten_errors
+from validate import Validator
 
-# to use the amarok player (osolete)
+configspec={}
+
+configspec['autoradiod']={}
+
+configspec['autoradiod']['playlistdir']   = "string(default='spots')"
+configspec['autoradiod']['logfile']       = "string(default='/tmp/autoradio.log')"
+configspec['autoradiod']['lockfile']      = "string(default='/tmp/autoradio.lock')"
+configspec['autoradiod']['timestampfile'] = "string(default='/tmp/autoradio.timestamp')"
+configspec['autoradiod']['base_path']     = "string(default=%s)" % os.getcwd()
+configspec['autoradiod']['xmms_host']     = "string(default='localhost')"
+configspec['autoradiod']['minelab']       = "integer(60,360,default=180)"
+configspec['autoradiod']['minsched']      = "integer(3,20,default=5)"
+configspec['autoradiod']['locale']        = "string(default='it_IT.UTF-8')"
+
+config    = ConfigObj ('/etc/autoradio/autoradio.cfg',file_error=False,configspec=configspec)
+
+usrconfig = ConfigObj (os.path.expanduser('~/.autoradio.cfg'),file_error=False)
+config.merge(usrconfig)
+usrconfig = ConfigObj ('autoradio.cfg',file_error=False)
+config.merge(usrconfig)
+
+val = Validator()
+test = config.validate(val,preserve_errors=True)
+for entry in flatten_errors(config, test):
+    # each entry is a tuple
+    section_list, key, error = entry
+    if key is not None:
+       section_list.append(key)
+    else:
+        section_list.append('[missing section]')
+    section_string = ', '.join(section_list)
+    if error == False:
+        error = 'Missing value or section.'
+    print section_string, ' = ', error
+    raise error
+
+# to use the amarok player (obsolete)
 amarok=False
 
-#directory to put playlists
-#playlistdir="playlist"
-playlistdir="spots"
+# section django
+playlistdir   = config['autoradiod']['playlistdir']
+logfile       = config['autoradiod']['logfile']
+lockfile      = config['autoradiod']['lockfile']
+timestampfile = config['autoradiod']['timestampfile']
+BASE_PATH     = config['autoradiod']['base_path']
+XMMSHOST      = config['autoradiod']['xmms_host']
+minelab       = config['autoradiod']['minelab']
+minsched      = config['autoradiod']['minsched']
+import locale
+locale.setlocale(locale.LC_ALL, config['autoradiod']['locale'])
 
-# path to working file
-logfile='/tmp/autoradio.log'
-lockfile = "/tmp/autoradio.lock"
-timestampfile = "/tmp/autoradio.timestamp"
-
-# root path where to find media
-import os
-BASE_PATH=os.getcwd()
-
-# host xmms is running on
-XMMSHOST='localhost'
-
-#backward and forward time intervat to check for schedule conflict 
-minelab=180
-
-# tollerance time interval to recovery schedule not done ( backward time when start autoradiod )
-# to adjust the programming you have to make changes minsched minutes before
-minsched=5
 
 ####
 
@@ -41,5 +63,3 @@ from django.core.management import setup_environ
 import settings
 setup_environ(settings)
 
-import locale
-locale.setlocale(locale.LC_ALL, 'it_IT.UTF-8')

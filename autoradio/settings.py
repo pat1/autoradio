@@ -1,63 +1,93 @@
 # Django settings for autoradio project.
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-FILE_UPLOAD_PERMISSIONS= 0644
+import os
+from configobj import ConfigObj,flatten_errors
+from validate import Validator
 
-ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
-)
+configspec={}
 
-MANAGERS = ADMINS
+configspec['django']={}
 
-DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
-DATABASE_NAME = 'autoradio.sqlite3'   # Or path to database file if using sqlite3.
+configspec['django']['DEBUG']="boolean(default=True)"
+configspec['django']['TEMPLATE_DEBUG']="boolean(default=True)"
+configspec['django']['FILE_UPLOAD_PERMISSIONS']="integer(default=0644)"
+configspec['django']['SECRET_KEY']="string(default='random-string-of-ascii')"
+configspec['django']['SESSION_COOKIE_DOMAIN']="string(default=None)"
+configspec['django']['SERVER_EMAIL']="string(default='localhost')"
+configspec['django']['EMAIL_HOST']="string(default='localhost')"
+configspec['django']['TIME_ZONE']="string(default='Europe/Rome')"
+configspec['django']['LANGUAGE_CODE']="string(default='en-us')"
+configspec['django']['SITE_ID']="integer(default=1)"
+configspec['django']['USE_I18N']="boolean(default=True)"
+configspec['django']['LOCALE_PATHS']="list(default=list('locale','/usr/share/locale'))"
+configspec['django']['ADMINS']="list(default=list('',))"
+configspec['django']['MANAGERS']="list(default=list('',))"                  
+configspec['django']['MEDIA_ROOT']="string(default='media')"
+configspec['django']['TEMPLATE_DIRS']="list(default=list('templates',))"
+configspec['django']['MEDIA_URL']="string(default='/django/media/')"
+configspec['django']['ADMIN_MEDIA_PREFIX']="string(default='/django/media/admin/')"
 
-#DATABASE_ENGINE = 'mysql'               # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
-#DATABASE_NAME = 'autoradio'             # Or path to database file if using sqlite3.
-#DATABASE_USER = 'autoradio'             # Not used with sqlite3.
-#DATABASE_PASSWORD = 'autoradio'         # Not used with sqlite3.
-#DATABASE_HOST = 'autorcf'               # Set to empty string for localhost. Not used with sqlite3.
-#DATABASE_PORT = ''                      # Set to empty string for default. Not used with sqlite3.
+configspec['database']={}
 
-# Local time zone for this installation. Choices can be found here:
-# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
-# although not all choices may be available on all operating systems.
-# If running in a Windows environment this must be set to the same as your
-# system time zone.
-TIME_ZONE = 'Europe/Rome'
+configspec['database']['DATABASE_USER']="string(default='')"
+configspec['database']['DATABASE_PASSWORD']="string(default='')"
+configspec['database']['DATABASE_HOST']="string(default='localhost')"
+configspec['database']['DATABASE_PORT']="integer(default=3306)"
+configspec['database']['DATABASE_ENGINE']="string(default='sqlite3')"
+configspec['database']['DATABASE_NAME']="string(default='%s/autoradio.sqlite3')" % os.getcwd()
 
-# Language code for this installation. All choices can be found here:
-# http://www.i18nguy.com/unicode/language-identifiers.html
-#LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'it-it'
 
-SITE_ID = 1
+config    = ConfigObj ('/etc/autoradio/autoradio.cfg',file_error=False,configspec=configspec)
 
-# If you set this to False, Django will make some optimizations so as not
-# to load the internationalization machinery.
-USE_I18N = True
+usrconfig = ConfigObj (os.path.expanduser('~/.autoradio.cfg'),file_error=False)
+config.merge(usrconfig)
+usrconfig = ConfigObj ('autoradio.cfg',file_error=False)
+config.merge(usrconfig)
 
-# A tuple of directories where Django looks for translation files.
-LOCALE_PATHS=('locale','/usr/share/ocale')
+val = Validator()
+test = config.validate(val,preserve_errors=True)
+for entry in flatten_errors(config, test):
+    # each entry is a tuple
+    section_list, key, error = entry
+    if key is not None:
+       section_list.append(key)
+    else:
+        section_list.append('[missing section]')
+    section_string = ', '.join(section_list)
+    if error == False:
+        error = 'Missing value or section.'
+    print section_string, ' = ', error
+    raise error
 
-# Absolute path to the directory that holds media.
-# Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = 'media/'
+# section django
+DEBUG                   = config['django']['DEBUG']                     
+TEMPLATE_DEBUG          = config['django']['TEMPLATE_DEBUG']            
+FILE_UPLOAD_PERMISSIONS = config['django']['FILE_UPLOAD_PERMISSIONS']   
+SECRET_KEY              = config['django']['SECRET_KEY']                
+SESSION_COOKIE_DOMAIN   = config['django']['SESSION_COOKIE_DOMAIN']     
+SERVER_EMAIL            = config['django']['SERVER_EMAIL']              
+EMAIL_HOST              = config['django']['EMAIL_HOST']                
+TIME_ZONE               = config['django']['TIME_ZONE']                 
+LANGUAGE_CODE           = config['django']['LANGUAGE_CODE']             
+SITE_ID                 = config['django']['SITE_ID']                   
+USE_I18N                = config['django']['USE_I18N']                  
+LOCALE_PATHS            = config['django']['LOCALE_PATHS']              
+ADMINS                  = config['django']['ADMINS']                    
+MANAGERS                = config['django']['MANAGERS']                  
+MEDIA_ROOT              = config['django']['MEDIA_ROOT']
+TEMPLATE_DIRS           = config['django']['TEMPLATE_DIRS']
+MEDIA_URL               = config['django']['MEDIA_URL']
+ADMIN_MEDIA_PREFIX      = config['django']['ADMIN_MEDIA_PREFIX']
 
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash if there is a path component (optional in other cases).
-# Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = '/django/media/'
 
-# URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
-# trailing slash.
-# Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/django/media/admin/'
-#ADMIN_MEDIA_PREFIX = '/usr/lib/python2.5/site-packages/django/contrib/admin/media/'
+# section database
+DATABASE_USER     = config['database']['DATABASE_USER']        
+DATABASE_PASSWORD = config['database']['DATABASE_PASSWORD']    
+DATABASE_HOST     = config['database']['DATABASE_HOST']        
+DATABASE_PORT     = config['database']['DATABASE_PORT']        
+DATABASE_ENGINE   = config['database']['DATABASE_ENGINE']      
+DATABASE_NAME     = config['database']['DATABASE_NAME']        
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'ulx5#1dh#51-zl*yk-)&_&kt(&cyc97*0=a3bd1(kfl-ayk5iv'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -75,12 +105,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'autoradio.urls'
-
-TEMPLATE_DIRS = ( "templates"
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
 
 INSTALLED_APPS = (
     'django.contrib.auth',

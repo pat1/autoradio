@@ -47,6 +47,14 @@ I suggest Django 1.1
 pyxmms
 http://people.via.ecp.fr/~flo/index.en.xhtml
 
+cherrypy
+Summary     : A pythonic, object-oriented web development framework
+URL         : http://www.cherrypy.org/
+
+configobj
+Summary     : Config file reading, writing, and validation
+URL         : http://www.voidspace.org.uk/python/configobj.html
+
 xmms
 http://www.xmms.org/
 

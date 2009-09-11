@@ -3,7 +3,7 @@ include NEWS
 include README
 include TODO
 include *.txt
-global-include  *.txt *.py *.sh *.in
+global-include  *.txt *.py *.sh *.in *.cfg
 recursive-include doc *
 recursive-include locale *.po
 recursive-include amarok *

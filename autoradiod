@@ -32,8 +32,8 @@ autoradiod = daemon.Daemon(
         stdout="/dev/null",
         stderr="/dev/null",
         pidfile=lockfile,
-        user=None,
-        group=None
+        user=user,
+        group=group
 )
 
 from datetime import *

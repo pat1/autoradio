@@ -65,7 +65,7 @@ for dirpath, dirnames, filenames in os.walk('locale'):
     for i, dirname in enumerate(dirnames):
         if dirname.startswith('.'): del dirnames[i]
     if filenames:
-        data_files.append(['share/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
+        data_files.append(['share/autoradio/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
 
 for dirpath, dirnames, filenames in os.walk('templates'):
     # Ignore dirnames that start with '.'
@@ -73,6 +73,8 @@ for dirpath, dirnames, filenames in os.walk('templates'):
         if dirname.startswith('.'): del dirnames[i]
     if filenames:
         data_files.append(['share/autoradio/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
+
+data_files.append(('/etc/autoradio',['autoradio-site.cfg']))
 
 
 #for dirpath, dirnames, filenames in os.walk('autoradio/templates'):
@@ -96,7 +98,7 @@ for dirpath, dirnames, filenames in os.walk('templates'):
 
 
 setup(name='autoradio',
-      version='1.0',
+      version='1.1',
       description='radio automation software',
       author='Paolo Patruno',
       author_email='p.patruno@iperbole.bologna.it',
@@ -104,7 +106,7 @@ setup(name='autoradio',
       url='http://autoradiobc.sf.net',
       cmdclass={'build': build,'compilemessages':compilemessages},
       packages=['autoradio', 'autoradio.playlists','autoradio.spots', 'autoradio.jingles', 'autoradio.programs'],
-      scripts=['autoradiod'],
+      scripts=['autoradiod','autoradioweb'],
       data_files = data_files,
       license = "GNU GPL v2",
       requires= [ "mutagen","django"],

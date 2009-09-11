@@ -19,13 +19,23 @@ configspec['django']['TIME_ZONE']="string(default='Europe/Rome')"
 configspec['django']['LANGUAGE_CODE']="string(default='en-us')"
 configspec['django']['SITE_ID']="integer(default=1)"
 configspec['django']['USE_I18N']="boolean(default=True)"
-configspec['django']['LOCALE_PATHS']="list(default=list('locale','/usr/share/locale'))"
+configspec['django']['LOCALE_PATHS']="list(default=list('locale',))"
 configspec['django']['ADMINS']="list(default=list('',))"
 configspec['django']['MANAGERS']="list(default=list('',))"                  
-configspec['django']['MEDIA_ROOT']="string(default='media')"
+configspec['django']['MEDIA_ROOT']="string(default='media/')"
+configspec['django']['MEDIA_SITE_ROOT']="string(default='media/')"
 configspec['django']['TEMPLATE_DIRS']="list(default=list('templates',))"
 configspec['django']['MEDIA_URL']="string(default='/django/media/')"
 configspec['django']['ADMIN_MEDIA_PREFIX']="string(default='/django/media/admin/')"
+
+configspec['autoradioweb']={}
+
+configspec['autoradioweb']['logfile']  = "string(default='/tmp/autoradioweb.log')"
+configspec['autoradioweb']['errfile']  = "string(default='/tmp/autoradioweb.err')"
+configspec['autoradioweb']['lockfile'] = "string(default='/tmp/autoradioweb.lock')"
+configspec['autoradioweb']['user']     = "string(default=None)"
+configspec['autoradioweb']['group']    = "string(default=None)"
+
 
 configspec['database']={}
 
@@ -37,7 +47,7 @@ configspec['database']['DATABASE_ENGINE']="string(default='sqlite3')"
 configspec['database']['DATABASE_NAME']="string(default='%s/autoradio.sqlite3')" % os.getcwd()
 
 
-config    = ConfigObj ('/etc/autoradio/autoradio.cfg',file_error=False,configspec=configspec)
+config    = ConfigObj ('/etc/autoradio/autoradio-site.cfg',file_error=False,configspec=configspec)
 
 usrconfig = ConfigObj (os.path.expanduser('~/.autoradio.cfg'),file_error=False)
 config.merge(usrconfig)
@@ -75,9 +85,17 @@ LOCALE_PATHS            = config['django']['LOCALE_PATHS']
 ADMINS                  = config['django']['ADMINS']                    
 MANAGERS                = config['django']['MANAGERS']                  
 MEDIA_ROOT              = config['django']['MEDIA_ROOT']
+MEDIA_SITE_ROOT         = config['django']['MEDIA_SITE_ROOT']
 TEMPLATE_DIRS           = config['django']['TEMPLATE_DIRS']
 MEDIA_URL               = config['django']['MEDIA_URL']
 ADMIN_MEDIA_PREFIX      = config['django']['ADMIN_MEDIA_PREFIX']
+
+# section autoradioweb
+logfileweb              = config['autoradioweb']['logfile']
+errfileweb              = config['autoradioweb']['errfile']
+lockfileweb             = config['autoradioweb']['lockfile']
+user                    = config['autoradioweb']['user']
+group                   = config['autoradioweb']['group']
 
 
 # section database

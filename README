@@ -65,32 +65,38 @@ HOW TO INSTALL
 >>>>> Easy way:
 You can run autoradio daemon and web server from root distributed directory:
 
-change your preferred language in locale.setlocale in autoradio/autoradio_config.py and other in autoradio/settings.py
+change your preferred language and other preference in autoradio.cfg 
 
 ./init.sh
 
 You have to respond to some question to setup database.
 
-This star daemon (that launch xmms and xmmsweb) an webserver on port 8080
+This star daemon autoradiod (that launch xmms and xmmsweb) 
+and webserver on port 8080
 xmmsweb respond on port 8888
 
-You can use a browser pointing to localhost:8080
+You have to use a browser pointing to localhost:8080
 
 
 >>>>> Installed way:
 python setup.py install
 
-Copy autoradio/settings.py and autoradio/autoradio_config.py in a
-working directory; specify your personal settings for installed files
-and after:
+make and go in your preferred working writable directory
+modify /etc/autoradio/autoradio-site.cfg or
+copy it in your working directory with name autoradio.cfg and modify
+specify your personal settings for installed files
+if you want you can set global user setting coping configuration file in
+~/.autoradio.cfg
 
-django-admin.py syncdb
-autoradiod start
-django-admin.py runserver 8080
+after:
 
-You can run autoradiod and xmms in one host and webserver in other if
+django-admin.py syncdb --settings=settings --pythonpath=/usr/lib/python<your python version number>/site-packages/autoradio
+autoradiod run
+autoradioweb run
+
+You can run autoradiod and xmms in one host and autoradioweb in other if
 you use client server DB like mysql and specify where autoradiod is
-running in autoradio_config.py
+running in .cfg files
 
 For a pubblic web server do not use django internal web server; use
 apache instead

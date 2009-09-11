@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import *
+import settings
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -17,8 +18,8 @@ urlpatterns = patterns('',
 
 #    Uncomment the next line to enable the admin:
     (r'^admin/(.*)', admin.site.root),
-    (r'^django/media/sito/(.*)', 'django.views.static.serve', {'document_root': '/usr/share/autoradio/media/sito', 'show_indexes': True}),
-    (r'^django/media/(.*)', 'django.views.static.serve', {'document_root': 'media', 'show_indexes': True}),
+    (r'^django/media/sito/(.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_SITE_ROOT, 'show_indexes': True}),
+    (r'^django/media/(.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
     (r'^', include('autoradio.programs.urls')),
 
 

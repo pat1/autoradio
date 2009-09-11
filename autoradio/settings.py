@@ -10,7 +10,7 @@ configspec['django']={}
 
 configspec['django']['DEBUG']="boolean(default=True)"
 configspec['django']['TEMPLATE_DEBUG']="boolean(default=True)"
-configspec['django']['FILE_UPLOAD_PERMISSIONS']="integer(default=0644)"
+configspec['django']['FILE_UPLOAD_PERMISSIONS']="integer(default=420)"
 configspec['django']['SECRET_KEY']="string(default='random-string-of-ascii')"
 configspec['django']['SESSION_COOKIE_DOMAIN']="string(default=None)"
 configspec['django']['SERVER_EMAIL']="string(default='localhost')"

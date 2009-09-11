@@ -106,7 +106,7 @@ def ManageXmms (session,schedule):
 
       media=schedule.media
       if operation == "loadPlaylist":
-         media=shuffle_playlist(schedule.media,schedule.shuffle,relative_path=False,length=schedule.length)
+         media=shuffle_playlist(schedule.media,schedule.shuffle,relative_path=False,length=schedule.maxlength)
 
       # Regione critica
       lock.acquire()
@@ -220,7 +220,7 @@ def main():
 
     session=0
     shuffle=True
-    length=None
+    maxlength=None
 
     type="playlist"
     media = "/home/autoradio/django/media/playlist/playlistmingogozza.m3u"
@@ -228,7 +228,7 @@ def main():
     #media = raw_input("dammi il media? ")
 
     scheduledatetime=datetime.now()+timedelta(seconds=5)
-    sched=autoradio_core.schedule(programma,scheduledatetime,media,type=type,shuffle=shuffle,length=length)
+    sched=autoradio_core.schedule(programma,scheduledatetime,media,type=type,shuffle=shuffle,maxlength=maxlength)
 
     threadschedule=ScheduleProgram(session,sched)
     threadschedule.start()

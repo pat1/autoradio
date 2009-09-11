@@ -21,7 +21,7 @@ class schedule:
     emission_done=None
     shuffle=False):
     """
-    def __init__ (self,djobj,scheduledatetime,media,length=None,type=None,emission_done=None,shuffle=False):
+    def __init__ (self,djobj,scheduledatetime,media,length=None,type=None,emission_done=None,shuffle=False,maxlength=None):
         """
         init of schedule object:
         """
@@ -33,6 +33,7 @@ class schedule:
         self.type=type
         self.emission_done=emission_done
         self.shuffle=shuffle
+        self.maxlength=maxlength
 
 
     def __cmp__ (self, b):
@@ -225,10 +226,11 @@ class schedules(list):
             media = playlist.ar_filename
             scheduledatetime=playlist.ar_scheduledatetime
             length=playlist.ar_length
+            maxlength=playlist.length
             emission_done=playlist.ar_emission_done
             shuffle=playlist.ar_shuffle
             #print scheduledatetime,media,length,emission_done
-            self.append(schedule(playlist,scheduledatetime,media,length,"playlist",emission_done,shuffle))
+            self.append(schedule(playlist,scheduledatetime,media,length,"playlist",emission_done,shuffle,maxlength))
 
 
         jingles=gest_jingle(now,minelab)

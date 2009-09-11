@@ -130,7 +130,7 @@ class gest_playlist:
 #            	playlist.ar_length=3600
 
             playlist.ar_length=playlist.length
-            if  playlist.ar_length is None : playlist.ar_length=3600*24
+            if  playlist.ar_length is None : playlist.ar_length=3600*24-1
 
             playlist.ar_shuffle=playlist.shuffle
 
@@ -173,7 +173,7 @@ class gest_playlist:
 #            	playlist.ar_length=3600
 
             playlist.ar_length=playlist.length
-            if  playlist.ar_length is None : playlist.ar_length=3600*24
+            if  playlist.ar_length is None : playlist.ar_length=3600*24-1
             playlist.ar_shuffle=playlist.shuffle
 
             yield playlist

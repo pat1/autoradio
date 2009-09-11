@@ -37,8 +37,9 @@ mutagen
 muatgen version > 1.17
 http://code.google.com/p/mutagen/
 
-at this time (27-08-2009) you can obtain it only with svn:
+at this time (11-09-2009) you can obtain it only with svn:
 svn checkout http://mutagen.googlecode.com/svn/trunk/ mutagen
+You can get also some tar and rpm from autoradio project home page 
 
 django
 http://www.djangoproject.com/
@@ -47,9 +48,15 @@ I suggest Django 1.1
 pyxmms
 http://people.via.ecp.fr/~flo/index.en.xhtml
 
-cherrypy
+cherrypy2
 Summary     : A pythonic, object-oriented web development framework
 URL         : http://www.cherrypy.org/
+Thera are incompatibility from cherrypy version 2 and 3
+If you have a recent distribution and have installed egg files for
+cherrypy2 compatibility package (like Fedora) autoradio try to get
+the correct version of cherrypy
+Otherwise you have to patch xmmsweb.py
+
 
 configobj
 Summary     : Config file reading, writing, and validation

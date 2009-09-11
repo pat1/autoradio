@@ -2,16 +2,24 @@
 # coding=utf-8
 
 """
-The most basic (working) CherryPy application possible.
+Show xmms playlist on a simple web server.
 """
-
-import cherrypy
-import xmms
-import datetime
 
 session=0         # sessione di xmms
 maxplele=100      # massimo numero di elementi della playlist
 iht=False         # emetti header e tail
+port=8888         # port for server
+
+try:
+    import sys,glob
+    from distutils.sysconfig import get_python_lib
+    compatCherryPyPath = glob.glob( get_python_lib()+"/CherryPy-2.*").pop()
+    sys.path.insert(0, compatCherryPyPath)
+finally:
+    import cherrypy
+
+import xmms
+import datetime
 
 
 head='''
@@ -134,7 +142,7 @@ def start_http_server():
     #pid = os.fork()
     settings = { 
         'global': {
-            'server.socket_port' : 8888,
+            'server.socket_port' : port,
             'server.socket_host': "",
             'server.socket_file': "",
             'server.socket_queue_size': 5,

@@ -4,7 +4,7 @@
 1)")}
 
 %define name autoradio
-%define version 1.1
+%define version 1.1.1
 %define unmangled_version 1.0
 %define release 1
 
@@ -20,6 +20,7 @@ Prefix: %{_prefix}
 BuildArch: noarch
 Vendor: Paolo Patruno <p.patruno@iperbole.bologna.it>
 Url: http://autoradiobc.sf.net
+requires:python-mutagen >= 1.17, pyxmms, Django >= 1.0.3 , python-cherrypy2 , python-configobj
 
 %description
 \ 

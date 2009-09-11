@@ -129,7 +129,7 @@ class gest_jingle:
             	jingle.ar_length=mutagen.File(jingle.ar_filename).info.length
                 logging.debug("JINGLE: time length: %s",jingle.ar_length)
 	    except:
-                logging,error("JINGLE: error establish time length; use an estimation %s", jingle.ar_filename)
+                logging.error("JINGLE: error establish time length; use an estimation %s", jingle.ar_filename)
             	jingle.ar_length=30
 
             yield jingle

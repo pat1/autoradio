@@ -1,3 +1,7 @@
+# Compile options:
+# --with cherrypy          : do not need cherrypy2
+
+
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()"
 )}
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(
@@ -5,14 +9,13 @@
 
 %define name autoradio
 %define version 1.1.1
-%define unmangled_version 1.0
-%define release 1
+%define release 15%{?dist}
 
 Summary: radio automation software
 Name: %{name}
 Version: %{version}
 Release: %{release}
-Source0: %{name}-%{unmangled_version}.tar.gz
+Source0: %{name}-%{version}.tar.gz
 License: GNU GPL v2
 Group: Development/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -20,7 +23,14 @@ Prefix: %{_prefix}
 BuildArch: noarch
 Vendor: Paolo Patruno <p.patruno@iperbole.bologna.it>
 Url: http://autoradiobc.sf.net
-requires:python-mutagen >= 1.17, pyxmms, Django >= 1.0.3 , python-cherrypy2 , python-configobj
+BuildRequires: python-configobj
+Requires:python-mutagen >= 1.17, pyxmms, Django >= 1.0.3 , python-configobj
+%if 0%{?fedora} < 10
+##%if 0%{?_with_}
+Requires: python-cherrypy
+%else
+Requires: python-cherrypy2
+%endif
 
 %description
 \ 
@@ -33,7 +43,7 @@ User inteface: WEB interface to monitor the player and scheduler and admin the s
 
 
 %prep
-%setup -n %{name}-%{unmangled_version} -n %{name}-%{unmangled_version}
+%setup -n %{name}-%{version} -n %{name}-%{version}
 
 %build
 %{__python} setup.py build

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# modified by Paolo Patruno September 2009
+
 ## Copyright 1999-2009 by LivingLogic AG, Bayreuth/Germany
 ## Copyright 1999-2009 by Walter Dörwald
 ##
@@ -156,7 +158,7 @@ class Daemon(object):
 	The :class:`Daemon` class provides methods for starting and stopping a
 	daemon process as well as handling command line arguments.
 	"""
-	def __init__(self, stdin="/dev/null", stdout="/dev/null", stderr="/dev/null", pidfile=None, user=None, group=None):
+	def __init__(self, stdin="/dev/null", stdout="/dev/null", stderr="/dev/null", pidfile=None, user=None, group=None,display=None):
 		"""
 		The :var:`stdin`, :var:`stdout`, and :var:`stderr` arguments are file
 		names that will be opened and be used to replace the standard file
@@ -175,6 +177,26 @@ class Daemon(object):
 
 		In the same way :var:`group` can be the name or gid of a group.
 		:meth:`start` will switch to this group.
+
+		:display: set the DISPLAY environment variable 
+
+		setting the DISPLAY to :0.0 pre-supposes that you're
+		sitting at the main display or at least that the main
+		display is logged on to your user id. If it's not
+		logged on, or it's a different userid, this will fail.
+
+		If you're coming in from another machine, and you're
+		at the main display of that machine and it's running
+		X, then you can use "ssh -X hostname" to connect to
+		that host, and ssh will forward the X display
+		back. ssh will also make sure that the DISPLAY
+		environment variable is set correctly (providing it
+		isn't being messed with in the various dot files I
+		mentioned above). In a "ssh -X" session, the DISPLAY
+		environment variable will have a value like
+		"localhost:11.0", which will point to the socket that
+		ssh is tunnelling to your local box.
+
 		"""
 		options = dict(
 			stdin=stdin,
@@ -183,6 +205,7 @@ class Daemon(object):
 			pidfile=pidfile,
 			user=user,
 			group=group,
+			display=display,
 		)
 
 		self.options = optparse.Values(options)
@@ -216,7 +239,7 @@ class Daemon(object):
 				pass
 		sys.exit(0)
 
-	def switchuser(self, user, group):
+	def switchuser(self, user, group, display):
 		"""
 		Switch the effective user and group. If :var:`user` and :var:`group` are
 		both :const:`None` nothing will be done. :var:`user` and :var:`group`
@@ -226,13 +249,16 @@ class Daemon(object):
 		if group is not None:
 			if isinstance(group, basestring):
 				group = grp.getgrnam(group).gr_gid
-			os.setegid(group)
+			os.setgid(group)
 		if user is not None:
 			if isinstance(user, basestring):
 				user = pwd.getpwnam(user).pw_uid
-			os.seteuid(user)
+			os.setuid(user)
 			if "HOME" in os.environ:
 				os.environ["HOME"] = pwd.getpwuid(user).pw_dir
+		if display is not None:
+			os.putenv("DISPLAY", display)
+
 
 	def start(self):
 		"""
@@ -267,7 +293,7 @@ class Daemon(object):
 		# Now I am a daemon!
 	
 		# Switch user
-		self.switchuser(self.options.user, self.options.group)
+		self.switchuser(self.options.user, self.options.group, self.options.display)
 
 		# Redirect standard file descriptors (will belong to the new user)
 		self.openstreams()
@@ -312,6 +338,8 @@ class Daemon(object):
 		p.add_option("--stderr", dest="stderr", help="stderr filename (default %default)", default=self.options.stderr)
 		p.add_option("--user", dest="user", help="user name or id (default %default)", default=self.options.user)
 		p.add_option("--group", dest="group", help="group name or id (default %default)", default=self.options.group)
+
+		p.add_option("--display", dest="display", help="DISPLAY envarioment variable(default %default)", default=self.options.display)
 		return p
 
 	def service(self, args=None):
@@ -338,9 +366,11 @@ class Daemon(object):
 		if self.args[1] == "run":
 			return True
 		elif self.args[1] == "restart":
-			self.stop()
-			self.start()
-			return True
+			try:
+				self.stop()
+			finally:
+				self.start()
+				return True
 		elif self.args[1] == "start":
 			self.start()
 			return True

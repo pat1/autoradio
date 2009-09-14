@@ -35,6 +35,7 @@ configspec['autoradioweb']['errfile']  = "string(default='/tmp/autoradioweb.err'
 configspec['autoradioweb']['lockfile'] = "string(default='/tmp/autoradioweb.lock')"
 configspec['autoradioweb']['user']     = "string(default=None)"
 configspec['autoradioweb']['group']    = "string(default=None)"
+configspec['autoradioweb']['port']    = "string(default='8080')"
 
 
 configspec['database']={}
@@ -96,7 +97,7 @@ errfileweb              = config['autoradioweb']['errfile']
 lockfileweb             = config['autoradioweb']['lockfile']
 user                    = config['autoradioweb']['user']
 group                   = config['autoradioweb']['group']
-
+port                    = config['autoradioweb']['port']
 
 # section database
 DATABASE_USER     = config['database']['DATABASE_USER']        

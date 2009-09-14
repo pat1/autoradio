@@ -45,7 +45,7 @@ def main(cwd):
     os.chdir(cwd)
 
     setup_environ(autoradio.settings)
-    management.call_command("runserver",'8080')
+    management.call_command("runserver",autoradio.settings.port)
 
 
 

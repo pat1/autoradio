@@ -21,9 +21,8 @@ configspec['autoradiod']['locale']        = "string(default='it_IT.UTF-8')"
 configspec['autoradiod']['user']          = "string(default=None)"
 configspec['autoradiod']['group']         = "string(default=None)"
 
-configspec['autoradiod'][env]=None
-#configspec['autoradiod'][env]={}
-#configspec['autoradiod'][env]['display']       = "string(default=':0.0')"
+configspec['autoradiod']['env']={}
+#configspec['autoradiod']['env']['display']       = "string(default=':0.0')"
 
 config    = ConfigObj ('/etc/autoradio/autoradio-site.cfg',file_error=False,configspec=configspec)
 

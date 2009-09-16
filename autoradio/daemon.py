@@ -187,10 +187,10 @@ class Daemon(object):
 			stderr=stderr,
 			pidfile=pidfile,
 			user=user,
-			group=group,
-			env=env,
+			group=group
 		)
 
+		self.env=env
 		self.options = optparse.Values(options)
 
 	def openstreams(self):
@@ -281,7 +281,7 @@ class Daemon(object):
 		# Now I am a daemon!
 	
 		# Switch user
-		self.switchuser(self.options.user, self.options.group, self.options.env)
+		self.switchuser(self.options.user, self.options.group, self.env)
 
 		# Redirect standard file descriptors (will belong to the new user)
 		self.openstreams()

@@ -33,7 +33,7 @@ autoradiod = daemon.Daemon(
         stderr="/dev/null",
         pidfile=lockfile,
         user=user,
-        group=group
+        group=group,
         env=env
 )
 

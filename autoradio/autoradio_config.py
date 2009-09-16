@@ -20,7 +20,10 @@ configspec['autoradiod']['minsched']      = "integer(3,20,default=5)"
 configspec['autoradiod']['locale']        = "string(default='it_IT.UTF-8')"
 configspec['autoradiod']['user']          = "string(default=None)"
 configspec['autoradiod']['group']         = "string(default=None)"
-configspec['autoradiod']['display']       = "string(default=':0.0')"
+
+configspec['autoradiod'][env]=None
+#configspec['autoradiod'][env]={}
+#configspec['autoradiod'][env]['display']       = "string(default=':0.0')"
 
 config    = ConfigObj ('/etc/autoradio/autoradio-site.cfg',file_error=False,configspec=configspec)
 
@@ -58,6 +61,7 @@ minelab       = config['autoradiod']['minelab']
 minsched      = config['autoradiod']['minsched']
 user          = config['autoradiod']['user']
 group         = config['autoradiod']['group']
+env           = config['autoradiod']['env']
 
 import locale
 locale.setlocale(locale.LC_ALL, config['autoradiod']['locale'])

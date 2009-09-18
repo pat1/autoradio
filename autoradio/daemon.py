@@ -211,6 +211,16 @@ class Daemon(object):
 		"""
 		self.openstreams()
 
+		for proc in self.procs:
+			print "invio segnale:",signum, " a:",proc.pid
+
+			try:
+				proc.send_signal(signum)
+
+			except:
+				pass
+
+
 	def handlesigterm(self, signum, frame):
 		"""
 		Handle a ``SIG_TERM`` signal: Remove the pid file and exit.
@@ -220,6 +230,18 @@ class Daemon(object):
 				os.remove(self.options.pidfile)
 			except Exception:
 				pass
+
+		for proc in self.procs:
+			print "invio segnale:",signum, " a:",proc.pid
+
+			try:
+				#proc.kill()                       # do not work
+				#proc.send_signal(signum)          # do not work
+				os.kill(proc.pid,signal.SIGTERM)
+
+			except:
+				pass
+
 		sys.exit(0)
 
 	def switchuser(self, user, group, env):

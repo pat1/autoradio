@@ -192,6 +192,7 @@ class Daemon(object):
 
 		self.env=env
 		self.options = optparse.Values(options)
+		self.procs=()
 
 	def openstreams(self):
 		"""
@@ -209,22 +210,24 @@ class Daemon(object):
 		"""
 		Handle a ``SIG_HUP`` signal: Reopen standard file descriptors.
 		"""
+		import subprocess
+
 		self.openstreams()
 
 		for proc in self.procs:
-			print "invio segnale:",signum, " a:",proc.pid
+			if (isinstance(proc,subprocess.Popen)):
+				#proc.send_signal(signum)     # work in py ver 2.6
+				os.kill(proc.pid,signum)
 
-			try:
-				proc.send_signal(signum)
-
-			except:
-				pass
-
+			if (isistance(proc,int)):
+				os.kill(proc,signum)
 
 	def handlesigterm(self, signum, frame):
 		"""
 		Handle a ``SIG_TERM`` signal: Remove the pid file and exit.
 		"""
+		import subprocess
+
 		if self.options.pidfile is not None:
 			try:
 				os.remove(self.options.pidfile)
@@ -232,15 +235,12 @@ class Daemon(object):
 				pass
 
 		for proc in self.procs:
-			print "invio segnale:",signum, " a:",proc.pid
+			if (isinstance(proc,subprocess.Popen)):
+				#proc.send_signal(signum)     # work in py ver 2.6
+				os.kill(proc.pid,signum)
 
-			try:
-				#proc.kill()                       # do not work
-				#proc.send_signal(signum)          # do not work
-				os.kill(proc.pid,signal.SIGTERM)
-
-			except:
-				pass
+			if (isinstance(proc,int)):
+				os.kill(proc,signum)
 
 		sys.exit(0)
 

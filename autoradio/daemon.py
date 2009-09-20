@@ -122,28 +122,46 @@ __ http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/66012
 
 An example script might look like this::
 
-	from ll import daemon
 
-	counter = daemon.Daemon(
-		stdin="/dev/null",
-		stdout="/tmp/daemon.log",
-		stderr="/tmp/daemon.log",
-		pidfile="/var/run/counter/counter.pid",
-		user="nobody"
-	)
+from autoradio import daemon
 
-	if __name__ == "__main__":
-		if counter.service():
-			import sys, os, time
-			sys.stdout.write("Daemon started with pid %d\n" % os.getpid())
-			sys.stdout.write("Daemon stdout output\n")
-			sys.stderr.write("Daemon stderr output\n")
-			c = 0
-			while True:
-				sys.stdout.write('%d: %s\n' % (c, time.ctime(time.time())))
-				sys.stdout.flush()
-				c += 1
-				time.sleep(1)
+tmp = daemon.Daemon(
+        stdin="/dev/null",
+        stdout="/tmp/tmp.log",
+        stderr="/tmp/tmp.err",
+        pidfile="/tmp/tmp.lock",
+#        user=user,
+#        group=group,
+#        env=env
+)
+
+
+def main(self):
+
+    import subprocess
+    self.procs=[subprocess.Popen(["sleep","60"],cwd=self.cwd)]
+    self.procs.append(subprocess.Popen(["sleep","130"],cwd=self.cwd))
+    
+if __name__ == '__main__':
+
+    import sys, os
+
+    tmp.cwd=os.getcwd()
+
+    if tmp.service():
+
+        sys.stdout.write("Daemon started with pid %d\n" % os.getpid())
+        sys.stdout.write("Daemon stdout output\n")
+        sys.stderr.write("Daemon stderr output\n")
+
+        main(tmp)  # (this code was run as script)
+
+        for proc in tmp.procs:
+            proc.wait()
+
+        sys.exit(0)
+    
+
 """
 
 

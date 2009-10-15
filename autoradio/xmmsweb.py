@@ -10,17 +10,18 @@ maxplele=100      # massimo numero di elementi della playlist
 iht=False         # emetti header e tail
 port=8888         # port for server
 
-try:
-    import sys,glob
-    from distutils.sysconfig import get_python_lib
-    compatCherryPyPath = glob.glob( get_python_lib()+"/CherryPy-2.*").pop()
-    sys.path.insert(0, compatCherryPyPath)
-finally:
-    import cherrypy
+#try:
+#    import sys,glob
+#    from distutils.sysconfig import get_python_lib
+#    compatCherryPyPath = glob.glob( get_python_lib()+"/CherryPy-2.*").pop()
+#    sys.path.insert(0, compatCherryPyPath)
+#finally:
+
+import cherrypy
+cpversion3=cherrypy.__version__.startswith("3")
 
 import xmms
 import datetime
-
 
 head='''
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -62,8 +63,15 @@ class HomePage:
 #        return htmlresponse
 #    Main.exposed = True
     
+    def test(self):
+        "return test page"
+        return "Test Page"
+            
+    test.exposed = True
+
     def status(self):
         "return xmms status"
+
         ok=xmms.control.is_playing(0)
         if ok:
             return "xmms is playing"
@@ -130,11 +138,6 @@ class HomePage:
             
     index.exposed = True
 
-# CherryPy always starts with cherrypy.root when trying to map request URIs
-# to objects, so we need to mount a request handler object here. A request
-# to '/' will be mapped to cherrypy.root.index().
-cherrypy.root = HomePage()
-
 
 
 def start_http_server():
@@ -155,15 +158,27 @@ def start_http_server():
             'server.environment': "production"
             },
         }
-    cherrypy.config.update(settings)
-    cherrypy.server.start()
 
 
+# CherryPy always starts with cherrypy.root when trying to map request URIs
+# to objects, so we need to mount a request handler object here. A request
+# to '/' will be mapped to cherrypy.root.index().
+
+    if (cpversion3):
+        cherrypy.quickstart(HomePage(),config=settings)
+
+    else:
+        cherrypy.config.update(settings)
+        cherrypy.root = HomePage()
+        cherrypy.server.start()
 
 
 if __name__ == '__main__':
+
+    # Set the signal handler
+    #import signal
+    #signal.signal(signal.SIGINT, signal.SIG_IGN)
+
     # Start the CherryPy server.
-
     start_http_server()
-
 

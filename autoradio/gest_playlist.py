@@ -12,7 +12,7 @@ from playlists.models import PeriodicSchedule
 from playlists.models import Schedule
 from playlists.models import Playlist
 
-if amarok :
+if (player == "amarok") :
     from autoradiod import amarok
 
 import os,calendar
@@ -110,7 +110,7 @@ class gest_playlist:
 
             # amarok vuole il nome della playlist che deve gia' esistere del suo elenco
             # gli altri vogliono il file della playlist
-            if (amarok):
+            if (player == "amarok"):
                 playlist.ar_filename=playlist.playlist.playlist
             else:
                 playlist.ar_filename=playlist.playlist.file.path
@@ -143,7 +143,7 @@ class gest_playlist:
 
             # amarok vuole il nome della playlist che deve gia' esistere del suo elenco
             # gli altri vogliono il file della playlist
-            if (amarok):
+            if (player == "amarok"):
                 playlist.ar_filename=playlist.playlist.playlist
             else:
                 playlist.ar_filename=playlist.playlist.file.path

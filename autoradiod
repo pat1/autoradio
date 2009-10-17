@@ -37,14 +37,23 @@ autoradiod = daemon.Daemon(
         env=env
 )
 
-from datetime import *
-from time import *
 from autoradio.autoradio_core import *
-if (amarok) :
+
+if (player == "amarok") :
     from autoradio.manageamarok import *
-else:
+
+elif (player == "xmms"):
     #    from managepytone import *
     from autoradio.managexmms import *
+    from autoradio.xmmsweb import *
+
+elif (player == "audacious"):
+    from autoradio.manageaudacious import *
+    from autoradio.audaciousweb import *
+
+else:
+    logging.error('wrong player %s' % player)
+    raise import_error
 
 
 def main(cwd):
@@ -52,11 +61,11 @@ def main(cwd):
     import logging,os,sys,errno,signal,time,logging.handlers
     import subprocess
     import thread
+    import  datetime
+    import  time
     #from threading import *
 
     os.chdir(cwd)
-
-    import autoradio.xmmsweb
 
     #def signalhandler(signum, frame):
     #    logging.info( 'Signal handler called with signal %d', signum)
@@ -76,7 +85,7 @@ def main(cwd):
     #signal.signal(signal.SIGALRM, signalhandler)
 
     f = open(timestampfile, "w")
-    f.write(str(datetime.now()))
+    f.write(str(datetime.datetime.now()))
     f.close()
 
     #we want to run a single process
@@ -87,11 +96,11 @@ def main(cwd):
       # time constant
 
       # this is the first and last time that I set now with the current time
-      now=datetime.now()
+      now=datetime.datetime.now()
 
       first = True
 
-      if (amarok) :
+      if (player == "amarok") :
           kapp=KdeInit()
           function=ManageAmarok
           ok=amarok_watchdog(kapp)
@@ -104,7 +113,7 @@ def main(cwd):
           #t = Timer(5.0, xmmsweb.start_http_server)
           #t.start()
 
-          t = thread.start_new_thread(autoradio.xmmsweb.start_http_server,())
+          t = thread.start_new_thread(start_http_server,())
           #os.system("python xmmsweb.py&")
           #p = subprocess.Popen("xmmsweb.py")
 
@@ -156,7 +165,7 @@ def main(cwd):
                   #print "ora schedulata", scheduledatetime
                   #print "ora attuale", datetime.now()
 
-                  if (amarok) :
+                  if (player == "amarok") :
                       threadschedule=ScheduleProgram(kapp,function,operation,media,scheduledatetime,obj)
                   else:
                       #threadschedule=ScheduleProgram(session,function,operation,media,scheduledatetime,obj,shuffle,length)
@@ -169,9 +178,9 @@ def main(cwd):
           sleepsec=minsched/5.*60.
 
           #now I advance minsched and wait the right time to proced
-          now=now+timedelta(0,60*minsched)
-          while ( datetime.now() < now):
-              if (amarok):
+          now=now+datetime.timedelta(0,60*minsched)
+          while ( datetime.datetime.now() < now):
+              if (player == "amarok"):
                   ok=save_status(kapp)
 
               else:
@@ -180,13 +189,13 @@ def main(cwd):
               if ( ok ) :
 
                   f = open(timestampfile, "w")
-                  f.write(str(datetime.now()))
+                  f.write(str(datetime.datetime.now()))
                   f.close()
 
               logging.debug ( "sleeping for %s seconds:%s  %d",sleepsec,__name__,os.getpid())
 
               #signal.alarm(0)
-              sleep (sleepsec)
+              time.sleep (sleepsec)
 
               #os.system("sleep 60")
               #target = time.time()
@@ -198,10 +207,12 @@ def main(cwd):
               #logging.debug ( "wake up: %s  %d",__name__,os.getpid() )
 
           #sometime adjust playlist (will be deleted)
-          if (amarok) :
+          if (player == "amarok"):
               ok=amarok_watchdog(kapp)
-          else:
+          elif (player == "xmms"):
               ok=xmms_watchdog(session)
+          elif (player == "audacious"):
+              ok=audacious_watchdog(session)
 
 
     except:

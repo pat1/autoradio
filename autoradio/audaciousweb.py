@@ -28,18 +28,6 @@ import dbus
 
 bus = dbus.SessionBus()
 
-root_obj      = bus.get_object("org.atheme.audacious", '/')
-player_obj    = bus.get_object("org.atheme.audacious", '/Player')
-tracklist_obj = bus.get_object("org.atheme.audacious", '/TrackList')
-org_obj       = bus.get_object("org.atheme.audacious", '/org/atheme/audacious')
-
-root      = dbus.Interface(root_obj,      dbus_interface='org.freedesktop.MediaPlayer')
-player    = dbus.Interface(player_obj,    dbus_interface='org.freedesktop.MediaPlayer')
-tracklist = dbus.Interface(tracklist_obj, dbus_interface='org.freedesktop.MediaPlayer')
-org       = dbus.Interface(org_obj, dbus_interface='org.atheme.audacious')
-
-#---------------------------------
-
 head='''
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -89,6 +77,15 @@ class HomePage:
     def status(self):
         "return xmms status"
 
+        try:
+            # ---------------------------------
+            org_obj       = bus.get_object("org.atheme.audacious", '/org/atheme/audacious')
+            org       = dbus.Interface(org_obj, dbus_interface='org.atheme.audacious')
+            # ---------------------------------
+        except:
+
+            return "error intializing dbus"
+
         if (org.Playing()):
             return "audacious is playing"
         else:
@@ -99,11 +96,30 @@ class HomePage:
 
     def index(self):
         "return xmms playlist"
+
+
         if (iht) :
             htmlresponse=head
         else:
             htmlresponse=""
-    
+
+
+        try:
+            # -----------------------------------------------------------
+            root_obj      = bus.get_object("org.atheme.audacious", '/')
+            player_obj    = bus.get_object("org.atheme.audacious", '/Player')
+            tracklist_obj = bus.get_object("org.atheme.audacious", '/TrackList')
+            org_obj       = bus.get_object("org.atheme.audacious", '/org/atheme/audacious')
+
+            root      = dbus.Interface(root_obj,      dbus_interface='org.freedesktop.MediaPlayer')
+            player    = dbus.Interface(player_obj,    dbus_interface='org.freedesktop.MediaPlayer')
+            tracklist = dbus.Interface(tracklist_obj, dbus_interface='org.freedesktop.MediaPlayer')
+            org       = dbus.Interface(org_obj, dbus_interface='org.atheme.audacious')
+            # -----------------------------------------------------------
+        except:
+
+            return "error intializing dbus"
+
         try:
             cpos=int(tracklist.GetCurrentTrack())
 
@@ -126,12 +142,24 @@ class HomePage:
                 htmlresponse+='<tr>'
                 metadata=tracklist.GetMetadata(pos)
 
-                file=metadata["URI"]
-                title=metadata["title"]
-                if title=="":
+                try:
+                    file=metadata["URI"]
+                except:
+                    file=None
+                try:
+                    title=metadata["title"]
+                    if title=="":
+                        title=None
+                except:
                     title=None
-                mtimelength=metadata["length"]
-                mtimeposition=player.PositionGet()
+                try:
+                    mtimelength=metadata["length"]
+                except:
+                    mtimelength=None
+                try:
+                    mtimeposition=player.PositionGet()
+                except:
+                    mtimeposition=None
 
                 timelength=datetime.timedelta(seconds=datetime.timedelta(milliseconds=mtimelength).seconds)
                 timeposition=datetime.timedelta(seconds=datetime.timedelta(milliseconds=mtimeposition).seconds)

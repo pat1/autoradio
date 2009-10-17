@@ -47,7 +47,13 @@ for entry in flatten_errors(config, test):
     raise error
 
 # to use the amarok player (obsolete)
-amarok=False
+#player="amarok"
+
+#this work on old systems
+#player="xmms"
+
+#on last distributions
+player="audacious"
 
 # section autoradiod
 playlistdir   = config['autoradiod']['playlistdir']

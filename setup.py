@@ -98,7 +98,7 @@ data_files.append(('/etc/autoradio',['autoradio-site.cfg']))
 
 
 setup(name='autoradio',
-      version='1.2.0',
+      version='1.3.0',
       description='radio automation software',
       author='Paolo Patruno',
       author_email='p.patruno@iperbole.bologna.it',

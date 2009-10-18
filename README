@@ -1,11 +1,11 @@
-= AutoRadio version 1.0 =
+= AutoRadio version 1.3 =
 http://autoradiobc.sourceforge.net/
 
 Radio automation software. Simple to use, starting from digital audio
 files manages on-air broadcasting over a radio-station or
 web-radio. The main components are:
 
-    * Player (Xmms): plays all your media files and send digital sound
+    * Player (Xmms/Audacious): plays all your media files and send digital sound
       to an audio device or audio server
  
     * Scheduler: real time manager for emission of special audio files
@@ -16,7 +16,7 @@ web-radio. The main components are:
       admin the schedules for the complete control over your station
       format
 
-Developed with Python, Django, Xmms it works in an production enviroment
+Developed with Python, Django, dbus it works in an production enviroment
 
 
 FEATURES
@@ -31,13 +31,20 @@ FEATURES
 REQUIRES
 --------
 
+Autoradio try to work on old distribution like fedora 8 with xmms and 
+cherrypy2 
+On more recent ditrubution I suggest audacious version >= 1.5 and cherypy3
+
 autoradio requires:
 
+python >= 2.5
+
 mutagen
-muatgen version > 1.17
+muatgen version >= 1.17
 http://code.google.com/p/mutagen/
 
-at this time (11-09-2009) you can obtain it only with svn:
+you can obtain it:
+http://code.google.com/p/mutagen/downloads/list
 svn checkout http://mutagen.googlecode.com/svn/trunk/ mutagen
 You can get also some tar and rpm from autoradio project home page 
 
@@ -45,25 +52,32 @@ django
 http://www.djangoproject.com/
 I suggest Django 1.1
 
-pyxmms
-http://people.via.ecp.fr/~flo/index.en.xhtml
-
-cherrypy2
+cherrypy
 Summary     : A pythonic, object-oriented web development framework
 URL         : http://www.cherrypy.org/
 Thera are incompatibility from cherrypy version 2 and 3
-If you have a recent distribution and have installed egg files for
-cherrypy2 compatibility package (like Fedora) autoradio try to get
-the correct version of cherrypy
-Otherwise you have to patch xmmsweb.py
-
+but autoradio works well with any version :)
 
 configobj
 Summary     : Config file reading, writing, and validation
 URL         : http://www.voidspace.org.uk/python/configobj.html
 
-xmms
-http://www.xmms.org/
+
+Player (xmms or audacious in alternative):
+
+  for xmms player
+    pyxmms
+    http://people.via.ecp.fr/~flo/index.en.xhtml
+
+    xmms
+    http://www.xmms.org/
+
+  for audacious player version >= 1.5
+    dbus-python   D-Bus Python Bindings
+    http://www.freedesktop.org/software/dbus/
+
+    audacious
+    http://audacious-media-player.org/
 
 
 HOW TO INSTALL
@@ -78,9 +92,10 @@ change your preferred language and other preference in autoradio.cfg
 
 You have to respond to some question to setup database.
 
-This star daemon autoradiod (that launch xmms and xmmsweb) 
-and webserver on port 8080
-xmmsweb respond on port 8888
+This star:
+daemon autoradiod (that launch xmms/audacious ) 
+the player web server respond on port 8888
+autoradio webserver on port 8080
 
 You have to use a browser pointing to localhost:8080
 
@@ -101,7 +116,7 @@ django-admin.py syncdb --settings=settings --pythonpath=/usr/lib/python<your pyt
 autoradiod run
 autoradioweb run
 
-You can run autoradiod and xmms in one host and autoradioweb in other if
+You can run autoradiod and xmms/audacious in one host and autoradioweb in other if
 you use client server DB like mysql and specify where autoradiod is
 running in .cfg files
 
@@ -113,9 +128,9 @@ http://docs.djangoproject.com/en/dev/howto/deployment/modpython/#howto-deploymen
 HOW IT WORKS
 ------------
 
-in xmms playlist you need a queue of media for a minumun of some hours
-and for this you have to program some playlist
-xmms cannot stay stopped or paused (if stopped it will be started, if paused it stay paused) for a corret work.
+In player playlist you need a queue of media for a minumun of some hours
+and for this you have to program some playlist.
+Player cannot stay stopped or paused (if stopped it will be started, if paused it stay paused) for a corret work.
 When time will be right jingle, programs and spots will be placed in playlist the first position after the last file inserted before by autoradiod 
 
 
@@ -146,7 +161,7 @@ Autoradio è una suite di programmi che partendo da file audio digitali permette 
 
 queste sono le componenti:
 
-    * Player: partendo da una playlist Ã¨ in grado di gestire differenti formati di audio digitali per poi inviare il suono o a una scheda audio o a un server audio
+    * Player: partendo da una playlist è in grado di gestire differenti formati di audio digitali per poi inviare il suono o a una scheda audio o a un server audio
     * Scheduler: gestisce in tempo reale l'emissione di particolari file
-          o audio quali i jingles, pubblicitÃ , playlist e programmi; interagisce col player controllandolo e impartendo comandi 
+          o audio quali i jingles, pubblicità, playlist e programmi; interagisce col player controllandolo e impartendo comandi 
     * L'intefaccia utente: utilizzando una interfaccia WEB pemette il monitoraggio dello scheduler e del player e permette la programmazione del palinsesto

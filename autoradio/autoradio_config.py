@@ -9,6 +9,7 @@ configspec={}
 
 configspec['autoradiod']={}
 
+configspec['autoradiod']['player']        = "string(default='xmms')"
 configspec['autoradiod']['playlistdir']   = "string(default='spots')"
 configspec['autoradiod']['logfile']       = "string(default='/tmp/autoradio.log')"
 configspec['autoradiod']['lockfile']      = "string(default='/tmp/autoradio.lock')"
@@ -46,6 +47,8 @@ for entry in flatten_errors(config, test):
     print section_string, ' = ', error
     raise error
 
+# section autoradiod
+
 # to use the amarok player (obsolete)
 #player="amarok"
 
@@ -53,9 +56,9 @@ for entry in flatten_errors(config, test):
 #player="xmms"
 
 #on last distributions
-player="audacious"
+#player="audacious"
 
-# section autoradiod
+player        = config['autoradiod']['player']
 playlistdir   = config['autoradiod']['playlistdir']
 logfile       = config['autoradiod']['logfile']
 lockfile      = config['autoradiod']['lockfile']

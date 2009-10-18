@@ -42,7 +42,7 @@ elif (player == "audacious"):
 
 else:
     logging.error('wrong player %s' % player)
-    raise import_error
+    raise Exception()
 
 autoradiod = daemon.Daemon(
         stdin="/dev/null",

@@ -158,6 +158,11 @@ class dummy_programma:
 
 def audacious_watchdog(session):
 
+
+   from distutils.version import LooseVersion
+   reqversion=LooseVersion("1.5")
+   version=LooseVersion("0.0")
+
    logging.debug( "audacious_watchdog: test if audacious is running" )
 
    try:
@@ -173,6 +178,19 @@ def audacious_watchdog(session):
       logging.info("audacious_watchdog: launch_audacious")
       aud=autoaudacious.audacious()
 
+   try:
+      # aud.root.Identity()
+      version=LooseVersion(aud.org.Version())
+      logging.info("audacious_watchdog: audacious version: %s" % str(version))
+
+   except:
+      logging.error("audacious_watchdog: eror gettin audacious version")
+      return True
+   
+   if ( version < reqversion ):
+      logging.error("audacious_watchdog: audacious %s version is wrong (>=1.5) " % version )
+      raise Exception
+
    aud.play_ifnot()
    logging.debug("audacious_watchdog: audacious start playing if not")
 
@@ -180,14 +198,12 @@ def audacious_watchdog(session):
 
 
 def save_status(session):
+   """
+   Do nothing
+   """
 
-# file dovra essere prima salvato usando:
-#        xmms.get_playlist_length(session) (restituisce il numero di brani nella playlist
-#        get_playlist_file(index, session=0) -> absolute filename (string)
-#        get_playlist_pos(session=0) -> position (integer)
-
-    logging.debug ( "DUMMY xmms.saveCurrentPlaylist")
-    return True
+   logging.debug ( "DUMMY xmms.saveCurrentPlaylist")
+   return True
 
 
 def main():

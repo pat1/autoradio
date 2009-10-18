@@ -26,17 +26,6 @@
 
 from autoradio.autoradio_config import *
 from autoradio import daemon
-
-autoradiod = daemon.Daemon(
-        stdin="/dev/null",
-        stdout="/dev/null",
-        stderr="/dev/null",
-        pidfile=lockfile,
-        user=user,
-        group=group,
-        env=env
-)
-
 from autoradio.autoradio_core import *
 
 if (player == "amarok") :
@@ -55,14 +44,24 @@ else:
     logging.error('wrong player %s' % player)
     raise import_error
 
+autoradiod = daemon.Daemon(
+        stdin="/dev/null",
+        stdout="/dev/null",
+        stderr="/dev/null",
+        pidfile=lockfile,
+        user=user,
+        group=group,
+        env=env
+)
+
 
 def main(cwd):
 
     import logging,os,sys,errno,signal,time,logging.handlers
     import subprocess
     import thread
-    import  datetime
-    import  time
+    import datetime
+    import time
     #from threading import *
 
     os.chdir(cwd)
@@ -116,6 +115,14 @@ def main(cwd):
           t = thread.start_new_thread(start_http_server,())
           #os.system("python xmmsweb.py&")
           #p = subprocess.Popen("xmmsweb.py")
+
+
+          if (player == "amarok"):
+              ok=amarok_watchdog(kapp)
+          elif (player == "xmms"):
+              ok=xmms_watchdog(session)
+          elif (player == "audacious"):
+              ok=audacious_watchdog(session)
 
       while ( True):
 

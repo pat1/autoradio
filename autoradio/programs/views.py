@@ -28,8 +28,12 @@ def stato(request):
     import urllib2
         
     xmmsweb=""
-    url=urllib2.urlopen("http://"+autoradio.autoradio_config.XMMSHOST+":8888/")
-    for line in url:
-        xmmsweb=xmmsweb+line
+    try:
+        url=urllib2.urlopen("http://"+autoradio.autoradio_config.XMMSHOST+":8888/")
+        for line in url:
+            xmmsweb=xmmsweb+line
+    except:
+        xmmsweb="<p>Error getting player status !!</p>"
+        xmmsweb=xmmsweb+"<p>Start autoradiod or verify settings</p>"
 
     return render_to_response('xmms/index.html', {'xmmsweb': xmmsweb})

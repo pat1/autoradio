@@ -7,7 +7,6 @@ Show audacious playlist on a simple web server.
 
 session=0         # sessione di xmms
 maxplele=100      # massimo numero di elementi della playlist
-iht=True         # emetti header e tail
 port=8888         # port for server
 
 #try:
@@ -68,6 +67,11 @@ class HomePage:
 #        return htmlresponse
 #    Main.exposed = True
     
+
+    def __init__(self,iht):
+        self.iht=iht
+
+
     def test(self):
         "return test page"
         return "Test Page"
@@ -98,7 +102,7 @@ class HomePage:
         "return xmms playlist"
 
 
-        if (iht) :
+        if (self.iht) :
             htmlresponse=head
         else:
             htmlresponse=""
@@ -185,7 +189,7 @@ class HomePage:
         if len > maxplele :
             htmlresponse+="<p>ATTENZIONE: ci sono molti elementi nella playlist e gli ultimi non sono visualizzati</p>"
 
-        if (iht) :
+        if (self.iht) :
             htmlresponse+=tail
         return htmlresponse
             
@@ -193,7 +197,11 @@ class HomePage:
 
 
 
-def start_http_server():
+def start_http_server(iht=False):
+    """
+    start web server to monitor audacious
+    iht=False         # emetti header e tail
+    """
     #import os
     #pid = os.fork()
     settings = { 
@@ -207,8 +215,8 @@ def start_http_server():
             'server.log_file': "/tmp/xmmsweb.log",
             'server.reverse_dns': False,
             'server.thread_pool': 10,
-            'server.environment': "development"
-            #'server.environment': "production"
+            #'server.environment': "development"
+            'server.environment': "production"
             },
         }
 
@@ -222,7 +230,7 @@ def start_http_server():
 
     else:
         cherrypy.config.update(settings)
-        cherrypy.root = HomePage()
+        cherrypy.root = HomePage(iht)
         cherrypy.server.start()
 
 
@@ -233,5 +241,5 @@ if __name__ == '__main__':
     #signal.signal(signal.SIGINT, signal.SIG_IGN)
 
     # Start the CherryPy server.
-    start_http_server()
+    start_http_server(iht=True)
 

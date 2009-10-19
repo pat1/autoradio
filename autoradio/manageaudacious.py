@@ -167,14 +167,13 @@ def audacious_watchdog(session):
 
    try:
       aud=autoaudacious.audacious()
-      logging.debug("audacious_watchdog: is_running return %s", str(ok))
 
    except:
       logging.error("audacious_watchdog: audacious is not running or error on is_running")
       import subprocess
       subprocess.Popen("audacious" , shell=True)
       import time
-      time.sleep(3)
+      time.sleep(5)
       logging.info("audacious_watchdog: launch_audacious")
       aud=autoaudacious.audacious()
 

@@ -1,14 +1,10 @@
-# Compile options:
-# --with cherrypy          : do not need cherrypy2
-
-
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()"
 )}
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(
 1)")}
 
 %define name autoradio
-%define version 1.2.0
+%define version 1.3.1
 %define release 1%{?dist}
 
 Summary: radio automation software
@@ -24,13 +20,21 @@ BuildArch: noarch
 Vendor: Paolo Patruno <p.patruno@iperbole.bologna.it>
 Url: http://autoradiobc.sf.net
 BuildRequires: python-configobj
-Requires:python-mutagen >= 1.17, pyxmms, Django >= 1.0.3 , python-configobj
+Requires:python-mutagen >= 1.17, Django >= 1.0.3 , python-configobj, python-cherrypy
 %if 0%{?fedora} < 10
-##%if 0%{?_with_}
-Requires: python-cherrypy
+Requires: pyxmms, xmms
 %else
-Requires: python-cherrypy2
+Requires: dbus-python,audacious >= 1.5
 %endif
+
+# Compile options:
+# --with cherrypy          : do not need cherrypy2
+##%if 0%{?fedora} < 10
+##%if 0%{?_with_}
+##Requires: python-cherrypy
+##%else
+##Requires: python-cherrypy2
+##%endif
 
 %description
 \ 

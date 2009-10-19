@@ -30,7 +30,7 @@ from django.core.management import setup_environ
 import autoradio.autoradio_config
 
 
-autoradiod = daemon.Daemon(
+autoradioweb = daemon.Daemon(
         stdin="/dev/null",
         stdout=autoradio.settings.logfileweb,
         stderr=autoradio.settings.errfileweb,
@@ -38,6 +38,15 @@ autoradiod = daemon.Daemon(
         user=autoradio.settings.user,
         group=autoradio.settings.group
 )
+
+
+#class  mydaemon(daemon):
+#
+#    def optionparser(self):
+#        op = super(miodaemon, self).optionparser()
+#        op.add_option("-s", "--syncdb",action="store_false")
+#        return op 	  				 
+
 
 def main(cwd):
 
@@ -54,7 +63,10 @@ if __name__ == '__main__':
     import sys, os
     cwd=os.getcwd()
 
-    if autoradiod.service():
+    setup_environ(autoradio.settings)
+    management.call_command("syncdb")
+
+    if autoradioweb.service():
 
         sys.stdout.write("Daemon started with pid %d\n" % os.getpid())
         sys.stdout.write("Daemon stdout output\n")

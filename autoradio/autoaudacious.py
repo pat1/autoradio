@@ -18,15 +18,15 @@ class audacious:
             self.bus = dbus.SessionBus()
 
             # -----------------------------------------------------------
-            root_obj      = self.bus.get_object("org.atheme.audacious", '/')
-            player_obj    = self.bus.get_object("org.atheme.audacious", '/Player')
-            tracklist_obj = self.bus.get_object("org.atheme.audacious", '/TrackList')
-            org_obj       = self.bus.get_object("org.atheme.audacious", '/org/atheme/audacious')
+            root_obj      = self.bus.get_object("org.mpris.audacious", '/')
+            player_obj    = self.bus.get_object("org.mpris.audacious", '/Player')
+            tracklist_obj = self.bus.get_object("org.mpris.audacious", '/TrackList')
+            org_obj       = self.bus.get_object("org.mpris.audacious", '/org/atheme/audacious')
 
             self.root      = dbus.Interface(root_obj,      dbus_interface='org.freedesktop.MediaPlayer')
             self.player    = dbus.Interface(player_obj,    dbus_interface='org.freedesktop.MediaPlayer')
             self.tracklist = dbus.Interface(tracklist_obj, dbus_interface='org.freedesktop.MediaPlayer')
-            self.org       = dbus.Interface(org_obj, dbus_interface='org.atheme.audacious')
+            self.org       = dbus.Interface(org_obj,       dbus_interface='org.atheme.audacious')
             # -----------------------------------------------------------
 
         except:

@@ -26,23 +26,6 @@
 
 from autoradio.autoradio_config import *
 from autoradio import daemon
-from autoradio.autoradio_core import *
-
-if (player == "amarok") :
-    from autoradio.manageamarok import *
-
-elif (player == "xmms"):
-    #    from managepytone import *
-    from autoradio.managexmms import *
-    from autoradio.xmmsweb import *
-
-elif (player == "audacious"):
-    from autoradio.manageaudacious import *
-    from autoradio.audaciousweb import *
-
-else:
-    logging.error('wrong player %s' % player)
-    raise Exception()
 
 autoradiod = daemon.Daemon(
         stdin="/dev/null",
@@ -57,12 +40,31 @@ autoradiod = daemon.Daemon(
 
 def main(cwd):
 
-    import logging,os,sys,errno,signal,time,logging.handlers
+    import logging,os,sys,errno,signal,logging.handlers
     import subprocess
     import thread
     import datetime
-    import time
+    import time as timesleep
     #from threading import *
+    import autoradio.autoradio_core
+
+    if (player == "amarok") :
+        import autoradio.manageamarok as manageplayer 
+
+    elif (player == "xmms"):
+        #    from managepytone import *
+        import autoradio.managexmms as manageplayer
+        import autoradio.xmmsweb as playerweb
+
+    elif (player == "audacious"):
+        import autoradio.manageaudacious as manageplayer
+        import autoradio.audaciousweb as playerweb
+
+    else:
+        logging.error('wrong player %s' % player)
+        raise Exception()
+
+
 
     os.chdir(cwd)
 
@@ -101,7 +103,7 @@ def main(cwd):
 
       if (player == "amarok") :
           kapp=KdeInit()
-          function=ManageAmarok
+          function=manageplayer.ManageAmarok
           ok=amarok_watchdog(kapp)
 
       else:
@@ -112,21 +114,21 @@ def main(cwd):
           #t = Timer(5.0, xmmsweb.start_http_server)
           #t.start()
 
-          t = thread.start_new_thread(start_http_server,())
+          t = thread.start_new_thread(playerweb.start_http_server,())
           #os.system("python xmmsweb.py&")
           #p = subprocess.Popen("xmmsweb.py")
 
 
           if (player == "amarok"):
-              ok=amarok_watchdog(kapp)
+              ok=manageplayer.amarok_watchdog(kapp)
           elif (player == "xmms"):
-              ok=xmms_watchdog(session)
+              ok=manageplayeer.xmms_watchdog(session)
           elif (player == "audacious"):
-              ok=audacious_watchdog(session)
+              ok=manageplayer.audacious_watchdog(session)
 
       while ( True):
 
-          scheds=schedules([])
+          scheds=autoradio.autoradio_core.schedules([])
           for schedule in scheds.get_all_refine(now):
 
               scheduledatetime=schedule.scheduledatetime
@@ -154,7 +156,7 @@ def main(cwd):
 
 
               delta=( scheduledatetime - now)
-              sec=secondi(delta)
+              sec=manageplayer.secondi(delta)
               #schedule for the nest minsched minutes starting from minsched minuti forward
               #if it is the first time I start from minsched minuti in the past
               if (first and ( type == "program" or type == "spot" or type == "playlist")): 
@@ -173,10 +175,10 @@ def main(cwd):
                   #print "ora attuale", datetime.now()
 
                   if (player == "amarok") :
-                      threadschedule=ScheduleProgram(kapp,function,operation,media,scheduledatetime,obj)
+                      threadschedule=manageplayer.ScheduleProgram(kapp,function,operation,media,scheduledatetime,obj)
                   else:
                       #threadschedule=ScheduleProgram(session,function,operation,media,scheduledatetime,obj,shuffle,length)
-                      threadschedule=ScheduleProgram(session,schedule)
+                      threadschedule=manageplayer.ScheduleProgram(session,schedule)
 
                   logging.debug (" %s %s programmed for %s seconds forward", type,media,threadschedule.deltasec)
                   threadschedule.start()
@@ -188,10 +190,10 @@ def main(cwd):
           now=now+datetime.timedelta(0,60*minsched)
           while ( datetime.datetime.now() < now):
               if (player == "amarok"):
-                  ok=save_status(kapp)
+                  ok=manageplayer.save_status(kapp)
 
               else:
-                  ok=save_status(session)
+                  ok=manageplayer.save_status(session)
 
               if ( ok ) :
 
@@ -202,7 +204,7 @@ def main(cwd):
               logging.debug ( "sleeping for %s seconds:%s  %d",sleepsec,__name__,os.getpid())
 
               #signal.alarm(0)
-              time.sleep (sleepsec)
+              timesleep.sleep(sleepsec)
 
               #os.system("sleep 60")
               #target = time.time()
@@ -215,11 +217,11 @@ def main(cwd):
 
           #sometime adjust playlist (will be deleted)
           if (player == "amarok"):
-              ok=amarok_watchdog(kapp)
+              ok=manageplayer.amarok_watchdog(kapp)
           elif (player == "xmms"):
-              ok=xmms_watchdog(session)
+              ok=manageplayer.xmms_watchdog(session)
           elif (player == "audacious"):
-              ok=audacious_watchdog(session)
+              ok=manageplayer.audacious_watchdog(session)
 
 
     except:

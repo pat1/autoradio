@@ -278,6 +278,7 @@ class Daemon(object):
 			if isinstance(user, basestring):
 				user = pwd.getpwnam(user).pw_uid
 			os.setuid(user)
+			os.seteuid(user)
 			if "HOME" in os.environ:
 				os.environ["HOME"] = pwd.getpwuid(user).pw_dir
 

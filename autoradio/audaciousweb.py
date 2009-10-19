@@ -226,7 +226,7 @@ def start_http_server(iht=False):
 # to '/' will be mapped to cherrypy.root.index().
 
     if (cpversion3):
-        cherrypy.quickstart(HomePage(),config=settings)
+        cherrypy.quickstart(HomePage(iht),config=settings)
 
     else:
         cherrypy.config.update(settings)

@@ -19,7 +19,6 @@ port=8888         # port for server
 import cherrypy
 cpversion3=cherrypy.__version__.startswith("3")
 
-import xmms
 import datetime
 
 # ------- dbus interface ---------
@@ -207,7 +206,7 @@ def start_http_server(iht=False):
     settings = { 
         'global': {
             'server.socket_port' : port,
-            'server.socket_host': "",
+            'server.socket_host': "0.0.0.0",
             'server.socket_file': "",
             'server.socket_queue_size': 5,
             'server.protocol_version': "HTTP/1.0",

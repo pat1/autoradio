@@ -109,7 +109,7 @@ setup(name='autoradio',
       scripts=['autoradiod','autoradioweb'],
       data_files = data_files,
       license = "GNU GPL v2",
-      requires= [ "mutagen","django"],
+      requires= [ "mutagen","django","reportlab],
       long_description="""\ 
 AutoRadio Radio automation software. 
 Simple to use, starting from digital audio files manages on-air broadcasting over a radio-station or web-radio. 

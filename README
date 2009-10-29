@@ -2,7 +2,7 @@
 http://autoradiobc.sourceforge.net/
 
 Radio automation software. Simple to use, starting from digital audio
-files manages on-air broadcasting over a radio-station or
+files, manage on-air broadcasting over a radio-station or
 web-radio. The main components are:
 
     * Player (Xmms/Audacious): plays all your media files and send digital sound
@@ -16,7 +16,7 @@ web-radio. The main components are:
       admin the schedules for the complete control over your station
       format
 
-Developed with Python, Django, dbus it works in an production enviroment
+Developed with Python, Django, Dbus it works in an production enviroment
 
 
 FEATURES
@@ -24,8 +24,8 @@ FEATURES
 
  * manage ogg, mp3, wav and other media file format
  * it's designed as client server
- * do not averlap schedules: anticipate, postone or delete
- * comples rules for schedule and period schedule
+ * programmable rules for schedule and period schedule
+ * do not overlap schedules: anticipate, postone or delete
  * player is monitored by web interface
 
 REQUIRES

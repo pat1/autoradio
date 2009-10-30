@@ -98,18 +98,20 @@ data_files.append(('/etc/autoradio',['autoradio-site.cfg']))
 
 
 setup(name='autoradio',
-      version='1.3.1',
+      version='1.3.2',
       description='radio automation software',
       author='Paolo Patruno',
       author_email='p.patruno@iperbole.bologna.it',
       platforms = ["any"],
       url='http://autoradiobc.sf.net',
       cmdclass={'build': build,'compilemessages':compilemessages},
-      packages=['autoradio', 'autoradio.playlists','autoradio.spots', 'autoradio.jingles', 'autoradio.programs'],
+      packages=['autoradio', 'autoradio.playlists','autoradio.spots', 
+                'autoradio.jingles', 'autoradio.programs','autoradio.palimpsest'],
+      package_data={'autoradio.palimpsest': ['fixtures/*.json']},
       scripts=['autoradiod','autoradioweb'],
       data_files = data_files,
       license = "GNU GPL v2",
-      requires= [ "mutagen","django","reportlab],
+      requires= [ "mutagen","django","reportlab"],
       long_description="""\ 
 AutoRadio Radio automation software. 
 Simple to use, starting from digital audio files manages on-air broadcasting over a radio-station or web-radio. 

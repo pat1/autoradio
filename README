@@ -92,7 +92,7 @@ change your preferred language and other preference in autoradio.cfg
 
 You have to respond to some question to setup database.
 
-This star:
+This start:
 daemon autoradiod (that launch xmms/audacious ) 
 the player web server respond on port 8888
 autoradio webserver on port 8080
@@ -157,11 +157,20 @@ module dir2ogg come from http://jak-linux.org/projects/dir2ogg/
 
 Italiano:
 
-Autoradio è una suite di programmi che partendo da file audio digitali permette la gestione automatica dell'emissione di una stazione radiofonica.
+Autoradio è una suite di programmi che partendo da file audio digitali
+permette la gestione automatica dell'emissione di una stazione
+radiofonica.
 
 queste sono le componenti:
 
-    * Player: partendo da una playlist è in grado di gestire differenti formati di audio digitali per poi inviare il suono o a una scheda audio o a un server audio
-    * Scheduler: gestisce in tempo reale l'emissione di particolari file
-          o audio quali i jingles, pubblicità, playlist e programmi; interagisce col player controllandolo e impartendo comandi 
-    * L'intefaccia utente: utilizzando una interfaccia WEB pemette il monitoraggio dello scheduler e del player e permette la programmazione del palinsesto
+    * Player: partendo da una playlist è in grado di gestire
+      differenti formati di audio digitali per poi inviare il suono o
+      a una scheda audio o a un server audio
+
+    * Scheduler: gestisce in tempo reale l'emissione di particolari
+      file o audio quali i jingles, pubblicità, playlist e programmi;
+      interagisce col player controllandolo e impartendo comandi
+
+    * L'intefaccia utente: utilizzando una interfaccia WEB pemette il
+      monitoraggio dello scheduler e del player e permette la
+      programmazione del palinsesto

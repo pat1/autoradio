@@ -93,8 +93,8 @@ class PeriodicSchedule(models.Model):
 
     shuffle = models.BooleanField(ugettext_lazy("Shuffle Playlist on start"),default=True)
     length = models.FloatField(ugettext_lazy("Max time length (seconds)"),default=None,null=True,blank=True)
-    start_date = models.DateField(ugettext_lazy('Programmed start time'),null=True,blank=True)
-    end_date = models.DateField(ugettext_lazy('Programmed end time'),null=True,blank=True)
+    start_date = models.DateField(ugettext_lazy('Programmed start date'),null=True,blank=True)
+    end_date = models.DateField(ugettext_lazy('Programmed end date'),null=True,blank=True)
     time = models.TimeField(ugettext_lazy('Programmed time'),null=True,blank=True)
     giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Programmed days'),null=True,blank=True)
     

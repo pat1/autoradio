@@ -7,6 +7,7 @@ from gest_program import *
 from gest_spot import *
 from gest_jingle import *
 from gest_playlist import *
+from gest_palimpsest import *
 
 
 class schedule:
@@ -261,9 +262,160 @@ class schedules(list):
 
         return self
 
+
+
+class palimpsest:
+
+
+    def __init__ (self,title=None,datetime_start=None,datetime_end=None,
+                  type=None,subtype=None,production=None,note=None):
+        """
+        init of palimpsest object
+        """
+        self.title=title
+        self.datetime_start=datetime_start
+        self.datetime_end=datetime_end
+        self.type=type
+        self.subtype=subtype
+        self.production=production
+        self.note=note
+
+
+    def __cmp__ (self, b):
+
+
+        #check start datetime
+
+        if self.datetime_start is None and b.datetime_start is None :
+            return 0
+    
+        if self.datetime_start is None :
+            return -1
+    
+        if b.datetime_start is None :
+            return 1
+    
+
+        if  self.datetime_start == b.datetime_start :
+
+            #check end datetime
+            if self.datetime_end is None and b.datetime_end is None :
+                return 0
+    
+            if self.datetime_end is None :
+                return -1
+    
+            if b.datetime_end is None :
+                return 1
+            
+            if  self.datetime_end == b.datetime_end :
+                return 0
+            elif   self.datetime_end < b.datetime_end :
+                return -1
+            elif   self.datetime_end > b.datetime_end :
+                return 1
+
+
+        elif   self.datetime_start < b.datetime_start :
+            return -1
+        elif   self.datetime_start > b.datetime_start :
+            return 1
+
+
+
+    def __str__ (self):
+
+        #print self.title, self.type, self.subtype, self.production, self.note
+        return self.title+" "+self.type+" "+self.subtype+" "+self.production+" "+self.note
+
+
+    def __iter__(self):
+        '''
+        return a list
+        '''
+
+        yield self.title
+        yield self.datetime_start
+        yield self.datetime_end
+        yield self.type
+        yield self.subtype
+        yield self.production
+        yield self.note
+
+
+class palimpsests(list):
+
+
+    def get_palimpsest(self,datetime_start=None,datetime_end=None):
+
+
+        #TODO !!!!
+        ###################
+
+        # time constants
+        now=datetime.now()
+        minelab=10*60        # one day
+
+        ###################
+
+        # get the programs of my insterest from palinsest
+
+        pro=gest_palimpsest(now,minelab)
+
+        for program in pro.get_program():
+
+            length=program.program.length
+            datetime_start=program.ar_scheduledatetime
+            title=str(program)
+            datetime_end=program.ar_scheduledatetime+timedelta(seconds=length)
+            type=str(program.program.type.type)
+            subtype=str(program.program.type.subtype)
+            production=program.program.production
+            note=""
+
+            self.append(palimpsest(title,datetime_start,datetime_end,
+                  type,subtype,production,note))
+
+
+        # Spots
+
+        spots=gest_spot(now,minelab,playlistdir)
+
+        for fascia in spots.get_fasce(genfile=False):
+
+            length=spots.ar_length
+            datetime_start=spots.ar_emission_done
+            number=spots.ar_spots_in_fascia
+            title=str(fascia)
+            datetime_end=spots.ar_emission_done+timedelta(seconds=length)
+            type="5"
+            subtype="5a"
+            production=""
+            note="%d Spot" % number
+
+            if (number <> 0 ):
+                self.append(palimpsest(title,datetime_start,datetime_end,
+                  type,subtype,production,note))
+
+
+        return self
+
+
 def main():
 
     logging.basicConfig(level=logging.DEBUG,)
+
+    pali=palimpsests([])
+
+    print "------- palimpsest --------"
+    for prog in pali.get_palimpsest():
+        print "------- program --------"
+
+        print prog
+
+        for elemento in prog:
+            print elemento
+
 
     scheds=schedules([])
 
@@ -272,7 +424,6 @@ def main():
     print "------- schedules --------"
     for sched in scheds.get_all_refine():
         
-        #pass
 
         print "------- schedule --------"
 

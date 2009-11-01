@@ -16,12 +16,19 @@ class Giorno(models.Model):
             return self.name
 
 class Configure(models.Model):
-        sezione = models.CharField(max_length=50,unique=True\
+        sezione = models.CharField(max_length=80,unique=True\
 					   ,default='palimpsest',editable=False)
         radiostation = models.CharField(max_length=50,unique=True\
 					   ,default='Radio',editable=True)
-        channel = models.CharField(max_length=50,unique=True\
+        channel = models.CharField(max_length=80,unique=True\
 					   ,default='103',editable=True)
+
+        mezzo = models.CharField(max_length=50,unique=True\
+					   ,default='analogico terrestre',editable=True)
+
+        type = models.CharField(max_length=50,unique=True\
+					   ,default='radiofonica',editable=True)
+
 
 	active = models.BooleanField(ugettext_lazy("Activate palimpsest"),default=True)
         emission_starttime = models.TimeField(ugettext_lazy('Programmed start time'))
@@ -47,11 +54,18 @@ class ProgramType(models.Model):
         return self.type+"/"+self.subtype
 
 
+
+
+def Production():
+	for production in (ugettext_lazy("autoproduction"),ugettext_lazy("eteroproduction")):
+		yield production, production
+
 class Program(models.Model):
     program = models.CharField(ugettext_lazy('Program name'),max_length=200)
     active = models.BooleanField(ugettext_lazy("Active"),default=True)
     length = models.FloatField(ugettext_lazy("Time length (seconds)"),default=None,null=True,blank=True)
     type = models.ForeignKey(ProgramType, verbose_name=	ugettext_lazy('Program Type'))
+    production = models.CharField(ugettext_lazy("Production"),max_length=30,choices=Production(),default=None,null=True,blank=True)
  
     def __unicode__(self):
         return self.program
@@ -84,8 +98,8 @@ class PeriodicSchedule(models.Model):
     program = models.ForeignKey(Program,verbose_name=\
 					ugettext_lazy('refer to program:'))
 
-    start_date = models.DateField(ugettext_lazy('Programmed start time'),null=True,blank=True)
-    end_date = models.DateField(ugettext_lazy('Programmed end time'),null=True,blank=True)
+    start_date = models.DateField(ugettext_lazy('Programmed start date'),null=True,blank=True)
+    end_date = models.DateField(ugettext_lazy('Programmed end date'),null=True,blank=True)
     time = models.TimeField(ugettext_lazy('Programmed time'),null=True,blank=True)
     giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Programmed days'),null=True,blank=True)
     

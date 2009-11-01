@@ -37,7 +37,7 @@ admin.site.register(ProgramType, ProgramTypeAdmin)
 
 class ProgramAdmin(admin.ModelAdmin):
     fieldsets = (
-        (None, {'fields': ('program','length','type')}),
+        (None, {'fields': ('program','length','type','production')}),
         )
     list_display = ('program','active')
     search_fields = ['program',]

@@ -29,7 +29,7 @@ class gest_program:
         ora=self.now.time()
 
         datesched_min=self.now - timedelta( seconds=60*self.minelab)
-        datesched_max=self.now + timedelta( seconds=60*self.minelab)
+        datesched_max=self.now + timedelta( milliseconds=60000*self.minelab-1) # 1 millisecond tollerance
         timesched_min=datesched_min.time()
         timesched_max=datesched_max.time()
         logging.debug( "PROGRAM: elaborate from %s to %s",datesched_min,datesched_max)

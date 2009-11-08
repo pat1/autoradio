@@ -21,9 +21,9 @@ class ProgramAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {'fields': ('program','file')}),
-        ('Date information', {'fields': ('rec_date','active')}),
+        ('Date information', {'fields': ('rec_date','active','palimpsest')}),
         )
-    list_display = ('program', 'rec_date', 'was_recorded_today','active')
+    list_display = ('program', 'rec_date', 'was_recorded_today','active','palimpsest')
     #list_filter = ['end_date']
     list_filter = ['rec_date']
     search_fields = ['program','file']

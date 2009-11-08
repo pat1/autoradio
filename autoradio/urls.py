@@ -18,9 +18,9 @@ urlpatterns = patterns('',
 
 #    Uncomment the next line to enable the admin:
     (r'^admin/(.*)', admin.site.root),
-    (r'^django/media/sito/(.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_SITE_ROOT, 'show_indexes': True}),
-    (r'^django/media/(.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+    (r'^'+settings.MEDIA_URL[1:]+'sito/(.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_SITE_ROOT, 'show_indexes': True}),
+    (r'^'+settings.MEDIA_URL[1:]+'(.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
     (r'^', include('autoradio.programs.urls')),
     (r'^', include('autoradio.palimpsest.urls')),
-
+    (r'^podcasts/', include('autoradio.podcast.urls')),
 )

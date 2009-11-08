@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from datetime import datetime
 import autoradio.autoradio_config
 import autoradio.autoradio_core
+import autoradio.settings
 
 #def index_old(request):
 #    latest_schedule_list = Schedule.objects.filter(emission_date__gte=datetime.now()).order_by('emission_date')[:5]
@@ -21,7 +22,7 @@ def index(request):
 
     scheds=autoradio.autoradio_core.schedules([])
 
-    return render_to_response('schedule/index.html', {'schedule': scheds.get_all_refine(genfile=False)})
+    return render_to_response('schedule/index.html', {'schedule': scheds.get_all_refine(genfile=False),'media_url':autoradio.settings.MEDIA_URL })
 
 
 def stato(request):
@@ -36,5 +37,5 @@ def stato(request):
         xmmsweb="<p>Error getting player status !!</p>"
         xmmsweb=xmmsweb+"<p>Start autoradiod or verify settings</p>"
 
-    return render_to_response('xmms/index.html', {'xmmsweb': xmmsweb})
+    return render_to_response('xmms/index.html', {'xmmsweb': xmmsweb,'media_url':autoradio.settings.MEDIA_URL })
 

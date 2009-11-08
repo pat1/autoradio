@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # GPL. (C) 2007-2009 Paolo Patruno.
 
 from autoradio_config import *
@@ -325,8 +326,9 @@ class palimpsest:
 
     def __str__ (self):
 
-        #print self.title, self.type, self.subtype, self.production, self.note
-        return self.title+" "+self.type+" "+self.subtype+" "+self.production+" "+self.note
+        return self.title+" "+str(self.datetime_start)+" "+\
+            str(self.datetime_end)+" "+str(self.type)+" "+\
+            str(self.subtype)+" "+str(self.production)+" "+str(self.note)
 
 
     def __iter__(self):
@@ -343,98 +345,188 @@ class palimpsest:
         yield self.note
 
 
+
+class dates:
+
+    def __init__(self,datetime_start, datetime_end,step):
+
+        self.step=step
+        self.datetime_start=datetime_start-self.step
+        self.datetime_end=datetime_end
+
+
+    def __iter__(self):
+
+        return self
+
+
+    def next(self):
+
+        self.datetime_start=self.datetime_start+self.step
+        if self.datetime_start <= self.datetime_end:
+            return self.datetime_start
+        else:
+            raise StopIteration
+
+
 class palimpsests(list):
 
 
-    def get_palimpsest(self,datetime_start=None,datetime_end=None):
+    def get_palimpsest(self,datetime_start,datetime_end):
+
+        step=timedelta(minutes=minelab*2) 
 
 
-        #TODO !!!!
-        ###################
+        for datetimeelab in dates(datetime_start, datetime_end, step):
 
-        # time constants
-        now=datetime.now()
-        minelab=10*60        # one day
+            pro=gest_palimpsest(datetimeelab,minelab)
 
-        ###################
+            for program in pro.get_program():
 
-        # get the programs of my insterest from palinsest
+                length=program.program.length
+                pdatetime_start=program.ar_scheduledatetime
+                title=str(program)
+                pdatetime_end=program.ar_scheduledatetime+timedelta(seconds=length)
+                type=str(program.program.type.type)
+                subtype=str(program.program.type.subtype)
+                production=program.program.production
+                note=""
 
-        pro=gest_palimpsest(now,minelab)
+                if pdatetime_start >= datetime_start and pdatetime_end < datetime_end :
 
-        for program in pro.get_program():
+                    self.append(palimpsest(title,pdatetime_start,pdatetime_end,
+                                           type,subtype,production,note))
 
-            length=program.program.length
-            datetime_start=program.ar_scheduledatetime
-            title=str(program)
-            datetime_end=program.ar_scheduledatetime+timedelta(seconds=length)
-            type=str(program.program.type.type)
-            subtype=str(program.program.type.subtype)
-            production=program.program.production
-            note=""
 
-            self.append(palimpsest(title,datetime_start,datetime_end,
-                  type,subtype,production,note))
+        self.sort()
+
+        #print "prima:"
+        #for program in self:
+        #    print program
+
+        # timing adjust:
+        #    1) overlay
+        #    2) insert music no stop for interval >15 minutes
+
+
+        musicanostop=palimpsests([])
+
+        for i in range(len(self)-1):
+            if self[i].datetime_end > self[i+1].datetime_start:
+
+                self[i].datetime_end=self[i+1].datetime_start
+
+            elif self[i].datetime_end < self[i+1].datetime_start-timedelta(minutes=15):
+
+                musicanostop.append(palimpsest("Musica no stop",self[i].datetime_end,
+                                       self[i+1].datetime_start,
+                                       type="13",subtype="13f",production="autoproduzione",note=None))
+
+        for element in musicanostop:
+            self.append(element)
+
+        self.sort()
+
+        for i in range(len(self)-1):
+        #    3) chain little interval
+
+            if self[i].datetime_end != self[i+1].datetime_start:
+
+                dtmean=self[i].datetime_end+((self[i+1].datetime_start-self[i].datetime_end)/2)
+
+                self[i].datetime_end=dtmean
+                self[i+1].datetime_start=dtmean
+
+
+
+        # add head and tail:
+        #    chain little interval
+
+        if self[0].datetime_start != datetime_start :
+
+            self.insert(0,palimpsest("Musica no stop",datetime_start,
+                                   self[0].datetime_start,
+                                   type="13",subtype="13f",production="autoproduzione",note=None))
+
+        if self[len(self)-1].datetime_end != datetime_end :
+
+            self.append(palimpsest("Musica no stop",self[len(self)-1].datetime_end,
+                                   datetime_end,
+                                   type="13",subtype="13f",production="autoproduzione",note=None))
+
+
+
+        #print "dopo:"
+        #for program in self:
+        #    print program
 
 
         # Spots
 
-        spots=gest_spot(now,minelab,playlistdir)
+        for datetimeelab in dates(datetime_start, datetime_end, step):
 
-        for fascia in spots.get_fasce(genfile=False):
+            print datetimeelab,minelab
+            spots=gest_spot(datetimeelab,minelab,playlistdir)
 
-            length=spots.ar_length
-            datetime_start=spots.ar_emission_done
-            number=spots.ar_spots_in_fascia
-            title=str(fascia)
-            datetime_end=spots.ar_emission_done+timedelta(seconds=length)
-            type="5"
-            subtype="5a"
-            production=""
-            note="%d Spot" % number
+            for fascia in spots.get_fasce(genfile=False):
 
-            if (number <> 0 ):
-                self.append(palimpsest(title,datetime_start,datetime_end,
-                  type,subtype,production,note))
+                length=spots.ar_length
+                #pdatetime_start=spots.ar_emission_done
+                pdatetime_start=spots.ar_scheduledatetime
+                number=spots.ar_spots_in_fascia
+                #title=str(fascia)
+                title="Pubblicità"
+                pdatetime_end=pdatetime_start+timedelta(seconds=length)
+                type="5"
+                subtype="5a"
+                production=""
+                note="%d Spot" % number
 
+                #if (number <> 0 and pdatetime_start.date() == dateelab):
+                if number <> 0 and  pdatetime_start >= datetime_start and pdatetime_end < datetime_end :
+                    self.append(palimpsest(title,pdatetime_start,pdatetime_end,
+                                           type,subtype,production,note))
+
+
+        self.sort()
 
         return self
 
 
 def main():
 
-    logging.basicConfig(level=logging.DEBUG,)
+    logging.basicConfig(level=logging.INFO,)
 
     pali=palimpsests([])
 
     print "------- palimpsest --------"
-    for prog in pali.get_palimpsest():
+    for prog in pali.get_palimpsest(datetime.now()-timedelta(days=1),datetime.now()):
         print "------- program --------"
 
         print prog
 
-        for elemento in prog:
-            print elemento
+        #for elemento in prog:
+        #    print elemento
 
 
-    scheds=schedules([])
+    #scheds=schedules([])
 
     # get the schedule of my insterest
     # I do a list
-    print "------- schedules --------"
-    for sched in scheds.get_all_refine():
-        
+    #print "------- schedules --------"
+    #for sched in scheds.get_all_refine():
+    #
 
-        print "------- schedule --------"
+    #    print "------- schedule --------"
 
-        for elemento in sched:
-            print elemento
+    #    for elemento in sched:
+    #        print elemento
 
-        #print sched.type
-        #print sched.media
-        #print sched.scheduledatetime
-        #print sched.shuffle
-        #print sched.length
+    #    #print sched.type
+    #    #print sched.media
+    #    #print sched.scheduledatetime
+    #    #print sched.shuffle
+    #    #print sched.length
 
 
 

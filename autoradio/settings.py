@@ -135,4 +135,5 @@ INSTALLED_APPS = (
     'autoradio.spots',
     'autoradio.playlists',
     'autoradio.palimpsest',
+    'autoradio.podcast',
 )

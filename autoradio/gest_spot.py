@@ -46,7 +46,7 @@ class gest_spot:
         self.giorno=calendar.day_name[self.now.weekday()]
 
         datesched_min=self.now - timedelta( seconds=60*self.minelab)
-        datesched_max=self.now + timedelta( seconds=60*self.minelab)
+        datesched_max=self.now + timedelta( milliseconds=60000*self.minelab-1) # 1 millisec tollerance
         logging.debug( "SPOT: elaborate from %s to %s",datesched_min, datesched_max)
         timesched_min=datesched_min.time()
         timesched_max=datesched_max.time()

@@ -1,11 +1,11 @@
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
-from datetime import datetime
+from datetime import datetime,timedelta,time
 import autoradio.autoradio_config
 import autoradio.autoradio_core
 from reportlab.platypus import *
 
-import autoradio.gest_palimpsest
+#import autoradio.gest_palimpsest
 
     
 def programsbook(request):
@@ -25,16 +25,15 @@ def programsbook(request):
 
     # time constants
     now=datetime.now()
-    minelab=1000
+    minelab=1
+    datetime_start=(now-timedelta(days=4))
+    datetime_end=now
+
 
     pro=autoradio.gest_palimpsest.gest_palimpsest(now,minelab)
 
     emittente,canale,mezzo,trasmissione=pro.get_info()
 
-    #emittente="L'informazione Nuova"
-    #canale="Radio citta' Fujiko"
-    #mezzo="analogico terrestre"
-    #trasmissione="radiofonica"
     author = "Autoradio Radio Automation Free Software"
 
     # Create the HttpResponse object with the appropriate PDF headers.
@@ -45,8 +44,10 @@ def programsbook(request):
     PAGE_HEIGHT=defaultPageSize[1]
     styles = getSampleStyleSheet()
 
-    MezzoTrasmissione=Paragraph("Mezzo di diffusione: "+mezzo+"  //   Tipo di trasmissione: "+trasmissione, styles["Normal"])
-    EmittenteCanale=Paragraph("Denominazione dell'emittente: "+emittente+"  //   Denominazione del canale: "+canale, styles["Normal"])
+    MezzoTrasmissione=Paragraph("Mezzo di diffusione: "+str(mezzo)+
+                                "  //   Tipo di trasmissione: "+str(trasmissione), styles["Normal"])
+    EmittenteCanale=Paragraph("Denominazione dell'emittente: "+str(emittente)+
+                              "  //   Denominazione del canale: "+str(canale), styles["Normal"])
     Space=Spacer(inch, 0.25 * inch)
 
     # First the top row, with all the text centered and in Times-Bold,
@@ -70,14 +71,18 @@ def programsbook(request):
     # See the ReportLab documentation for the full list of functionality.
     #p.drawString(100, 100, "Hello world.")
 
-    dati=[["data","titolo programma","ora inizio","ora fine","tipologia","dettagli","produzione","note"]]
+    dati=[["data",
+           Paragraph("titolo programma", styles["Normal"]),
+           Paragraph("ora inizio", styles["Normal"]),
+           Paragraph("ora fine", styles["Normal"]),
+           "tipologia","dettagli","produzione","note"]]
 
 
     pali=autoradio.autoradio_core.palimpsests([])
 
-    for title,datetime_start,datetime_end,type,subtype,production,note in pali.get_palimpsest():
-        dati.append([str(datetime_start.date()),Paragraph(title, styles["Normal"]),
-                     datetime_start.time().strftime("%H:%M"),datetime_end.time().strftime("%H:%M"),
+    for title,pdatetime_start,pdatetime_end,type,subtype,production,note in pali.get_palimpsest(datetime_start,datetime_end):
+        dati.append([str(pdatetime_start.date()),Paragraph(title, styles["Normal"]),
+                     pdatetime_start.time().strftime("%H:%M"),pdatetime_end.time().strftime("%H:%M"),
                      Paragraph(type, styles["Normal"]),Paragraph(subtype, styles["Normal"]),production,note])
 
 
@@ -88,7 +93,7 @@ def programsbook(request):
     Elements = [MezzoTrasmissione,EmittenteCanale,Space,Tabella]
 
     # Create the PDF object, using the response object as its "file."
-    p = SimpleDocTemplate(response,title="Libro programmi: "+emittente,author=author)
+    p = SimpleDocTemplate(response,title="Libro programmi: "+str(emittente),author=str(author))
     p.build(Elements, onFirstPage=myPages, onLaterPages=myPages)
 
 

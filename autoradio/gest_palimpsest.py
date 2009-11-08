@@ -16,10 +16,9 @@ import os,calendar
 
 class gest_palimpsest:
 
-    def __init__ (self,now,minelab):
+    def __init__ (self,datetimeelab,minelab):
         """init of palimpsest application:
-        now : currenti datetime
-        minelab: minutes to elaborate 
+        datetimeelab : datetime to elaborate
         execute the right data retrival to get the schedued programs"""
         
         self.radiostation=None
@@ -27,18 +26,19 @@ class gest_palimpsest:
         self.mezzo=None
         self.type=None
 
-        self.now = now
-        self.minelab = minelab
+        self.datetimeelab = datetimeelab
+        self.oggi=self.datetimeelab.date()
+        self.minelab=minelab
 
-        ora=self.now.time()
-        self.oggi=self.now.date()
-        self.giorno=calendar.day_name[self.now.weekday()]
+        ora=datetimeelab.time()
+
+        self.giorno=calendar.day_name[self.datetimeelab.weekday()]
 
         self.schedule=()
         self.periodicschedule=()
 
-        datesched_min=self.now - timedelta( seconds=60*self.minelab)
-        datesched_max=self.now + timedelta( seconds=60*self.minelab)
+        datesched_min=self.datetimeelab - timedelta( seconds=60*self.minelab)
+        datesched_max=self.datetimeelab + timedelta( milliseconds=60000*self.minelab-1) #1 millisecond tollerance
 
         if ora < time(12):
             self.ieriodomani=calendar.day_name[datesched_min.weekday()]
@@ -67,6 +67,7 @@ class gest_palimpsest:
             .filter(emission_date__lte=datesched_max)\
             .filter(program__active__exact=True)\
             .order_by('emission_date')
+
 
 
         # retrive the right records relative to periodicschedule
@@ -107,6 +108,8 @@ class gest_palimpsest:
 
     def get_program(self):
         "iterable to get programs"
+
+        ora=self.datetimeelab.time()
                 
         for program in self.schedule:
             logging.debug("PALIMPSEST: schedule %s %s %s", program.program.program, ' --> '\
@@ -122,13 +125,15 @@ class gest_palimpsest:
             logging.debug("PALIMPSEST: periodic schedule %s %s %s", program.program.program, ' --> '\
                               ,  program.time.isoformat())
 
-            program.ar_scheduledatetime=datetime.combine(self.oggi, program.time)
+            program.ar_scheduledatetime=datetime.combine(self.datetimeelab, program.time)
 
             # if we are around midnight we have to check the correct date (today, iesterday, tomorrow)
-            datesched_min=self.now - timedelta( seconds=60*self.minelab)
-            datesched_max=self.now + timedelta( seconds=60*self.minelab)
+
+            datesched_min=self.datetimeelab - timedelta( seconds=60*self.minelab)
+            datesched_max=self.datetimeelab + timedelta( seconds=60*self.minelab)
+
             if not (datesched_min <= program.ar_scheduledatetime and  program.ar_scheduledatetime <= datesched_max  ):
-                if self.now.time() < time(12):
+                if ora < time(12):
                     program.ar_scheduledatetime=datetime.combine(datesched_min.date(), program.time)
                 else:
                     program.ar_scheduledatetime=datetime.combine(datesched_max.date(), program.time)
@@ -158,11 +163,11 @@ def main():
 
     logging.basicConfig(level=logging.DEBUG,)
     # time constants
-    now=datetime.now()
-
+    datetimeelab=datetime.now()
+    minelab=60*12
 
     # get the programs of my insterest
-    pro=gest_palimpsest(now,minelab)
+    pro=gest_palimpsest(datetimeelab,minelab)
 
     for info in pro.get_info():
         print "info: ",info
@@ -173,10 +178,8 @@ def main():
         #pass
         print program
         print program.ar_scheduledatetime
-        print program.ar_length
-
+        print program.program.length
         print "program",program.program
-
         
 if __name__ == '__main__':
     main()  # (this code was run as script)

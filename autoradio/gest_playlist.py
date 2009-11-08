@@ -36,7 +36,7 @@ class gest_playlist:
         self.periodicschedule=()
 
         datesched_min=self.now - timedelta( seconds=60*self.minelab)
-        datesched_max=self.now + timedelta( seconds=60*self.minelab)
+        datesched_max=self.now + timedelta( milliseconds=60000*self.minelab-1) # 1 millisecond tollerance
 
         if ora < time(12):
             self.ieriodomani=calendar.day_name[datesched_min.weekday()]

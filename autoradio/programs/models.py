@@ -1,3 +1,5 @@
+
+from autoradio.palimpsest.models import Program as PalimpsestProgram
 from django.db import models
 from django.utils.translation import ugettext_lazy
 
@@ -22,6 +24,7 @@ class Program(models.Model):
 	file = models.FileField('file',upload_to='programs')
 	rec_date = models.DateTimeField(ugettext_lazy('Recording date'))
 	active = models.BooleanField(ugettext_lazy("Active"),default=True)
+	palimpsest = models.ForeignKey(PalimpsestProgram,related_name="PalimpsestProgram")
 	
 	def was_recorded_today(self):
 		return self.rec_date.date() == datetime.date.today()

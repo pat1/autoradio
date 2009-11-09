@@ -9,6 +9,23 @@ from reportlab.platypus import *
 
 #import autoradio.gest_palimpsest
 
+
+def decode(code):
+    car=""
+    digit=""
+    for i in range(len(code)):
+
+        if code[i-1].isdigit():
+            digit+=code[i-1]
+        else:
+            car+=code[i-1]
+
+    if len(car) > 0 :
+        car=digit+car
+
+    return digit,car
+
+
 class ExtremeForm(forms.Form):
     datetime_start = forms.DateTimeField(required=False)
     datetime_end = forms.DateTimeField(required=False)
@@ -96,7 +113,11 @@ def programsbook(request):
 
             pali=autoradio.autoradio_core.palimpsests([])
 
-            for title,pdatetime_start,pdatetime_end,type,subtype,production,note in pali.get_palimpsest(datetime_start,datetime_end):
+            for title,pdatetime_start,pdatetime_end,code,type,subtype,production,note in pali.get_palimpsest(datetime_start,datetime_end):
+
+                # if you want extensive text comment this line
+                type,subtype=decode(code)
+
                 dati.append([str(pdatetime_start.date()),Paragraph(title, styles["Normal"]),
                              pdatetime_start.time().strftime("%H:%M"),pdatetime_end.time().strftime("%H:%M"),
                              Paragraph(type, styles["Normal"]),Paragraph(subtype, styles["Normal"]),production,note])

@@ -269,13 +269,14 @@ class palimpsest:
 
 
     def __init__ (self,title=None,datetime_start=None,datetime_end=None,
-                  type=None,subtype=None,production=None,note=None):
+                  code=None,type=None,subtype=None,production=None,note=None):
         """
         init of palimpsest object
         """
         self.title=title
         self.datetime_start=datetime_start
         self.datetime_end=datetime_end
+        self.code=code
         self.type=type
         self.subtype=subtype
         self.production=production
@@ -339,6 +340,7 @@ class palimpsest:
         yield self.title
         yield self.datetime_start
         yield self.datetime_end
+        yield self.code
         yield self.type
         yield self.subtype
         yield self.production
@@ -387,6 +389,7 @@ class palimpsests(list):
                 pdatetime_start=program.ar_scheduledatetime
                 title=str(program)
                 pdatetime_end=program.ar_scheduledatetime+timedelta(seconds=length)
+                code=str(program.program.type.code)
                 type=str(program.program.type.type)
                 subtype=str(program.program.type.subtype)
                 production=program.program.production
@@ -395,7 +398,7 @@ class palimpsests(list):
                 if pdatetime_start >= datetime_start and pdatetime_end < datetime_end :
 
                     self.append(palimpsest(title,pdatetime_start,pdatetime_end,
-                                           type,subtype,production,note))
+                                           code,type,subtype,production,note))
 
 
         self.sort()
@@ -419,7 +422,7 @@ class palimpsests(list):
             elif self[i].datetime_end < self[i+1].datetime_start-timedelta(minutes=15):
 
                 musicanostop.append(palimpsest("Musica no stop",self[i].datetime_end,
-                                       self[i+1].datetime_start,
+                                       self[i+1].datetime_start,code="13f",
                                        type="13",subtype="13f",production="autoproduzione",note=None))
 
         for element in musicanostop:
@@ -437,21 +440,20 @@ class palimpsests(list):
                 self[i].datetime_end=dtmean
                 self[i+1].datetime_start=dtmean
 
-
-
         # add head and tail:
         #    chain little interval
+        if len(self) > 0 :
 
-        if self[0].datetime_start != datetime_start :
+            if self[0].datetime_start != datetime_start :
 
-            self.insert(0,palimpsest("Musica no stop",datetime_start,
-                                   self[0].datetime_start,
-                                   type="13",subtype="13f",production="autoproduzione",note=None))
+                self.insert(0,palimpsest("Musica no stop",datetime_start,
+                                       self[0].datetime_start,code="13f",
+                                       type="13",subtype="13f",production="autoproduzione",note=None))
 
-        if self[len(self)-1].datetime_end != datetime_end :
+            if self[len(self)-1].datetime_end != datetime_end :
 
-            self.append(palimpsest("Musica no stop",self[len(self)-1].datetime_end,
-                                   datetime_end,
+                self.append(palimpsest("Musica no stop",self[len(self)-1].datetime_end,
+                                       datetime_end,code="13f",
                                    type="13",subtype="13f",production="autoproduzione",note=None))
 
 

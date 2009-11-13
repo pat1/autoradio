@@ -26,6 +26,7 @@ class ShowAdmin(admin.ModelAdmin):
             'fields': ('organization', 'author', 'webmaster', 'title', 'slug', 'link', 'description', 'image', 'category_show', 'domain', 'language', 'ttl', 'copyright', 'copyright_url', 'feedburner')
         }),
         ('iTunes', {
+            'classes': ('collapse',),
             'fields': ('subtitle', 'summary', 'category', 'keywords', ('explicit', 'block'), 'redirect', 'itunes')
         }),
     )
@@ -55,6 +56,7 @@ class EpisodeAdmin(admin.ModelAdmin):
             'fields': ('show', 'author', 'title_type', 'title', 'slug', 'description_type', 'description', 'captions', 'category', 'domain', 'frequency', 'priority', 'status')
         }),
         ('iTunes', {
+            'classes': ('collapse',),
             'fields': ('subtitle', 'summary', ('minutes', 'seconds'), 'keywords', ('explicit', 'block'))
         }),
         ('Media RSS', {

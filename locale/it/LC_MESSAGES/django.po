@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-30 02:22+0100\n"
-"PO-Revision-Date: 2009-10-30 02:27+0100\n"
+"POT-Creation-Date: 2010-01-11 16:00+0100\n"
+"PO-Revision-Date: 2010-01-11 16:01+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -52,19 +52,19 @@ msgstr "Nome jingle"
 msgid "File"
 msgstr "File"
 
-#: autoradio/jingles/models.py:38 autoradio/programs/models.py:23
+#: autoradio/jingles/models.py:38 autoradio/programs/models.py:25
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/jingles/models.py:38
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/programs/models.py:23
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/jingles/models.py:38
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/programs/models.py:23
 #: build/lib/autoradio/jingles/models.py:38
-#: build/lib/autoradio/programs/models.py:23
+#: build/lib/autoradio/programs/models.py:25
 #, fuzzy
 msgid "Recording date"
 msgstr "Registrato oggi?"
 
-#: autoradio/jingles/models.py:39 autoradio/palimpsest/models.py:52
-#: autoradio/playlists/models.py:37 autoradio/programs/models.py:24
+#: autoradio/jingles/models.py:39 autoradio/palimpsest/models.py:65
+#: autoradio/playlists/models.py:37 autoradio/programs/models.py:26
 #: autoradio/spots/models.py:76 autoradio/spots/models.py:114
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/jingles/models.py:39
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/playlists/models.py:37
@@ -77,8 +77,9 @@ msgstr "Registrato oggi?"
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/spots/models.py:76
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/spots/models.py:114
 #: build/lib/autoradio/jingles/models.py:39
+#: build/lib/autoradio/palimpsest/models.py:65
 #: build/lib/autoradio/playlists/models.py:37
-#: build/lib/autoradio/programs/models.py:24
+#: build/lib/autoradio/programs/models.py:26
 #: build/lib/autoradio/spots/models.py:76
 #: build/lib/autoradio/spots/models.py:114
 msgid "Active"
@@ -133,17 +134,17 @@ msgstr "Programmato per oggi?"
 msgid "Priority"
 msgstr "Priorità"
 
-#: autoradio/jingles/models.py:51 autoradio/programs/models.py:44
+#: autoradio/jingles/models.py:51 autoradio/programs/models.py:47
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/jingles/models.py:51
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/programs/models.py:44
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/jingles/models.py:51
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/programs/models.py:44
 #: build/lib/autoradio/jingles/models.py:51
-#: build/lib/autoradio/programs/models.py:44
+#: build/lib/autoradio/programs/models.py:47
 msgid "emission done"
 msgstr "emissione effettuata"
 
-#: autoradio/jingles/models.py:57 autoradio/programs/models.py:29
+#: autoradio/jingles/models.py:57 autoradio/programs/models.py:32
 #: autoradio/spots/models.py:131
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/jingles/models.py:57
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/programs/models.py:29
@@ -152,20 +153,20 @@ msgstr "emissione effettuata"
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/programs/models.py:29
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/spots/models.py:131
 #: build/lib/autoradio/jingles/models.py:57
-#: build/lib/autoradio/programs/models.py:29
+#: build/lib/autoradio/programs/models.py:32
 #: build/lib/autoradio/spots/models.py:131
 msgid "Recorded today?"
 msgstr "Registrato oggi?"
 
-#: autoradio/palimpsest/models.py:26
+#: autoradio/palimpsest/models.py:33
+#: build/lib/autoradio/palimpsest/models.py:33
 #, fuzzy
 msgid "Activate palimpsest"
 msgstr "Playlist attive"
 
-#: autoradio/palimpsest/models.py:27 autoradio/palimpsest/models.py:28
-#: autoradio/palimpsest/models.py:87 autoradio/playlists/models.py:23
-#: autoradio/playlists/models.py:24 autoradio/playlists/models.py:96
-#: autoradio/programs/models.py:10 autoradio/spots/models.py:61
+#: autoradio/palimpsest/models.py:34 autoradio/palimpsest/models.py:35
+#: autoradio/playlists/models.py:23 autoradio/playlists/models.py:24
+#: autoradio/programs/models.py:12 autoradio/spots/models.py:61
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/playlists/models.py:23
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/playlists/models.py:24
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/playlists/models.py:96
@@ -176,100 +177,129 @@ msgstr "Playlist attive"
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/playlists/models.py:96
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/programs/models.py:10
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/spots/models.py:61
+#: build/lib/autoradio/palimpsest/models.py:34
+#: build/lib/autoradio/palimpsest/models.py:35
 #: build/lib/autoradio/playlists/models.py:23
 #: build/lib/autoradio/playlists/models.py:24
-#: build/lib/autoradio/playlists/models.py:96
-#: build/lib/autoradio/programs/models.py:10
+#: build/lib/autoradio/programs/models.py:12
 #: build/lib/autoradio/spots/models.py:61
 msgid "Programmed start time"
 msgstr "Ora inizio programmazione"
 
-#: autoradio/palimpsest/models.py:41
+#: autoradio/palimpsest/models.py:48
+#: build/lib/autoradio/palimpsest/models.py:48
 msgid "Code"
 msgstr "Codice"
 
-#: autoradio/palimpsest/models.py:42
+#: autoradio/palimpsest/models.py:49
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/templates/schedule/index.html:15
+#: build/lib/autoradio/palimpsest/models.py:49
 #: templates/schedule/index.html:15
 msgid "Type"
 msgstr "Tipo"
 
-#: autoradio/palimpsest/models.py:43
+#: autoradio/palimpsest/models.py:50
+#: build/lib/autoradio/palimpsest/models.py:50
 #, fuzzy
 msgid "SubType"
 msgstr "Tipo"
 
-#: autoradio/palimpsest/models.py:44
+#: autoradio/palimpsest/models.py:51
+#: build/lib/autoradio/palimpsest/models.py:51
 msgid "Description"
 msgstr "Descrizione"
 
-#: autoradio/palimpsest/models.py:51 autoradio/programs/models.py:21
+#: autoradio/palimpsest/models.py:60
+#: build/lib/autoradio/palimpsest/models.py:60
+msgid "autoproduction"
+msgstr "autoproduzione"
+
+#: autoradio/palimpsest/models.py:60
+#: build/lib/autoradio/palimpsest/models.py:60
+msgid "eteroproduction"
+msgstr "eteroproduzione"
+
+#: autoradio/palimpsest/models.py:64 autoradio/programs/models.py:23
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/programs/models.py:21
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/programs/models.py:21
-#: build/lib/autoradio/programs/models.py:21
+#: build/lib/autoradio/palimpsest/models.py:64
+#: build/lib/autoradio/programs/models.py:23
 msgid "Program name"
 msgstr "Nome del programma"
 
-#: autoradio/palimpsest/models.py:53
+#: autoradio/palimpsest/models.py:66
+#: build/lib/autoradio/palimpsest/models.py:66
 #, fuzzy
 msgid "Time length (seconds)"
 msgstr "Durata massima (secondi)"
 
-#: autoradio/palimpsest/models.py:54
+#: autoradio/palimpsest/models.py:67
+#: build/lib/autoradio/palimpsest/models.py:67
 #, fuzzy
 msgid "Program Type"
 msgstr "Nome del programma"
 
-#: autoradio/palimpsest/models.py:67 autoradio/palimpsest/models.py:85
+#: autoradio/palimpsest/models.py:68
+#: build/lib/autoradio/palimpsest/models.py:68
+msgid "Production"
+msgstr "Produttore"
+
+#: autoradio/palimpsest/models.py:81 autoradio/palimpsest/models.py:99
+#: build/lib/autoradio/palimpsest/models.py:81
+#: build/lib/autoradio/palimpsest/models.py:99
 #, fuzzy
 msgid "refer to program:"
 msgstr "riferito alla playlist"
 
-#: autoradio/palimpsest/models.py:69 autoradio/playlists/models.py:59
+#: autoradio/palimpsest/models.py:83 autoradio/playlists/models.py:59
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/playlists/models.py:59
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/playlists/models.py:59
+#: build/lib/autoradio/palimpsest/models.py:83
 #: build/lib/autoradio/playlists/models.py:59
 #, fuzzy
 msgid "Programmed date"
-msgstr "data programmata"
+msgstr "Data programmata"
 
-#: autoradio/palimpsest/models.py:74 autoradio/playlists/models.py:77
+#: autoradio/palimpsest/models.py:88 autoradio/playlists/models.py:77
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/playlists/models.py:77
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/playlists/models.py:77
+#: build/lib/autoradio/palimpsest/models.py:88
 #: build/lib/autoradio/playlists/models.py:77
 #, fuzzy
 msgid "Programmed for today?"
 msgstr "Programmato per"
 
-#: autoradio/palimpsest/models.py:88 autoradio/playlists/models.py:97
-#: autoradio/programs/models.py:11 autoradio/spots/models.py:62
-#: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/playlists/models.py:97
-#: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/programs/models.py:11
-#: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/spots/models.py:62
-#: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/playlists/models.py:97
-#: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/programs/models.py:11
-#: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/spots/models.py:62
+#: autoradio/palimpsest/models.py:101 autoradio/playlists/models.py:96
+#: build/lib/autoradio/palimpsest/models.py:101
+#: build/lib/autoradio/playlists/models.py:96
+#, fuzzy
+msgid "Programmed start date"
+msgstr "Ora inizio programmazione"
+
+#: autoradio/palimpsest/models.py:102 autoradio/playlists/models.py:97
+#: build/lib/autoradio/palimpsest/models.py:102
 #: build/lib/autoradio/playlists/models.py:97
-#: build/lib/autoradio/programs/models.py:11
-#: build/lib/autoradio/spots/models.py:62
-msgid "Programmed end time"
+#, fuzzy
+msgid "Programmed end date"
 msgstr "Ora fine programmazione"
 
-#: autoradio/palimpsest/models.py:89 autoradio/playlists/models.py:98
+#: autoradio/palimpsest/models.py:103 autoradio/playlists/models.py:98
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/playlists/models.py:98
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/playlists/models.py:98
+#: build/lib/autoradio/palimpsest/models.py:103
 #: build/lib/autoradio/playlists/models.py:98
 #, fuzzy
 msgid "Programmed time"
 msgstr "Ora fine programmazione"
 
-#: autoradio/palimpsest/models.py:90 autoradio/playlists/models.py:99
+#: autoradio/palimpsest/models.py:104 autoradio/playlists/models.py:99
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/playlists/models.py:99
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/playlists/models.py:99
+#: build/lib/autoradio/palimpsest/models.py:104
 #: build/lib/autoradio/playlists/models.py:99
 #, fuzzy
 msgid "Programmed days"
-msgstr "data programmata"
+msgstr "Giorni programmati"
 
 #: autoradio/playlists/models.py:22
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/playlists/models.py:22
@@ -343,7 +373,7 @@ msgstr "Durata massima (secondi)"
 #: build/lib/autoradio/spots/models.py:77
 #, fuzzy
 msgid "Emission done"
-msgstr "emissione effettuata"
+msgstr "Emissione effettuata"
 
 #: autoradio/playlists/models.py:81 autoradio/playlists/models.py:110
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/playlists/models.py:81
@@ -355,36 +385,48 @@ msgstr "emissione effettuata"
 msgid "Linked Playlist"
 msgstr "Playlist correlata"
 
-#: autoradio/programs/models.py:9
+#: autoradio/programs/models.py:11
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/programs/models.py:9
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/programs/models.py:9
-#: build/lib/autoradio/programs/models.py:9
+#: build/lib/autoradio/programs/models.py:11
 msgid "Active programs"
 msgstr "Programmi attivi"
 
-#: autoradio/programs/models.py:41 autoradio/programs/models.py:58
+#: autoradio/programs/models.py:13 autoradio/spots/models.py:62
+#: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/playlists/models.py:97
+#: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/programs/models.py:11
+#: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/spots/models.py:62
+#: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/playlists/models.py:97
+#: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/programs/models.py:11
+#: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/spots/models.py:62
+#: build/lib/autoradio/programs/models.py:13
+#: build/lib/autoradio/spots/models.py:62
+msgid "Programmed end time"
+msgstr "Ora fine programmazione"
+
+#: autoradio/programs/models.py:44 autoradio/programs/models.py:61
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/programs/models.py:41
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/programs/models.py:58
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/programs/models.py:41
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/programs/models.py:58
-#: build/lib/autoradio/programs/models.py:41
-#: build/lib/autoradio/programs/models.py:58
+#: build/lib/autoradio/programs/models.py:44
+#: build/lib/autoradio/programs/models.py:61
 #, fuzzy
 msgid "Linked program:"
 msgstr "Programma correlato"
 
-#: autoradio/programs/models.py:43
+#: autoradio/programs/models.py:46
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/programs/models.py:43
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/programs/models.py:43
-#: build/lib/autoradio/programs/models.py:43
+#: build/lib/autoradio/programs/models.py:46
 #, fuzzy
 msgid "programmed date"
 msgstr "data programmata"
 
-#: autoradio/programs/models.py:54
+#: autoradio/programs/models.py:57
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/autoradio/programs/models.py:54
 #: build/bdist.linux-i686/rpm/BUILD/autoradio-1.0/build/lib/autoradio/programs/models.py:54
-#: build/lib/autoradio/programs/models.py:54
+#: build/lib/autoradio/programs/models.py:57
 #, fuzzy
 msgid "Scheduled for today?"
 msgstr "Programmato per oggi?"
@@ -563,6 +605,87 @@ msgstr "secondi"
 #: templates/base.html:36
 msgid "Player"
 msgstr ""
+
+#: templates/base.html:42
+msgid "Mediacast"
+msgstr ""
+
+#: templates/base.html:43
+msgid "ProgBook"
+msgstr ""
+
+#: templates/podcast/episode_detail.html:17
+#: templates/podcast/episode_list.html:17 templates/podcast/show_list.html:16
+msgid "Autoradio Mediacast"
+msgstr ""
+
+#: templates/podcast/episode_detail.html:24
+msgid "A detail of one episode of one show"
+msgstr "Dettagli di un episodio del programma"
+
+#: templates/podcast/episode_detail.html:32
+msgid "Return to episodes"
+msgstr "Torna agli episodi"
+
+#: templates/podcast/episode_detail.html:38
+#: templates/podcast/episode_list.html:67
+msgid "episode screenshot"
+msgstr "Immagine dell'episodio"
+
+#: templates/podcast/episode_detail.html:41
+msgid "Date"
+msgstr "Data"
+
+#: templates/podcast/episode_detail.html:43
+msgid "Show"
+msgstr "Programma"
+
+#: templates/podcast/episode_detail.html:45
+#: templates/podcast/episode_list.html:47
+msgid "Author"
+msgstr "Autore"
+
+#: templates/podcast/episode_detail.html:48
+#: templates/podcast/episode_detail.html:50
+#: templates/podcast/episode_detail.html:52
+#: templates/podcast/episode_detail.html:76
+#: templates/podcast/episode_list.html:51
+#: templates/podcast/episode_list.html:53
+#: templates/podcast/episode_list.html:55
+msgid "Subscribe"
+msgstr "Iscrizione"
+
+#: templates/podcast/episode_detail.html:57
+msgid "Download this episode"
+msgstr "Scarica questo episodio"
+
+#: templates/podcast/episode_detail.html:67
+msgid "Download the closed captions"
+msgstr ""
+
+#: templates/podcast/episode_list.html:24
+msgid "A list of episodes of one show"
+msgstr "Lista degli episodi di un programma"
+
+#: templates/podcast/episode_list.html:33
+msgid "Return to shows"
+msgstr "Torna ai programmi"
+
+#: templates/podcast/episode_list.html:41
+msgid "Explicit"
+msgstr "Esplicito"
+
+#: templates/podcast/episode_list.html:44
+msgid "Category"
+msgstr "Categoria"
+
+#: templates/podcast/episode_list.html:52
+msgid "FeedBurner"
+msgstr ""
+
+#: templates/podcast/show_list.html:23
+msgid "A list of shows"
+msgstr "Lista dei programmi"
 
 #~ msgid "Date of recording"
 #~ msgstr "Data della registrazione"

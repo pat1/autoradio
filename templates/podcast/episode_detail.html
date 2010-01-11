@@ -38,11 +38,11 @@
 {% if object.image %}<div class="image"><img src="{{ object.image.url }}" width="{{ object.image.width }}" height="{{ object.image.height }}" alt="{{ object.title }} {% trans "episode screenshot" %}" /></div>{% endif %}
 
 <dl>
-  <dt>Date</dt>
+  <dt>{% trans "Date" %}</dt>
     <dd>{{ object.date|date:"F g, Y, g:m a" }}</dd>
-  <dt>Show</dt>
+  <dt>{% trans "Show" %}</dt>
     <dd><a href="{% url podcast_episodes object.show.slug %}">{{ object.show.title }}</a></dd>
-  <dt>Author</dt>{% for author in object.author.all %}
+  <dt>{% trans "Author" %}</dt>{% for author in object.author.all %}
     <dd>{% if author.email %}<a href="mailto:{{ author.email }}">{% endif %}{% if author.first_name or author.last_name %}{% if author.first_name and author.last_name %}{{ author.first_name }} {{ author.last_name }}{% endif %}{% if author.first_name and not author.last_name %}{{ author.first_name }}{% endif %}{% if author.last_name and not author.first_name %}{{ author.last_name }}{% endif %}{% else %}{{ author.username }}{% endif %}{% if author.email %}</a>{% endif %}</dd>{% endfor %}
   <dt>RSS</dt>
     <dd><a href="{% url podcast_feed object.show.slug %}">{% trans "Subscribe" %}</a></dd>

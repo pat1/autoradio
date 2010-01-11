@@ -1,3 +1,4 @@
+{% load i18n %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -13,14 +14,14 @@
 <div id="header-wrap">
 <div id="header">
 {% block header %}
-<h1>Django podcast</h1>
+<h1>{% trans "Autoradio Mediacast" %}</h1>
 {% endblock %}
 </div>
 </div>
 
 <div id="return-wrap">
 <div id="return">
-<p>A list of episodes of one show</p>
+<p>{% trans "A list of episodes of one show" %}</p>
 </div>
 </div>
 
@@ -29,7 +30,7 @@
 
 {% block content %}
 
-<p class="back"><a href="{% url podcast_shows %}">Return to shows</a></p>
+<p class="back"><a href="{% url podcast_shows %}">{% trans "Return to shows" %}</a></p>
 
 {% regroup object_list by show as show_list %}
 
@@ -37,19 +38,21 @@
 <h2>{{ show.grouper.title }}</h2>
 <h3>{{ show.grouper.subtitle }}</h3>
 
-{% if show.grouper.explicity %}<p>Explicit</p>{% endif %}
+{% if show.grouper.explicity %}<p>{% trans "Explicit" %}</p>{% endif %}
 
 <dl>
-  {% if show.grouper.category.all %}<dt>Category</dt>
+  {% if show.grouper.category.all %}<dt>{% trans "Category" %}</dt>
+
     <dd>{% for category in show.grouper.category.all|slice:":1" %}{{ category.name }}{% endfor %}</dd>{% endif %}
-  <dt>Author</dt>{% for author in show.grouper.author.all %}
+  <dt>Author</dt>
+ {% for author in show.grouper.author.all %}
     <dd>{% if author.email %}<a href="mailto:{{ author.email }}">{% endif %}{% if author.first_name or author.last_name %}{% if author.first_name and author.last_name %}{{ author.first_name }} {{ author.last_name }}{% endif %}{% if author.first_name and not author.last_name %}{{ author.first_name }}{% endif %}{% if author.last_name and not author.first_name %}{{ author.last_name }}{% endif %}{% else %}{{ author.username }}{% endif %}{% if author.email %}</a>{% endif %}</dd>{% endfor %}
   <dt>RSS</dt>
-    <dd><a href="{% url podcast_feed object_list.all.0.slug %}">Subscribe</a></dd>
-  {% if show.grouper.feedburner %}<dt>FeedBurner</dt>
-    <dd><a href="{{ show.grouper.feedburner }}">Subscribe</a></dd>{% endif %}
+    <dd><a href="{% url podcast_feed show.grouper.slug %}">{% trans "Subscribe" %}</a></dd>
+  {% if show.grouper.feedburner %}<dt>{% trans "FeedBurner" %}</dt>
+    <dd><a href="{{ show.grouper.feedburner }}">{% trans "Subscribe" %}</a></dd>{% endif %}
   {% if show.grouper.itunes %}<dt>iTunes</dt>
-    <dd><a href="{{ show.grouper.itunes }}">Subscribe</a></dd>{% endif %}
+    <dd><a href="{{ show.grouper.itunes }}">{% trans "Subscribe" %}</a></dd>{% endif %}
 </dl>
 
 {% if show.grouper.image %}<div class="image"><img src="{{ show.grouper.image.url }}" width="{{ show.grouper.image.width }}" height="{{ show.grouper.image.height }}" alt="{{ show.grouper.organization }} show logo" /></div>{% endif %}
@@ -61,7 +64,7 @@
 <h4><a href="{{ episode.get_absolute_url }}">{{ episode.title }}</a></h4>
 <h5>{{ episode.subtitle }}</h5>
 
-{% if episode.image %}<div class="image"><a href="{{ episode.get_absolute_url }}"><img src="{{ episode.image.url }}" width="{{ episode.image.width }}" height="{{ episode.image.height }}" alt="{{ episode.title }} episode screenshot" /></a></div>{% endif %}
+{% if episode.image %}<div class="image"><a href="{{ episode.get_absolute_url }}"><img src="{{ episode.image.url }}" width="{{ episode.image.width }}" height="{{ episode.image.height }}" alt="{{ episode.title }} {% trans "episode screenshot" %}" /></a></div>{% endif %}
 
 <p>{% if episode.summary %}{{ episode.summary }}{% else %}{{ episode.description|striptags }}{% endif %}</p>
 {% endfor %}
@@ -75,7 +78,7 @@
 <div id="footer-wrap">
 <div id="footer">
 {% block footer %}
-<p>&#169; {% now "Y" %} {% regroup object_list by show as show_list %}{% for show in show_list %}{{ show.grouper.organization }}.{% endfor %} <a href="{% url podcast_feed object_list.all.0.slug %}">Subscribe</a>.</p>
+<p>&#169; {% now "Y" %} 
 {% endblock %}
 </div>
 </div>

@@ -240,5 +240,11 @@ if __name__ == '__main__':
     #signal.signal(signal.SIGINT, signal.SIG_IGN)
 
     # Start the CherryPy server.
-    start_http_server(iht=True)
+    try:
+        start_http_server(iht=True)
+    except:
+        print "Error"
+        raise
+    finally:
+        print "Terminated"
 

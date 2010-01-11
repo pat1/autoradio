@@ -37,6 +37,7 @@
     {% if show.grouper.redirect %}<itunes:new-feed-url>{{ show.grouper.redirect }}</itunes:new-feed-url>{% endif %}
     
     {% for episode in show.list %}<item>
+	{% if episode.enclosure_set.all.0.file %}
         <title>{{ episode.title }}</title>
         <link>{{ episode.enclosure_set.all.0.file.url }}</link>
         <description>{{ episode.description|striptags }}</description>
@@ -53,6 +54,7 @@
         {% if episode.explicit %}<itunes:explicit>{{ episode.explicit|lower }}</itunes:explicit>{% endif %}
         {% if episode.block %}<itunes:block>yes</itunes:block>{% endif %}
     </item>
+    {% endif %}
     {% endfor %}
     
 </channel>

@@ -1,5 +1,6 @@
 from django.views.generic.list_detail import object_list
 from django.views.generic.list_detail import object_detail
+from django.http import HttpResponseRedirect
 from autoradio.podcast.models import Episode, Show, Enclosure
 import autoradio.settings
 
@@ -32,11 +33,25 @@ def episode_list(request, slug):
         object_list
             List of episodes.
     """
+#    return object_list(
+#        request,
+#        queryset=Episode.objects.published().filter(show__slug__exact=slug),
+#        extra_context={'media_url':autoradio.settings.MEDIA_URL},
+#        template_name='podcast/episode_list.html')
+
+# from: http://code.google.com/p/django-podcast/issues/detail?id=12
+
+    try:
+        show = Show.objects.get(slug=slug)
+    except:
+        return HttpResponseRedirect(reverse('podcast_shows'))
+
+    context = {'show':show, 'media_url':autoradio.settings.MEDIA_URL}
     return object_list(
         request,
         queryset=Episode.objects.published().filter(show__slug__exact=slug),
-        extra_context={'media_url':autoradio.settings.MEDIA_URL},
-        template_name='podcast/episode_list.html')
+        template_name='podcast/episode_list.html',
+        extra_context = context)
 
 
 def episode_sitemap(request, slug):

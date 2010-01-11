@@ -144,13 +144,13 @@ def main(cwd):
 
                   if ( type == "spot" ):
                       # considero una emissione effettuata se e' avvenuta nell'intorno delle 3 ore
-                      if ( abs(emission_done - scheduledatetime) < timedelta(minutes=180)): 
+                      if ( abs(emission_done - scheduledatetime) < datetime.timedelta(minutes=180)): 
                           logging.debug(" %s %s %s schedula already done; ignore it !", type,scheduledatetime,emission_done)
                           continue
 
                   if ( type == "playlist" ):
                       # I assume the emission is done if it happen around 3 hours
-                      if ( abs(emission_done - scheduledatetime) < timedelta(minutes=180)): 
+                      if ( abs(emission_done - scheduledatetime) < datetime.timedelta(minutes=180)): 
                           logging.debug (" %s %s %s schedula already done; ignore it !",type,scheduledatetime,emission_done)
                           continue
 

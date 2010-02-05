@@ -59,7 +59,7 @@
 <ul>
   {% for enclosure in enclosure_list %}
   {% if enclosure.file %}
-  <li><a href="{{ enclosure.file.url }}"><strong>{% if enclosure.title %}{{ enclosure.title }}{% else %}{{ object.title }}{% endif %}</strong></a> ({{ enclosure.file.size|filesizeformat }})</li>
+  <li><a href="{{ enclosure.file.url }}"><strong>{% if enclosure.title %}{{ enclosure.title }}{% else %}{{ object.title }}{% endif %}</strong></a> ({{ enclosure.file.size|filesizeformat }})  --> <a href="/player/{{ enclosure.file.url }}"><strong>{% trans "Listen" %}</strong></a> </li>
   {% endif %}
   {% endfor %}
 </ul>

@@ -23,4 +23,5 @@ urlpatterns = patterns('',
     (r'^', include('autoradio.programs.urls')),
     (r'^', include('autoradio.palimpsest.urls')),
     (r'^podcasts/', include('autoradio.podcast.urls')),
+    (r'^player/', include('autoradio.player.urls')),
 )

@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>Universal Ogg player</title>
+  <script type="text/javascript" src="swfobject/swfobject.js"></script>
+  <script type="text/javascript">
+
+var flashvars = {
+};
+var params = {
+};
+var attributes = {
+  allowScriptAccess: "always",
+  swLiveConnect:"true",
+};
+
+var haveflash=false;
+function callbackFn(e) {
+  if (e.success){
+  //alert("you have flash");
+  haveflash=true;
+};
+
+createPlayer("http://www.radiocittafujiko.it:8001/rcf.ogg","html5player","flashplayer","javaplayer");
+
+}
+
+// try to update flash becouse after I am hidden !
+function cancelFunction() {
+  alert("Flash Express Install was cancelled");
+}
+if ( ! (swfobject.hasFlashPlayerVersion("10.0.0"))) {
+  var att = { data:"swfobject/expressInstall.swf", width:"310", height:"137" };
+  var par = {};
+  var id = "updateflash";
+  swfobject.showExpressInstall(att, par, id, cancelFunction);
+}
+
+
+    swfobject.embedSWF("flash/AnOgg.swf", "flashplayer",  "0", "0", "10.0.0", "swfobject/expressInstall.swf",flashvars,params,attributes,callbackFn);
+
+  </script>
+
+  <script type="text/javascript" src="js/player.js"></script>
+
+</head>
+
+<body>
+
+
+<div id="updateflash"></div>
+
+<!--
+<p>
+If do not work try <a id="playernohtml5" href="index.html"> This </a>
+</p>
+-->
+
+<div style="visibility:hidden">
+
+      <div id="flashplayer">
+
+	<applet id="javaplayer" code="com.fluendo.player.Cortado.class" archive="java/cortado.jar" width="352" height="288" style="visibility:hidden">
+	  <param name="url" value="http://www.radiocittafujiko.it:8001/rcf.ogg"/>
+	  <param name="archive" value="java/cortado.jar" />
+	  <param name="autoPlay" value="false"/>
+	  <param name="showStatus" value="show"/>
+	  <param name="local" value="false" />
+	  <param name="keepaspect" value="true" />
+	  <param name="video" value="false" />
+	  <param name="audio" value="true" />
+	  <param name="seekable" value="auto" />
+	  <param name="bufferSize" value="20" /> 
+	  <param name="allowScriptAccess" value="always" />
+	</applet>
+
+      </div>
+  </div>    
+
+  <script type="text/javascript">
+
+    document.write("<div id='player' style='visibility:show ; position:fixed; left:100px; top:40px; border: 2px solid red; '></div>");
+
+  </script>
+  <noscript>
+
+<!-- do not work without js
+    <audio id="html5nojs" src="http://www.radiocittafujiko.it:8001/rcf.ogg"  style="visibility:show;" controls="true">
+		<a id="pluginnojs" href="http://www.radiocittafujiko.it:8001/rcf.ogg" type="audio/ogg"> <img src="player.png"> </a>
+    </audio>
+-->
+
+<a id="pluginnojs" href="http://www.radiocittafujiko.it:8001/rcf.ogg" type="audio/ogg"> <img src="player.png" style='visibility:show ; position:fixed; left:100px; top:40px; border: 2px solid red; ' alt="playogg" /> </a>
+
+</noscript>
+
+
+</body>
+</html>

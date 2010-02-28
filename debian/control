@@ -1,0 +1,19 @@
+Source: autoradio
+Section: unknown
+Priority: extra
+Maintainer:  Paolo Patruno <p.patruno@iperbole.bologna.it>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.1
+Homepage:  http://autoradiobc.sf.net
+
+Package: autoradio
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description:  radio automation software
+AutoRadio Radio automation software. 
+Simple to use, starting from digital audio files manages on-air broadcasting over a radio-station or web-radio. 
+The main components are: 
+Player (Xmms): plays all your media files and send digital sound to an audio device or audio server; 
+Scheduler: real time manager for emission of special audio files like jingles, spots, playlist and programs; interact wi
+User inteface: WEB interface to monitor the player and scheduler and admin the schedules for the complete control over y
+

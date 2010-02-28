@@ -21,11 +21,16 @@
     function cancelFunction() {
      alert("Flash Express Install was cancelled");
     }
-    if ( ! (swfobject.hasFlashPlayerVersion("10.0.0"))) {
+    var upflash = function() {
+
       var att = { data:media_url+"/sito/playogg/swfobject/expressInstall.swf", width:"310", height:"137" };
       var par = {};
       var id = "updateflash";
       swfobject.showExpressInstall(att, par, id, cancelFunction);
+    }
+
+    if ( ! (swfobject.hasFlashPlayerVersion("10.0.0"))) {
+	swfobject.addDomLoadEvent(upflash);
     }
 
     swfobject.embedSWF(media_url+"/sito/playogg/flash/AnOgg.swf", "flashplayer",  "0", "0", "10.0.0", media_url+"/sito/playogg/swfobject/expressInstall.swf",flashvars,params,attributes,callbackFn);
@@ -112,10 +117,15 @@ function  createPlayer(playURL,html5id,flashid,javaid){
 		immagine.setAttribute("src",imgURL+"player.png");
 		immagine.setAttribute("id",id);
 		immagine.setAttribute("alt","Play OGG");
-		immagine.setAttribute("onclick","buttonPlayStop(event,'"+playURL+"','"+html5id+"','"+flashid+"','"+javaid+"')");
-	    
+		//immagine.setAttribute("onclick","buttonPlayStop(event,'"+playURL+"','"+html5id+"','"+flashid+"','"+javaid+"')");
+
 		// inseriamola quindi nel nostro tag <player>
 		document.getElementById("player").appendChild(immagine);
+
+		$("#"+id).click(function (event) { 
+			buttonPlayStop(event,playURL,html5id,flashid,javaid);
+		    });
+	    
 	    }
 	}
 }

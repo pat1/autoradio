@@ -1,10 +1,14 @@
+{% extends "podcast/base.html" %}
 {% load i18n %}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+
+
+{% block head %}
 
 <head>
   <title>Universal Ogg player</title>
   <script type="text/javascript" src="{{media_url}}/sito/playogg/swfobject/swfobject.js"></script>
+  <script type="text/javascript" src="{{media_url}}/sito/playogg/js/jquery-1.4.1.min.js"></script>
+
   <script type="text/javascript">
     var imgURL="{{ media_url }}/sito/playogg/";
     var media_url="{{ media_url }}";
@@ -14,17 +18,12 @@
 
   <link href="{{media_url}}sito/css/podcast.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
+{% endblock %}
 
-<body>
+
+{% block allcontent %}
 
 <div id="updateflash"></div>
-<div id="header-wrap">
-<div id="header">
-{% block header %}
-<h1>{% trans "Autoradio Mediacast" %}</h1>
-{% endblock %}
-</div>
-</div>
 
 <div style="visibility:hidden">
     <audio src="{{ media }}" id="html5player" type='audio/ogg; codecs=vorbis' autobuffer="true">
@@ -49,9 +48,10 @@
     </audio>
   </div>    
 
+<div id='player' style='visibility:show ; position:fixed; left:100px; top:200px;'></div>
   <script type="text/javascript">
-    document.write("<div id='player' style='visibility:show ; position:fixed; left:100px; top:200px;'></div>")
-// border: 2px solid red; 
+   // document.write("<div id='player' style='visibility:show ; position:fixed; left:100px; top:200px;'></div>")
+   // border: 2px solid red; 
   </script>
   <noscript>
 
@@ -65,11 +65,4 @@
 
 </noscript>
 
-<div id="footer" style="position:fixed; top:300px;">
-{% block footer %}
-<p>&#169; 2007-{% now "Y" %} Paolo Patruno.</p>
 {% endblock %}
-</div>
-
-</body>
-</html>

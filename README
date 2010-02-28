@@ -140,7 +140,7 @@ CONTRIBUTED SOFTWARE
 module daemon come from http://www.livinglogic.de/Python/index.html
 ## Copyright 2007-2009 by LivingLogic AG, Bayreuth/Germany.
 ## Copyright 2007-2009 by Walter Dörwald
-## All Rights Reserved
+## OSI Approved :: MIT License
 
 module mkplaylist come from http://bj.spline.de/mkplaylist-man.html
 # Author:        Marc 'BlackJack' Rintsch

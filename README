@@ -88,14 +88,18 @@ You can run autoradio daemon and web server from root distributed directory:
 
 change your preferred language and other preference in autoradio.cfg 
 
-./init.sh
+./autoradioctrl --syncdb
 
 You have to respond to some question to setup database.
 
+./autoradioweb run
+This start:
+autoradio webserver on port 8080
+
+./autoradiod run
 This start:
 daemon autoradiod (that launch xmms/audacious ) 
 the player web server respond on port 8888
-autoradio webserver on port 8080
 
 You have to use a browser pointing to localhost:8080
 
@@ -105,14 +109,14 @@ python setup.py install
 
 make and go in your preferred working writable directory
 modify /etc/autoradio/autoradio-site.cfg or
-copy it in your working directory with name autoradio.cfg and modify
+copy it in your working directory with name autoradio.cfg and modify it
 specify your personal settings for installed files
 if you want you can set global user setting coping configuration file in
 ~/.autoradio.cfg
 
 after:
 
-django-admin.py syncdb --settings=settings --pythonpath=/usr/lib/python<your python version number>/site-packages/autoradio
+autoradioctrl --syncdb
 autoradiod run
 autoradioweb run
 
@@ -123,6 +127,7 @@ running in .cfg files
 For a pubblic web server do not use django internal web server; use
 apache instead
 http://docs.djangoproject.com/en/dev/howto/deployment/modpython/#howto-deployment-modpython
+you can find an example configuration file in doc directory
 
 
 HOW IT WORKS

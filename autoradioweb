@@ -57,14 +57,10 @@ def main(cwd):
     management.call_command("runserver",autoradio.settings.port,use_reloader=False)
 
 
-
 if __name__ == '__main__':
 
     import sys, os
     cwd=os.getcwd()
-
-    setup_environ(autoradio.settings)
-    management.call_command("syncdb")
 
     if autoradioweb.service():
 

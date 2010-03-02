@@ -77,6 +77,7 @@ rm -rf $RPM_BUILD_ROOT
 #%{_datadir}/autoradio/locale/*
 %{_bindir}/autoradiod
 %{_bindir}/autoradioweb
+%{_bindir}/autoradioctrl
 
 %dir %{_var}/log/autoradio/
 %dir %{_var}/run/autoradio/

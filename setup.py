@@ -38,7 +38,7 @@ class compilemessages(Command):
 package_data = []
 data_files = []
 
-for dirpath, dirnames, filenames in os.walk('media'):
+for dirpath, dirnames, filenames in os.walk('media/sito'):
     # Ignore dirnames that start with '.'
     for i, dirname in enumerate(dirnames):
         if dirname.startswith('.'): del dirnames[i]

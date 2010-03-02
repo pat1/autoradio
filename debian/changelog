@@ -2,4 +2,4 @@ autoradio (1.4.0-1) unstable; urgency=low
 
   * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
 
- -- root <root@unknown>  Fri, 26 Feb 2010 21:20:21 +0100
+ -- Paolo Patruno <root@unknown>  Fri, 26 Feb 2010 21:20:21 +0100

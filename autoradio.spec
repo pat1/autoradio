@@ -19,12 +19,12 @@ Prefix: %{_prefix}
 BuildArch: noarch
 Vendor: Paolo Patruno <p.patruno@iperbole.bologna.it>
 Url: http://autoradiobc.sf.net
-BuildRequires: python-configobj, Django >= 1.0.3 
-Requires:python-mutagen >= 1.17, Django >= 1.0.3 , python-configobj, python-cherrypy, python-reportlab >=2.0 , python-docutils
+BuildRequires: python-configobj , Django >= 1.0.3 
+Requires:python-mutagen >= 1.17 , Django >= 1.0.3,  python-configobj, python-cherrypy, python-reportlab >= 2.0,  python-docutils
 %if 0%{?fedora} < 10
 Requires: pyxmms, xmms
 %else
-Requires: dbus-python,audacious >= 1.5
+Requires: dbus-python, audacious >= 1.5
 %endif
 
 # Compile options:
@@ -55,6 +55,10 @@ User inteface: WEB interface to monitor the player and scheduler and admin the s
 %install
 %{__python} setup.py install --single-version-externally-managed --root=$RPM_BUILD_ROOT
 
+mkdir -p  $RPM_BUILD_ROOT/%{_var}/log/autoradio/
+mkdir -p  $RPM_BUILD_ROOT/%{_var}/run/autoradio/
+
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -73,3 +77,64 @@ rm -rf $RPM_BUILD_ROOT
 #%{_datadir}/autoradio/locale/*
 %{_bindir}/autoradiod
 %{_bindir}/autoradioweb
+
+%dir %{_var}/log/autoradio/
+%dir %{_var}/run/autoradio/
+
+%post
+
+# set some useful variables
+AUTORADIO="autoradio"
+CHOWN="/bin/chown"
+ADDUSER="/usr/sbin/adduser"
+USERDEL="/usr/sbin/userdel"
+USERADD="/usr/sbin/useradd"
+GROUPDEL="/usr/sbin/groupdel"
+GROUPMOD="/usr/sbin/groupmod"
+ID="/usr/bin/id"
+
+set -e
+
+###
+# 1. get current autoradio uid and gid if user exists.
+if $ID $AUTORADIO > /dev/null 2>&1; then
+   IUID=`$ID --user $AUTORADIO`
+   IGID=`$ID --group $AUTORADIO`
+else
+   IUID="NONE"
+   IGID="NONE"
+fi
+
+####
+## 2. Ensure that no standard account or group will remain before adding the
+##    new user
+#if [ "$IUID" = "NONE" ] || [ $IUID -ge 1000 ]; then # we must do sth :)
+#  if ! [ "$IUID" = "NONE" ] && [ $IUID -ge 1000 ]; then
+#      # autoradio user exists but isn't a system user... delete it.
+#      $USERDEL $PEERCAST
+#      $GROUPDEL $PEERCAST
+#  fi
+#
+####
+
+# 3. Add the system account.
+#    Issue a debconf warning if it fails. 
+  if $GROUPMOD $AUTORADIO > /dev/null 2>&1; then 
+    # peercast group already exists, use --ingroup
+    if ! $ADDUSER --system --disabled-password --disabled-login --home /usr/share/autoradio --no-create-home --ingroup $AUTORADIO $AUTORADIO; then
+      echo "The adduser command failed."
+    fi
+  else
+    if ! $ADDUSER --system --disabled-password --disabled-login --home /usr/share/peercast --no-create-home --group $AUTORADIO; then
+      echo "The adduser command failed."
+    fi
+  fi
+fi
+set +e
+
+###
+# 4. change ownership of directory
+$CHOWN -R $AUTORADIO:$AUTORADIO /usr/share/autoradio/
+$CHOWN -R $AUTORADIO:$AUTORADIO /var/log/autoradio/
+$CHOWN -R $AUTORADIO:$AUTORADIO /etc/autoradio/
+$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/

@@ -18,10 +18,15 @@ urlpatterns = patterns('',
 
 #    Uncomment the next line to enable the admin:
     (r'^admin/(.*)', admin.site.root),
-    (r'^'+settings.MEDIA_ROOT+'sito/(.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_SITE_ROOT, 'show_indexes': True}),
-    (r'^'+settings.MEDIA_ROOT+'(.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
     (r'^', include('autoradio.programs.urls')),
     (r'^', include('autoradio.palimpsest.urls')),
     (r'^podcasts/', include('autoradio.podcast.urls')),
     (r'^player/', include('autoradio.player.urls')),
 )
+
+if ( settings.SERVE_STATIC ):
+#serve local static files
+    urlpatterns += patterns('',
+                            (r'^'+settings.SITE_MEDIA_PREFIX[1:]+'(.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_SITE_ROOT, 'show_indexes': True}),
+                            (r'^'+settings.MEDIA_PREFIX[1:]+'(.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+                            )

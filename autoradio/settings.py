@@ -27,6 +27,10 @@ configspec['django']['MEDIA_SITE_ROOT']="string(default='media/')"
 configspec['django']['TEMPLATE_DIRS']="list(default=list('templates',))"
 configspec['django']['MEDIA_URL']="string(default='/django/media/')"
 configspec['django']['ADMIN_MEDIA_PREFIX']="string(default='/django/media/admin/')"
+configspec['django']['MEDIA_PREFIX']="string(default='/media/')"
+configspec['django']['SITE_MEDIA_PREFIX']="string(default='/media/sito/')"
+configspec['django']['SERVE_STATIC']="boolean(default=True)"
+
 
 configspec['autoradioweb']={}
 
@@ -90,6 +94,9 @@ MEDIA_SITE_ROOT         = config['django']['MEDIA_SITE_ROOT']
 TEMPLATE_DIRS           = config['django']['TEMPLATE_DIRS']
 MEDIA_URL               = config['django']['MEDIA_URL']
 ADMIN_MEDIA_PREFIX      = config['django']['ADMIN_MEDIA_PREFIX']
+MEDIA_PREFIX            = config['django']['MEDIA_PREFIX']
+SITE_MEDIA_PREFIX       = config['django']['SITE_MEDIA_PREFIX']
+SERVE_STATIC            = config['django']['SERVE_STATIC']
 
 # section autoradioweb
 logfileweb              = config['autoradioweb']['logfile']

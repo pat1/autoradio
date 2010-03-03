@@ -2,14 +2,14 @@ Source: autoradio
 Section: sound
 Priority: extra
 Maintainer: Paolo Patruno <p.patruno@iperbole.bologna.it>
-Build-Depends: debhelper (>= 7)
+Build-Depends: debhelper (>= 7) ,python-django
 Build-Depends-Indep: python, python-support
 Standards-Version: 3.8.1
 Homepage: http://autoradiobc.sf.net
 
 Package: autoradio
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, python-reportlab, python-configobj, python-django, audacious
 Description: radio automation software
  Simple to use, starting from digital audio files manages on-air broadcasting
  over a radio-station or web-radio. 

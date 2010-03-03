@@ -177,6 +177,18 @@ def audacious_watchdog(session):
       logging.info("audacious_watchdog: launch_audacious")
       aud=autoaudacious.audacious()
 
+      try:
+         aud=autoaudacious.audacious()
+
+      except:
+         logging.error("audacious_watchdog: audacious2  not started: try with audacious")
+         import subprocess
+         subprocess.Popen("audacious" , shell=True)
+         import time
+         time.sleep(5)
+         logging.info("audacious_watchdog: launch_audacious")
+         aud=autoaudacious.audacious()
+
    try:
       # aud.root.Identity()
       version=LooseVersion(aud.org.Version())

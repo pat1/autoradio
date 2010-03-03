@@ -84,51 +84,104 @@ HOW TO INSTALL
 --------------
 
 >>>>> Easy way:
-You can run autoradio daemon and web server from root distributed directory:
+
+You can run autoradio daemon and web server from your root software
+distributed directory:
+
+python setup.py build
 
 change your preferred language and other preference in autoradio.cfg 
 
 ./autoradioctrl --syncdb
-
-You have to respond to some question to setup database.
+You have to answer to some question to setup database.
 
 ./autoradioweb run
-This start:
-autoradio webserver on port 8080
+This start autoradio webserver on port 8080
+
+control+c to stop it
+if all works well you can detach it with
+./autoradioweb restart
+
 
 ./autoradiod run
-This start:
-daemon autoradiod (that launch xmms/audacious ) 
+This start daemon autoradiod (that launch xmms/audacious ) 
 the player web server respond on port 8888
+
+control+c to stop it
+if all works well you can detach it with
+./autoradiod restart
+
 
 You have to use a browser pointing to localhost:8080
 
 
 >>>>> Installed way:
+
+you need access to root administrator user and after:
+
 python setup.py install
 
-make and go in your preferred working writable directory
-modify /etc/autoradio/autoradio-site.cfg or
+choose a normal user to run the daemons, create it and 
+make and go in your preferred user working writable directory
+
+modify /etc/autoradio/autoradio-site.cfg or from the normal user
 copy it in your working directory with name autoradio.cfg and modify it
 specify your personal settings for installed files
 if you want you can set global user setting coping configuration file in
 ~/.autoradio.cfg
 
-after:
+after from root:
 
-autoradioctrl --syncdb
-autoradiod run
-autoradioweb run
+autoradioctrl --syncdb --changeuser
+autoradioweb restart
+autoradiod restart
 
-You can run autoradiod and xmms/audacious in one host and autoradioweb in other if
-you use client server DB like mysql and specify where autoradiod is
-running in .cfg files
+You can run autoradiod and xmms/audacious in one host and autoradioweb
+in other if you use client server DB like mysql and specify where
+autoradiod is running in .cfg files
 
-For a pubblic web server do not use django internal web server; use
-apache instead
+For a pubblic web server do not use django internal web server:
+
+autoradioweb stop
+
+and use apache instead:
 http://docs.djangoproject.com/en/dev/howto/deployment/modpython/#howto-deployment-modpython
-you can find an example configuration file in doc directory
+you can find an example configuration file in doc directory:
+doc/apache_mod_python_example.conf
 
+set
+SERVE_STATIC=False
+in /etc/autoradio-site.cfg
+
+>>>> Pachaged way:
+
+for Fedora and Debian/Ubuntu you have the possibility to install from
+pachages in a easy way.
+
+The pachage create the autoradio user for you and set everything in a
+standard way for an easy use.
+
+to start everythings from root user (prepend sudo command for Ubuntu):
+autoradioctrl --syncdb --changeuser
+autoradioweb restart
+autoradiod restart
+
+If you want you can activate monit daemon to control autoradio
+daemons; an example conf file to add to monit is in:
+doc/monit_autoradio_example.conf
+
+For a pubblic web server do not use django internal web server:
+
+autoradioweb stop
+
+and use apache instead:
+http://docs.djangoproject.com/en/dev/howto/deployment/modpython/#howto-deployment-modpython
+you can find an example configuration file in doc directory:
+doc/apache_mod_python_example.conf
+
+set
+SERVE_STATIC=False
+in /etc/autoradio-site.cfg
 
 HOW IT WORKS
 ------------

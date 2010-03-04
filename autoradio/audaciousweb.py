@@ -158,11 +158,11 @@ class HomePage:
                 try:
                     mtimelength=metadata["length"]
                 except:
-                    mtimelength=None
+                    mtimelength=0
                 try:
                     mtimeposition=player.PositionGet()
                 except:
-                    mtimeposition=None
+                    mtimeposition=0
 
                 timelength=datetime.timedelta(seconds=datetime.timedelta(milliseconds=mtimelength).seconds)
                 timeposition=datetime.timedelta(seconds=datetime.timedelta(milliseconds=mtimeposition).seconds)

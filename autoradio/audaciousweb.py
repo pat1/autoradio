@@ -146,7 +146,7 @@ class HomePage:
                 metadata=tracklist.GetMetadata(pos)
 
                 try:
-                    file=metadata["URI"]
+                    file=metadata["location"]
                 except:
                     file=None
                 try:
@@ -156,7 +156,7 @@ class HomePage:
                 except:
                     title=None
                 try:
-                    mtimelength=metadata["length"]
+                    mtimelength=metadata["mtime"]
                 except:
                     mtimelength=0
                 try:

@@ -43,27 +43,29 @@ else
    IGID="NONE"
 fi
 
-###
-# 2. Ensure that no standard account or group will remain before adding the
-#    new user
-if [ "$IUID" = "NONE" ] || [ $IUID -ge 1000 ]; then # we must do sth :)
-  if ! [ "$IUID" = "NONE" ] && [ $IUID -ge 1000 ]; then
-      # autoradio user exists but isn't a system user... delete it.
-      $USERDEL $AUTORADIO
-      $GROUPDEL $AUTORADIO
-  fi
+if [ "$IUID" = "NONE" ] ; then # we must do sth :)
 
-###
+####
+## 2. Ensure that no standard account or group will remain before adding the
+##    new user
+#if [ "$IUID" = "NONE" ] || [ $IUID -ge 1000 ]; then # we must do sth :)
+#  if ! [ "$IUID" = "NONE" ] && [ $IUID -ge 1000 ]; then
+#      # autoradio user exists but isn't a system user... delete it.
+#      $USERDEL $AUTORADIO
+#      $GROUPDEL $AUTORADIO
+#  fi
+#
+####
 
 # 3. Add the system account.
 #    Issue a debconf warning if it fails. 
   if $GROUPMOD $AUTORADIO > /dev/null 2>&1; then 
     # autoradio group already exists, use --ingroup
-    if ! $ADDUSER --system --disabled-password --disabled-login --home /usr/share/autoradio --no-create-home --ingroup $AUTORADIO $AUTORADIO; then
+    if ! $ADDUSER --disabled-password --disabled-login --no-create-home --ingroup $AUTORADIO $AUTORADIO; then
       echo "The adduser command failed."
     fi
   else
-    if ! $ADDUSER --system --disabled-password --disabled-login --home /usr/share/autoradio --no-create-home --group $AUTORADIO; then
+    if ! $ADDUSER --disabled-password --disabled-login --no-create-home --group $AUTORADIO; then
       echo "The adduser command failed."
     fi
   fi
@@ -74,8 +76,10 @@ set +e
 
 ###
 # 4. change ownership of directory
-mkdir -p /var/log/autoradio/
-mkdir -p /var/run/autoradio/
+
+install -d /var/{run/autoradio,log/autoradio}
+#mkdir -p /var/log/autoradio/
+#mkdir -p /var/run/autoradio/
 
 $CHOWN -R $AUTORADIO:$AUTORADIO /usr/share/autoradio/
 $CHOWN -R $AUTORADIO:$AUTORADIO /etc/autoradio/

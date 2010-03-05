@@ -9,7 +9,7 @@ Homepage: http://autoradiobc.sf.net
 
 Package: autoradio
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, python, python-reportlab (>=2.0) , python-configobj, python-django (>=1.03) , audacious, python-mutagen (>=1.17) ,python-cherrypy3 , python-dbus
+Depends: ${shlibs:Depends}, ${misc:Depends}, python, python-reportlab (>=2.0) , python-configobj, python-django (>=1.0.3) , audacious, python-mutagen (>=1.17) ,python-cherrypy3 , python-dbus
 Description: radio automation software
  Simple to use, starting from digital audio files manages on-air broadcasting
  over a radio-station or web-radio. 

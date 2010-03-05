@@ -45,6 +45,7 @@ for dirpath, dirnames, filenames in os.walk('media/sito'):
     if filenames:
         data_files.append(['share/autoradio/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
 
+
 for dirpath, dirnames, filenames in os.walk('doc'):
     # Ignore dirnames that start with '.'
     for i, dirname in enumerate(dirnames):

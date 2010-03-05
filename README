@@ -31,6 +31,7 @@ FEATURES
 REQUIRES
 --------
 
+
 Autoradio try to work on old distribution like fedora 8 with xmms and 
 cherrypy2 
 On more recent ditrubution I suggest audacious version >= 1.5 and cherypy3
@@ -46,7 +47,7 @@ http://code.google.com/p/mutagen/
 you can obtain it:
 http://code.google.com/p/mutagen/downloads/list
 svn checkout http://mutagen.googlecode.com/svn/trunk/ mutagen
-You can get also some tar and rpm from autoradio project home page 
+You can get also some tar, rpm and deb from autoradio project home page 
 
 django
 http://www.djangoproject.com/
@@ -78,6 +79,16 @@ Player (xmms or audacious in alternative):
 
     audacious
     http://audacious-media-player.org/
+
+
+In debian/ubuntu distribution you need those packeges: python
+python-setuptools, python-django, python-configobj, gettext
+python-reportlab, audacious, python-mutagen (>=1.17) ,python-cherrypy3
+, python-dbus
+
+In Fedora distibution you need those pckages: python-mutagen >= 1.17 ,
+Django, python-configobj, python-cherrypy, python-reportlab,
+python-docutils
 
 
 HOW TO INSTALL

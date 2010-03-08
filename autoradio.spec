@@ -41,9 +41,19 @@ Requires: dbus-python, audacious >= 1.5
 AutoRadio Radio automation software. 
 Simple to use, starting from digital audio files manages on-air broadcasting over a radio-station or web-radio. 
 The main components are: 
-Player (Xmms): plays all your media files and send digital sound to an audio device or audio server; 
-Scheduler: real time manager for emission of special audio files like jingles, spots, playlist and programs; interact wi
-User inteface: WEB interface to monitor the player and scheduler and admin the schedules for the complete control over y
+
+    * Player (Xmms/Audacious): plays all your media files and send digital sound
+      to an audio device or audio server
+ 
+    * Scheduler: real time manager for emission of special audio files
+      like jingles, spots, playlist and programs; interact with player
+      like supervisor User
+
+    * inteface: WEB interface to monitor the player and scheduler and
+      admin the schedules for the complete control over your station
+      format
+
+Developed with Python, Django, Dbus it works in an production enviroment
 
 
 %prep

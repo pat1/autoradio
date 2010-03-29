@@ -1,0 +1,64 @@
+{% load i18n %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<meta http-equiv="Content-Language" content="it-it" />
+
+		<title>AutoRadio | {% block title %} Radio Automation Software {% endblock %}</title>
+
+		<meta name="ROBOTS" content="ALL" />
+		<meta http-equiv="imagetoolbar" content="no" />
+		<meta name="MSSmartTagsPreventParsing" content="true" />
+		<meta name="Copyright" content="This site's design and contents Copyright (c) 2007-{% now "Y" %} Patruno Paolo." />
+
+		<meta name="keywords" content="Python, Django, framework, open-source AutoRadio Radio Automation RadioCittaFujiko" />
+		<meta name="description" content="Autoradio Radio Automazione." />
+
+		<link href="{{media_url}}sito/css/{% block cssid %}base{% endblock %}.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="{{media_url}}sito/css/print.css" rel="stylesheet" type="text/css" media="print" />
+
+		{% block refresh %}
+		  <meta http-equiv="refresh" content="300">
+		{% endblock %}
+
+      {% block extrahead %}{% endblock %}
+	</head>
+
+	<body id="{% block sectionid %}generic{% endblock %}" class="{% block coltype %}default{% endblock %}">
+
+	<div id="container">
+		<div id="header">
+			<h1 id="logo"><a href="/"><img src="/{{media_url}}/image/logo.gif" alt="AutoRadio"></a></h1>
+			<ul id="nav-global">
+				<li id="nav-homepage"><a href="/">{% trans "Home" %}</a></li>
+				<li id="nav-player"><a href="/xmms/">{% trans "Player" %}</a></li>
+				<li id="nav-admin"><a href="/admin/">{% trans "Admin" %}</a></li>
+				<li id="nav-program"><a href="/admin/programs/program/">{% trans "Program" %}</a></li>
+				<li id="nav-jingle"><a href="/admin/jingles/jingle/">{% trans "Jingle" %}</a></li>
+				<li id="nav-spot"><a href="/admin/spots/spot/">{% trans "Spot" %}</a></li>
+				<li id="nav-playlist"><a href="/admin/playlists/playlist/">{% trans "Playlist" %}</a></li>
+				<li id="nav-playlist"><a href="/podcasts/">{% trans "Mediacast" %}</a></li>
+				<li id="nav-playlist"><a href="/programsbook/">{% trans "ProgBook" %}</a></li>
+			</ul>
+		</div>
+		<!-- END Header -->
+		<div id="billboard">{% block billboard %}{% endblock %}</div>
+		<div id="columnwrap">
+			{% block columnwrap %}
+				<div id="content-main">
+				{% block content %}{% endblock %}
+				</div>
+				<!-- END #content-main -->
+			{% endblock %}
+		</div>
+		<!-- END #content -->
+		<div id="footer">
+			<p>&copy; 2007-{% now "Y" %} <a href="http://radiocittafujiko.it">RadioCittaFujiko</a> unless otherwise noted. <a href="http://djangoproject.com">Django</a> is a registered trademark of Lawrence Journal-World. <a href="http://bfsf.it/wiki/AutoRadio">AutoRadio</a> is developed by Paolo Patruno</p>
+		</div>
+	</div>
+	<!-- END #container -->
+	</body>
+</html>
+

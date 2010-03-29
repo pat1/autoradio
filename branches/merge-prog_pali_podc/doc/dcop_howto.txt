@@ -1,0 +1,23 @@
+aggiunge una playlist alla playlistwrobser (laterale):
+ dcop amarok playlistbrowser addPlaylist /tmp/save.m3u 
+
+
+dice che deve essere suonata:
+ dcop amarok playlistbrowser loadPlaylist save
+
+
+questo carica una playlist dinamica:
+ dcop amarok playlistbrowser loadPlaylist dimenticate
+che subit dopo va ripopolata:
+ dcop amarok playlist repopulate
+
+
+questo ripulisce una playlist:
+ dcop amarok playlist adjustDynamicPrevious
+
+questo termina bene
+ dcop amarok MainApplication-Interface
+
+questo salva lo stato
+ dcop amarok playlist saveCurrentPlaylist
+

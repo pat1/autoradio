@@ -1,0 +1,255 @@
+#!/usr/bin/env python
+# GPL. (C) 2007-2009 Paolo Patruno.
+
+# This program is free software; you can redistribute it and/or modify 
+# it under the terms of the GNU General Public License as published by 
+# the Free Software Foundation; either version 2 of the License, or 
+# (at your option) any later version. 
+# 
+# This program is distributed in the hope that it will be useful, 
+# but WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# GNU General Public License for more details. 
+# 
+# You should have received a copy of the GNU General Public License 
+# along with this program; if not, write to the Free Software 
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+# 
+
+# ToDo:
+# controllare gli inserimenti al livello di django ADMIN INTERFACE
+# controllare altri conflitti in districa oltre ai jingles
+# utilizzare mp3splt per spezzare i programmi per fare gli inserimenti pubblicitari
+# alternare meglio i jingle tenendo in considerazione la priorita
+# a cavallo della mezzanotte verificare il funzionamento
+
+
+from autoradio.autoradio_config import *
+from autoradio import daemon
+
+autoradiod = daemon.Daemon(
+        stdin="/dev/null",
+        stdout="/dev/null",
+        stderr="/dev/null",
+        pidfile=lockfile,
+        user=user,
+        group=group,
+        env=env
+)
+
+
+def main(cwd):
+
+    import logging,os,sys,errno,signal,logging.handlers
+    import subprocess
+    import thread
+    import datetime
+    import time as timesleep
+    #from threading import *
+    import autoradio.autoradio_core
+
+    if (player == "amarok") :
+        import autoradio.manageamarok as manageplayer 
+
+    elif (player == "xmms"):
+        #    from managepytone import *
+        import autoradio.managexmms as manageplayer
+        import autoradio.xmmsweb as playerweb
+
+    elif (player == "audacious"):
+        import autoradio.manageaudacious as manageplayer
+        import autoradio.audaciousweb as playerweb
+
+    else:
+        logging.error('wrong player %s' % player)
+        raise Exception()
+
+
+
+    os.chdir(cwd)
+
+    #def signalhandler(signum, frame):
+    #    logging.info( 'Signal handler called with signal %d', signum)
+
+    handler = logging.handlers.RotatingFileHandler(logfile, maxBytes=5000000, backupCount=10)
+    formatter=logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+
+    handler.setFormatter(formatter)
+    #handler.setLevel(logging.DEBUG)
+
+    # Add the log message handler to the root logger
+    logging.getLogger('').addHandler(handler)
+    logging.getLogger('').setLevel(logging.DEBUG)
+
+    logging.info('Starting up autoradiod')
+
+    #signal.signal(signal.SIGALRM, signalhandler)
+
+    f = open(timestampfile, "w")
+    f.write(str(datetime.datetime.now()))
+    f.close()
+
+    #we want to run a single process
+
+    try:
+
+      # now we can start to do our work
+      # time constant
+
+      # this is the first and last time that I set now with the current time
+      now=datetime.datetime.now()
+
+      first = True
+
+      if (player == "amarok") :
+          kapp=KdeInit()
+          function=manageplayer.ManageAmarok
+          ok=amarok_watchdog(kapp)
+
+      else:
+  #        function=ManagePytone
+          session=0
+
+          # parte un thread pe monitorare via web il player
+          #t = Timer(5.0, xmmsweb.start_http_server)
+          #t.start()
+
+          t = thread.start_new_thread(playerweb.start_http_server,())
+          #os.system("python xmmsweb.py&")
+          #p = subprocess.Popen("xmmsweb.py")
+
+
+          if (player == "amarok"):
+              ok=manageplayer.amarok_watchdog(kapp)
+          elif (player == "xmms"):
+              ok=manageplayeer.xmms_watchdog(session)
+          elif (player == "audacious"):
+              ok=manageplayer.audacious_watchdog(session)
+
+      while ( True):
+
+          scheds=autoradio.autoradio_core.schedules([])
+          for schedule in scheds.get_all_refine(now):
+
+              scheduledatetime=schedule.scheduledatetime
+              media=schedule.media
+              type=schedule.type
+              emission_done=schedule.emission_done
+
+              if ( emission_done <> None ):
+                  if ( type == "program" ):
+                      #la trasmissione ha una schedula con un'unica emissione prevista
+                      logging.debug( " %s %s %s schedula already done; ignore it !",type,scheduledatetime,emission_done)
+                      continue
+
+                  if ( type == "spot" ):
+                      # considero una emissione effettuata se e' avvenuta nell'intorno delle 3 ore
+                      if ( abs(emission_done - scheduledatetime) < datetime.timedelta(minutes=180)): 
+                          logging.debug(" %s %s %s schedula already done; ignore it !", type,scheduledatetime,emission_done)
+                          continue
+
+                  if ( type == "playlist" ):
+                      # I assume the emission is done if it happen around 3 hours
+                      if ( abs(emission_done - scheduledatetime) < datetime.timedelta(minutes=180)): 
+                          logging.debug (" %s %s %s schedula already done; ignore it !",type,scheduledatetime,emission_done)
+                          continue
+
+
+              delta=( scheduledatetime - now)
+              sec=manageplayer.secondi(delta)
+              #schedule for the nest minsched minutes starting from minsched minuti forward
+              #if it is the first time I start from minsched minuti in the past
+              if (first and ( type == "program" or type == "spot" or type == "playlist")): 
+                  #recovery programmi, playlist e pubblicita' not emitted in a ragionable past time range
+                  startschedsec=-60*minsched
+              elif (first and ( type == "jingle")):
+                  startschedsec=0
+              else:
+                  startschedsec=60*minsched
+
+
+              endschedsec = 60*minsched*2
+              if ( startschedsec < sec and sec <= endschedsec ):
+
+                  #print "ora schedulata", scheduledatetime
+                  #print "ora attuale", datetime.now()
+
+                  if (player == "amarok") :
+                      threadschedule=manageplayer.ScheduleProgram(kapp,function,operation,media,scheduledatetime,obj)
+                  else:
+                      #threadschedule=ScheduleProgram(session,function,operation,media,scheduledatetime,obj,shuffle,length)
+                      threadschedule=manageplayer.ScheduleProgram(session,schedule)
+
+                  logging.debug (" %s %s programmed for %s seconds forward", type,media,threadschedule.deltasec)
+                  threadschedule.start()
+
+          first = False
+          sleepsec=minsched/5.*60.
+
+          #now I advance minsched and wait the right time to proced
+          now=now+datetime.timedelta(0,60*minsched)
+          while ( datetime.datetime.now() < now):
+              if (player == "amarok"):
+                  ok=manageplayer.save_status(kapp)
+
+              else:
+                  ok=manageplayer.save_status(session)
+
+              if ( ok ) :
+
+                  f = open(timestampfile, "w")
+                  f.write(str(datetime.datetime.now()))
+                  f.close()
+
+              logging.debug ( "sleeping for %s seconds:%s  %d",sleepsec,__name__,os.getpid())
+
+              #signal.alarm(0)
+              timesleep.sleep(sleepsec)
+
+              #os.system("sleep 60")
+              #target = time.time()
+              #while True:
+              #   now = time.time()
+              #   if now >= target+60: break
+              #   os.sleep(target-now)
+
+              #logging.debug ( "wake up: %s  %d",__name__,os.getpid() )
+
+          #sometime adjust playlist (will be deleted)
+          if (player == "amarok"):
+              ok=manageplayer.amarok_watchdog(kapp)
+          elif (player == "xmms"):
+              ok=manageplayer.xmms_watchdog(session)
+          elif (player == "audacious"):
+              ok=manageplayer.audacious_watchdog(session)
+
+
+    except:
+      import traceback
+      msg = traceback.format_exc()
+      logging.error(msg)
+      logging.info('Stopping')
+
+      return 2
+
+    else:
+      msg = "error without traceback; what happens ?!?!"
+      logging.error(msg)
+      logging.info('Stopping')
+
+      return 3
+
+    
+if __name__ == '__main__':
+
+    import sys, os
+    cwd=os.getcwd()
+
+    if autoradiod.service():
+
+        sys.stdout.write("Daemon started with pid %d\n" % os.getpid())
+        sys.stdout.write("Daemon stdout output\n")
+        sys.stderr.write("Daemon stderr output\n")
+
+        sys.exit(main(cwd))  # (this code was run as script)
+    

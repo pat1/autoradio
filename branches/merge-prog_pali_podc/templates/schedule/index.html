@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+
+{% block title %}{{ section.title }}{% endblock %}
+
+{% block content %}
+
+<p>{% trans "Automatic update every" %} 5 {% trans "minuts" %}. {% trans "Last update" %}:  {% now "Y-m-d H:i:s" %}</p>
+<p>{% trans "This is on air status" %}:</p>
+
+{% if schedule %}
+    <table  cellpadding="8" cellspacing="8" border="1" align="left" valign="middle" bgcolor="#888844" frame="border" rules="all">
+      <tr bgcolor="#F0F0F0">
+      <td><B> {% trans "Type" %} </B></td><td><B> {% trans "Name" %} </B></td><td><B> {% trans "Programmed for" %} </B></td><td><B> {% trans "That is" %} </B></td><td><B> {% trans "Last emission done" %} </B></td><td><B> {% trans "Length" %}  </B></td><td><B> {% trans "File" %} </B></td>
+      </tr>
+    {% for nome,datet,media,length,tipo,datetdone,future in schedule %}
+      <tr>
+        <td 
+	   {%ifequal tipo "spot" %} bgcolor="#FFA500" {% endifequal %}
+	   {%ifequal tipo "playlist" %} bgcolor="#FFFF00" {% endifequal %}
+	   {%ifequal tipo "program" %} bgcolor="#1E90FF" {% endifequal %}
+	   {%ifequal tipo "jingle" %} bgcolor="#448888" {% endifequal %}
+           >  {{ tipo  }} </td>
+	<td
+	   {%ifequal tipo "spot" %} bgcolor="#FFA500" {% endifequal %}
+	   {%ifequal tipo "playlist" %} bgcolor="#FFFF00" {% endifequal %}
+	   {%ifequal tipo "program" %} bgcolor="#1E90FF" {% endifequal %}
+	   {%ifequal tipo "jingle" %} bgcolor="#448888" {% endifequal %}
+	   > {{ nome  }} </td>
+	<td {% if future %} bgcolor="#884488" {%else %} bgcolor="#00FF00" {% endif %}> {{  datet|date:"Y-m-d H:i:s" }} </td>
+	<td {% if future %} bgcolor="#884488" {%else %} bgcolor="#00FF00" {% endif %}> {%if datet %} {% if future %} {% trans "in" %} {{ datet|timeuntil }} {% else %} {{ datet|timesince }} {% trans "ago" %} {% endif %}{% endif %}</td>
+	<td> {{ datetdone|timesince }} {%if datetdone %} {% trans "ago" %} {% endif %}</td>
+	<td> {{ length }}</td>
+	<td> <a href="{{ media  }}">{% trans "Download" %}</a></td>
+      </tr>
+    {% endfor %}
+    </table>
+
+{% else %}
+    <p>{% trans "No schedule are available" %}.</p>
+{% endif %}
+
+
+
+{% endblock %}

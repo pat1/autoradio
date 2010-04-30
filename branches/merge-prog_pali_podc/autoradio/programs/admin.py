@@ -6,6 +6,17 @@ class EnclosureInline(admin.StackedInline):
     model = Enclosure
     extra=1
     max_num=10
+    fieldsets = (
+        (None, {
+                'fields': ('title', 'file',)
+                }),
+        ('Podcast options', {
+                'classes': ('collapse',),
+                'fields': ('mime', 'medium','expression','frame','bitrate',\
+                               'sample','channel','algo','hash','player','embed','width','height')
+                }),
+        )
+
 
 
 class ScheduleInline(admin.StackedInline):
@@ -98,8 +109,21 @@ admin.site.register(PeriodicSchedule, PeriodicScheduleAdmin)
 
 
 class EnclosureAdmin(admin.ModelAdmin):
+
     list_display = ('title',)
     list_filter = ['medium','mime','bitrate']
     search_fields = ['title','file']
+
+    fieldsets = (
+        (None, {
+                'fields': ('title', 'file',)
+                }),
+        ('Podcast options', {
+                'classes': ('collapse',),
+                'fields': ('mime', 'medium','expression','frame','bitrate',\
+                               'sample','channel','algo','hash','player','embed','width','height')
+                }),
+        )
+
 
 admin.site.register(Enclosure, EnclosureAdmin)

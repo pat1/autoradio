@@ -23,7 +23,7 @@ class schedule:
     emission_done=None
     shuffle=False):
     """
-    def __init__ (self,djobj,scheduledatetime,media,length=None,type=None,emission_done=None,shuffle=False,maxlength=None):
+    def __init__ (self,djobj,scheduledatetime,media,length=None,type=None,emission_done=None,shuffle=False,maxlength=None,enclosure=None):
         """
         init of schedule object:
         """
@@ -36,7 +36,7 @@ class schedule:
         self.emission_done=emission_done
         self.shuffle=shuffle
         self.maxlength=maxlength
-
+        self.enclosure=enclosure
 
     def __cmp__ (self, b):
 
@@ -83,6 +83,7 @@ class schedule:
         #return iter((self.djobj,self.scheduledatetime,self.media,self.length,self.type,self.emission_done,self.shuffle,self.future(now)))
 
         yield self.djobj
+        yield self.enclosure
         yield self.scheduledatetime
         yield self.mediaweb
         yield str((datetime(2000,1,1)+timedelta(seconds=int(self.length))).time())
@@ -99,7 +100,7 @@ class schedules(list):
     def districa(self):
         '''
         english:
-        try to extricate fron an schedules ensemble
+        try to extricate from an schedules ensemble
         the more easy operation is to delete jingles inside programs and spots
         italian: cerca di sdistricarsi tra un insieme di schedule
         la prima operazione da fare e' togliere i jingle che coincidono con programmi e pubblicita'
@@ -208,18 +209,26 @@ class schedules(list):
             if (number <> 0 ):
                 self.append(schedule(fascia,scheduledatetime,media,length,"spot",emission_done))
 
+
         programs=gest_program(now,minelab)
 
         for programma in programs.get_program():
 
-            # remove prefix
-            media = programma.ar_filename
-            scheduledatetime=programma.ar_scheduledatetime
-            length=programma.ar_length
-            emission_done=programma.ar_emission_done
+            for i in range(len(programma.ar_filename)):
+                # loop over all Enclosure
+                media = programma.ar_filename[i]
+                if i == 0:
+                    scheduledatetime=programma.ar_scheduledatetime
+                    length=programma.ar_length[i]
+                else:
+                    scheduledatetime=programma.ar_scheduledatetime+timedelta(seconds=programma.ar_length[i-1])
+                    length=programma.ar_length[i]
 
-            #print scheduledatetime,media,length,emission_done
-            self.append(schedule(programma,scheduledatetime,media,length,"program",emission_done))
+                emission_done=programma.ar_emission_done
+
+                #print scheduledatetime,media,length,emission_done
+                self.append(schedule(programma,scheduledatetime,media,length,"program",emission_done,enclosure=programma.ar_title[i]))
+
 
         playlists=gest_playlist(now,minelab)
 

@@ -64,15 +64,17 @@ class gest_program:
 
             programma=schedule
             programma.ar_filename=[]
+            programma.ar_length=[]
+            programma.ar_title=[]
             for enclosure in schedule.episode.enclosure_set.order_by('id'):
                 logging.debug("PROGRAM: files: %s", enclosure.file.path)
                 programma.ar_filename.append(enclosure.file.path)
+                programma.ar_title.append(enclosure.title)
 
             programma.ar_scheduledatetime=schedule.emission_date
             programma.ar_emission_done=schedule.emission_done
 
             # calcolo la lunghezza del programma
-            programma.ar_length=[]
 
             for filen in programma.ar_filename:
                 try:

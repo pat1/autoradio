@@ -8,7 +8,7 @@ from autoradio_config import *
 
 from django.db.models import Q
 from programs.models import Schedule
-from programs.models import Program
+from programs.models import Show
 from programs.models import Configure
 
 # to get metadata from audio files
@@ -46,33 +46,41 @@ class gest_program:
             return
 
         # estraggo i record di mio interesse
-        self.schedule=Schedule.objects.select_related()\
+        self.schedules=Schedule.objects.select_related()\
             .filter(emission_date__gte=datesched_min)\
             .filter(emission_date__lte=datesched_max)\
-            .filter(program__active__exact=True)\
+            .filter(episode__active__exact=True)\
             .order_by('emission_date')
 #               .filter(emission_done__isnull=True).order_by('emission_date')
 
     def get_program(self):
-        "iterale to get program"
+        "iterate to get program"
                 
-        for programma in self.schedule:
-            logging.debug("PROGRAM: %s %s %s", programma.program.file , ' --> '\
-                              ,  programma.emission_date.isoformat())
+        for schedule in self.schedules:
+#            logging.debug("PROGRAM: %s %s %s", programma.program.file , ' --> '\
+#                              ,  programma.emission_date.isoformat())
+            logging.debug("PROGRAM: %s %s %s", schedule.episode , ' --> '\
+                              ,  schedule.emission_date.isoformat())
 
-            logging.debug("PROGRAM: %s", programma.program.file.path)
+            programma=schedule
+            programma.ar_filename=[]
+            for enclosure in schedule.episode.enclosure_set.order_by('id'):
+                logging.debug("PROGRAM: files: %s", enclosure.file.path)
+                programma.ar_filename.append(enclosure.file.path)
 
-            programma.ar_filename=programma.program.file.path
-            programma.ar_scheduledatetime=programma.emission_date
-            programma.ar_emission_done=programma.emission_done
+            programma.ar_scheduledatetime=schedule.emission_date
+            programma.ar_emission_done=schedule.emission_done
 
             # calcolo la lunghezza del programma
-	    try:
-                programma.ar_length=mutagen.File(programma.ar_filename).info.length
-                logging.debug("PROGRAM: elaborate time length: %s",programma.ar_length)
-	    except:
-                logging.error("PROGRAM: error establish time length; use an estimation %s", programma.ar_filename)
-            	programma.ar_length=3600
+            programma.ar_length=[]
+
+            for filen in programma.ar_filename:
+                try:
+                    programma.ar_length.append(mutagen.File(filen).info.length)
+                    logging.debug("PROGRAM: elaborate time length: %s",programma.ar_length)
+                except:
+                    logging.error("PROGRAM: error establish time length; use an estimation %s", programma.ar_filename)
+                    programma.ar_length.append(3600)
 
             yield programma
 

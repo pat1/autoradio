@@ -19,8 +19,8 @@ urlpatterns = patterns('',
 #    Uncomment the next line to enable the admin:
     (r'^admin/(.*)', admin.site.root),
     (r'^', include('autoradio.programs.urls')),
-    (r'^', include('autoradio.palimpsest.urls')),
-    (r'^podcasts/', include('autoradio.podcast.urls')),
+#    (r'^', include('autoradio.palimpsest.urls')),
+#    (r'^podcasts/', include('autoradio.podcast.urls')),
     (r'^player/', include('autoradio.player.urls')),
 )
 

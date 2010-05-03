@@ -217,21 +217,15 @@ class schedules(list):
 
         for programma in programs.get_program():
 
-            for i in range(len(programma.ar_filename)):
-                # loop over all Enclosure
-                media = programma.ar_filename[i]
-                if i == 0:
-                    scheduledatetime=programma.ar_scheduledatetime
-                    length=programma.ar_length[i]
-                else:
-                    scheduledatetime=programma.ar_scheduledatetime+timedelta(seconds=programma.ar_length[i-1])
-                    length=programma.ar_length[i]
+            media = programma.ar_filename
+            scheduledatetime=programma.ar_scheduledatetime
+            length=programma.ar_length
+            emission_done=programma.ar_emission_done
+            title=programma.ar_title
 
-                emission_done=programma.ar_emission_done[i]
-
-                #print scheduledatetime,media,length,emission_done
-                self.append(schedule(programma,scheduledatetime,media,length,"program",\
-                                         emission_done,title=programma.ar_title[i]))
+            #print scheduledatetime,media,length,emission_done
+            self.append(schedule(programma,scheduledatetime,media,length,"program",\
+                                     emission_done,title=title))
 
 
         playlists=gest_playlist(now,minelab)

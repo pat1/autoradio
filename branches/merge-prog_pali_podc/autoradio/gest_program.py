@@ -62,17 +62,13 @@ class gest_program:
             logging.debug("PROGRAM: %s %s %s", schedule.episode , ' --> '\
                               ,  schedule.emission_date.isoformat())
 
-            ar_filename=[]
-            ar_length=[]
-            ar_title=[]
-            ar_emission_done=[]
-
+            firth=True
             for enclosure in schedule.episode.enclosure_set.order_by('id'):
                 logging.debug("PROGRAM: files: %s", enclosure.file.path)
-                ar_filename.append(enclosure.file.path)
-                ar_title.append(schedule.episode.show.title+" / "\
-                                              +schedule.episode.title+" / "\
-                                              +enclosure.title)
+                ar_filename=enclosure.file.path
+                ar_title=schedule.episode.show.title+" / "\
+                    +schedule.episode.title+" / "\
+                    +enclosure.title
 
                 query=ScheduleDone.objects.filter(enclosure=enclosure,schedule=schedule)
 
@@ -83,29 +79,34 @@ class gest_program:
                     scheduledone=ScheduleDone(schedule=schedule,enclosure=enclosure)
                     scheduledone.save()
 
-                ar_emission_done.append(scheduledone.emission_done)
+                ar_emission_done=scheduledone.emission_done
 
-
-            ar_scheduledatetime=schedule.emission_date
-
-            programma=scheduledone
-            programma.ar_filename=ar_filename
-            programma.ar_length=ar_length
-            programma.ar_title=ar_title
-            programma.ar_emission_done=ar_emission_done
-            programma.ar_scheduledatetime=ar_scheduledatetime
-
-            # calcolo la lunghezza del programma
-
-            for filen in programma.ar_filename:
+                # calcolo la lunghezza del programma
                 try:
-                    programma.ar_length.append(mutagen.File(filen).info.length)
-                    logging.debug("PROGRAM: elaborate time length: %s",programma.ar_length)
+                    ar_length=mutagen.File(ar_filename).info.length
+                    logging.debug("PROGRAM: elaborate time length: %s",ar_length)
                 except:
-                    logging.error("PROGRAM: error establish time length; use an estimation %s", programma.ar_filename)
-                    programma.ar_length.append(3600)
+                    logging.error("PROGRAM: error establish time length; use an estimation %s", ar_filename)
+                    ar_length=3600
 
-            yield programma
+                # the schedule time is postponed every enclosure
+                if firth:
+                    ar_scheduledatetime=schedule.emission_date
+                    lengthold=ar_length
+                    firth=False
+
+                else:
+                   ar_scheduledatetime=schedule.emission_date+timedelta(seconds=lengthold)
+ 
+                programma=scheduledone
+                programma.ar_filename=ar_filename
+                programma.ar_length=ar_length
+                programma.ar_title=ar_title
+                programma.ar_emission_done=ar_emission_done
+                programma.ar_scheduledatetime=ar_scheduledatetime
+
+
+                yield programma
 
 
 

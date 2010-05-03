@@ -1,7 +1,27 @@
 from django.contrib import admin
 from models import Giorno, Configure, ProgramType, Show, Schedule, \
     PeriodicSchedule,AperiodicSchedule,Episode,Enclosure,ScheduleDone
+from autoradio.podcast.models import ParentCategory, ChildCategory, MediaCategory
 
+
+class CategoryInline(admin.StackedInline):
+    model = ChildCategory
+    extra = 3
+
+class ParentCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    inlines = [CategoryInline,]
+
+class ChildCategoryAdmin(admin.ModelAdmin):
+    list_display = ('parent', 'name')
+
+class MediaCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+
+admin.site.register(ParentCategory, ParentCategoryAdmin)
+admin.site.register(ChildCategory, ChildCategoryAdmin)
+admin.site.register(MediaCategory, MediaCategoryAdmin)
 
 class EnclosureInline(admin.StackedInline):
     model = Enclosure
@@ -34,10 +54,38 @@ class AperiodicScheduleInline(admin.TabularInline):
     model = AperiodicSchedule
     extra=2
 
-class EpisodeInline(admin.TabularInline):
+class EpisodeInline(admin.StackedInline):
     model = Episode
-    extra=2
+    extra=1
 
+    # not supported
+    #inline=(ScheduleInline,EnclosureInline,)
+
+    fieldsets = (
+        (None, {
+            'fields': ('show', 'author', 'title_type', 'title', 'slug', 'description_type', 'description')
+        }),
+        ('podcast options', {
+            'classes': ('collapse',),
+            'fields': ('captions', 'category', 'domain', 'frequency', 'priority', 'status')
+        }),
+        ('iTunes options', {
+            'classes': ('collapse',),
+            'fields': ('subtitle', 'summary', ('minutes', 'seconds'), 'keywords', ('explicit', 'block'))
+        }),
+        ('Media RSS options', {
+            'classes': ('collapse',),
+            'fields': ('role', 'media_category', ('standard', 'rating'), 'image', 'text', ('deny', 'restriction'))
+        }),
+        ('Dublin Core options', {
+            'classes': ('collapse',),
+            'fields': (('start', 'end'), 'scheme', 'name')
+        }),
+        ('Google Media options', {
+            'classes': ('collapse',),
+            'fields': ('preview', ('preview_start_mins', 'preview_start_secs'), ('preview_end_mins', 'preview_end_secs'), 'host')
+        }),
+    )
 
 class GiornoAdmin(admin.ModelAdmin):
 	search_fields = ['name']
@@ -64,33 +112,81 @@ admin.site.register(ProgramType, ProgramTypeAdmin)
 
 class ShowAdmin(admin.ModelAdmin):
 
+    prepopulated_fields = {'slug': ("title",)}
+
     fieldsets = (
-        (None, {'fields': ('title','length','type','production')}),
+        (None, {'fields': ('title','slug','length','type','production',\
+                               'organization','link','description','author')}),
+
+        ('Podcast options', {
+                'classes': ('collapse',),
+                'fields': ('language','copyright','copyright_url',\
+                               'webmaster','category_show',\
+                               'domain','ttl','image','feedburner')}),
+        ('iTunes options', {
+                'classes': ('collapse',),
+                'fields': ('subtitle','summary','category','explicit',\
+                               'block','redirect','keywords','itunes')})
         )
+
+
     list_display = ('title',)
     #list_filter = ['end_date',]
     search_fields = ['title',]
 
+#    is better without EpisodeInline and start from Episode 
+#    inlines = [
+#        EpisodeInline,PeriodicScheduleInline,AperiodicScheduleInline
+#        ]
+
     inlines = [
-        PeriodicScheduleInline,AperiodicScheduleInline,EpisodeInline
+        PeriodicScheduleInline,AperiodicScheduleInline
         ]
 
 
 admin.site.register(Show, ShowAdmin)
 
 
+
+
+
 class EpisodeAdmin(admin.ModelAdmin):
-
-    fieldsets = (
-        (None, {'fields': ('show','title','rec_date')}),
-        )
-    list_display = ('title',)
-    #list_filter = ['end_date',]
-    search_fields = ['title',]
-
     inlines = [
         ScheduleInline,EnclosureInline
         ]
+    prepopulated_fields = {'slug': ("title",)}
+    search_fields = ['title',]
+    list_display = ('title', 'update', 'show')
+    list_filter = ('show', 'update')
+
+    radio_fields = {'title_type': admin.HORIZONTAL, 'description_type': admin.HORIZONTAL, 'status': admin.HORIZONTAL}
+    fieldsets = (
+        (None, {
+            'fields': ('show', 'author', 'title_type', 'title', 'slug', 'description_type', 'description')
+        }),
+        ('podcast options', {
+            'classes': ('collapse',),
+            'fields': ('captions', 'category', 'domain', 'frequency', 'priority', 'status')
+        }),
+        ('iTunes options', {
+            'classes': ('collapse',),
+            'fields': ('subtitle', 'summary', ('minutes', 'seconds'), 'keywords', ('explicit', 'block'))
+        }),
+        ('Media RSS options', {
+            'classes': ('collapse',),
+            'fields': ('role', 'media_category', ('standard', 'rating'), 'image', 'text', ('deny', 'restriction'))
+        }),
+        ('Dublin Core options', {
+            'classes': ('collapse',),
+            'fields': (('start', 'end'), 'scheme', 'name')
+        }),
+        ('Google Media options', {
+            'classes': ('collapse',),
+            'fields': ('preview', ('preview_start_mins', 'preview_start_secs'), ('preview_end_mins', 'preview_end_secs'), 'host')
+        }),
+    )
+
+
 
 admin.site.register(Episode, EpisodeAdmin)
 

@@ -11,7 +11,9 @@ import os
 import autoradio_config
 
 class AudaciousError(Exception):
-   pass
+
+   def __str__(self):
+      return repr(self.args[0])
 
 
 def shuffle_playlist(infile,shuffle=False,relative_path=False,length=None):
@@ -109,7 +111,7 @@ def ManageAudacious (session,schedule):
             raise AudaciousError("ManageXmms: ERROR in xmms.control.get_playlist_posauto")
 
          logging.info( "ManageXmms: insert media: %s at position %d",media,pos)
-         aud.org.PlaylistInsUrlString("file:/"+media,pos)
+         aud.org.PlaylistInsUrlString("file://"+media,pos)
                 
          # recheck for consistency
          newpos=aud.get_playlist_pos()
@@ -130,7 +132,7 @@ def ManageAudacious (session,schedule):
       logging.info( "ManageAudacious: write in django: %s",schedule.djobj)
 
    except AudaciousError, e:
-      logging.error(e.message)
+      logging.error(e)
       
       
    return  aud.play_ifnot()

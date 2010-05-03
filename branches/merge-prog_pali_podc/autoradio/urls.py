@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     (r'^admin/(.*)', admin.site.root),
     (r'^', include('autoradio.programs.urls')),
 #    (r'^', include('autoradio.palimpsest.urls')),
-#    (r'^podcasts/', include('autoradio.podcast.urls')),
+    (r'^podcasts/', include('autoradio.programs.urls_podcast')),
     (r'^player/', include('autoradio.player.urls')),
 )
 

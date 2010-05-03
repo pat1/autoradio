@@ -7,10 +7,9 @@ from datetime import *
 from autoradio_config import *
 
 from django.db.models import Q
-from palimpsest.models import Configure
-from palimpsest.models import PeriodicSchedule
-from palimpsest.models import Schedule
-from palimpsest.models import Program
+from programs.models import Configure
+from programs.models import PeriodicSchedule
+from programs.models import AperiodicSchedule
 
 import os,calendar
 
@@ -62,10 +61,10 @@ class gest_palimpsest:
 
 
         # retrive the right records relative to schedule
-        self.schedule=Schedule.objects.select_related()\
+        self.schedule=AperiodicSchedule.objects.select_related()\
             .filter(emission_date__gte=datesched_min)\
             .filter(emission_date__lte=datesched_max)\
-            .filter(program__active__exact=True)\
+            .filter(show__active__exact=True)\
             .order_by('emission_date')
 
 
@@ -78,7 +77,7 @@ class gest_palimpsest:
                 .filter(time__gte=timesched_min)\
                 .filter(time__lte=timesched_max)\
                 .filter(giorni__name__exact=self.giorno)\
-                .filter(program__active__exact=True)\
+                .filter(show__active__exact=True)\
                 .order_by('time')
 
         else:
@@ -90,7 +89,7 @@ class gest_palimpsest:
                 .filter(Q(end_date__gte=self.oggi)   | Q(end_date__isnull=True))\
                 .filter(Q(time__gte=timesched_min) & Q(giorni__name__exact=self.giorno) |\
                         Q(time__lte=timesched_max) & Q(giorni__name__exact=self.ieriodomani))\
-                .filter(program__active__exact=True)\
+                .filter(show__active__exact=True)\
                 .order_by('time')
 
 

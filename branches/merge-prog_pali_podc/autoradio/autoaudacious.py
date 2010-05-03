@@ -69,7 +69,8 @@ class audacious:
 
                 pos=self.tracklist.GetCurrentTrack()
                 metadata=self.tracklist.GetMetadata(pos)
-                mtimelength=metadata["length"]
+                print metadata
+                mtimelength=metadata["mtime"]
                 mtimeposition=self.player.PositionGet()
 
                 timed=datetime.timedelta(seconds=datetime.timedelta(milliseconds=mtimelength).seconds)
@@ -168,7 +169,7 @@ class audacious:
 
             # ora controllo se ci sono gia dei file accodati nella playlist da autoradio
             # l'unica possibilita di saperlo e verificare il path del file
-            while ( os.path.commonprefix ((filepath,"file:/"+autopath)) == "file:/"+autopath ):
+            while ( os.path.commonprefix ((filepath,"file://"+autopath)) == "file://"+autopath ):
                 pos+=1
 
                 metadata=self.tracklist.GetMetadata(pos)

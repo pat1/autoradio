@@ -1,7 +1,7 @@
 from django.contrib import admin
 from models import Giorno, Configure, ProgramType, Show, Schedule, \
     PeriodicSchedule,AperiodicSchedule,Episode,Enclosure,ScheduleDone
-from autoradio.podcast.models import ParentCategory, ChildCategory, MediaCategory
+from autoradio.programs.models import ParentCategory, ChildCategory, MediaCategory
 
 
 class CategoryInline(admin.StackedInline):

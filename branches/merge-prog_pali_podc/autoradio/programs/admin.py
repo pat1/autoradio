@@ -1,5 +1,6 @@
 from django.contrib import admin
-from models import Giorno, Configure, ProgramType, Show, Schedule, PeriodicSchedule,Episode,Enclosure
+from models import Giorno, Configure, ProgramType, Show, Schedule, \
+    PeriodicSchedule,AperiodicSchedule,Episode,Enclosure,ScheduleDone
 
 
 class EnclosureInline(admin.StackedInline):
@@ -27,6 +28,14 @@ class ScheduleInline(admin.StackedInline):
 
 class PeriodicScheduleInline(admin.TabularInline):
     model = PeriodicSchedule
+    extra=2
+
+class AperiodicScheduleInline(admin.TabularInline):
+    model = AperiodicSchedule
+    extra=2
+
+class EpisodeInline(admin.TabularInline):
+    model = Episode
     extra=2
 
 
@@ -63,7 +72,7 @@ class ShowAdmin(admin.ModelAdmin):
     search_fields = ['title',]
 
     inlines = [
-        PeriodicScheduleInline,
+        PeriodicScheduleInline,AperiodicScheduleInline,EpisodeInline
         ]
 
 
@@ -90,9 +99,9 @@ admin.site.register(Episode, EpisodeAdmin)
 
 class ScheduleAdmin(admin.ModelAdmin):
 
-    list_display = ('episode', 'emission_date','emission_done'\
+    list_display = ('episode', 'emission_date'\
                         ,'was_scheduled_today')
-    list_filter = ['emission_date','emission_done']
+    list_filter = ['emission_date']
     search_fields = ['episode','emission_date']
     date_hierarchy = 'emission_date'
 
@@ -106,6 +115,20 @@ class PeriodicScheduleAdmin(admin.ModelAdmin):
     date_hierarchy = 'start_date'
 
 admin.site.register(PeriodicSchedule, PeriodicScheduleAdmin)
+
+class AperiodicScheduleAdmin(admin.ModelAdmin):
+    list_display = ('emission_date','show')
+    search_fields = ['show']
+    date_hierarchy = 'emission_date'
+
+admin.site.register(AperiodicSchedule, AperiodicScheduleAdmin)
+
+class ScheduleDoneAdmin(admin.ModelAdmin):
+    list_display = ('emission_done','schedule','enclosure')
+    search_fields = ['enclosure']
+    date_hierarchy = 'emission_done'
+
+admin.site.register(ScheduleDone, ScheduleDoneAdmin)
 
 
 class EnclosureAdmin(admin.ModelAdmin):

@@ -21,9 +21,11 @@ class schedule:
     length=None : time length in seconds
     type=None   : "spot"/""playlist"/"jingle"/"programma"
     emission_done=None
-    shuffle=False):
+    shuffle=False
+    title=None):
     """
-    def __init__ (self,djobj,scheduledatetime,media,length=None,type=None,emission_done=None,shuffle=False,maxlength=None,enclosure=None):
+    def __init__ (self,djobj,scheduledatetime,media,length=None,type=None,emission_done=None,\
+                      shuffle=False,maxlength=None,title=None):
         """
         init of schedule object:
         """
@@ -36,7 +38,7 @@ class schedule:
         self.emission_done=emission_done
         self.shuffle=shuffle
         self.maxlength=maxlength
-        self.enclosure=enclosure
+        self.title=title
 
     def __cmp__ (self, b):
 
@@ -80,10 +82,11 @@ class schedule:
 
         if now is None : now=datetime.now()
 
-        #return iter((self.djobj,self.scheduledatetime,self.media,self.length,self.type,self.emission_done,self.shuffle,self.future(now)))
+        #return iter((self.djobj,self.scheduledatetime,self.media,self.length,self.type,\
+        # self.emission_done,self.shuffle,self.future(now)))
 
         yield self.djobj
-        yield self.enclosure
+        yield self.title
         yield self.scheduledatetime
         yield self.mediaweb
         yield str((datetime(2000,1,1)+timedelta(seconds=int(self.length))).time())
@@ -207,7 +210,7 @@ class schedules(list):
             number=spots.ar_spots_in_fascia
             #print scheduledatetime,media,length,number,emission_done
             if (number <> 0 ):
-                self.append(schedule(fascia,scheduledatetime,media,length,"spot",emission_done))
+                self.append(schedule(fascia,scheduledatetime,media,length,"spot",emission_done,title=str(fascia)))
 
 
         programs=gest_program(now,minelab)
@@ -224,10 +227,11 @@ class schedules(list):
                     scheduledatetime=programma.ar_scheduledatetime+timedelta(seconds=programma.ar_length[i-1])
                     length=programma.ar_length[i]
 
-                emission_done=programma.ar_emission_done
+                emission_done=programma.ar_emission_done[i]
 
                 #print scheduledatetime,media,length,emission_done
-                self.append(schedule(programma,scheduledatetime,media,length,"program",emission_done,enclosure=programma.ar_title[i]))
+                self.append(schedule(programma,scheduledatetime,media,length,"program",\
+                                         emission_done,title=programma.ar_title[i]))
 
 
         playlists=gest_playlist(now,minelab)
@@ -241,7 +245,8 @@ class schedules(list):
             emission_done=playlist.ar_emission_done
             shuffle=playlist.ar_shuffle
             #print scheduledatetime,media,length,emission_done
-            self.append(schedule(playlist,scheduledatetime,media,length,"playlist",emission_done,shuffle,maxlength))
+            self.append(schedule(playlist,scheduledatetime,media,length,"playlist",\
+                                     emission_done,shuffle,maxlength,title=str(playlist)))
 
 
         jingles=gest_jingle(now,minelab)
@@ -256,7 +261,8 @@ class schedules(list):
             emission_done=jingle.ar_emission_done
 
             #print scheduledatetime,media,length,emission_done
-            self.append(schedule(jingle,scheduledatetime,media,length,"jingle",emission_done))
+            self.append(schedule(jingle,scheduledatetime,media,length,"jingle",\
+                                     emission_done,title=str(jingle)))
 
 
         return self

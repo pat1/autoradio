@@ -273,52 +273,6 @@ class Episode(models.Model):
 	def __unicode__(self):
 		return self.title
 
-class Schedule(models.Model):
-
-#    program = models.ForeignKey(Program, edit_inline=models.TABULAR,\
-#    num_in_admin=2,verbose_name='si riferisce al programma:',editable=False)
-
-	episode = models.ForeignKey(Episode, \
-		  verbose_name=ugettext_lazy('Linked episode:'))
-
-	emission_date = models.DateTimeField(ugettext_lazy('programmed date'))
-	emission_done = models.DateTimeField(ugettext_lazy('emission done')\
-						     ,null=True,editable=False )
-
-	#    def emitted(self):
-	#	    return self.emission_done != None 
-	#    emitted.short_description = 'Trasmesso'
-
-	def was_scheduled_today(self):
-		return self.emission_date.date() == datetime.date.today()
-    
-	was_scheduled_today.short_description = ugettext_lazy('Scheduled for today?')
-
-	def file(self):
-		return self.episode.title
-	file.short_description = ugettext_lazy('Linked episode:')
-
-	def __unicode__(self):
-	        return unicode(self.episode.title)
-
-class PeriodicSchedule(models.Model):
-
-#    program = models.ForeignKey(Program, edit_inline=models.TABULAR,\
-#    num_in_admin=2,verbose_name='si riferisce al programma:',editable=False)
-
-    show = models.ForeignKey(Show,verbose_name=\
-					ugettext_lazy('refer to show:'))
-
-    start_date = models.DateField(ugettext_lazy('Programmed start date'),null=True,blank=True)
-    end_date = models.DateField(ugettext_lazy('Programmed end date'),null=True,blank=True)
-    time = models.TimeField(ugettext_lazy('Programmed time'),null=True,blank=True)
-    giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Programmed days'),null=True,blank=True)
-    
-
-    def __unicode__(self):
-        return unicode(self.show)
-
-
 
 class Enclosure(models.Model):
     """Enclosure model."""
@@ -397,3 +351,86 @@ class Enclosure(models.Model):
 
     def __unicode__(self):
         return u'%s' % (self.file)
+
+
+class Schedule(models.Model):
+
+#    program = models.ForeignKey(Program, edit_inline=models.TABULAR,\
+#    num_in_admin=2,verbose_name='si riferisce al programma:',editable=False)
+
+	episode = models.ForeignKey(Episode, \
+		  verbose_name=ugettext_lazy('Linked episode:'))
+
+	emission_date = models.DateTimeField(ugettext_lazy('programmed date'))
+
+
+	#    def emitted(self):
+	#	    return self.emission_done != None 
+	#    emitted.short_description = 'Trasmesso'
+
+	def was_scheduled_today(self):
+		return self.emission_date.date() == datetime.date.today()
+    
+	was_scheduled_today.short_description = ugettext_lazy('Scheduled for today?')
+
+	def refepisode(self):
+		return self.episode.title
+	refepisode.short_description = ugettext_lazy('Linked episode:')
+
+	def __unicode__(self):
+	        return unicode(self.episode.title)
+
+
+
+class ScheduleDone(models.Model):
+
+	schedule = models.ForeignKey(Schedule, \
+		  verbose_name=ugettext_lazy('Linked schedule:'))
+
+	enclosure = models.ForeignKey(Enclosure, \
+		  verbose_name=ugettext_lazy('Linked enclosure:'))
+
+	emission_done = models.DateTimeField(ugettext_lazy('emission done')\
+						     ,null=True,editable=False )
+
+	def __unicode__(self):
+	        return unicode(self.emission_done)
+
+
+
+class PeriodicSchedule(models.Model):
+
+#    program = models.ForeignKey(Program, edit_inline=models.TABULAR,\
+#    num_in_admin=2,verbose_name='si riferisce al programma:',editable=False)
+
+    show = models.ForeignKey(Show,verbose_name=\
+					ugettext_lazy('refer to show:'))
+
+    start_date = models.DateField(ugettext_lazy('Programmed start date'),null=True,blank=True)
+    end_date = models.DateField(ugettext_lazy('Programmed end date'),null=True,blank=True)
+    time = models.TimeField(ugettext_lazy('Programmed time'),null=True,blank=True)
+    giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Programmed days'),null=True,blank=True)
+    
+
+    def __unicode__(self):
+        return unicode(self.show)
+
+class AperiodicSchedule(models.Model):
+
+#    program = models.ForeignKey(Program, edit_inline=models.TABULAR,\
+#    num_in_admin=2,verbose_name='si riferisce al programma:',editable=False)
+
+    show = models.ForeignKey(Show, verbose_name=\
+					ugettext_lazy('refer to Show:'))
+
+    emission_date = models.DateTimeField(ugettext_lazy('Programmed date'))
+
+    def was_scheduled_today(self):
+        return self.emission_date.date() == datetime.date.today()
+    
+    was_scheduled_today.short_description = ugettext_lazy('Programmed for today?')
+
+    def __unicode__(self):
+        return unicode(self.show)
+
+

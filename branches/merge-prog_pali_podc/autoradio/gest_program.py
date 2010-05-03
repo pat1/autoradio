@@ -8,13 +8,13 @@ from autoradio_config import *
 
 from django.db.models import Q
 from programs.models import Schedule
+from programs.models import ScheduleDone
 from programs.models import Show
 from programs.models import Configure
 
 # to get metadata from audio files
 import mutagen
 import os
-
 
 class gest_program:
 
@@ -62,17 +62,38 @@ class gest_program:
             logging.debug("PROGRAM: %s %s %s", schedule.episode , ' --> '\
                               ,  schedule.emission_date.isoformat())
 
-            programma=schedule
-            programma.ar_filename=[]
-            programma.ar_length=[]
-            programma.ar_title=[]
+            ar_filename=[]
+            ar_length=[]
+            ar_title=[]
+            ar_emission_done=[]
+
             for enclosure in schedule.episode.enclosure_set.order_by('id'):
                 logging.debug("PROGRAM: files: %s", enclosure.file.path)
-                programma.ar_filename.append(enclosure.file.path)
-                programma.ar_title.append(enclosure.title)
+                ar_filename.append(enclosure.file.path)
+                ar_title.append(schedule.episode.show.title+" / "\
+                                              +schedule.episode.title+" / "\
+                                              +enclosure.title)
 
-            programma.ar_scheduledatetime=schedule.emission_date
-            programma.ar_emission_done=schedule.emission_done
+                query=ScheduleDone.objects.filter(enclosure=enclosure,schedule=schedule)
+
+                if query:
+                    scheduledone=query.all()[0]
+                else:
+                    #create new entry in table if necessary
+                    scheduledone=ScheduleDone(schedule=schedule,enclosure=enclosure)
+                    scheduledone.save()
+
+                ar_emission_done.append(scheduledone.emission_done)
+
+
+            ar_scheduledatetime=schedule.emission_date
+
+            programma=scheduledone
+            programma.ar_filename=ar_filename
+            programma.ar_length=ar_length
+            programma.ar_title=ar_title
+            programma.ar_emission_done=ar_emission_done
+            programma.ar_scheduledatetime=ar_scheduledatetime
 
             # calcolo la lunghezza del programma
 

@@ -25,6 +25,7 @@
 
 
 from autoradio import daemon
+from autoradio import _version_
 from django.core import management
 from django.core.management import setup_environ
 import autoradio.autoradio_config
@@ -64,6 +65,7 @@ if __name__ == '__main__':
 
     if autoradioweb.service():
 
+        sys.stdout.write("Autoradioweb version "+_version_+"\n")
         sys.stdout.write("Daemon started with pid %d\n" % os.getpid())
         sys.stdout.write("Daemon stdout output\n")
         sys.stderr.write("Daemon stderr output\n")

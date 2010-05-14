@@ -26,6 +26,8 @@
 
 from autoradio.autoradio_config import *
 from autoradio import daemon
+from autoradio import _version_
+
 
 autoradiod = daemon.Daemon(
         stdin="/dev/null",
@@ -81,7 +83,7 @@ def main(cwd):
     logging.getLogger('').addHandler(handler)
     logging.getLogger('').setLevel(logging.DEBUG)
 
-    logging.info('Starting up autoradiod')
+    logging.info('Starting up autoradiod version '+_version_)
 
     #signal.signal(signal.SIGALRM, signalhandler)
 

@@ -13,10 +13,35 @@ from autoradio import settings
 
 setup_environ(settings)
 
+
+class distclean(Command):
+    description = "remove man pages and *.mo files"
+    user_options = []   
+    boolean_options = []
+
+    def initialize_options(self):
+        pass
+    
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import shutil
+        from os.path import join
+        try:
+            shutil.rmtree("man")
+        except:
+            pass
+        for root, dirs, files in os.walk('locale'):
+            for name in files:
+                if name[-3:] == ".mo":
+                    os.remove(join(root, name))
+
 class build(build_):
 
     sub_commands = build_.sub_commands[:]
     sub_commands.append(('compilemessages', None))
+    sub_commands.append(('createmanpages', None))
 
 class compilemessages(Command):
     description = "generate .mo files from .po"
@@ -32,11 +57,42 @@ class compilemessages(Command):
     def run(self):
         management.call_command("compilemessages")
 
+class createmanpages(Command):
+    description = "generate man page with help2man"
+    user_options = []   
+    boolean_options = []
+
+    def initialize_options(self):
+        pass
+    
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        try:
+            import subprocess
+            subprocess.check_call(["mkdir","-p", "man/man1"])
+            subprocess.check_call(["help2man", "-v","version","-N","-o","man/man1/autoradiod.1","./autoradiod"])
+            subprocess.check_call(["gzip","-f", "man/man1/autoradiod.1"])
+            subprocess.check_call(["help2man", "-v","version","-N","-o","man/man1/autoradioweb.1","./autoradioweb"])
+            subprocess.check_call(["gzip", "-f","man/man1/autoradioweb.1"])
+            subprocess.check_call(["help2man", "-v","version","-N","-o","man/man1/autoradioctrl.1","./autoradioctrl"])
+            subprocess.check_call(["gzip", "-f","man/man1/autoradioctrl.1"])
+        except:
+            pass
 
 # Compile the list of files available, because distutils doesn't have
 # an easy way to do this.
 package_data = []
 data_files = []
+
+for dirpath, dirnames, filenames in os.walk('man'):
+    # Ignore dirnames that start with '.'
+    for i, dirname in enumerate(dirnames):
+        if dirname.startswith('.'): del dirnames[i]
+    if filenames:
+        data_files.append(['share/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
+
 
 for dirpath, dirnames, filenames in os.walk('media/sito'):
     # Ignore dirnames that start with '.'
@@ -105,7 +161,7 @@ setup(name='autoradio',
       author_email='p.patruno@iperbole.bologna.it',
       platforms = ["any"],
       url='http://autoradiobc.sf.net',
-      cmdclass={'build': build,'compilemessages':compilemessages},
+      cmdclass={'build': build,'compilemessages':compilemessages,'createmanpages':createmanpages,"distclean":distclean},
       packages=['autoradio', 'autoradio.playlists','autoradio.spots', 
                 'autoradio.jingles', 'autoradio.programs',
                 'autoradio.player'],

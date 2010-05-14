@@ -4,8 +4,8 @@
 1)")}
 
 %define name autoradio
-%define version 2.0.0alpha
-%define release 2%{?dist}
+%define version 2.0
+%define release 3%{?dist}
 
 Summary: radio automation software
 Name: %{name}

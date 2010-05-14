@@ -22,9 +22,10 @@ from django.core import management
 from django.core.management import setup_environ
 import autoradio.autoradio_config
 import sys, os, optparse, autoradio.daemon
+from autoradio import  _version_
 
 def initdb(cwd):
-    p = optparse.OptionParser(usage="usage: %prog [options]")
+    p = optparse.OptionParser(usage="usage: %prog [options]",version="%prog "+_version_)
     p.add_option("--syncdb", action="store_true",dest="syncdb", help="initialize autoradio DB (default %default)", default=False)
     p.add_option("--changeuser", action="store_true",dest="changeuser", help="change user to the user in config file (default %default)", default=False)
     (options, args) = p.parse_args()

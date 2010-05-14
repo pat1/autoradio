@@ -360,15 +360,16 @@ class Daemon(object):
 		Return an :mod:`optparse` parser for parsing the command line options.
 		This can be overwritten in subclasses to add more options.
 		"""
-		p = optparse.OptionParser(usage="usage: %prog [options] (start|stop|restart|run)")
+
+		from . import  _version_
+
+		p = optparse.OptionParser(usage="usage: %prog [options] (start|stop|restart|run|version)",version="%prog "+_version_)
 		p.add_option("--pidfile", dest="pidfile", help="PID filename (default %default)", default=self.options.pidfile)
 		p.add_option("--stdin", dest="stdin", help="stdin filename (default %default)", default=self.options.stdin)
 		p.add_option("--stdout", dest="stdout", help="stdout filename (default %default)", default=self.options.stdout)
 		p.add_option("--stderr", dest="stderr", help="stderr filename (default %default)", default=self.options.stderr)
 		p.add_option("--user", dest="user", help="user name or id (default %default)", default=self.options.user)
 		p.add_option("--group", dest="group", help="group name or id (default %default)", default=self.options.group)
-		p.add_option("--version", action="store_true", dest="version", default=False,
-			     help="print version information")
 		return p
 
 	def service(self, args=None):
@@ -392,10 +393,6 @@ class Daemon(object):
 		if len(self.args) != 2:
 			p.error("incorrect number of arguments")
 			sys.exit(1)
-		if self.args[1] == "version":
-			from . import  _version_
-			print _version_
-			sys.exit(0)
 		if self.args[1] == "run":
 			return True
 		elif self.args[1] == "restart":

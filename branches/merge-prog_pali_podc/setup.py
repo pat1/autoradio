@@ -10,6 +10,7 @@ from distutils.core import Command
 from django.core import management
 from django.core.management import setup_environ
 from autoradio import settings
+from autoradio import _version_
 
 setup_environ(settings)
 
@@ -72,11 +73,11 @@ class createmanpages(Command):
         try:
             import subprocess
             subprocess.check_call(["mkdir","-p", "man/man1"])
-            subprocess.check_call(["help2man", "-v","version","-N","-o","man/man1/autoradiod.1","./autoradiod"])
+            subprocess.check_call(["help2man","-N","-o","man/man1/autoradiod.1","./autoradiod"])
             subprocess.check_call(["gzip","-f", "man/man1/autoradiod.1"])
-            subprocess.check_call(["help2man", "-v","version","-N","-o","man/man1/autoradioweb.1","./autoradioweb"])
+            subprocess.check_call(["help2man","-N","-o","man/man1/autoradioweb.1","./autoradioweb"])
             subprocess.check_call(["gzip", "-f","man/man1/autoradioweb.1"])
-            subprocess.check_call(["help2man", "-v","version","-N","-o","man/man1/autoradioctrl.1","./autoradioctrl"])
+            subprocess.check_call(["help2man","-N","-o","man/man1/autoradioctrl.1","./autoradioctrl"])
             subprocess.check_call(["gzip", "-f","man/man1/autoradioctrl.1"])
         except:
             pass
@@ -155,7 +156,7 @@ data_files.append(('/etc/autoradio',['autoradio-site.cfg']))
 
 
 setup(name='autoradio',
-      version='2.0.0alpha',
+      version=_version_,
       description='radio automation software',
       author='Paolo Patruno',
       author_email='p.patruno@iperbole.bologna.it',

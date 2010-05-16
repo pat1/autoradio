@@ -394,14 +394,14 @@ class palimpsests(list):
 
             for program in pro.get_program():
 
-                length=program.program.length
+                length=program.show.length
                 pdatetime_start=program.ar_scheduledatetime
                 title=str(program)
                 pdatetime_end=program.ar_scheduledatetime+timedelta(seconds=length)
-                code=str(program.program.type.code)
-                type=str(program.program.type.type)
-                subtype=str(program.program.type.subtype)
-                production=program.program.production
+                code=str(program.show.type.code)
+                type=str(program.show.type.type)
+                subtype=str(program.show.type.subtype)
+                production=program.show.production
                 note=""
 
                 if pdatetime_start >= datetime_start and pdatetime_end < datetime_end :

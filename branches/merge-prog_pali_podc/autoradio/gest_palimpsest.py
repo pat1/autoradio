@@ -111,7 +111,7 @@ class gest_palimpsest:
         ora=self.datetimeelab.time()
                 
         for program in self.schedule:
-            logging.debug("PALIMPSEST: schedule %s %s %s", program.program.program, ' --> '\
+            logging.debug("PALIMPSEST: schedule %s %s", program.show.title, ' --> '\
                               ,program.emission_date.isoformat())
 
 
@@ -121,7 +121,7 @@ class gest_palimpsest:
 
 
         for program in self.periodicschedule:
-            logging.debug("PALIMPSEST: periodic schedule %s %s %s", program.program.program, ' --> '\
+            logging.debug("PALIMPSEST: periodic schedule %s %s", program.show.title, ' --> '\
                               ,  program.time.isoformat())
 
             program.ar_scheduledatetime=datetime.combine(self.datetimeelab, program.time)

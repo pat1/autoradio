@@ -3,11 +3,13 @@
 from django.shortcuts import render_to_response
 from models import Schedule
 from django.http import HttpResponse,HttpResponseRedirect
-from datetime import datetime,timedelta,time
+from datetime import date,datetime,timedelta,time
 import autoradio.autoradio_config
 import autoradio.autoradio_core
 import autoradio.settings
 
+#from django.forms.extras.widgets import SelectDateWidget
+from widgets import MySelectDateWidget
 
 #----------------------------------------------------
 # section for programs
@@ -68,11 +70,16 @@ def decode(code):
 
 
 class ExtremeForm(forms.Form):
-    datetime_start = forms.DateTimeField(required=False)
-    datetime_end = forms.DateTimeField(required=False)
+
+    initial_start=date.today()-timedelta(days=1)
+    initial_end=date.today()
+
+#    datetime_start = forms.DateTimeField(required=True,initial=initial_start,input_formats=("%d/%m/%Y",),widget=MySelectDateWidget())
+#    datetime_end = forms.DateTimeField(required=True,initial=initial_end,input_formats=("%d/%m/%Y",),widget=MySelectDateWidget())
+    datetime_start = forms.DateTimeField(required=True,initial=initial_start,widget=MySelectDateWidget())
+    datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=MySelectDateWidget())
 
 
-    
 def programsbook(request):
 
     from reportlab.lib.styles import getSampleStyleSheet
@@ -86,10 +93,10 @@ def programsbook(request):
         if form.is_valid(): # All validation rules pass
 
             def myPages(canvas, doc):
-                pageinfo="test page"
+                pageinfo="Libro Programmi"
                 canvas.saveState()
                 canvas.setFont('Times-Roman',9)
-                canvas.drawString(inch, 0.75 * inch, "Page %d %s" % (doc.page, pageinfo))
+                canvas.drawString(inch, 0.75 * inch, "Pagina %d               %s" % (doc.page, pageinfo))
                 canvas.restoreState()
 
             # time constants

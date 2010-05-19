@@ -363,7 +363,8 @@ class Daemon(object):
 
 		from . import  _version_
 
-		p = optparse.OptionParser(usage="usage: %prog [options] (start|stop|restart|run|version)",version="%prog "+_version_)
+		p = optparse.OptionParser(usage="usage: %prog [options] (start|stop|restart|run|version)",
+					  description="%prog daemon for autoradio suite",version="%prog "+_version_)
 		p.add_option("--pidfile", dest="pidfile", help="PID filename (default %default)", default=self.options.pidfile)
 		p.add_option("--stdin", dest="stdin", help="stdin filename (default %default)", default=self.options.stdin)
 		p.add_option("--stdout", dest="stdout", help="stdout filename (default %default)", default=self.options.stdout)

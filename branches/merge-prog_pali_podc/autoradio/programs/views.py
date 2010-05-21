@@ -74,8 +74,8 @@ class ExtremeForm(forms.Form):
     initial_start=date.today()-timedelta(days=1)
     initial_end=date.today()
 
-#    datetime_start = forms.DateTimeField(required=True,initial=initial_start,input_formats=("%d/%m/%Y",),widget=MySelectDateWidget())
-#    datetime_end = forms.DateTimeField(required=True,initial=initial_end,input_formats=("%d/%m/%Y",),widget=MySelectDateWidget())
+#    datetime_start = forms.DateTimeField(required=True,initial=initial_start,widget=SelectDateWidget(years=(2010,etc)))
+#    datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=SelectDateWidget(years=(2010,etc)))
     datetime_start = forms.DateTimeField(required=True,initial=initial_start,widget=MySelectDateWidget())
     datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=MySelectDateWidget())
 

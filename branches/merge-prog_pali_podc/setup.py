@@ -38,6 +38,14 @@ class distclean(Command):
                 if name[-3:] == ".mo":
                     os.remove(join(root, name))
 
+        # remove all the .pyc files
+        for root, dirs, files in os.walk(os.getcwd(), topdown=False):
+            for name in files:
+                if name.endswith('.pyc') and os.path.isfile(os.path.join(root, name)):
+                    print 'removing: %s' % os.path.join(root, name)
+                    if not(self.dry_run): os.remove(os.path.join(root, name))
+
+
 class build(build_):
 
     sub_commands = build_.sub_commands[:]

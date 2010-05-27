@@ -276,6 +276,38 @@ django-podcast
 #   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 #   OF THE POSSIBILITY OF SUCH DAMAGE.
 
+SWFObject v2.2 
+  <http://code.google.com/p/swfobject/>
+  is released under the MIT License 
+  <http://www.opensource.org/licenses/mit-license.php> 
+
+jQuery JavaScript Library v1.4.1
+  http://jquery.com/
+
+  Copyright 2010, John Resig
+  Dual licensed under the MIT or GPL Version 2 licenses.
+  http://jquery.org/license
+
+  Includes Sizzle.js
+  http://sizzlejs.com/
+  Copyright 2010, The Dojo Foundation
+  Released under the MIT, BSD, and GPL Licenses.
+
+Cortado - a video player java applet
+  Copyright (C) 2004 Fluendo S.L.
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+anoggplayer
+  http://code.google.com/p/anoggplayer/
+  GNU LESSER GENERAL PUBLIC LICENSE
+
+fogg
+  http://bazaar.launchpad.net/~arkadini/fogg/trunk
+  GNU LESSER GENERAL PUBLIC LICENSE
 
 ----------------------------------------------------------------------------
 

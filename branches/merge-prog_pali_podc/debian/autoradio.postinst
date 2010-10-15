@@ -1,9 +1,7 @@
 #!/bin/sh
-# postinst script for kvm
+# postinst script for autoradio
 #
 # see: dh_installdeb(1)
-
-set -e
 
 # summary of how this script can be called:
 #        * <postinst> `configure' <most-recently-configured-version>
@@ -18,16 +16,76 @@ set -e
 # the debian-policy package
 
 
+# set some useful variables
+AUTORADIO="autoradio"
+CHOWN="/bin/chown"
+ADDUSER="/usr/sbin/adduser"
+USERDEL="/usr/sbin/userdel"
+USERADD="/usr/sbin/useradd"
+GROUPDEL="/usr/sbin/groupdel"
+GROUPMOD="/usr/sbin/groupmod"
+ID="/usr/bin/id"
+
+set -e
+
 case "$1" in
     configure)
-        # Add the kvm user and group unless they are already there
-        if ! getent group autoradio >/dev/null; then
-            addgroup --quiet --system autoradio || true
-        fi
-        if ! getent passwd autoradio >/dev/null; then
-            adduser --quiet --system autoradio || true
-        fi
-install -o autoradio -g autoradio -d /var/run/autoradio /var/log/autoradio
+
+
+
+###
+# 1. get current autoradio uid and gid if user exists.
+if $ID $AUTORADIO > /dev/null 2>&1; then
+   IUID=`$ID --user $AUTORADIO`
+   IGID=`$ID --group $AUTORADIO`
+else
+   IUID="NONE"
+   IGID="NONE"
+fi
+
+if [ "$IUID" = "NONE" ] ; then # we must do sth :)
+
+####
+## 2. Ensure that no standard account or group will remain before adding the
+##    new user
+#if [ "$IUID" = "NONE" ] || [ $IUID -ge 1000 ]; then # we must do sth :)
+#  if ! [ "$IUID" = "NONE" ] && [ $IUID -ge 1000 ]; then
+#      # autoradio user exists but isn't a system user... delete it.
+#      $USERDEL $AUTORADIO
+#      $GROUPDEL $AUTORADIO
+#  fi
+#
+####
+
+# 3. Add the system account.
+#    Issue a debconf warning if it fails. 
+  if $GROUPMOD $AUTORADIO > /dev/null 2>&1; then 
+    # autoradio group already exists, use --ingroup
+    if ! $ADDUSER --disabled-password --disabled-login --no-create-home --ingroup $AUTORADIO $AUTORADIO; then
+      echo "The adduser command failed."
+    fi
+  else
+    if ! $ADDUSER --disabled-password --disabled-login --no-create-home --group $AUTORADIO; then
+      echo "The adduser command failed."
+    fi
+  fi
+fi
+set +e
+
+
+
+###
+# 4. change ownership of directory
+
+install -d /var/{run/autoradio,log/autoradio}
+#mkdir -p /var/log/autoradio/
+#mkdir -p /var/run/autoradio/
+
+$CHOWN -R $AUTORADIO:$AUTORADIO /usr/share/autoradio/
+$CHOWN -R $AUTORADIO:$AUTORADIO /etc/autoradio/
+$CHOWN -R $AUTORADIO:$AUTORADIO /var/log/autoradio/
+$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
+
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
@@ -45,4 +103,3 @@ esac
 #DEBHELPER#
 
 exit 0
-

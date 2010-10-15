@@ -36,8 +36,8 @@ autoradioweb = daemon.Daemon(
         stdout=autoradio.settings.logfileweb,
         stderr=autoradio.settings.errfileweb,
         pidfile=autoradio.settings.lockfileweb,
-        user=autoradio.settings.user,
-        group=autoradio.settings.group
+        user=autoradio.settings.userweb,
+        group=autoradio.settings.groupweb
 )
 
 

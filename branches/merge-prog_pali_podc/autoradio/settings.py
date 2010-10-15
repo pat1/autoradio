@@ -102,8 +102,8 @@ SERVE_STATIC            = config['django']['SERVE_STATIC']
 logfileweb              = config['autoradioweb']['logfile']
 errfileweb              = config['autoradioweb']['errfile']
 lockfileweb             = config['autoradioweb']['lockfile']
-user                    = config['autoradioweb']['user']
-group                   = config['autoradioweb']['group']
+userweb                 = config['autoradioweb']['user']
+groupweb                = config['autoradioweb']['group']
 port                    = config['autoradioweb']['port']
 
 # section database

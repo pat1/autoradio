@@ -3,9 +3,13 @@ from django.utils.translation import ugettext_lazy
 import calendar
 from autoradio.autoradio_config import *
 
+
 def giorno_giorno():
-	for giorno in calendar.day_name:
-		yield giorno, giorno
+	giorni=[]
+	for giorno in (calendar.day_name):
+		giorno=giorno.decode('utf-8')
+		giorni.append(( giorno, giorno))
+	return giorni
 #	yield 'Tutti','Tutti'
 
 class Giorno(models.Model):

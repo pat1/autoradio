@@ -201,10 +201,12 @@ class ChildCategory(models.Model):
             return u'%s' % (self.parent)
 
 
-
 def giorno_giorno():
-	for giorno in calendar.day_name:
-		yield giorno, giorno
+	giorni=[]
+	for giorno in (calendar.day_name):
+		giorno=giorno.decode('utf-8')
+		giorni.append(( giorno, giorno))
+	return giorni
 #	yield 'Tutti','Tutti'
 
 class Giorno(models.Model):

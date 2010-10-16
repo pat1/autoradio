@@ -1,13 +1,5 @@
 
 [
-{"pk": 1, "model": "programs.giorno", "fields": {"name": "luned\u00ec"}},
-{"pk": 2, "model": "programs.giorno", "fields": {"name": "marted\u00ec"}},
-{"pk": 3, "model": "programs.giorno", "fields": {"name": "mercoled\u00ec"}},
-{"pk": 4, "model": "programs.giorno", "fields": {"name": "gioved\u00ec"}},
-{"pk": 5, "model": "programs.giorno", "fields": {"name": "venerd\u00ec"}},
-{"pk": 6, "model": "programs.giorno", "fields": {"name": "sabato"}},
-{"pk": 7, "model": "programs.giorno", "fields": {"name": "domenica"}},
-
 
 {"pk": 1, "model": "programs.programtype", "fields": { "code":"1a", "type": "Notiziari", "subtype": "Telegiornale","description": "Trasmissione a carattere informativo con programmazione quotidiana all'interno di fasce orarie prestabilite"}},
 

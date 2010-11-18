@@ -190,13 +190,22 @@ def xmms_watchdog(session):
         logging.error("xmms_watchdog: xmms is not running")
 
         try:
-            xmms.control.enqueue_and_play_launch_if_session_not_started("file",session=session)
+            xmms.control.enqueue_and_play_launch_if_session_not_started("file",session=session,
+                                              stdout_to_dev_null=True, stderr_to_dev_null=True)
             ok=True
-            logging.info("xmms_watchdog: xmms.control.enqueue_and_play_launch_if_session_not_started")
+            logging.info("xmms_watchdog: pyxmms < 2.07 xmms.control.enqueue_and_play_launch_if_session_not_started")
 
         except:
-            ok=False
-            logging.error("xmms_watchdog: error xmms.control.enqueue_and_play_launch_if_session_not_started")
+
+           try:
+              xmms.control.enqueue_and_play_launch_if_session_not_started("file",session=session)
+
+              ok=True
+              logging.info("xmms_watchdog: pyxmms >= 2.07 xmms.control.enqueue_and_play_launch_if_session_not_started")
+
+           except:
+              ok=False
+              logging.error("xmms_watchdog: error xmms.control.enqueue_and_play_launch_if_session_not_started")
 
     return ok
 

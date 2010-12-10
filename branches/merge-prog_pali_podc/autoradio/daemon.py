@@ -269,11 +269,25 @@ class Daemon(object):
 		can be an :class:`int` (i.e. a user/group id) or :class:`str`
 		(a user/group name).
 		"""
+		groups = []
 		if group is not None:
+			if isinstance(group, list):
+				for gr in group:
+					if isinstance(gr, basestring):
+						groups.append(grp.getgrnam(gr).gr_gid)
+				group = group[0]
+
 			if isinstance(group, basestring):
 				group = grp.getgrnam(group).gr_gid
+
+			try:
+				os.setgroups(groups)
+			except:
+				pass
+
 			os.setgid(group)
 			os.setegid(group)
+
 		if user is not None:
 			if isinstance(user, basestring):
 				user = pwd.getpwnam(user).pw_uid

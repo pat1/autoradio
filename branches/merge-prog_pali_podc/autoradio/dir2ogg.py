@@ -46,8 +46,10 @@ __date__    = '2009-05-03'
 FILTERS = {'mp3': ('*.mp3',),
            'm4a': ('*.aac', '*.m4a', '*.mp4'),
            'wma': ('*.asf', '*.wma', '*.wmf'),
+           'flash': ('*.flv', ),
            'flac': ('*.flac',),
            'wav': ('*.wav', ),
+           'speex': ('*.spx','*.speex' ),
            }
 
 def mmatch(names, patterns, rbool=True):
@@ -89,9 +91,11 @@ def read_opts():
     parser.add_option('-n', '--no-mp3', dest='convert_mp3', action='store_false', default=True, help="don't convert mp3s (use with '-d' or '-r')")
     parser.add_option('-a', '--convert-all', action='store_true', help="convert all supported formats")
     parser.add_option('-f', '--convert-flac', action='store_true', help="convert flac files (use with '-d')")
+    parser.add_option('-x', '--convert-speex', action='store_true', help="convert speex files (use with '-d')")
     parser.add_option('-m', '--convert-m4a', action='store_true', help="convert m4a files (use with '-d')")
     parser.add_option('-w', '--convert-wav', action='store_true', help="convert wav files (use with '-d')")
     parser.add_option('-W', '--convert-wma', action='store_true', help="convert wma files (use with '-d').")
+    parser.add_option('-F', '--convert-flash', action='store_true', help="convert flash files (use with '-d').")
     parser.add_option('--delete-input', action='store_true', help='delete input files')
     parser.add_option('-p', '--preserve-wav', action='store_true', help='keep the wav files (also includes -P)')
     parser.add_option('-P', '--no-pipe', action='store_true', help='Do not use pipes, use temporary wav files')
@@ -101,7 +105,9 @@ def read_opts():
     commands = {'mp3': ('mpg123', 'mpg321', 'lame',  'mplayer'),
         'wma': ('mplayer',),
         'm4a': ('faad', 'mplayer'),
+        'flash':  ('mplayer',),
         'flac': ('flac', 'ogg123', 'mplayer'),
+        'speex': ('speexdec',),
         'cd':  ('cdparanoia', 'icedax','cdda2wav', 'mplayer'),
         }
 
@@ -283,6 +289,16 @@ class Id3TagHandler:
         from mutagen.flac import FLAC, error
         self.grab_common(FLAC, error=error)
 
+    def grab_flash_tags(self):
+        '''Import FLAC tags handler, and call commonGrab'''
+        pass
+
+    def grab_speex_tags(self):
+        '''Import speex tags handler, and call commonGrab'''
+        from mutagen.oggspeex import OggSpeex, error
+        self.grab_common(OggSpeex, error=error)
+
+
     def grab_mp3_tags(self):
         '''Import MP3 tags handler, and call commonGrab'''
         from mutagen.id3 import ID3, error
@@ -370,7 +386,7 @@ class Convert(Id3TagHandler):
     def decode(self):
         # Used for mplayer
         tempwav = 'dir2ogg-%s-temp.wav' % os.getpid()
-        if self.decoder not in ('mplayer',) and not self.conf.no_pipe and not self.conf.preserve_wav:
+        if self.decoder not in ('mplayer','speexdec') and not self.conf.no_pipe and not self.conf.preserve_wav:
             outfile, outfile1 = '-', '/dev/stdout'
             use_pipe = 1
         else:
@@ -381,6 +397,7 @@ class Convert(Id3TagHandler):
                    'faad':    ['faad',  '-o' , outfile1, self.song],
                    'ogg123':  ['ogg123', '-dwav', '-f' , outfile, self.song],
                    'flac':    ['flac', '-o', outfile, '-d', self.song],
+                   'speexdec':['speexdec', self.song, outfile],
                    'lame':    ['lame', '--quiet', '--decode', self.song, outfile],
                    'mplayer': ['mplayer', '-vo', 'null', '-vc' ,'dummy', '-af', 'resample=44100', '-ao', 'pcm:file=' + tempwav, self.song],
                    'alac-decoder': ['alac-decoder',  self.song],

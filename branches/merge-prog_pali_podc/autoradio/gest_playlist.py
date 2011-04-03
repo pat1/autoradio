@@ -26,7 +26,6 @@ class gest_playlist:
         execute the right data retrival to get the schedued playlists"""
         
         self.now = now
-        self.minelab = minelab
 
         ora=self.now.time()
         self.oggi=self.now.date()
@@ -35,20 +34,14 @@ class gest_playlist:
         self.schedule=()
         self.periodicschedule=()
 
-        datesched_min=self.now - timedelta( seconds=60*self.minelab)
-        datesched_max=self.now + timedelta( milliseconds=60000*self.minelab-1) # 1 millisecond tollerance
+        self.datesched_min=self.now - timedelta( seconds=60*minelab)
+        self.datesched_max=self.now + timedelta( milliseconds=60000*minelab-1) # 1 millisecond tollerance
 
-        if ora < time(12):
-            self.ieriodomani=calendar.day_name[datesched_min.weekday()]
-        else:
-            self.ieriodomani=calendar.day_name[datesched_max.weekday()]
+        self.timesched_min=self.datesched_min.time()
+        self.timesched_max=self.datesched_max.time()
 
-        logging.debug( "PLAYLIST: elaborate from %s to %s",datesched_min, datesched_max)
-
-        timesched_min=datesched_min.time()
-        timesched_max=datesched_max.time()
-        logging.debug( "PLAYLIST: elaborate from %s to %s",timesched_min, timesched_max)
-
+        logging.debug( "PLAYLIST: elaborate date from %s to %s",self.datesched_min, self.datesched_max)
+        logging.debug( "PLAYLIST: elaborate time from %s to %s",self.timesched_min, self.timesched_max)
 
         if (Configure.objects.filter(active__exact=False).count() == 1):
             return
@@ -61,19 +54,19 @@ class gest_playlist:
 
         # retrive the right records relative to schedule
         self.schedule=Schedule.objects.select_related()\
-            .filter(emission_date__gte=datesched_min)\
-            .filter(emission_date__lte=datesched_max)\
+            .filter(emission_date__gte=self.datesched_min)\
+            .filter(emission_date__lte=self.datesched_max)\
             .filter(playlist__active__exact=True)\
             .order_by('emission_date')
 
 
         # retrive the right records relative to periodicschedule
-        if (timesched_min < timesched_max):
+        if (self.timesched_min < self.timesched_max):
             self.periodicschedule=PeriodicSchedule.objects\
                 .filter(Q(start_date__lte=self.oggi) | Q(start_date__isnull=True))\
                 .filter(Q(end_date__gte=self.oggi)   | Q(end_date__isnull=True))\
-                .filter(time__gte=timesched_min)\
-                .filter(time__lte=timesched_max)\
+                .filter(time__gte=self.timesched_min)\
+                .filter(time__lte=self.timesched_max)\
                 .filter(giorni__name__exact=self.giorno)\
                 .filter(playlist__active__exact=True)\
                 .order_by('time')
@@ -82,11 +75,13 @@ class gest_playlist:
             # warning here we are around midnight
             logging.debug("PLAYLIST: around midnight")
 
+            domani=calendar.day_name[self.datesched_max.weekday()]
+
             self.periodicschedule=PeriodicSchedule.objects\
                 .filter(Q(start_date__lte=self.oggi) | Q(start_date__isnull=True))\
                 .filter(Q(end_date__gte=self.oggi)   | Q(end_date__isnull=True))\
-                .filter(Q(time__gte=timesched_min) & Q(giorni__name__exact=self.giorno) |\
-                        Q(time__lte=timesched_max) & Q(giorni__name__exact=self.ieriodomani))\
+                .filter(Q(time__gte=self.timesched_min) & Q(giorni__name__exact=self.giorno) |\
+                        Q(time__lte=self.timesched_max) & Q(giorni__name__exact=domani))\
                 .filter(playlist__active__exact=True)\
                 .order_by('time')
 
@@ -148,16 +143,16 @@ class gest_playlist:
             else:
                 playlist.ar_filename=playlist.playlist.file.path
 
-            playlist.ar_scheduledatetime=datetime.combine(self.oggi, playlist.time)
+            if (self.timesched_min < self.timesched_max):
 
-            # if we are around midnight we have to check the correct date (today, iesterday, tomorrow)
-            datesched_min=self.now - timedelta( seconds=60*self.minelab)
-            datesched_max=self.now + timedelta( seconds=60*self.minelab)
-            if not (datesched_min <= playlist.ar_scheduledatetime and  playlist.ar_scheduledatetime <= datesched_max  ):
-                if self.now.time() < time(12):
-                    playlist.ar_scheduledatetime=datetime.combine(datesched_min.date(), playlist.time)
+                playlist.ar_scheduledatetime=datetime.datetime.combine(self.datesched_min.date(), playlist.time)
+                
+            else:
+                # we are around midnight we have to check the correct date (today, tomorrow)
+                if self.ar_scheduledatetime.time() > time(12):
+                    playlist.ar_scheduledatetime=datetime.combine(self.datesched_min.date(), playlist.time)
                 else:
-                    playlist.ar_scheduledatetime=datetime.combine(datesched_max.date(), playlist.time)
+                    playlist.ar_scheduledatetime=datetime.combine(self.datesched_max.date(), playlist.time)
 
             playlist.ar_emission_done=playlist.emission_done
 

@@ -27,7 +27,6 @@ class gest_palimpsest:
 
         self.datetimeelab = datetimeelab
         self.oggi=self.datetimeelab.date()
-        self.minelab=minelab
 
         ora=datetimeelab.time()
 
@@ -36,19 +35,13 @@ class gest_palimpsest:
         self.schedule=()
         self.periodicschedule=()
 
-        datesched_min=self.datetimeelab - timedelta( seconds=60*self.minelab)
-        datesched_max=self.datetimeelab + timedelta( milliseconds=60000*self.minelab-1) #1 millisecond tollerance
+        self.datesched_min=self.datetimeelab - timedelta( seconds=60*minelab)
+        self.datesched_max=self.datetimeelab + timedelta( milliseconds=60000*minelab-1) #1 millisecond tollerance
+        self.timesched_min=self.datesched_min.time()
+        self.timesched_max=self.datesched_max.time()
 
-        if ora < time(12):
-            self.ieriodomani=calendar.day_name[datesched_min.weekday()]
-        else:
-            self.ieriodomani=calendar.day_name[datesched_max.weekday()]
-
-        logging.debug( "PALIMPSEST: elaborate from %s to %s",datesched_min, datesched_max)
-
-        timesched_min=datesched_min.time()
-        timesched_max=datesched_max.time()
-        logging.debug( "PALIMPSEST: elaborate from %s to %s",timesched_min, timesched_max)
+        logging.debug( "PALIMPSEST: elaborate date from %s to %s",self.datesched_min, self.datesched_max)
+        logging.debug( "PALIMPSEST: elaborate time from %s to %s",self.timesched_min, self.timesched_max)
 
 
         if (Configure.objects.filter(active__exact=False).count() == 1):
@@ -62,20 +55,20 @@ class gest_palimpsest:
 
         # retrive the right records relative to schedule
         self.schedule=AperiodicSchedule.objects.select_related()\
-            .filter(emission_date__gte=datesched_min)\
-            .filter(emission_date__lte=datesched_max)\
+            .filter(emission_date__gte=self.datesched_min)\
+            .filter(emission_date__lte=self.datesched_max)\
             .filter(show__active__exact=True)\
             .order_by('emission_date')
 
 
 
         # retrive the right records relative to periodicschedule
-        if (timesched_min < timesched_max):
+        if (self.timesched_min < self.timesched_max):
             self.periodicschedule=PeriodicSchedule.objects\
                 .filter(Q(start_date__lte=self.oggi) | Q(start_date__isnull=True))\
                 .filter(Q(end_date__gte=self.oggi)   | Q(end_date__isnull=True))\
-                .filter(time__gte=timesched_min)\
-                .filter(time__lte=timesched_max)\
+                .filter(time__gte=self.timesched_min)\
+                .filter(time__lte=self.timesched_max)\
                 .filter(giorni__name__exact=self.giorno)\
                 .filter(show__active__exact=True)\
                 .order_by('time')
@@ -84,11 +77,13 @@ class gest_palimpsest:
             # warning here we are around midnight
             logging.debug("PALIMPSEST: around midnight")
 
+            domani=calendar.day_name[self.datesched_max.weekday()]
+
             self.periodicschedule=PeriodicSchedule.objects\
                 .filter(Q(start_date__lte=self.oggi) | Q(start_date__isnull=True))\
                 .filter(Q(end_date__gte=self.oggi)   | Q(end_date__isnull=True))\
-                .filter(Q(time__gte=timesched_min) & Q(giorni__name__exact=self.giorno) |\
-                        Q(time__lte=timesched_max) & Q(giorni__name__exact=self.ieriodomani))\
+                .filter(Q(time__gte=self.timesched_min) & Q(giorni__name__exact=self.giorno) |\
+                        Q(time__lte=self.timesched_max) & Q(giorni__name__exact=domani))\
                 .filter(show__active__exact=True)\
                 .order_by('time')
 
@@ -97,7 +92,6 @@ class gest_palimpsest:
         if (infos.count() == 1):
 
             for info in infos:
-
 
                 self.radiostation=info.radiostation
                 self.channel=info.channel
@@ -124,19 +118,17 @@ class gest_palimpsest:
             logging.debug("PALIMPSEST: periodic schedule %s %s", program.show.title, ' --> '\
                               ,  program.time.isoformat())
 
-            program.ar_scheduledatetime=datetime.combine(self.datetimeelab, program.time)
 
-            # if we are around midnight we have to check the correct date (today, iesterday, tomorrow)
+            if (self.timesched_min < self.timesched_max):
 
-            datesched_min=self.datetimeelab - timedelta( seconds=60*self.minelab)
-            datesched_max=self.datetimeelab + timedelta( seconds=60*self.minelab)
-
-            if not (datesched_min <= program.ar_scheduledatetime and  program.ar_scheduledatetime <= datesched_max  ):
-                if ora < time(12):
-                    program.ar_scheduledatetime=datetime.combine(datesched_min.date(), program.time)
+                program.ar_scheduledatetime=datetime.datetime.combine(self.datesched_min.date(), program.time)
+                
+            else:
+                # we are around midnight we have to check the correct date (today, tomorrow)
+                if self.ar_scheduledatetime.time() > time(12):
+                    program.ar_scheduledatetime=datetime.combine(self.datesched_min.date(), program.time)
                 else:
-                    program.ar_scheduledatetime=datetime.combine(datesched_max.date(), program.time)
-
+                    program.ar_scheduledatetime=datetime.combine(self.datesched_max.date(), program.time)
 
             yield program
 
@@ -163,7 +155,7 @@ def main():
     logging.basicConfig(level=logging.DEBUG,)
     # time constants
     datetimeelab=datetime.now()
-    minelab=60*12
+    minelab=60*4
 
     # get the programs of my insterest
     pro=gest_palimpsest(datetimeelab,minelab)

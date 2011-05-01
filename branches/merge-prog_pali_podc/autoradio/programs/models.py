@@ -9,6 +9,42 @@ from autoradio.programs.managers import EpisodeManager
 import datetime
 import calendar
 
+
+from  django import VERSION as djversion
+
+if ((djversion[0] == 1 and djversion[1] >= 3) or 
+    djversion[0] > 1):
+
+    from django.db import models
+    from django.db.models import signals
+
+    class DeletingFileField(models.FileField):
+        """
+        FileField subclass that deletes the refernced file when the model object
+        itself is deleted.
+        
+        WARNING: Be careful using this class - it can cause data loss! This class
+        makes at attempt to see if the file's referenced elsewhere, but it can get
+        it wrong in any number of cases.
+        """
+        def contribute_to_class(self, cls, name):
+            super(DeletingFileField, self).contribute_to_class(cls, name)
+            signals.post_delete.connect(self.delete_file, sender=cls)
+        
+        def delete_file(self, instance, sender, **kwargs):
+            file = getattr(instance, self.attname)
+            # If no other object of this type references the file,
+            # and it's not the default value for future objects,
+            # delete it from the backend.
+            
+            if file and file.name != self.default and \
+                    not sender._default_manager.filter(**{self.name: file.name}):
+                file.delete(save=False)
+            elif file:
+                # Otherwise, just close the file, so it doesn't tie up resources.
+                file.close()
+        
+
 class MediaCategory(models.Model):
     """Category model for Media RSS"""
     MEDIA_CATEGORY_CHOICES = (
@@ -508,7 +544,7 @@ class Episode(models.Model):
     author = models.ManyToManyField(User, related_name='episode_authors', help_text='Remember to save the user\'s name and e-mail address in the <a href="../../../auth/user/">User application</a>.')
     description_type = models.CharField('Description type', max_length=255, blank=True, default='Plain', choices=TYPE_CHOICES)
     description = models.TextField(help_text='Avoid explicit language. Google video sitempas allow 2,048 characters.')
-    captions = models.FileField(upload_to='podcasts/episodes/captions/', help_text='For video podcasts. Good captioning choices include <a href="http://en.wikipedia.org/wiki/SubViewer">SubViewer</a>, <a href="http://en.wikipedia.org/wiki/SubRip">SubRip</a> or <a href="http://www.w3.org/TR/ttaf1-dfxp/">TimedText</a>.', blank=True)
+    captions = DeletingFileField(upload_to='podcasts/episodes/captions/', help_text='For video podcasts. Good captioning choices include <a href="http://en.wikipedia.org/wiki/SubViewer">SubViewer</a>, <a href="http://en.wikipedia.org/wiki/SubRip">SubRip</a> or <a href="http://www.w3.org/TR/ttaf1-dfxp/">TimedText</a>.', blank=True)
     category = models.CharField(max_length=255, blank=True, help_text='Limited to one user-specified category for the sake of sanity.')
     domain = models.URLField(blank=True, help_text='A URL that identifies a categorization taxonomy.')
     frequency = models.CharField(max_length=10, choices=FREQUENCY_CHOICES, blank=True, help_text='The frequency with which the episode\'s data changes. For sitemaps.', default='never')
@@ -630,7 +666,7 @@ class Enclosure(models.Model):
         )
 
     title = models.CharField(max_length=255, blank=True, help_text='Title is generally only useful with multiple enclosures.')
-    file = models.FileField(upload_to='podcasts/episodes/files/', help_text='Either upload or use the "Player" text box below. If uploading, file must be less than or equal to 30 MB for a Google video sitemap.',blank=False, null=False)
+    file = DeletingFileField(upload_to='podcasts/episodes/files/', help_text='Either upload or use the "Player" text box below. If uploading, file must be less than or equal to 30 MB for a Google video sitemap.',blank=False, null=False)
     mime = models.CharField('Format', max_length=255, choices=MIME_CHOICES, blank=True)
     medium = models.CharField(max_length=255, blank=True, choices=MEDIUM_CHOICES)
     expression = models.CharField(max_length=25, choices=EXPRESSION_CHOICES, blank=True)

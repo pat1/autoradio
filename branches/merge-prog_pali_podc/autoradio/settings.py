@@ -115,6 +115,18 @@ DATABASE_ENGINE   = config['database']['DATABASE_ENGINE']
 DATABASE_NAME     = config['database']['DATABASE_NAME']        
 
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.'+DATABASE_ENGINE,
+        'NAME':    DATABASE_NAME,
+        'USER':    DATABASE_USER,
+        'PASSWORD':DATABASE_PASSWORD,
+        'HOST':    DATABASE_HOST,
+        'PORT':    DATABASE_PORT,
+        }
+    }
+
+
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',

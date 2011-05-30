@@ -1,0 +1,316 @@
+Index: VectorTools.hx
+===================================================================
+--- VectorTools.hx	(revisione 15)
++++ VectorTools.hx	(copia locale)
+@@ -97,7 +97,7 @@
+             b = src.slice(src_pos, src_end);
+         }
+ 
+-        if (dst_pos + length < dst.length) {
++        if (cast(dst_pos + length,UInt) < dst.length) {
+             b = b.concat(dst.slice(dst_pos + length));
+         }
+ 
+@@ -118,7 +118,7 @@
+             b = src.slice(src_pos, src_end);
+         }
+ 
+-        if (dst_pos + length < dst.length) {
++        if (cast(dst_pos + length,UInt) < dst.length) {
+             b = b.concat(dst.slice(dst_pos + length));
+         }
+ 
+Index: AnOggPlayer.hx
+===================================================================
+--- AnOggPlayer.hx	(revisione 15)
++++ AnOggPlayer.hx	(copia locale)
+@@ -93,8 +93,8 @@
+     var playTimer: haxe.Timer;
+     
+     function DoProgress(event:ProgressEvent):Void {
+-    	bytesLoaded = event.bytesLoaded;
+-    	bytesTotal = event.bytesTotal;
++    	bytesLoaded = cast(event.bytesLoaded,Int);
++    	bytesTotal = cast(event.bytesTotal,Int);
+     	doOnProgress(Math.ceil(bytesLoaded*100/bytesTotal),bytesPlayed);
+     	if(mp3Sound.isBuffering)doBuffer(50)
+         else {
+@@ -350,7 +350,7 @@
+                     };
+                     comment = System.fromBytes(ptr[j], 0, ptr[j].length - 1).split("=");
+                     comments = comments+comment[0];
+-                    comments = comments +"=\""+StringTools.replace(comment[1],"\"","\"\"")+"\";";
++		    comments = comments +"=\""+StringTools.htmlEscape(StringTools.replace(comment[1],"\"","\"\""))+"\";";
+                     trace(System.fromBytes(ptr[j], 0, ptr[j].length - 1));
+                     j++;
+                 };
+@@ -468,7 +468,7 @@
+     	target_pos=Math.ceil(bytesTotal*seek_pos);
+     	target_step=Math.ceil(Math.max(Math.ceil(target_pos/16384),3));
+     	target_pos=target_step*16384;
+-    	if(playBuffer.length>target_pos){
++    	if(playBuffer.length > cast(target_pos,UInt)){
+     		bytesPlayed=target_pos;
+     		playBuffer.position=target_pos;
+     		return 1;
+@@ -661,7 +661,7 @@
+     
+     function _on_progress(e : flash.events.ProgressEvent) : Void {
+         //trace("on_progress: " + ul.bytesAvailable);
+-        bytesLoaded = e.bytesLoaded;
++        bytesLoaded = cast(e.bytesLoaded,Int);
+         if(oldBytesTotal==0){
+         	_bootstrap_pending=false;
+         	read_started=false;
+@@ -669,7 +669,7 @@
+         	if(adjustCount>3)adjustCount=0;
+         	if(!streamDetected)trace("adjust "+adjustCount+": size "+bytesTotal);
+         }
+-        bytesTotal = e.bytesTotal;
++        bytesTotal = cast(e.bytesTotal,Int);
+         if((bytesTotal==0)&&(!streamDetected))
+         {
+         	adjustCount++;
+Index: org/xiph/fogg/Buffer.hx
+===================================================================
+--- org/xiph/fogg/Buffer.hx	(revisione 15)
++++ org/xiph/fogg/Buffer.hx	(copia locale)
+@@ -44,7 +44,7 @@
+     // modifiers: public
+     public function writeBytes(s : Bytes) : Void {
+         // for-while;
+-        var i : Int = 0;
++        var i : UInt = 0;
+         while (i < s.length) {
+             if (s[i] == 0) {
+                 break;
+Index: org/xiph/fogg/StreamState.hx
+===================================================================
+--- org/xiph/fogg/StreamState.hx	(revisione 15)
++++ org/xiph/fogg/StreamState.hx	(copia locale)
+@@ -56,19 +56,19 @@
+         }
+         else {
+             // for-while;
+-            var i : Int = 0;
++            var i : UInt = 0;
+             while (i < body_data.length) {
+                 body_data[i] = 0;
+                 i++;
+             };
+             // for-while;
+-            var i : Int = 0;
++            var i : UInt = 0;
+             while (i < lacing_vals.length) {
+                 lacing_vals[i] = 0;
+                 i++;
+             };
+             // for-while;
+-            var i : Int = 0;
++            var i : UInt = 0;
+             while (i < granule_vals.length) {
+                 granule_vals[i] = 0;
+                 i++;
+Index: org/xiph/system/AudioSink.hx
+===================================================================
+--- org/xiph/system/AudioSink.hx	(revisione 15)
++++ org/xiph/system/AudioSink.hx	(copia locale)
+@@ -120,19 +120,17 @@
+         buffer.position = available * 8; // 2 ch * 4 bytes per sample (float)
+         if (pcm.length == 1) {
+             // one channel
+-            //trace("1 chan");
+             var c = pcm[0];
+             var s : Float;
+             i = index[0];
+             end = i + samples;
+-            while (i < /*samples*/end) {
++            while (i < samples) {
+                 s = c[i++];
+                 buffer.writeFloat(s);
+                 buffer.writeFloat(s);
+             }
+         } else if (pcm.length == 2) {
+             // two channels
+-            //trace("2 chan");
+             var c1 = pcm[0];
+             var c2 = pcm[1];
+             i = index[0];
+Index: org/xiph/fvorbis/Floor1.hx
+===================================================================
+--- org/xiph/fvorbis/Floor1.hx	(revisione 15)
++++ org/xiph/fvorbis/Floor1.hx	(copia locale)
+@@ -261,13 +261,13 @@
+             if (Std.is(memo, Vector)) {
+                 fit_value = memo;
+             };
+-            if ((fit_value == null) || (fit_value.length < look.posts)) {
++            if ((fit_value == null) || (cast(fit_value.length, Int) < look.posts)) {
+                 //fit_value = new int[look.posts];
+                 fit_value = new Vector(look.posts, true);
+             }
+             else {
+                 // for-while;
+-                var i : Int = 0;
++                var i : UInt = 0;
+                 while (i < fit_value.length) {
+                     fit_value[i] = 0;
+                     i++;
+Index: org/xiph/fvorbis/CodeBook.hx
+===================================================================
+--- org/xiph/fvorbis/CodeBook.hx	(revisione 15)
++++ org/xiph/fvorbis/CodeBook.hx	(copia locale)
+@@ -63,7 +63,7 @@
+         var i : Int;
+         var j : Int;
+         var o : Int;
+-        if (t.length < step) {
++        if (t.length < cast(step,UInt)) {
+             //t = new int[step];
+             t = new Vector(step);
+         };
+Index: org/xiph/fvorbis/Floor0.hx
+===================================================================
+--- org/xiph/fvorbis/Floor0.hx	(revisione 15)
++++ org/xiph/fvorbis/Floor0.hx	(copia locale)
+@@ -128,7 +128,7 @@
+             if ((booknum != -1) && (booknum < info.numbooks)) {
+                 // synchronized (this) ...;
+                 {
+-                    if ((lsp == null) || (lsp.length < look.m)) {
++                    if ((lsp == null) || (cast(lsp.length, Int) < look.m)) {
+                         //lsp = new float[look.m];
+                         lsp = new Vector(look.m, true);
+                     }
+@@ -202,13 +202,13 @@
+             if ((booknum != -1) && (booknum < info.numbooks)) {
+                 var b : CodeBook = vb.vd.fullbooks[info.books[booknum]];
+                 var last : Float = 0.;
+-                if ((lsp == null) || (lsp.length < (look.m + 1))) {
++                if ((lsp == null) || (cast(lsp.length, Int) < (look.m + 1))) {
+                     //lsp = new float[look.m + 1];
+                     lsp = new Vector(look.m + 1, true);
+                 }
+                 else {
+                     // for-while;
+-                    var j : Int = 0;
++                    var j : UInt = 0;
+                     while (j < lsp.length) {
+                         lsp[j] = 0.;
+                         j++;
+Index: org/xiph/fvorbis/Residue0.hx
+===================================================================
+--- org/xiph/fvorbis/Residue0.hx	(revisione 15)
++++ org/xiph/fvorbis/Residue0.hx	(copia locale)
+@@ -136,7 +136,7 @@
+             while (k < dim) {
+                 var deco : Int = Std.int(val / mult);
+                 val -= (deco * mult);
+-                mult /= look.parts;
++                mult = Std.int(mult / look.parts);
+                 look.decodemap[j][k] = deco;
+                 k++;
+             };
+Index: org/xiph/fvorbis/Block.hx
+===================================================================
+--- org/xiph/fvorbis/Block.hx	(revisione 15)
++++ org/xiph/fvorbis/Block.hx	(copia locale)
+@@ -92,7 +92,7 @@
+         // for-while;
+         var i : Int = 0;
+         while (i < vi.channels) {
+-            if ((pcm[i] == null) || (pcm[i].length < pcmend)) {
++            if ((pcm[i] == null) || (cast(pcm[i].length, Int) < pcmend)) {
+                 //pcm[i] = new float[pcmend];
+                 pcm[i] = new Vector(pcmend, true);
+             }
+Index: org/xiph/fvorbis/Info.hx
+===================================================================
+--- org/xiph/fvorbis/Info.hx	(revisione 15)
++++ org/xiph/fvorbis/Info.hx	(copia locale)
+@@ -162,7 +162,7 @@
+         };
+ 
+         times = (opb.read(6) + 1);
+-        if ((time_type == null) || (time_type.length != times)) {
++        if ((time_type == null) || (cast(time_type.length, Int) != times)) {
+             //time_type = new int[times];
+             time_type = new Vector(times, true);
+         };
+@@ -187,7 +187,7 @@
+             i++;
+         };
+         floors = (opb.read(6) + 1);
+-        if ((floor_type == null) || (floor_type.length != floors)) {
++        if ((floor_type == null) || (cast(floor_type.length, Int) != floors)) {
+             //floor_type = new int[floors];
+             floor_type = new Vector(floors, true);
+         };
+@@ -212,7 +212,7 @@
+             i++;
+         };
+         residues = (opb.read(6) + 1);
+-        if ((residue_type == null) || (residue_type.length != residues)) {
++        if ((residue_type == null) || (cast(residue_type.length, Int) != residues)) {
+             //residue_type = new int[residues];
+             residue_type = new Vector(residues, true);
+         };
+@@ -237,7 +237,7 @@
+             i++;
+         };
+         maps = (opb.read(6) + 1);
+-        if ((map_type == null) || (map_type.length != maps)) {
++        if ((map_type == null) || (cast(map_type.length, Int) != maps)) {
+             //map_type = new int[maps];
+             map_type = new Vector(maps, true);
+         };
+Index: org/xiph/foggy/Demuxer.hx
+===================================================================
+--- org/xiph/foggy/Demuxer.hx	(revisione 15)
++++ org/xiph/foggy/Demuxer.hx	(copia locale)
+@@ -110,13 +110,11 @@
+ 
+         cb = page_cbs.get(sn);
+         if (cb == null) {
+-            //trace("cb==0");
+             cb = page_cbs.get(-1);
+         }
+ 
+         if (cb != null) {
+             cbret = cb(p, sn);
+-            trace("cb!=null; "+cbret);
+             // TODO handle stop request
+         }
+ 
+@@ -124,7 +122,6 @@
+         if (os == null) {
+             if (bos_done) {
+                 // unexpected new stream
+-                trace("unexpected end of stream");
+                 return -1;
+             }
+             os = new StreamState();
+@@ -132,7 +129,6 @@
+             streams.set(sn, os);
+         } else {
+             // end of bos pages? handle!...
+-           // trace("end of bos");
+             if (!bos_done) {
+                 bos_done = true;
+             }
+@@ -140,7 +136,6 @@
+ 
+         if (os.pagein(p) < 0) {
+             // can happen on an unsupported version
+-            trace("unsupported ver");
+             return -1;
+         }
+ 
+@@ -154,7 +149,6 @@
+         }
+ 
+         if (p.eos() != 0) {
+-            //trace("eos detected");
+             os.clear();
+             streams.remove(sn);
+             if (!streams.iterator().hasNext()) {

@@ -73,7 +73,7 @@ class Configure(models.Model):
 class Jingle(models.Model):
 	
 	jingle = models.CharField(ugettext_lazy("Jingle name"),max_length=80,unique=True)
-	file = DeletingFileField(ugettext_lazy('File'),upload_to='jingles')
+	file = DeletingFileField(ugettext_lazy('File'),upload_to='jingles',max_length=255)
 	rec_date = models.DateTimeField(ugettext_lazy('Recording date'))
 	active = models.BooleanField(ugettext_lazy("Active"),default=True)
 

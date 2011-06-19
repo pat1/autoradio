@@ -72,7 +72,7 @@ class Configure(models.Model):
 
 class Playlist(models.Model):
     playlist = models.CharField(ugettext_lazy('Playlist name'),max_length=200)
-    file = DeletingFileField(ugettext_lazy('File'),upload_to='playlist')
+    file = DeletingFileField(ugettext_lazy('File'),upload_to='playlist',max_length=255)
     rec_date = models.DateTimeField(ugettext_lazy('Generation date'))
     active = models.BooleanField(ugettext_lazy("Active"),default=True)
 

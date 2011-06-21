@@ -118,12 +118,12 @@ for dirpath, dirnames, filenames in os.walk('doc'):
     if filenames:
         data_files.append(['share/autoradio/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
 
-for dirpath, dirnames, filenames in os.walk('amarok'):
-    # Ignore dirnames that start with '.'
-    for i, dirname in enumerate(dirnames):
-        if dirname.startswith('.'): del dirnames[i]
-    if filenames:
-        data_files.append(['share/autoradio/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
+#for dirpath, dirnames, filenames in os.walk('amarok'):
+#    # Ignore dirnames that start with '.'
+#    for i, dirname in enumerate(dirnames):
+#        if dirname.startswith('.'): del dirnames[i]
+#    if filenames:
+#        data_files.append(['share/autoradio/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
 
 
 for dirpath, dirnames, filenames in os.walk('locale'):

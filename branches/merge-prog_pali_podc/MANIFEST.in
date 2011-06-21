@@ -7,7 +7,7 @@ include autoradio.spec
 global-include  *.txt *.py *.sh *.in *.cfg *.json
 recursive-include doc *
 recursive-include locale *.po
-recursive-include amarok *
 recursive-include templates *
 recursive-include media/sito *
 recursive-include debian *
+prune amarok

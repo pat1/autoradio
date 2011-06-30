@@ -3,6 +3,10 @@ ported ANOGGPLAYER to haxe 2.07
 applied path for security issues
 http://code.google.com/p/anoggplayer/issues/detail?id=7
 
+enabled 
+flash.system.Security.allowDomain("*");
+to disable the more strict security on last flash plugins
+
 ------------------
 
 get the anoggplayer software:
@@ -17,6 +21,6 @@ applay the patch haxe207.patch :
 patch  -p0 < haxe207.patch
 
 build the AnOgg.swf:
-haxe build.hxml
+make
 
 

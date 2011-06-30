@@ -3,18 +3,18 @@
     var flashvars = {};
     var params = {};
     var attributes = {
-    allowScriptAccess: "always",
-    swLiveConnect:"true"
+	allowScriptAccess: "always",
+	swLiveConnect:"true"
     };
 
     var haveflash=false;
     function callbackFn(e) 
     {
       if (e.success){
-      //alert("you have flash");
+	  //alert("you have flash");
       haveflash=true;
     };
-      createPlayer(media,"html5player","flashplayer","javaplayer");
+      createPlayer(media_url+media,"html5player","flashplayer","javaplayer");
     }
     
     // try to update flash becouse after I am hidden !
@@ -23,7 +23,7 @@
     }
     var upflash = function() {
 
-      var att = { data:media_url+"/sito/playogg/swfobject/expressInstall.swf", width:"310", height:"137" };
+      var att = { data:"baseURL+swfobject/expressInstall.swf", width:"310", height:"137" };
       var par = {};
       var id = "updateflash";
       swfobject.showExpressInstall(att, par, id, cancelFunction);
@@ -33,7 +33,8 @@
 	swfobject.addDomLoadEvent(upflash);
     }
 
-    swfobject.embedSWF(media_url+"/sito/playogg/flash/AnOgg.swf", "flashplayer",  "0", "0", "10.0.0", media_url+"/sito/playogg/swfobject/expressInstall.swf",flashvars,params,attributes,callbackFn);
+//alert ("installo:"+baseURL+"flash/AnOgg.swf");
+    swfobject.embedSWF(baseURL+"flash/AnOgg.swf", "flashplayer",  "0", "0", "10.0.0", baseURL+"swfobject/expressInstall.swf",flashvars,params,attributes,callbackFn);
 
 
 
@@ -43,6 +44,9 @@
 /* Helper function */
 function getFlashMovie(movieName)
 {
+
+    //alert("moviename:"+movieName);
+    //return $(movie_name)
 
     if (window.document[movieName]) 
 	{
@@ -62,7 +66,9 @@ function getFlashMovie(movieName)
 /* Commands */
 function oggPlayURL(oggPlayer,str)//play an url ending with .ogg or .mp3
 {
-	getFlashMovie(oggPlayer).playURL(str);
+    //alert(getFlashMovie(oggPlayer));
+    //alert(str);
+	    getFlashMovie(oggPlayer).playURL(str);
 }
 function oggStop(oggPlayer) //stop playing and discontinue loading as well
 {
@@ -99,10 +105,10 @@ function  createPlayer(playURL,html5id,flashid,javaid){
 		// Creiamo il nuovo elemento Anchor
 
 		immagine = document.createElement("A");
-		immagine.innerHTML="<img src='player.png'>";
+		immagine.innerHTML='<img src="'+imgURL+'player.png">';
 		immagine.setAttribute("id",id);
 		immagine.setAttribute("type","audio/ogg");
-		immagine.setAttribute("href",playURL);
+		immagine.setAttribute("href",media_url+playURL);
 		//		immagine.setAttribute("href","player.m3u");
 		//              application/xspf+xml
 
@@ -148,8 +154,11 @@ function testobjects(html5id,flashid,javaid){
 	if (html5playogg != "probably")
 	    { 
 		//swfobject.embedSWF("flash/AnOgg.swf", "redoflplayer",  "310", "137", "10.0.0", "swfobject/expressInstall.swf",flashvars,params,attributes,callbackFn);
-	    //alert(flashid);
-		alert("Your browser have some problems with html5 tag ! update it or try firefox");
+		//alert(flashid);
+		//alert("Your browser have some problems with html5 and Ogg ! redirect to no html5 version");
+		var currenturl = document.location.href;
+		window.location.replace(currenturl.replace("/player/", "/player/nohtml5/"));
+
 		//raise_random_error();
 	}
 	player="html5";
@@ -169,7 +178,7 @@ function testobjects(html5id,flashid,javaid){
 	}
 	
 	try {
-	    document.getElementById(javaid).doStop();
+	    document.getElementById(javaid);
 	    player="java";
 	}
 	catch(err){
@@ -194,7 +203,9 @@ function buttonPlayStop(event,playURL,html5id,flashid,javaid){
     var target = event.target ? event.target : event.srcElement;
 
     PlayerID=target.getAttribute("id")
-	
+
+	//alert("ecco:"+PlayerID);
+
 	switch (PlayerID) {
 	case "html5":
 	html5buttonPlayStop(PlayerID,html5id,playURL);
@@ -209,7 +220,7 @@ function buttonPlayStop(event,playURL,html5id,flashid,javaid){
 	break;
 
 	default:
-	alert("evento non gestito; contatta il webmaster");
+	alert("error: notify to webmaster");
 	}
 }
 
@@ -253,7 +264,10 @@ var javaStatus = false;
 
 function javabuttonPlayStop(PlayerID,javaid,playURL)
 {
-    var javaAudio = document.getElementById(javaid);
+
+    //var javaAudio = document.getElementById(javaid);
+    //var javaAudio = $(javaid);
+    var javaAudio = document.applets[0];
 
     if (javaStatus){
 	javaAudio.doStop();

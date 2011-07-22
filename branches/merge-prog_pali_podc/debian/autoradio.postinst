@@ -77,9 +77,9 @@ set +e
 ###
 # 4. change ownership of directory
 
-install -d /var/{run/autoradio,log/autoradio}
-#mkdir -p /var/log/autoradio/
-#mkdir -p /var/run/autoradio/
+#install -d /var/{run/autoradio,log/autoradio}
+mkdir -p /var/log/autoradio/
+mkdir -p /var/run/autoradio/
 
 $CHOWN -R $AUTORADIO:$AUTORADIO /usr/share/autoradio/
 $CHOWN -R $AUTORADIO:$AUTORADIO /etc/autoradio/

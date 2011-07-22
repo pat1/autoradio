@@ -43,7 +43,9 @@ if ((djversion[0] == 1 and djversion[1] >= 3) or
             elif file:
                 # Otherwise, just close the file, so it doesn't tie up resources.
                 file.close()
-        
+
+else:
+    DeletingFileField=models.FileField
 
 class MediaCategory(models.Model):
     """Category model for Media RSS"""

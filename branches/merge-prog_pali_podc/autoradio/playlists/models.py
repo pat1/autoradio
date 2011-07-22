@@ -39,7 +39,8 @@ if ((djversion[0] == 1 and djversion[1] >= 3) or
                 # Otherwise, just close the file, so it doesn't tie up resources.
                 file.close()
         
-
+else:
+    DeletingFileField=models.FileField
 
 def giorno_giorno():
 	giorni=[]

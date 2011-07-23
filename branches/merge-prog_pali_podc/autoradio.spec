@@ -5,7 +5,7 @@
 
 %define name autoradio
 %define version 2.0
-%define release 3%{?dist}
+%define release 5%{?dist}
 
 Summary: radio automation software
 Name: %{name}
@@ -97,7 +97,7 @@ rm -rf $RPM_BUILD_ROOT
 
 /usr/bin/getent group autoradio >/dev/null || /usr/sbin/groupadd  autoradio
 /usr/bin/getent passwd autoradio >/dev/null || \
-        /usr/sbin/useradd  -g autoradio \
+        /usr/sbin/useradd  -g autoradio  -d %{_datadir}/autoradio -M \
                 -c "autoradio user for radio automation software" autoradio
 
 #/usr/bin/getent group autoradio >/dev/null || /usr/sbin/groupadd -r autoradio

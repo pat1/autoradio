@@ -37,7 +37,7 @@ def initdb(cwd):
     if (options.changeuser):
         dae=autoradio.daemon.Daemon()
         dae.switchuser(user=autoradio.autoradio_config.user,group=autoradio.autoradio_config.group,env=None)
-        os.chdir(cwd)
+        #os.chdir(cwd)
 
     if (options.syncdb):
         setup_environ(autoradio.settings)

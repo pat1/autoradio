@@ -1,4 +1,5 @@
 = AutoRadio version 2.0 =
+
 http://autoradiobc.sourceforge.net/
 
 Radio automation software. Simple to use, starting from digital audio
@@ -55,7 +56,7 @@ You can get also some tar, rpm and deb from autoradio project home page
 
 django
 http://www.djangoproject.com/
-I suggest Django 1.1
+I suggest Django 1.3
 
 cherrypy
 Summary     : A pythonic, object-oriented web development framework
@@ -86,14 +87,15 @@ Player (xmms or audacious in alternative):
 
 
 In debian/ubuntu distribution you need those packeges: python
-python-setuptools, python-django, python-configobj, gettext
+python-setuptools, python-django, python-django-extensions, python-configobj, gettext
 python-reportlab, audacious, python-mutagen (>=1.17) ,python-cherrypy3
 , python-dbus
 
 In Fedora distibution you need those pckages: python-mutagen >= 1.17 ,
-Django, python-configobj, python-cherrypy, python-reportlab,
-python-docutils
-
+Django, python-configobj, python-cherrypy, python-reportlab, python-docutils,
+pyxmms, xmms
+or
+dbus-python, audacious >= 1.5
 
 HOW TO INSTALL
 --------------
@@ -136,7 +138,7 @@ you need access to root administrator user and after:
 
 python setup.py install
 
-choose a normal user to run the daemons, create it and 
+choose a normal user to run the daemons, create it and login,
 make and go in your preferred user working writable directory
 
 modify /etc/autoradio/autoradio-site.cfg or from the normal user
@@ -151,12 +153,15 @@ autoradioctrl --syncdb --changeuser
 autoradioweb restart
 
 You can run autoradiod and xmms/audacious in one host and autoradioweb
-in other if you use client server DB like mysql and specify where
-autoradiod is running in .cfg files.
+in other if you use server Data Base like mysql and specify it and where
+autoradiod is running in the autoradio configuration (.cfg) files.
 The /usr/share/autoradio of the machine where run autoradioweb will be 
-accessible read and write from machine where run autoradiod.
+accessible read (and write) from machine where run autoradiod.
 
-on machine where you want run autoradiod (the player side) after autoradio installation from root user (set password and activate interactive login):
+On machine where you want run autoradiod (the player side), after autoradio
+installation, from root user create a new user and set password and activate
+interactive login like this:
+useradd autoradio
 passwd autoradio
 usermod -s /bin/bash autoradio
 
@@ -191,12 +196,15 @@ autoradioctrl --syncdb --changeuser
 autoradioweb restart
 
 You can run autoradiod and xmms/audacious in one host and autoradioweb
-in other if you use client server DB like mysql and specify where
-autoradiod is running in .cfg files.
+in other if you use server Data Base like mysql and specify it and where
+autoradiod is running in the autoradio configuration (.cfg) files.
 The /usr/share/autoradio of the machine where run autoradioweb will be 
-accessible read and write from machine where run autoradiod.
+accessible read (and write) from machine where run autoradiod.
 
-on machine where you want run autoradiod (the player side) after autoradio installation from root user (set password and activate interactive login):
+On machine where you want run autoradiod (the player side), after autoradio
+installation, from root user create a new user and set password and activate
+interactive login like this:
+useradd autoradio
 passwd autoradio
 usermod -s /bin/bash autoradio
 
@@ -225,11 +233,32 @@ in /etc/autoradio-site.cfg
 HOW IT WORKS
 ------------
 
-In player playlist you need a queue of media for a minumun of some hours
-and for this you have to program some playlist.
-Player cannot stay stopped or paused (if stopped it will be started, if paused it stay paused) for a corret work.
-When time will be right jingle, programs and spots will be placed in playlist the first position after the last file inserted before by autoradiod 
+In player playlist you need a queue of media for a minumun of some
+hours and for this you have to program some playlist.  Player cannot
+stay stopped or paused (if stopped it will be started, if paused it
+stay paused) for a corret work.  When time will be right jingle,
+programs and spots will be placed in playlist the first position after
+the last file inserted before by autoradiod
 
+HOT TO USE IT
+-------------
+
+autoradioctrl provide some adminisistration commands like --sincdb to
+inizialite the data base.  aotoradioweb or other web serber like
+apache provide a web interface to program every thinks you cannot find
+in configuration files; you have to run it like a permanent daemon;
+use a browser pointing it at the machine and port of the web server
+(http://localhost:8080 is the default for autoradioweb).  Where you
+have an X server you can run autoradiod to start the player
+(xmms/audacious); autoradiod start the player after few time and
+manage it with the programmed schedules. You can run autoradiod from
+the same machine where run auroradioweb; it use sqlite local file. If
+you use a database client/server like mysql you can access the DB from
+an other machine but you have to read the media files from all
+machines involved (with nfs services).
+
+Read doc/user_guide.txt or the documentation in the web admin
+interface for the features enabled in the autoradio suite.
 
 CONTRIBUTED SOFTWARE
 --------------------

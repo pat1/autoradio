@@ -145,7 +145,6 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'autoradio.urls'
 
 INSTALLED_APPS = (
-    'django_extensions',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -155,3 +154,10 @@ INSTALLED_APPS = (
     'autoradio.spots',
     'autoradio.playlists',
 )
+
+try:
+    import django_extensions
+    INSTALLED_APPS += 'django_extensions',
+except ImportError:
+    print "django_extensions is not installed; I do not use it"
+    pass

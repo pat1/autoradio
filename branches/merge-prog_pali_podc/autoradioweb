@@ -52,7 +52,10 @@ autoradioweb = daemon.Daemon(
 def main(cwd):
 
     import os
-    os.chdir(cwd)
+    try:
+        os.chdir(cwd)
+    except:
+        pass
 
     setup_environ(autoradio.settings)
     management.call_command("runserver",autoradio.settings.port,use_reloader=False)

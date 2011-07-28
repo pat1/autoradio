@@ -5,7 +5,7 @@
 
 %define name autoradio
 %define version 2.0
-%define release 5%{?dist}
+%define release 6%{?dist}
 
 Summary: radio automation software
 Name: %{name}
@@ -19,7 +19,7 @@ Prefix: %{_prefix}
 BuildArch: noarch
 Vendor: Paolo Patruno <p.patruno@iperbole.bologna.it>
 Url: http://autoradiobc.sf.net
-BuildRequires: python-configobj , Django >= 1.0.3 , help2man
+BuildRequires: python-configobj , Django >= 1.0.3 , help2man, python-setuptools
 Requires:python-mutagen >= 1.17 , Django >= 1.0.3,  python-configobj, python-cherrypy, python-reportlab >= 2.0,  python-docutils
 %if 0%{?fedora} < 10
 Requires: pyxmms, xmms

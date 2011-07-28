@@ -66,9 +66,10 @@ def main(cwd):
         logging.error('wrong player %s' % player)
         raise Exception()
 
-
-
-    os.chdir(cwd)
+    try:
+        os.chdir(cwd)
+    except:
+        pass
 
     #def signalhandler(signum, frame):
     #    logging.info( 'Signal handler called with signal %d', signum)

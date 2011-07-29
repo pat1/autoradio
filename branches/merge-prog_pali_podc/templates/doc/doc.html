@@ -6,7 +6,52 @@
 <h1><a href="../">Documentation Home</a></h1>
 
 <div id="content-main">
+
+{% if params.docitem == "todo1" %}
+todo 1
 Documentation needs writers ......
+{% endif %}
+
+{% if params.docitem == "todo2" %}
+todo 2
+Documentation needs writers ......
+{% endif %}
+
+{% if params.docitem == "todo3" %}
+todo 3
+Documentation needs writers ......
+{% endif %}
+
+{% if params.docitem == "podcast" %}
+<h2>Podcast</h2>
+
+<h3>Che cos'è il podcasting?</h3>
+
+Il podcasting è un sistema che mette a disposizione brani audio e
+video attraverso Internet in formato feed RSS, in pratica è un
+servizio che automaticamente informa ed eventualmente scarica i nuovi
+file audio messi a disposizione su un sito. Tramite un programma in
+grado di leggere e decifrare questi feed, è possibile essere informati
+non appena un nuovo file audio viene pubblicato. Il podcasting
+consente un ascolto personalizzato dei contenuti: gli utenti scelgono
+quando ascoltare, dove ascoltare e come ascoltare i file audio.
+
+<h3>Come funziona il podcasting?</h3>
+
+Il procedimento è semplice: occorre scaricare ed installare sul
+proprio pc un software gratuito per il podcasting. Una volta
+installato il programma, bisogna indicare da quali fonti scaricare i
+file e con quale frequenza cercare nuovi brani.
+
+<h3>Come si usa il podcasting?</h3>
+
+Per utilizzare la risorsa occorre posizionarsi col mouse sull'icona
+"Podcast", cliccare col tasto destro del mouse e selezionare l'opzione
+"Copia collegamento". Una volta copiato il collegamento, utilizzarlo
+nell'ambito del programma scaricato.  
+
+{% endif %}
+
 </div>
 
 {% endblock %}

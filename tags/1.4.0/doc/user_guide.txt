@@ -1,0 +1,263 @@
+= AutoRadio versione 1.0 =
+Suite per l'automazione di una emittente radiofonica
+
+== Descriziione generale ==
+
+Autoradio è una suite di programmi che partendo da file audio digitali
+permette la gestione automatica dell'emissione di una stazione
+radiofonica.
+
+queste sono le componenti:
+
+ * Player: partendo da una playlist è in grado di gestire differenti formati di audio digitali per poi inviare il suono o a una scheda audio o a un server audio
+
+ * Scheduler: gestisce in tempo reale l'emissione di particolari file
+   audio quali i jingles, pubblicità, playlist e programmi; interagisce col player controllandolo e impartendo comandi
+
+ * L'intefaccia utente: utilizzando una interfaccia WEB pemette il monitoraggio dello scheduler e del player e permette la programmazione del palinsesto
+   
+=== Player ===
+
+Esistono varie possibilità:
+
+==== Xmms ====
+E' un player “antico” ma molto robusto. Con questo player è possibile visualizzare lo stato con interfaccia web. Questi sono i meccanismi di funzionamento principale:
+ * deve essere sempre presente nel player una playlist di brani musicali ciascuno di durata non superiore a 7/8 minuti; brani piu' lunghi potrebbero comportare ritardi e cattiva gestione dell'emissione automatica. Per mantenere sempre piena la playlist si consiglia di prevedere almeno due volte al giorno il caricamento automatico di una playlist voluminosa
+ * quando una schedula raggiunge il tempo per cui è stata programmata viene inserita nella prima posizione successiva a quella attualmente in play, saltando ogni file precedentemente inserito da una precedente schedula.
+ * tutto thread save, ossia le funzioni fatte su xmms dalle varie schedule saranno sempre consistenti
+ * le operazioni di insrimento e cancellazione dalla playlist vengono fatte solo quando mancano piu' di 10 secondi alla fine del brano per non cadere in situazioni critiche e inconsistenti
+ * la testa della playlist che se tutto è programmato correttamente tende sempre a crescere viene tagliata a 10 brani
+ * la coda della playlist che se tutto è programmato correttamente tende sempre a crescere viene tagliata a 500 brani
+ * il player se in stato "stop" viene sempre rimesso in stato "play"
+ * il player se in stato "pause" rimarrà sempre in "pause" se non ci srà un intervento manuale
+
+'''Questo è il player preferito pe l'utilizzo con AutoRadio'''
+
+==== Amarok ====
+
+E' un player molto potente con moltissime funzionalità. Oltre
+l'accesso al filesystem gestisce conpletamente i tag dei formati audio
+più diffusi. Dispone di molti plugin.
+Il funzionamento con autoradio prevede l'uso di amarok a cui è stata applicata una apposita patch.
+E' previsto l'ulizzo esclusivo di playlist autogenerate da amarok; a questa playlist automatica vengono aggiunti i file schedulati associati ad un ordine di esecuzione. Quindi non è possibile stabilire l'ordine di emissione dei brani musicali. 
+I brani musicali dovranno errere ciascuno di durata non superiore a 7/8 minuti; brani piu' lunghi potrebbero comportare ritardi e cattiva gestione dell'emissione automatica. Ancune funzioni dello scheduler non sono gestite/testate con Amarok
+
+==== Pytone ====
+
+E' un player da consol testuale scritto in python. Per la sua
+semplicità e completezza è un player da tenere in considerazione per
+essere completamente integrato in AutoRadio. Al momento il suo
+supporto in AutoRadio è limitato e non completo, quindi operativamente
+consigliamo di utilizzare Amarok.
+
+=== Scheduler ===
+
+Lo scheduler è un programma che lanciato separatamente o come plugin
+di amarok, comanda all'istante di tempo opportuno il Player per
+attivare l'emissione delle schedule preimpostate. Svolge anche altre
+funzioni logiche e di controllo.
+
+=== L'intefaccia utente ===
+
+Per mette l'interazione con l'utente permettendo l'impostazione delle
+schedule e il loro controllo. Si puo' utilizzare un normale browser
+quale l'ottimo Firefox permettendo il controllo remoto da qualsiasi
+postazione in rete dello scheduler compreso l'upload dei programmi e degli altri file audio.
+
+
+== Funzionalità dello Scheduler ==
+
+Le schedule sono distinte in quattro classi principali:
+
+ * Programmi
+ * Spots
+ * Jingles
+ * Playlist
+
+Ogni elemento ha un voce di configurazione che imposta alcune
+caratteristiche per l'intera classe (Config).
+
+I programmi, spot,  playlist e jingle vengono uplodati impostandone le
+caratteristiche per l'emissione.
+
+Programmi: possono essere mandati in onda piu' volte impostando piu'
+date e orati di emissione.
+
+Jingles: vengono emessi ad intervalli di tempo fissi. Per ogni jingle
+è possibile impostare da quale data a quale data effettuare
+l'emissione, da che ora a che ora effettuare l'emissione e in quali
+giorni della settimana. E' cosi' facile attivare promo di programmi o
+altro ad orari specifici.
+
+Spots: è possibile impostare qualsiasi numero di fasce pubblicitarie
+caratterizzate da un orario di emissione; ogni fascia è attivabile o
+disattivabile singolarmente. Ogni fascia pubblicitaria ha uno o piu'
+prologhi che annunciano la pubblicità. Ogni fascia pubblicitaria ha
+uno o piu' epiloghi che annunciano la fine della pubblicità. Per ogni
+spot (o prologo o epilogo) è possibile stabilire da quale data a quale
+data effettuare l'emissione, in quali giorni della settimana e in
+quale fascia pubblicitaria. Ogni spot ( o prologo o epilogo) ha una
+priorità che determina l'oridine di emissione.
+
+Lo scheduler effettua un controllo sulla possibilità di emettere le
+varie schedule:
+
+Vengono estratte tutte le schedule in un intervallo di tempo a cavallo
+tra passato e futuro. Spot e programmi programmati nel passato e non
+ancora emessi vengono programmati immediatamente se il ritardo non è
+eccessivo. Le pubblicità che cadono durante l'emissione di un programma
+vengono anticipare o ritardate a seconda della vicinanza temporale. I
+jingles che cadono durante l'emissione di programmi o publicità
+vengono eliminati.
+
+Ogni comando al Player viene registrato nel caso vada a buon
+fine. Ovviamente se sul player vengono fatte operazioni manuali lo
+scheduler non ne puo tenere conto.
+
+Lo scheduler provvede anche alla generazione dinamica delle playlist
+delle fasce pubblicitarie per l'eventuale emissione manuale della pubblicità.
+Queste playlist vengono generate poco prima dell'orario programato per l'emissione.
+
+== Impostazioni ==
+=== Programmi ===
+==== Impostazioni  generali ====
+
+ * Attivazione/disattivazione dell'emissione dei programmi
+ * ora inizio possibilità di emissione dei programmi
+ * ora fine   possibilità di emissione dei programmi
+
+==== Impostazioni per ogni programma ====
+ * Nome del programma
+ * File uplodato
+ * Data in cui il programma è stato registrato
+ * Attivazione/disattivazione emissione del singolo programma
+ * Elenco di date e orari a cui fare l'emissione
+
+==== Schedule ====
+
+Alla voce schedule è possibile avere l'elenco delle emissioni
+programmate ed effettuate
+
+=== Jingle ===
+==== Impostazioni  generali ====
+
+ * Attivazione/disattivazione dell'emissione dei jingles
+ * Frequenza: cadenza dell'emissione dei jingle
+
+==== Impostazioni per ogni jingle ====
+ * Nome del jingle
+ * File uplodato
+ * Data in cui il jingle è stato registrato
+ * Attivazione/disattivazione emissione del singolo jingle
+ * giorno inizio possibilità di emissione del jingle
+ * giorno fine   possibilità di emissione del jingle
+ * ora inizio possibilità di emissione del jingle
+ * ora fine   possibilità di emissione del jingle
+ * giorno della settimana in cui emettere il jingle
+ * priorità: determina la maggiore/minore probabilità di essere emesso (da implementare)
+
+
+=== Spot ===
+==== Impostazioni  generali ====
+
+ * Attivazione/disattivazione dell'emissione della pubblicità
+ * ora inizio possibilità di emissione degli spot
+ * ora fine   possibilità di emissione degli spot
+
+==== Impostazioni per ogni spot ====
+
+ * Nome dello spot
+ * File uplodato
+ * Data in cui lo spot è stato registrato
+ * Attivazione/disattivazione emissione del singolo jingle
+ * data inizio possibilità di emissione del jingle
+ * data fine   possibilità di emissione del jingle
+ * giorno della settimana in cui emettere il jingle
+ * fascie pubblicitarie in cui lo spot va emesso
+ * priorità: determina l'ordine di emissione dello spot rispetto agli altri
+ * prologo: determina se quello inserito è un prologo della fascia
+ * epilogo: determina se quello inserito è un epilogo della fascia
+
+==== Impostazioni per ogni fascia ====
+
+ * Nome della fascia (sarà il nome della playlist generata in dinamico)
+ * orario di emissione
+ * Attivazione/disattivazione emissione della singola fascia
+
+=== Playlist ===
+
+==== Impostazioni  generali ====
+
+ * Attivazione/disattivazione dell'emissione delle playlist
+ * ora inizio possibilità di emissione delle Playlist
+ * ora fine   possibilità di emissione degli Playlist
+
+==== Impostazioni per ogni playlist ====
+
+ * Nome della playlist
+ * File uplodato
+ * Data in cui la playlist è stata composta
+ * Attivazione/disattivazione emissione della singola playlist
+ * schedule:
+  * Shuffle abilita/disabilita ordinamento casuale dei brani al momento dell'emissione
+  * Elenco di eventuali date e orari a cui fare l'emissione
+ * periodic schedule (eventuale programmazione periodica):
+  * Shuffle abilita/disabilita ordinamento casuale dei brani al momento dell'emissione
+  * Data inizio programmazione / Data fine programmazione (possono essere omesse)
+  * orario a cui affettuare l'eventuale emissione
+  * giorni a cui effettuare l'eventuale emissione
+
+
+==== Schedule ====
+
+Alla voce schedule è possibile avere l'elenco delle emissioni
+programmate ed effettuate
+
+==== Periodic Schedule ====
+
+Alla voce periodic schedule è possibile avere l'elenco delle emissioni periodiche
+programmate e ultima emissione
+
+
+== Installazione ==
+dipendenze mutagen >= 1.17
+django 1.1
+etc. etc.
+
+
+DA SCRIVERE
+
+== Per far partire il tutto ==
+
+python manage.py runserver 8001
+
+python autoradiod.py
+
+firefox localhost:8001
+
+
+
+== obsolete AutoRadio e Pytone ==
+
+In autoradiod.py  c'è uno switch per commutare tra amarok e pytone
+per far funzionare amarok bisogna patchare amarok (come al solito)
+
+Pytone ha iseguenti problemi:
+managepytone.py è stato installato nella dir pytone/ per farlo funzionare
+se si mettono due database non funziona
+se si mette la dir di django in un database che non si chiama main non funziona
+managepytone.py è da ggiornare per riallinarlo a manageanarok.py che ha avuto alcune modifiche (scrittura di emission_done).
+
+== TODO ==
+# ToDo:
+# controllare gli inserimenti al livello di django ADMIN INTERFACE
+# utilizzare mp3splt sper spezzare i programmi per fare gli inserimenti pubblicitari
+# alternare meglio i jingle tenendo in considerazione la priorita
+# a cavallo della mezzanotte verificare il funzionamento
+
+#obsolete amarok
+# effettuare la scrittura di emission_done in django tramite dcop
+# tenere un log delle emissioni tramite dcop o tramite il plugin playlog
+
+20/09/2009
+

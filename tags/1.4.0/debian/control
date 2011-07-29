@@ -1,0 +1,28 @@
+Source: autoradio
+Section: sound
+Priority: extra
+Maintainer: Paolo Patruno <p.patruno@iperbole.bologna.it>
+Build-Depends: debhelper (>= 7)
+Build-Depends-Indep: python, python-support, python-setuptools, python-django (>=1.0.3) , python-configobj, gettext
+Standards-Version: 3.8.1
+Homepage: http://autoradiobc.sf.net
+
+Package: autoradio
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, python, python-reportlab (>=2.0) , python-configobj, python-django (>=1.0.3) , audacious, python-mutagen (>=1.17) ,python-cherrypy3 , python-dbus
+Description: radio automation software
+ Simple to use, starting from digital audio files manages on-air broadcasting
+ over a radio-station or web-radio. 
+ .
+ The main components are: 
+ .
+ * Player (Xmms/Audacious): plays all your media files and send
+   digital sound to an audio device or audio server
+ * Scheduler: real time manager for emission of special audio files
+   like jingles, spots, playlist and programs; interact with player
+   like supervisor User
+ * inteface: WEB interface to monitor the player and scheduler and
+   admin the schedules for the complete control over your station
+   format
+ .
+ Developed with Python, Django, Dbus it works in an production enviroment

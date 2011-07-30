@@ -66,7 +66,7 @@ if [ "$IUID" = "NONE" ] ; then # we must do sth :)
       echo "The adduser command failed."
     fi
   else
-    if ! $ADDUSER --home /usr/share/autoradio/ --gecos autoradio --disabled-password --disabled-login --no-create-home --group $AUTORADIO; then
+    if ! $ADDUSER --home /usr/share/autoradio/ --gecos autoradio --disabled-password --disabled-login --no-create-home --group $AUTORADIO $AUTORADIO; then
       echo "The adduser command failed."
     fi
   fi

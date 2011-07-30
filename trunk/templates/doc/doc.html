@@ -25,8 +25,8 @@ Documentation needs writers ......
 {% if params.docitem == "podcast" %}
 <h2>Podcast</h2>
 
-<h3>Che cos'è il podcasting?</h3>
-
+<h3>{% trans 'Che cosa è il podcasting?' %}</h3>
+{% blocktrans %}
 Il podcasting è un sistema che mette a disposizione brani audio e
 video attraverso Internet in formato feed RSS, in pratica è un
 servizio che automaticamente informa ed eventualmente scarica i nuovi
@@ -35,20 +35,23 @@ grado di leggere e decifrare questi feed, è possibile essere informati
 non appena un nuovo file audio viene pubblicato. Il podcasting
 consente un ascolto personalizzato dei contenuti: gli utenti scelgono
 quando ascoltare, dove ascoltare e come ascoltare i file audio.
+{% endblocktrans %}
 
-<h3>Come funziona il podcasting?</h3>
-
+<h3>{% trans 'Come funziona il podcasting?' %}</h3>
+{% blocktrans %}
 Il procedimento è semplice: occorre scaricare ed installare sul
 proprio pc un software gratuito per il podcasting. Una volta
 installato il programma, bisogna indicare da quali fonti scaricare i
 file e con quale frequenza cercare nuovi brani.
+{% endblocktrans %}
 
-<h3>Come si usa il podcasting?</h3>
-
+<h3>{% trans 'Come si usa il podcasting?' %}</h3>
+{% blocktrans %}
 Per utilizzare la risorsa occorre posizionarsi col mouse sull'icona
 "Podcast", cliccare col tasto destro del mouse e selezionare l'opzione
 "Copia collegamento". Una volta copiato il collegamento, utilizzarlo
 nell'ambito del programma scaricato.  
+{% endblocktrans %}
 
 {% endif %}
 

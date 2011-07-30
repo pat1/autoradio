@@ -1,0 +1,66 @@
+{% extends "podcast/base.html" %}
+{% load i18n %}
+
+
+{% block head %}
+
+<head>
+  <title>Universal Ogg player</title>
+  <script type="text/javascript" src="{{media_url}}sito/playogg/swfobject/swfobject.js"></script>
+  <script type="text/javascript" src="{{media_url}}sito/playogg/js/jquery-1.4.1.min.js"></script>
+
+  <script type="text/javascript">
+    var baseURL="{{ media_url }}sito/playogg/";
+    var imgURL="{{ media_url }}sito/playogg/";
+    var media_url="{{ media_url }}";
+    var media="{{ media }}";
+  </script>
+  <script type="text/javascript" src="{{media_url}}sito/playogg/js/player.js"></script>
+
+  <link href="{{media_url}}sito/css/podcast.css" rel="stylesheet" type="text/css" media="screen" />
+</head>
+{% endblock %}
+
+
+{% block allcontent %}
+
+<div id="updateflash"></div>
+
+<div style="visibility:hidden">
+      <div id="flashplayer">
+
+	<applet id="javaplayer" code="com.fluendo.player.Cortado.class" archive="{{media_url}}sito/playogg/java/cortado.jar" width="352" height="288" style="visibility:hidden">
+	  <param name="url" value="{{ media  }}"/>
+	  <param name="archive" value="{{media_url}}sito/playogg/java/cortado.jar" />
+	  <param name="autoPlay" value="false"/>
+	  <param name="showStatus" value="hide"/>
+	  <param name="keepaspect" value="true" />
+	  <param name="video" value="false" />
+	  <param name="audio" value="true" />
+	  <param name="seekable" value="auto" />
+	  <param name="bufferSize" value="20" /> 
+	  <param name="allowScriptAccess" value="always" />
+	  <param name="showSpeaker" value="false" />
+	  <param name="local" value="false"/>
+      </applet>
+    </div>
+</div>    
+
+<div id='player' style='visibility:show ; position:fixed; left:100px; top:200px;'></div>
+<script type="text/javascript">
+  // document.write("<div id='player' style='visibility:show ; position:fixed; left:100px; top:200px;'></div>")
+  // border: 2px solid red; 
+</script>
+<noscript>
+
+<!-- do not work without js
+    <audio id="html5nojs" src="http://www.radiocittafujiko.it:8001/rcf.ogg"  style="visibility:show;" controls="true">
+		<a id="pluginnojs" href="http://www.radiocittafujiko.it:8001/rcf.ogg" type="audio/ogg"> <img src="player.png"> </a>
+    </audio>
+-->
+
+<a id="pluginnojs" href="{{ media  }}" type="audio/ogg"> <img src="{{media_url}}sito/playogg/player.png" style='visibility:show ; position:fixed; left:100px; top:200px; border: 2px solid red; ' /> </a>
+
+</noscript>
+
+{% endblock %}

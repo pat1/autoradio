@@ -1,0 +1,22 @@
+== TODO ==
+
+30/09/2010
+
+ * error on week days on italian locale
+ * on programbook programtype 5 need subtype 5a
+
+
+
+20/09/2009
+
+# controllare gli inserimenti al livello di django ADMIN INTERFACE
+# utilizzare mp3splt sper spezzare i programmi per fare gli inserimenti pubblicitari
+# alternare meglio i jingle tenendo in considerazione la priorita
+# a cavallo della mezzanotte verificare il funzionamento
+
+#obsolete amarok
+# effettuare la scrittura di emission_done in django tramite dcop
+# tenere un log delle emissioni tramite dcop o tramite il plugin playlog
+
+
+

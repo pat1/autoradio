@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+
+{% block title %}{{ section.title }}{% endblock %}
+
+{% block content %}
+
+<p>
+Specificare un periodo in cui produrre un report per il Libro
+Programmi
+</p>
+
+<p>
+<form action="/programsbook/" method="POST">
+{{ form.as_p }}
+<input type="submit" value="Submit" />
+</form>
+
+</p>
+
+{% endblock %}

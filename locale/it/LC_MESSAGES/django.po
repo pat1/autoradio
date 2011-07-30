@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-30 14:06+0200\n"
+"POT-Creation-Date: 2011-07-30 14:23+0200\n"
 "PO-Revision-Date: 2011-07-30 14:07+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -191,8 +191,9 @@ msgid "Programmed time"
 msgstr "Ora fine programmazione"
 
 #: autoradio/playlists/models.py:140 autoradio/programs/models.py:750
-#: build/lib/autoradio/playlists/models.py:140
+#: autoradio/spots/models.py:161 build/lib/autoradio/playlists/models.py:140
 #: build/lib/autoradio/programs/models.py:750
+#: build/lib/autoradio/spots/models.py:161
 #, fuzzy
 msgid "Programmed days"
 msgstr "Giorni programmati"
@@ -300,16 +301,14 @@ msgid "Recordinf date"
 msgstr "Registrato oggi?"
 
 #: autoradio/spots/models.py:156 build/lib/autoradio/spots/models.py:156
-msgid "Data inizio programmazione"
-msgstr ""
+#, fuzzy
+msgid "Programmed starting date"
+msgstr "Ora inizio programmazione"
 
 #: autoradio/spots/models.py:157 build/lib/autoradio/spots/models.py:157
-msgid "Data fine programmazione"
-msgstr ""
-
-#: autoradio/spots/models.py:161 build/lib/autoradio/spots/models.py:161
-msgid "Giorni programmati"
-msgstr ""
+#, fuzzy
+msgid "Programmed ending date"
+msgstr "Ora fine programmazione"
 
 #: autoradio/spots/models.py:164 build/lib/autoradio/spots/models.py:164
 msgid "Prologue"
@@ -364,6 +363,10 @@ msgstr "Amministrazione"
 msgid "Documentation"
 msgstr "Documentazione"
 
+#: templates/doc/doc.html:28
+msgid "Che cosa è il podcasting?"
+msgstr ""
+
 #: templates/doc/doc.html:29
 msgid ""
 "\n"
@@ -377,6 +380,10 @@ msgid ""
 "quando ascoltare, dove ascoltare e come ascoltare i file audio.\n"
 msgstr ""
 
+#: templates/doc/doc.html:40
+msgid "Come funziona il podcasting?"
+msgstr ""
+
 #: templates/doc/doc.html:41
 msgid ""
 "\n"
@@ -384,6 +391,10 @@ msgid ""
 "proprio pc un software gratuito per il podcasting. Una volta\n"
 "installato il programma, bisogna indicare da quali fonti scaricare i\n"
 "file e con quale frequenza cercare nuovi brani.\n"
+msgstr ""
+
+#: templates/doc/doc.html:48
+msgid "Come si usa il podcasting?"
 msgstr ""
 
 #: templates/doc/doc.html:49

@@ -153,12 +153,12 @@ class Spot(models.Model):
 	rec_date = models.DateTimeField(ugettext_lazy('Recordinf date'))
 	active = models.BooleanField(ugettext_lazy("Active"),default=True)
 
-	start_date = models.DateTimeField(ugettext_lazy('Data inizio programmazione'),null=True,blank=True)
-	end_date = models.DateTimeField(ugettext_lazy('Data fine programmazione'),null=True,blank=True)
+	start_date = models.DateTimeField(ugettext_lazy('Programmed starting date'),null=True,blank=True)
+	end_date = models.DateTimeField(ugettext_lazy('Programmed ending date'),null=True,blank=True)
 
 	# giorni = models.PositiveIntegerField( choices=DAY_CHOICES)
 #	giorni = models.ForeignKey(Giorno,verbose_name='Giorni programmati',editable=False)
-	giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Giorni programmati'),null=True,blank=True)
+	giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Programmed days'),null=True,blank=True)
 	fasce = models.ManyToManyField(Fascia,null=True,blank=True)
 	priorita = models.IntegerField(ugettext_lazy("Priority"),default=50)
 	prologo =  models.BooleanField(ugettext_lazy("Prologue"),default=False)

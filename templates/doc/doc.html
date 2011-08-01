@@ -3,24 +3,139 @@
 
 {% block content %}
 
-<h1><a href="../">Documentation Home</a></h1>
+<h1><a href="../">{% trans 'Documentation Home' %}</a></h1>
 
 <div id="content-main">
 
-{% if params.docitem == "todo1" %}
-todo 1
-Documentation needs writers ......
+{% if params.docitem == "overview" %}
+{% blocktrans %}
+Radio automation software. Simple to use, starting from digital audio
+files, manage on-air broadcasting over a radio-station or
+web-radio. The main components are:
+<ul>
+  <li>Player (Xmms/Audacious): plays all your media files and send digital sound
+      to an audio device or audio server</li>
+ 
+  <li>Scheduler: real time manager for emission of special audio files
+      like jingles, spots, playlist and programs; interact with player
+      like supervisor User</li>
+
+  <li>inteface: WEB interface to monitor the player and scheduler and
+      admin the schedules for the complete control over your station
+      format. The web interface allows you to easily publish podcasts
+      that conform to the RSS 2.0 and iTunes RSS podcast specifications
+      The web interface provide a "full compatible" ogg player.</li>
+
+</ul>
+Developed with Python, Django, Dbus it works in an production enviroment
+
+{% endblocktrans %}
 {% endif %}
 
-{% if params.docitem == "todo2" %}
-todo 2
-Documentation needs writers ......
+{% if params.docitem == "feature" %}
+{% blocktrans %}
+<ul>
+ <li> manage ogg, mp3, wav and other media file format</li>
+ <li> it's designed as client server</li>
+ <li> manage playlists, inserting on it jingles, spots and programs</li>
+ <li> programmable rules for schedule and period schedule</li>
+ <li> do not overlap schedules: anticipate, postone or delete</li>
+ <li> player is monitored by web interface</li>
+ <li> spots are grouped and ordered by your preference</li>
+ <li> programs are available for podcasting in a very complete rss feed web interface</li>
+ <li> integrated web player for ogg vorbis that is very compatible with most user's systems</li>
+ <li> can produce a palimpsest and a printable version is available following the the italian law standard</li>
+ <li> integrated daemon system with logging</li>
+ <li> provide enhanced version of dir2ogg.py and mkplaylist.py to manage
+   files with music (convert to ogg and make playlist)</li>
+ <li> do not use DataBases to manage music; you can use your preferred application to produce playlists  </li>
+ <li> on line web documentation</li>
+</ul>
+
+{% endblocktrans %}
 {% endif %}
 
-{% if params.docitem == "todo3" %}
-todo 3
-Documentation needs writers ......
+{% if params.docitem == "player" %}
+{% blocktrans %}
+Partendo da una playlist è in grado di gestire differenti formati di audio digitali per poi inviare il suono o a una scheda audio o a un server audio.
+
+Esistono varie possibilità:
+<ul>
+  <li>Audacious2:
+  Questo player è disponibile su tutte le nuove distribuzioni.
+  Permette l'invio diretto a un server per lo streaming per la realizzazione di web radio.
+  Questo è il player preferito pe l'utilizzo con AutoRadio.</li>
+  <li>Xmms:
+  E' un player “antico” ma molto robusto.
+  Consigliato solo su vecchie distribuzioni</li>
+</ul>
+Questi sono i meccanismi di funzionamento principale:
+
+<ul>
+ <li> deve essere sempre presente nel player una playlist di brani
+ musicali ciascuno di durata non superiore a 7/8 minuti; brani piu'
+ lunghi potrebbero comportare ritardi e cattiva gestione
+ dell'emissione automatica. Per mantenere sempre piena la playlist si
+ consiglia di prevedere almeno due volte al giorno il caricamento
+ automatico di una playlist voluminosa.</li>
+
+ <li> quando una schedula raggiunge il tempo per cui è stata programmata
+ viene inserita nella prima posizione successiva a quella attualmente
+ in play, saltando ogni file precedentemente inserito da una
+ precedente schedula.</li>
+
+ <li> tutto thread save, ossia le funzioni fatte sul player dalle varie
+ schedule saranno sempre consistenti.</li>
+
+ <li> le operazioni di insrimento e cancellazione dalla playlist vengono
+ fatte solo quando mancano piu' di 10 secondi alla fine del brano per
+ non cadere in situazioni critiche e inconsistenti.</li>
+
+ <li> la testa della playlist che se tutto è programmato correttamente
+ tende sempre a crescere viene tagliata a 10 brani.</li>
+
+ <li> la coda della playlist che se tutto è programmato correttamente
+ tende sempre a crescere viene tagliata a 500 brani.</li>
+
+ <li> il player se in stato "stop" viene sempre rimesso in stato "play".</li>
+
+ <li> il player se in stato "pause" rimarrà sempre in "pause" se non ci
+ srà un intervento manuale.</li>
+
+ <li> è possibile visualizzare lo stato con interfaccia web.</li>
+</ul>
+
+{% endblocktrans %}
 {% endif %}
+
+{% if params.docitem == "scheduler" %}
+{% blocktrans %}
+scheduler
+Documentation needs writers ......
+{% endblocktrans %}
+{% endif %}
+
+{% if params.docitem == "playlist" %}
+{% blocktrans %}
+playlist
+Documentation needs writers ......
+{% endblocktrans %}
+{% endif %}
+
+{% if params.docitem == "jingle" %}
+{% blocktrans %}
+jingle
+Documentation needs writers ......
+{% endblocktrans %}
+{% endif %}
+
+{% if params.docitem == "program" %}
+{% blocktrans %}
+program
+Documentation needs writers ......
+{% endblocktrans %}
+{% endif %}
+
 
 {% if params.docitem == "podcast" %}
 <h2>Podcast</h2>
@@ -54,6 +169,15 @@ nell'ambito del programma scaricato.
 {% endblocktrans %}
 
 {% endif %}
+
+
+{% if params.docitem == "programbook" %}
+{% blocktrans %}
+programbook
+Documentation needs writers ......
+{% endblocktrans %}
+{% endif %}
+
 
 </div>
 

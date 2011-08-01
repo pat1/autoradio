@@ -1,6 +1,8 @@
 = AutoRadio version 2.0 =
-
 http://autoradiobc.sourceforge.net/
+
+OVERVIEW
+--------
 
 Radio automation software. Simple to use, starting from digital audio
 files, manage on-air broadcasting over a radio-station or
@@ -16,10 +18,8 @@ web-radio. The main components are:
     * inteface: WEB interface to monitor the player and scheduler and
       admin the schedules for the complete control over your station
       format. The web interface allows you to easily publish podcasts
-      that conform to the RSS 2.0 and iTunes RSS podcast
-      specifications
-
-
+      that conform to the RSS 2.0 and iTunes RSS podcast specifications
+      The web interface provide a "full compatible" ogg player.
 
 Developed with Python, Django, Dbus it works in an production enviroment
 
@@ -29,13 +29,22 @@ FEATURES
 
  * manage ogg, mp3, wav and other media file format
  * it's designed as client server
+ * manage playlists, inserting on it jingles, spots and programs
  * programmable rules for schedule and period schedule
  * do not overlap schedules: anticipate, postone or delete
  * player is monitored by web interface
+ * spots are grouped and ordered by your preference
+ * programs are available for podcasting in a very complete rss feed web interface
+ * integrated web player for ogg vorbis that is very compatible with most user's systems
+ * can produce a palimpsest and a printable version is available following the the italian law standard
+ * integrated daemon system with logging
+ * provide enhanced version of dir2ogg.py and mkplaylist.py to manage
+   files with music (convert to ogg and make playlist)
+ * do not use DataBases to manage music; you can use your preferred application to produce playlists  
+ * on line web documentation
 
 REQUIRES
 --------
-
 
 Autoradio try to work on old distribution like fedora 8 with xmms and 
 cherrypy2 

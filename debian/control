@@ -25,7 +25,7 @@ Description: radio automation software
     * inteface: WEB interface to monitor the player and scheduler and
       admin the schedules for the complete control over your station
       format. The web interface allows you to easily publish podcasts
-      that conform to the RSS 2.0 and iTunes RSS podcast
-      specifications
+      that conform to the RSS 2.0 and iTunes RSS podcast specifications
+      The web interface provide a "full compatible" ogg player.
  .
  Developed with Python, Django, Dbus it works in an production enviroment

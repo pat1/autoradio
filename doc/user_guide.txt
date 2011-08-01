@@ -1,4 +1,4 @@
-= AutoRadio versione 1.0 =
+= AutoRadio versione 2.0 =
 Suite per l'automazione di una emittente radiofonica
 
 == Descriziione generale ==

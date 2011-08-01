@@ -5,9 +5,8 @@
 Show audacious playlist on a simple web server.
 """
 
-session=0         # sessione di xmms
-maxplele=100      # massimo numero di elementi della playlist
-port=8888         # port for server
+maxplele=100      # max number of elements in playlist
+port=8888         # server port
 
 #try:
 #    import sys,glob
@@ -34,7 +33,7 @@ head='''
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 		<meta http-equiv="Content-Language" content="it-it" />
 
-		<title>XMMS monitor | </title>
+		<title>AUDACIOUS monitor | </title>
 
 		<meta name="ROBOTS" content="ALL" />
 		<meta http-equiv="imagetoolbar" content="no" />
@@ -42,8 +41,8 @@ head='''
 		<meta name="MSSmartTagsPreventParsing" content="true" />
 		<meta name="Copyright" content="This site's design and contents Copyright (c) 2007 Patruno Paolo." />
 
-		<meta name="keywords" content="Python, xmms" />
-		<meta name="description" content="xmms web monitor" />
+		<meta name="keywords" content="Python, audacious" />
+		<meta name="description" content="audacious web monitor" />
 
 		<meta http-equiv="refresh" content="10">
 
@@ -61,8 +60,8 @@ class HomePage:
     
 #    def Main(self):
 #        # Let's link to another method here.
-#        htmlresponse='Goto xmms <a href="status">status</a> for autoradio!<BR>'
-#        htmlresponse+='Goto xmms <a href="playList">playlist</a> for autoradio!<BR>'
+#        htmlresponse='Goto audacious <a href="status">status</a> for autoradio!<BR>'
+#        htmlresponse+='Goto audacious <a href="playList">playlist</a> for autoradio!<BR>'
 #        return htmlresponse
 #    Main.exposed = True
     
@@ -78,7 +77,7 @@ class HomePage:
     test.exposed = True
 
     def status(self):
-        "return xmms status"
+        "return audacious status"
 
         try:
             # ---------------------------------
@@ -98,7 +97,7 @@ class HomePage:
     status.exposed = True
 
     def index(self):
-        "return xmms playlist"
+        "return audacious playlist"
 
 
         if (self.iht) :
@@ -211,7 +210,7 @@ def start_http_server(iht=False):
             'server.socket_queue_size': 5,
             'server.protocol_version': "HTTP/1.0",
             'server.log_to_screen': False,
-            'server.log_file': "/tmp/xmmsweb.log",
+            'server.log_file': "/tmp/audaciousweb.log",
             'server.reverse_dns': False,
             'server.thread_pool': 10,
             #'server.environment': "development"

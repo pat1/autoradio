@@ -5,7 +5,7 @@
 
 %define name autoradio
 %define version 2.0
-%define release 6%{?dist}
+%define release 7%{?dist}
 
 Summary: radio automation software
 Name: %{name}
@@ -38,9 +38,10 @@ Requires: dbus-python, audacious >= 1.5
 
 %description
 \ 
-AutoRadio Radio automation software. 
-Simple to use, starting from digital audio files manages on-air broadcasting over a radio-station or web-radio. 
-The main components are: 
+
+Radio automation software. Simple to use, starting from digital audio
+files, manage on-air broadcasting over a radio-station or
+web-radio. The main components are:
 
     * Player (Xmms/Audacious): plays all your media files and send digital sound
       to an audio device or audio server
@@ -51,10 +52,11 @@ The main components are:
 
     * inteface: WEB interface to monitor the player and scheduler and
       admin the schedules for the complete control over your station
-      format
+      format. The web interface allows you to easily publish podcasts
+      that conform to the RSS 2.0 and iTunes RSS podcast specifications
+      The web interface provide a "full compatible" ogg player.
 
 Developed with Python, Django, Dbus it works in an production enviroment
-
 
 %prep
 %setup -n %{name}-%{version} -n %{name}-%{version}

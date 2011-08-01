@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-30 14:23+0200\n"
-"PO-Revision-Date: 2011-07-30 14:07+0200\n"
+"POT-Creation-Date: 2011-08-01 10:28+0200\n"
+"PO-Revision-Date: 2011-08-01 11:10+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -330,12 +330,12 @@ msgstr ""
 msgid "Admin"
 msgstr "Amministra"
 
-#: templates/base.html:38
+#: templates/base.html:38 templates/doc/index.html:35
 #, fuzzy
 msgid "Program"
 msgstr "Programma"
 
-#: templates/base.html:39
+#: templates/base.html:39 templates/doc/index.html:32
 msgid "Jingle"
 msgstr ""
 
@@ -343,7 +343,7 @@ msgstr ""
 msgid "Spot"
 msgstr ""
 
-#: templates/base.html:41
+#: templates/base.html:41 templates/doc/index.html:29
 msgid "Playlist"
 msgstr ""
 
@@ -363,11 +363,197 @@ msgstr "Amministrazione"
 msgid "Documentation"
 msgstr "Documentazione"
 
-#: templates/doc/doc.html:28
+#: templates/doc/doc.html:6
+#, fuzzy
+msgid "Documentation Home"
+msgstr "Documentazione"
+
+#: templates/doc/doc.html:11
+msgid ""
+"\n"
+"Radio automation software. Simple to use, starting from digital audio\n"
+"files, manage on-air broadcasting over a radio-station or\n"
+"web-radio. The main components are:\n"
+"<ul>\n"
+"  <li>Player (Xmms/Audacious): plays all your media files and send digital "
+"sound\n"
+"      to an audio device or audio server</li>\n"
+" \n"
+"  <li>Scheduler: real time manager for emission of special audio files\n"
+"      like jingles, spots, playlist and programs; interact with player\n"
+"      like supervisor User</li>\n"
+"\n"
+"  <li>inteface: WEB interface to monitor the player and scheduler and\n"
+"      admin the schedules for the complete control over your station\n"
+"      format. The web interface allows you to easily publish podcasts\n"
+"      that conform to the RSS 2.0 and iTunes RSS podcast specifications\n"
+"      The web interface provide a \"full compatible\" ogg player.</li>\n"
+"\n"
+"</ul>\n"
+"Developed with Python, Django, Dbus it works in an production enviroment\n"
+"\n"
+msgstr ""
+"\n"
+"Software per l'automazione di una radio. Semplice da usare, facendo\n"
+"uso di file audio digitali, gestisce la mess ain onda di una emittente\n"
+"radiofonica o di una web-radio. Le componenti principali sono:\n"
+"\n"
+"<ul> \n"
+"\n"
+"  <li>Player (Xmms/Audacious): suona tutti i media file e invia il\n"
+"  suono digitale a un dispositivo audio o a un server audio</li>\n"
+"\n"
+"  <li>Scheduler: gestore in tempo reale di particolari file audio\n"
+"  quali jingle, spot, playlist e programmi; interagisce con il player\n"
+"  come se fosse un utente supervisore mandando in onda le\n"
+"  programmazioni al momento giusto.\n"
+"\n"
+"  <li>Interfaccia: interfaccia WEB per monitore il player e lo\n"
+"  scheduler e per amministare la programmazione per il pieno controllo\n"
+"  delle emissione della tua emittente radiofonica.L'intefaccia web\n"
+"  permette anche con facilità di di pubblicare facilmente il podcast\n"
+"  dei programmi coerentemente con gli standard RSS 2.0 e iTunes\n"
+"  RSS. L'interfaccia web fornisce un player ogg integrato pienamente\n"
+"  compatibile.</ul>\n"
+"\n"
+"Sviluppato con Python, Django, Dbus, funziona operativamente in\n"
+"ambiente produttivo.\n"
+"\n"
+"</ul>\n"
+
+#: templates/doc/doc.html:36
+msgid ""
+"\n"
+"<ul>\n"
+" <li> manage ogg, mp3, wav and other media file format</li>\n"
+" <li> it's designed as client server</li>\n"
+" <li> manage playlists, inserting on it jingles, spots and programs</li>\n"
+" <li> programmable rules for schedule and period schedule</li>\n"
+" <li> do not overlap schedules: anticipate, postone or delete</li>\n"
+" <li> player is monitored by web interface</li>\n"
+" <li> spots are grouped and ordered by your preference</li>\n"
+" <li> programs are available for podcasting in a very complete rss feed web "
+"interface</li>\n"
+" <li> integrated web player for ogg vorbis that is very compatible with most "
+"user's systems</li>\n"
+" <li> can produce a palimpsest and a printable version is available "
+"following the the italian law standard</li>\n"
+" <li> integrated daemon system with logging</li>\n"
+" <li> provide enhanced version of dir2ogg.py and mkplaylist.py to manage\n"
+"   files with music (convert to ogg and make playlist)</li>\n"
+" <li> do not use DataBases to manage music; you can use your preferred "
+"application to produce playlists  </li>\n"
+" <li> on line web documentation</li>\n"
+"</ul>\n"
+"\n"
+msgstr ""
+"\n"
+"<ul>\n"
+"<li> gestisce ogg, mp3, wav e altri formati audio digitale</li>\n"
+"<li> è disegnato con funzionalità client, server</li>\n"
+"<li> gestisce playlists, inserendo in esse jingle, spot e programmi</li>\n"
+"<li> regole programmabili for calendarizzazione anche periodica</li>\n"
+"<li> non sovrapposizione degli eventi programmati: anticipa, ritarda o cancella seguendo regole evolute</li>\n"
+"<li> il player è monitorato tramite l'interfaccia web</li>\n"
+"<li> spots sono raggruppati e orditati secondo le proprie preferenze</li>\n"
+"<li> i programmi sono disponibili pe ril podcasting in una completa interfaccia web con rss feed in vari standard</li>\n"
+" <li> un player per ogg vorbis integrato che è molto compatibile con la maggioranza dei sistemi disponibili agli utenti</li>\n"
+" <li> può produrre un palinsesto in una versione stampabile che segue lo standard stabilito dalla legislazione italiana</li>\n"
+" <li> sistema integrato di esecuzione in background completo di messagistica</li>\n"
+" <li> fornisce una versione evoluta di dir2ogg.py e mkplaylist.py per la gestione di file musicali (conversione a ogg e creazione di playlist)</li>\n"
+" <li> non utilizza Data Base per gestire la musica; puoi usare la tua applicazione preferita per produrre le playlist musicali</li>\n"
+" <li>documentazione disponibile in linea su web</li>\n"
+"</ul>\n"
+
+#: templates/doc/doc.html:59
+msgid ""
+"\n"
+"Partendo da una playlist è in grado di gestire differenti formati di audio "
+"digitali per poi inviare il suono o a una scheda audio o a un server audio.\n"
+"\n"
+"Esistono varie possibilità:\n"
+"<ul>\n"
+"  <li>Audacious2:\n"
+"  Questo player è disponibile su tutte le nuove distribuzioni.\n"
+"  Permette l'invio diretto a un server per lo streaming per la realizzazione "
+"di web radio.\n"
+"  Questo è il player preferito pe l'utilizzo con AutoRadio.</li>\n"
+"  <li>Xmms:\n"
+"  E' un player “antico” ma molto robusto.\n"
+"  Consigliato solo su vecchie distribuzioni</li>\n"
+"</ul>\n"
+"Questi sono i meccanismi di funzionamento principale:\n"
+"\n"
+"<ul>\n"
+" <li> deve essere sempre presente nel player una playlist di brani\n"
+" musicali ciascuno di durata non superiore a 7/8 minuti; brani piu'\n"
+" lunghi potrebbero comportare ritardi e cattiva gestione\n"
+" dell'emissione automatica. Per mantenere sempre piena la playlist si\n"
+" consiglia di prevedere almeno due volte al giorno il caricamento\n"
+" automatico di una playlist voluminosa.</li>\n"
+"\n"
+" <li> quando una schedula raggiunge il tempo per cui è stata programmata\n"
+" viene inserita nella prima posizione successiva a quella attualmente\n"
+" in play, saltando ogni file precedentemente inserito da una\n"
+" precedente schedula.</li>\n"
+"\n"
+" <li> tutto thread save, ossia le funzioni fatte sul player dalle varie\n"
+" schedule saranno sempre consistenti.</li>\n"
+"\n"
+" <li> le operazioni di insrimento e cancellazione dalla playlist vengono\n"
+" fatte solo quando mancano piu' di 10 secondi alla fine del brano per\n"
+" non cadere in situazioni critiche e inconsistenti.</li>\n"
+"\n"
+" <li> la testa della playlist che se tutto è programmato correttamente\n"
+" tende sempre a crescere viene tagliata a 10 brani.</li>\n"
+"\n"
+" <li> la coda della playlist che se tutto è programmato correttamente\n"
+" tende sempre a crescere viene tagliata a 500 brani.</li>\n"
+"\n"
+" <li> il player se in stato \"stop\" viene sempre rimesso in stato \"play\"."
+"</li>\n"
+"\n"
+" <li> il player se in stato \"pause\" rimarrà sempre in \"pause\" se non ci\n"
+" srà un intervento manuale.</li>\n"
+"\n"
+" <li> è possibile visualizzare lo stato con interfaccia web.</li>\n"
+"</ul>\n"
+"\n"
+msgstr ""
+
+#: templates/doc/doc.html:112
+msgid ""
+"\n"
+"scheduler\n"
+"Documentation needs writers ......\n"
+msgstr ""
+
+#: templates/doc/doc.html:119
+msgid ""
+"\n"
+"playlist\n"
+"Documentation needs writers ......\n"
+msgstr ""
+
+#: templates/doc/doc.html:126
+msgid ""
+"\n"
+"jingle\n"
+"Documentation needs writers ......\n"
+msgstr ""
+
+#: templates/doc/doc.html:133
+msgid ""
+"\n"
+"program\n"
+"Documentation needs writers ......\n"
+msgstr ""
+
+#: templates/doc/doc.html:143
 msgid "Che cosa è il podcasting?"
 msgstr ""
 
-#: templates/doc/doc.html:29
+#: templates/doc/doc.html:144
 msgid ""
 "\n"
 "Il podcasting è un sistema che mette a disposizione brani audio e\n"
@@ -380,11 +566,11 @@ msgid ""
 "quando ascoltare, dove ascoltare e come ascoltare i file audio.\n"
 msgstr ""
 
-#: templates/doc/doc.html:40
+#: templates/doc/doc.html:155
 msgid "Come funziona il podcasting?"
 msgstr ""
 
-#: templates/doc/doc.html:41
+#: templates/doc/doc.html:156
 msgid ""
 "\n"
 "Il procedimento è semplice: occorre scaricare ed installare sul\n"
@@ -393,11 +579,11 @@ msgid ""
 "file e con quale frequenza cercare nuovi brani.\n"
 msgstr ""
 
-#: templates/doc/doc.html:48
+#: templates/doc/doc.html:163
 msgid "Come si usa il podcasting?"
 msgstr ""
 
-#: templates/doc/doc.html:49
+#: templates/doc/doc.html:164
 msgid ""
 "\n"
 "Per utilizzare la risorsa occorre posizionarsi col mouse sull'icona\n"
@@ -405,6 +591,87 @@ msgid ""
 "\"Copia collegamento\". Una volta copiato il collegamento, utilizzarlo\n"
 "nell'ambito del programma scaricato.  \n"
 msgstr ""
+
+#: templates/doc/doc.html:175
+msgid ""
+"\n"
+"programbook\n"
+"Documentation needs writers ......\n"
+msgstr ""
+
+#: templates/doc/index.html:9
+msgid "overview"
+msgstr "Panoramica"
+
+#: templates/doc/index.html:10
+msgid "A global vision of Autoradio suite."
+msgstr "Visione globale della suite di programmi di autoradio"
+
+#: templates/doc/index.html:12
+msgid "features"
+msgstr "Funzionalità"
+
+#: templates/doc/index.html:13 templates/doc/index.html.py:19
+msgid "What you can do with Autoradio."
+msgstr "Cosa si puoò fare con Autoradio"
+
+#: templates/doc/index.html:15
+msgid "Main components"
+msgstr "Componenti Principali"
+
+#: templates/doc/index.html:16
+msgid "The components of autoradio suite."
+msgstr "Le componenti della suite Autoradio"
+
+#: templates/doc/index.html:18
+msgid "player"
+msgstr ""
+
+#: templates/doc/index.html:21
+#, fuzzy
+msgid "scheduler"
+msgstr "Programmazione collegata"
+
+#: templates/doc/index.html:22
+msgid "Real time emission of your schedule."
+msgstr "Emissione in tempo reale della programmazione."
+
+#: templates/doc/index.html:26
+msgid "User inteface"
+msgstr "Interfaccia utente."
+
+#: templates/doc/index.html:27
+msgid "The web interface."
+msgstr "Interfaccia Web."
+
+#: templates/doc/index.html:30
+msgid "How to start to play music."
+msgstr "Come cominciare a emettere musica."
+
+#: templates/doc/index.html:33
+msgid "How to start to use jingles to promote your brand."
+msgstr "Come usare i jingle per promuover eil tuo marchio."
+
+#: templates/doc/index.html:36
+msgid "Record your programs and set when it will be on air."
+msgstr "Registra i tuoi programmi e imposta quando dovranno andare in onda."
+
+#: templates/doc/index.html:38
+msgid "Podcast"
+msgstr ""
+
+#: templates/doc/index.html:39
+msgid "How to distribute your audio on the net."
+msgstr "Come distribuire il tuo audio in rete."
+
+#: templates/doc/index.html:41
+#, fuzzy
+msgid "Program's book"
+msgstr "Libro Programmi"
+
+#: templates/doc/index.html:42
+msgid "Palimpsest for the italian law."
+msgstr "Il libro programmi per la legislazione italiana."
 
 #: templates/podcast/base.html:20
 msgid "Autoradio Mediacast"

@@ -2,7 +2,7 @@
 # GPL. (C) 2007-2009 Paolo Patruno.
 
 import logging
-from datetime import *
+import datetime
 
 from autoradio_config import *
 
@@ -34,8 +34,8 @@ class gest_playlist:
         self.schedule=()
         self.periodicschedule=()
 
-        self.datesched_min=self.now - timedelta( seconds=60*minelab)
-        self.datesched_max=self.now + timedelta( milliseconds=60000*minelab-1) # 1 millisecond tollerance
+        self.datesched_min=self.now - datetime.timedelta( seconds=60*minelab)
+        self.datesched_max=self.now + datetime.timedelta( milliseconds=60000*minelab-1) # 1 millisecond tollerance
 
         self.timesched_min=self.datesched_min.time()
         self.timesched_max=self.datesched_max.time()
@@ -145,6 +145,10 @@ class gest_playlist:
 
             if (self.timesched_min < self.timesched_max):
 
+
+                print self.datesched_min.date()
+                print playlist.time
+
                 playlist.ar_scheduledatetime=datetime.datetime.combine(self.datesched_min.date(), playlist.time)
                 
             else:
@@ -179,7 +183,7 @@ def main():
 
     logging.basicConfig(level=logging.DEBUG,)
     # time constants
-    now=datetime.now()
+    now=datetime.datetime.now()
 
     # get the playlists of my insterest
     pla=gest_playlist(now,minelab)

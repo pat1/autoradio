@@ -10,6 +10,7 @@ import autoradio.settings
 
 #from django.forms.extras.widgets import SelectDateWidget
 from widgets import MySelectDateWidget
+from django.utils.translation import ugettext_lazy
 
 #----------------------------------------------------
 # section for programs
@@ -71,13 +72,13 @@ def decode(code):
 
 class ExtremeForm(forms.Form):
 
-    initial_start=date.today()-timedelta(days=1)
+    initial_start=date.today()-timedelta(days=10)
     initial_end=date.today()
 
 #    datetime_start = forms.DateTimeField(required=True,initial=initial_start,widget=SelectDateWidget(years=(2010,etc)))
 #    datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=SelectDateWidget(years=(2010,etc)))
-    datetime_start = forms.DateTimeField(required=True,initial=initial_start,widget=MySelectDateWidget())
-    datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=MySelectDateWidget())
+    datetime_start = forms.DateTimeField(required=True,initial=initial_start,widget=MySelectDateWidget(),label=ugettext_lazy("Starting date & time"),help_text=ugettext_lazy("Elaborate palimpsest starting from this date and time"))
+    datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=MySelectDateWidget(),label=ugettext_lazy("Ending date & time"),help_text=ugettext_lazy("Elaborate palimpsest ending to this date and time"))
 
 
 def programsbook(request):

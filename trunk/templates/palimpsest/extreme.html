@@ -7,14 +7,13 @@
 {% block content %}
 
 <p>
-Specificare un periodo in cui produrre un report per il Libro
-Programmi
+{%trans "Specify a time range to produce the report for the program's book" %}
 </p>
 
 <p>
 <form action="/programsbook/" method="POST">
 {{ form.as_p }}
-<input type="submit" value="Submit" />
+<input type="submit" value={%trans "Submit" %}>
 </form>
 
 </p>

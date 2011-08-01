@@ -69,7 +69,7 @@ class audacious:
 
                 pos=self.tracklist.GetCurrentTrack()
                 metadata=self.tracklist.GetMetadata(pos)
-                print metadata
+                #print metadata
                 mtimelength=metadata["mtime"]
                 mtimeposition=self.player.PositionGet()
 

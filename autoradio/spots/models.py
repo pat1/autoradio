@@ -150,7 +150,7 @@ class Spot(models.Model):
 	
 	spot = models.CharField(ugettext_lazy("Spot Name"),max_length=80,unique=True)
 	file = DeletingFileField(ugettext_lazy('File'),upload_to='spots',max_length=255)
-	rec_date = models.DateTimeField(ugettext_lazy('Recordinf date'))
+	rec_date = models.DateTimeField(ugettext_lazy('Record date'))
 	active = models.BooleanField(ugettext_lazy("Active"),default=True)
 
 	start_date = models.DateTimeField(ugettext_lazy('Programmed starting date'),null=True,blank=True)

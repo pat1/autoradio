@@ -64,7 +64,7 @@ class HomePage:
 #        htmlresponse+='Goto audacious <a href="playList">playlist</a> for autoradio!<BR>'
 #        return htmlresponse
 #    Main.exposed = True
-    
+
 
     def __init__(self,iht):
         self.iht=iht
@@ -198,7 +198,7 @@ class HomePage:
 def start_http_server(iht=False):
     """
     start web server to monitor audacious
-    iht=False         # emetti header e tail
+    iht=False         # do not emit header e tail
     """
     #import os
     #pid = os.fork()
@@ -213,8 +213,10 @@ def start_http_server(iht=False):
             'server.log_file': "/tmp/audaciousweb.log",
             'server.reverse_dns': False,
             'server.thread_pool': 10,
-            #'server.environment': "development"
-            'server.environment': "production"
+            'server.environment': "development",
+            #'server.environment': "production",
+            'tools.encode.on':True,
+#            'tools.encode.encoding':'utf8',
             },
         }
 

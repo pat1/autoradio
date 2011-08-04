@@ -227,6 +227,16 @@ def main(cwd):
               ok=manageplayer.audacious_watchdog(session)
 
 
+    except KeyboardInterrupt :
+
+      logging.info('All threads terminated for keyboard interrupt' )
+      return 1
+
+    except SystemExit:
+
+      logging.info('Stopped OK')
+      return 0
+
     except:
       import traceback
       msg = traceback.format_exc()

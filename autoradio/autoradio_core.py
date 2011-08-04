@@ -32,7 +32,7 @@ class schedule:
         self.djobj=djobj
         self.scheduledatetime=scheduledatetime
         self.media=media
-        self.mediaweb = self.media[len(BASE_PATH)+1:]
+        self.mediaweb = self.media[len(settings.MEDIA_URL)+1:]
         self.length=length
         self.type=type
         self.emission_done=emission_done

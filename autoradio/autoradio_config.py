@@ -15,7 +15,6 @@ configspec['autoradiod']['logfile']       = "string(default='/tmp/autoradiod.log
 configspec['autoradiod']['errfile']       = "string(default='/tmp/autoradiod.err')"
 configspec['autoradiod']['lockfile']      = "string(default='/tmp/autoradiod.lock')"
 configspec['autoradiod']['timestampfile'] = "string(default='/tmp/autoradiod.timestamp')"
-configspec['autoradiod']['base_path']     = "string(default=%s)" % os.getcwd()
 configspec['autoradiod']['xmms_host']     = "string(default='localhost')"
 configspec['autoradiod']['minelab']       = "integer(60,360,default=180)"
 configspec['autoradiod']['minsched']      = "integer(3,20,default=5)"
@@ -65,7 +64,6 @@ logfile       = config['autoradiod']['logfile']
 errfile       = config['autoradiod']['errfile']
 lockfile      = config['autoradiod']['lockfile']
 timestampfile = config['autoradiod']['timestampfile']
-BASE_PATH     = config['autoradiod']['base_path']
 XMMSHOST      = config['autoradiod']['xmms_host']
 minelab       = config['autoradiod']['minelab']
 minsched      = config['autoradiod']['minsched']

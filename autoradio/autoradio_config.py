@@ -11,9 +11,10 @@ configspec['autoradiod']={}
 
 configspec['autoradiod']['player']        = "string(default='xmms')"
 configspec['autoradiod']['playlistdir']   = "string(default='spots')"
-configspec['autoradiod']['logfile']       = "string(default='/tmp/autoradio.log')"
-configspec['autoradiod']['lockfile']      = "string(default='/tmp/autoradio.lock')"
-configspec['autoradiod']['timestampfile'] = "string(default='/tmp/autoradio.timestamp')"
+configspec['autoradiod']['logfile']       = "string(default='/tmp/autoradiod.log')"
+configspec['autoradiod']['errfile']       = "string(default='/tmp/autoradiod.err')"
+configspec['autoradiod']['lockfile']      = "string(default='/tmp/autoradiod.lock')"
+configspec['autoradiod']['timestampfile'] = "string(default='/tmp/autoradiod.timestamp')"
 configspec['autoradiod']['base_path']     = "string(default=%s)" % os.getcwd()
 configspec['autoradiod']['xmms_host']     = "string(default='localhost')"
 configspec['autoradiod']['minelab']       = "integer(60,360,default=180)"
@@ -61,6 +62,7 @@ for entry in flatten_errors(config, test):
 player        = config['autoradiod']['player']
 playlistdir   = config['autoradiod']['playlistdir']
 logfile       = config['autoradiod']['logfile']
+errfile       = config['autoradiod']['errfile']
 lockfile      = config['autoradiod']['lockfile']
 timestampfile = config['autoradiod']['timestampfile']
 BASE_PATH     = config['autoradiod']['base_path']

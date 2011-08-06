@@ -476,7 +476,7 @@ class palimpsests(list):
 
         for datetimeelab in dates(datetime_start, datetime_end, step):
 
-            print datetimeelab,minelab
+            #print datetimeelab,minelab
             spots=gest_spot(datetimeelab,minelab,playlistdir)
 
             for fascia in spots.get_fasce(genfile=False):

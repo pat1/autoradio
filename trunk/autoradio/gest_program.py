@@ -27,6 +27,7 @@ class gest_program:
         self.now = now
         self.minelab = minelab
         ora=self.now.time()
+        self.schedules=()
 
         datesched_min=self.now - timedelta( seconds=60*self.minelab)
         datesched_max=self.now + timedelta( milliseconds=60000*self.minelab-1) # 1 millisecond tollerance
@@ -35,14 +36,14 @@ class gest_program:
         logging.debug( "PROGRAM: elaborate from %s to %s",datesched_min,datesched_max)
 
         if (Configure.objects.filter(active__exact=False).count() == 1):
-            self.schedule=()
+            self.schedules=()
             return
         #todo: the use of ora here is not exact
         if (Configure.objects.filter(emission_starttime__gt=ora).count() == 1) :
-            self.schedule=()
+            self.schedules=()
             return
         if (Configure.objects.filter(emission_endtime__lt=ora).count() == 1):
-            self.schedule=()
+            self.schedules=()
             return
 
         # estraggo i record di mio interesse
@@ -55,7 +56,7 @@ class gest_program:
 
     def get_program(self):
         "iterate to get program"
-                
+
         for schedule in self.schedules:
 #            logging.debug("PROGRAM: %s %s %s", programma.program.file , ' --> '\
 #                              ,  programma.emission_date.isoformat())
@@ -97,7 +98,7 @@ class gest_program:
 
                 else:
                    ar_scheduledatetime=schedule.emission_date+timedelta(seconds=lengthold)
- 
+
                 programma=scheduledone
                 programma.ar_filename=ar_filename
                 programma.ar_length=ar_length

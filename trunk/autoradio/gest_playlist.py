@@ -146,8 +146,8 @@ class gest_playlist:
             if (self.timesched_min < self.timesched_max):
 
 
-                print self.datesched_min.date()
-                print playlist.time
+                #print self.datesched_min.date()
+                #print playlist.time
 
                 playlist.ar_scheduledatetime=datetime.datetime.combine(self.datesched_min.date(), playlist.time)
                 

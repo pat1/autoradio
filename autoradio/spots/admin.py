@@ -33,7 +33,7 @@ class SpotAdmin(admin.ModelAdmin):
 	#date_hierarchy = 'rec_date'
 	date_hierarchy = 'end_date'
 
-	search_fields = ['spot','giorni','fascie']
+	search_fields = ['spot','giorni__name','fasce__name',]
 	list_display = ('spot','file','rec_date','priorita')
 
 admin.site.register(Spot, SpotAdmin)

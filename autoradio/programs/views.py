@@ -16,7 +16,7 @@ from django.utils.translation import ugettext_lazy
 # section for programs
 
 #def index_old(request):
-#    latest_schedule_list = Schedule.objects.filter(emission_date__gte=datetime.now()).order_by('emission_date')[:5]
+#    latesst_schedule_list = Schedule.objects.filter(emission_date__gte=datetime.now()).order_by('emission_date')[:5]
 #    latest_schedule_done = Schedule.objects.filter(emission_date__lt=datetime.now()).order_by('emission_date')[:5]
 #    return render_to_response('schedule/index.html', {'latest_schedule_done': latest_schedule_done , 'latest_schedule_list': latest_schedule_list})
 #
@@ -78,8 +78,8 @@ class ExtremeForm(forms.Form):
 #    datetime_start = forms.DateTimeField(required=True,initial=initial_start,widget=SelectDateWidget(years=(2010,etc)))
 #    datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=SelectDateWidget(years=(2010,etc)))
     datetime_start = forms.DateTimeField(required=True,initial=initial_start,widget=MySelectDateWidget(),label=ugettext_lazy("Starting date & time"),help_text=ugettext_lazy("Elaborate palimpsest starting from this date and time"))
-    datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=MySelectDateWidget(),label=ugettext_lazy("Ending date & time"),help_text=ugettext_lazy("Elaborate palimpsest ending to this date and time"))
 
+    datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=MySelectDateWidget(),label=ugettext_lazy("Ending date & time"),help_text=ugettext_lazy("Elaborate palimpsest ending to this date and time"))
 
 def programsbook(request):
 
@@ -108,9 +108,11 @@ def programsbook(request):
             datetime_start=form.cleaned_data['datetime_start']
             datetime_end=form.cleaned_data['datetime_end']
 
+            datetime_start = datetime.combine(datetime_start.date(),time(00))
+            datetime_end = datetime.combine(datetime_end.date(),time(23,59))
+
             #datetime_start=(now-timedelta(days=4))
             #datetime_end=now
-
 
             pro=autoradio.gest_palimpsest.gest_palimpsest(now,minelab)
 

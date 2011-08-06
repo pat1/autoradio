@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
     # this is a triky for ubuntu and debian that remove /var/run every boot
     # ATTENTION, this should be a security problem
-    path=os.path.dirname(lockfile)
+    path=os.path.dirname(autoradio.settings.lockfileweb)
     if (not os.path.lexists(path) and path <> "" ):
         os.mkdir(path)
         if (os.getuid() == 0):

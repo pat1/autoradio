@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-08-01 12:37+0200\n"
-"PO-Revision-Date: 2011-08-01 12:36+0200\n"
+"PO-Revision-Date: 2011-08-06 03:46+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -320,7 +320,7 @@ msgstr "Amministra"
 
 #: templates/base.html:38 templates/doc/index.html:35
 msgid "Program"
-msgstr "Programma"
+msgstr "Programmi"
 
 #: templates/base.html:39 templates/doc/index.html:32
 msgid "Jingle"

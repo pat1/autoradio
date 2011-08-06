@@ -16,6 +16,7 @@ port=8888         # server port
 #finally:
 
 import cherrypy
+import os
 cpversion3=cherrypy.__version__.startswith("3")
 
 import datetime
@@ -154,6 +155,14 @@ class HomePage:
                         title=None
                 except:
                     title=None
+
+                try:
+                    artist=metadata["artist"]
+                    if artist=="":
+                        artist=None
+                except:
+                    artist=None
+
                 try:
                     mtimelength=metadata["mtime"]
                 except:
@@ -171,12 +180,21 @@ class HomePage:
                     toend=timelength-timeposition
                 elif  pos < cpos :
                     col="#0000FF"
-                    toend=None
+                    toend=""
                 else:
                     col="#00FF00"
-                    toend=None
+                    toend=""
 
-                htmlresponse+='<td bgcolor="%s">%i</td><td> %s // %s </td><td><a href="%s">%s</a></td>' % (col,pos+1,str(timelength),str(toend),file,title)
+                print artist,title
+                if (artist is not None) or (title is not None):
+                    htmlresponse+='<td bgcolor="%s">%i</td><td> %s // %s </td><td><a href="%s">%s // %s</a></td>' % \
+                    (col,pos+1,str(timelength),str(toend),file,artist,title)
+                else:
+                    purefilename=os.path.splitext(file)[0]
+                    htmlresponse+='<td bgcolor="%s">%i</td><td> %s // %s </td><td><a href="%s">%s</a></td>' % \
+                    (col,pos+1,str(timelength),str(toend),file,os.path.basename(purefilename))
+
+
                 htmlresponse+='</tr>'
 
         except:

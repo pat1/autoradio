@@ -27,7 +27,7 @@
 from autoradio.autoradio_config import *
 from autoradio import daemon
 from autoradio import _version_
-
+import os
 
 autoradiod = daemon.Daemon(
         stdin="/dev/null",
@@ -257,6 +257,14 @@ if __name__ == '__main__':
 
     import sys, os
     cwd=os.getcwd()
+
+    # this is a triky for ubuntu and debian that remove /var/run every boot
+    # ATTENTION, this should be a security problem
+    path=os.path.dirname(lockfile)
+    if (not os.path.lexists(path) and path <> "" ):
+        os.mkdir(path)
+        if (os.getuid() == 0):
+            os.chown(path,user,group)
 
     if autoradiod.service():
 

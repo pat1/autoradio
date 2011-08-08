@@ -264,7 +264,11 @@ if __name__ == '__main__':
     if (not os.path.lexists(path) and path == "/var/run/autoradio" ):
         os.mkdir(path)
         if (os.getuid() == 0):
-            os.chown(path,user,group)
+            from pwd import getpwnam
+            from grp import getgrnam
+            uid = getpwnam(user)[2]
+            gid = getgrnam(group)[2]
+            os.chown(path,uid,gid)
 
     if autoradiod.service():
 

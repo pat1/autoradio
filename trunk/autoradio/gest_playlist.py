@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # GPL. (C) 2007-2009 Paolo Patruno.
 
 import logging
@@ -75,24 +76,18 @@ class gest_playlist:
             # warning here we are around midnight
             logging.debug("PLAYLIST: around midnight")
 
-            domani=calendar.day_name[self.datesched_max.weekday()]
-
-            self.periodicschedule=PeriodicSchedule.objects\
-                .filter(Q(start_date__lte=self.oggi) | Q(start_date__isnull=True))\
-                .filter(Q(end_date__gte=self.oggi)   | Q(end_date__isnull=True))\
-                .filter(Q(time__gte=self.timesched_min) & Q(giorni__name__exact=self.giorno) |\
-                        Q(time__lte=self.timesched_max) & Q(giorni__name__exact=domani))\
-                .filter(playlist__active__exact=True)\
-                .order_by('time')
-
-
-#            self.periodicschedule=PeriodicSchedule.objects\
-#                .filter(Q(start_date__lte=self.oggi) | Q(start_date__isnull=True))\
-#                .filter(Q(end_date__gte=self.oggi)   | Q(end_date__isnull=True))\
-#                .filter(Q(time__gte=timesched_min)   | Q(time__lte=timesched_max))\
-#                .filter(Q(giorni__name__exact=self.giorno) | Q(giorni__name__exact=self.ieriodomani))\
-#                .filter(playlist__active__exact=True)\
-#                .order_by('time')
+            ieri=unicode(calendar.day_name[self.datesched_min.weekday()], 'utf-8')
+            domani=unicode(calendar.day_name[self.datesched_max.weekday()], 'utf-8')
+            
+            self.periodicschedule=PeriodicSchedule.objects.filter \
+                (Q(start_date__lte=self.oggi) | Q(start_date__isnull=True),\
+                 Q(end_date__gte=self.oggi)   | Q(end_date__isnull=True),\
+                 (Q(time__gte=self.timesched_min) & Q(giorni__name__exact=ieri))\
+                     |\
+                 (Q(time__lte=self.timesched_max) & Q(giorni__name__exact=domani))\
+                     ,\
+                 playlist__active__exact=True)\
+                 .order_by('time')
 
  
     def get_playlist(self):
@@ -143,8 +138,9 @@ class gest_playlist:
             else:
                 playlist.ar_filename=playlist.playlist.file.path
 
-            if (self.timesched_min < self.timesched_max):
+            #print self.timesched_min, self.timesched_max
 
+            if (self.timesched_min < self.timesched_max):
 
                 #print self.datesched_min.date()
                 #print playlist.time
@@ -153,10 +149,11 @@ class gest_playlist:
                 
             else:
                 # we are around midnight we have to check the correct date (today, tomorrow)
-                if self.ar_scheduledatetime.time() > time(12):
-                    playlist.ar_scheduledatetime=datetime.combine(self.datesched_min.date(), playlist.time)
+
+                if playlist.time > datetime.time(12):
+                    playlist.ar_scheduledatetime=datetime.datetime.combine(self.datesched_min.date(), playlist.time)
                 else:
-                    playlist.ar_scheduledatetime=datetime.combine(self.datesched_max.date(), playlist.time)
+                    playlist.ar_scheduledatetime=datetime.datetime.combine(self.datesched_max.date(), playlist.time)
 
             playlist.ar_emission_done=playlist.emission_done
 
@@ -181,25 +178,31 @@ class gest_playlist:
 
 def main():
 
-    logging.basicConfig(level=logging.DEBUG,)
+#    logging.basicConfig(level=logging.DEBUG,)
+    logging.basicConfig(level=logging.INFO,)
+
     # time constants
     now=datetime.datetime.now()
+    for hour in (0,3,6,9,12,15,18,21):
 
-    # get the playlists of my insterest
-    pla=gest_playlist(now,minelab)
+        now=now.replace(hour=hour)
+        print
+        print "Runnig for date: ",now
+
+        # get the playlists of my insterest
+        pla=gest_playlist(now,minelab)
     
-    # I do a list
-    for playlist in pla.get_playlist():
-        
-        #pass
-        print playlist
-        print playlist.ar_filename
-        print playlist.ar_scheduledatetime
-        print playlist.ar_length
+        # I do a list
+        for playlist in pla.get_playlist():
 
-        print "playlist",playlist.playlist
-        #.program.get_file_filename()
-
+            print "--------------------------------"
+            print "found schedule: ",playlist
+            print playlist.ar_filename
+            print playlist.ar_scheduledatetime
+            print playlist.ar_length
+            print "playlist",playlist.playlist
+            #.program.get_file_filename()
+            print "--------------------------------"
         
 if __name__ == '__main__':
     main()  # (this code was run as script)

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-08-01 12:37+0200\n"
-"PO-Revision-Date: 2011-08-06 03:46+0200\n"
+"PO-Revision-Date: 2011-08-11 13:13+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -164,13 +164,13 @@ msgstr "Playlist correlata"
 #: build/lib/autoradio/playlists/models.py:137
 #: build/lib/autoradio/programs/models.py:747
 msgid "Programmed start date"
-msgstr "Ora inizio programmazione"
+msgstr "Data inizio programmazione"
 
 #: autoradio/playlists/models.py:138 autoradio/programs/models.py:748
 #: build/lib/autoradio/playlists/models.py:138
 #: build/lib/autoradio/programs/models.py:748
 msgid "Programmed end date"
-msgstr "Ora fine programmazione"
+msgstr "Data fine programmazione"
 
 #: autoradio/playlists/models.py:139 autoradio/programs/models.py:749
 #: build/lib/autoradio/playlists/models.py:139

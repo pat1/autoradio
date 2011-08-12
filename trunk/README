@@ -15,7 +15,7 @@ web-radio. The main components are:
       like jingles, spots, playlist and programs; interact with player
       like supervisor User
 
-    * inteface: WEB interface to monitor the player and scheduler and
+    * interface: WEB interface to monitor the player and scheduler and
       admin the schedules for the complete control over your station
       format. The web interface allows you to easily publish podcasts
       that conform to the RSS 2.0 and iTunes RSS podcast specifications
@@ -242,7 +242,7 @@ in /etc/autoradio-site.cfg
 HOW IT WORKS
 ------------
 
-In player playlist you need a queue of media for a minumun of some
+In player's playlist you need a queue of media for a minumun of some
 hours and for this you have to program some playlist.  Player cannot
 stay stopped or paused (if stopped it will be started, if paused it
 stay paused) for a corret work.  When time will be right jingle,
@@ -252,7 +252,7 @@ the last file inserted before by autoradiod
 HOT TO USE IT
 -------------
 
-autoradioctrl provide some adminisistration commands like --sincdb to
+autoradioctrl provide some administration commands like --sincdb to
 inizialite the data base.  aotoradioweb or other web serber like
 apache provide a web interface to program every thinks you cannot find
 in configuration files; you have to run it like a permanent daemon;

@@ -1,6 +1,12 @@
 NEWS
 ----
 
+version 2.1beta
+---------------
+close bug autoradiod crash on playlist management - ID: 3388949
+
+
+
 version 2.0
 -----------
 

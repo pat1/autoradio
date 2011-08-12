@@ -6,7 +6,6 @@ from datetime import *
 
 from autoradio_config import *
 
-from django.db.models import Q
 from programs.models import Schedule
 from programs.models import ScheduleDone
 from programs.models import Show

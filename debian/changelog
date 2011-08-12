@@ -1,3 +1,9 @@
+autoradio (2.1beta-1) unstable; urgency=low
+
+  * upstream release 2.1beta
+
+ -- Paolo Patruno <p.patruno@iperbole.bologna.it>  Fri Aug 12 11:52:43 CEST 2011
+
 autoradio (2.0-1) unstable; urgency=low
 
   * Initial release (Closes: #572927)

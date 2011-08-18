@@ -57,7 +57,10 @@ Developed with Python, Django, Dbus it works in an production enviroment
 
 {% if params.docitem == "player" %}
 {% blocktrans %}
-Partendo da una playlist è in grado di gestire differenti formati di audio digitali per poi inviare il suono o a una scheda audio o a un server audio.
+
+Partendo da una playlist è in grado di gestire differenti formati di
+audio digitali per poi inviare il suono o a una scheda audio o a un
+server audio.
 
 Esistono varie possibilità:
 <ul>
@@ -81,18 +84,18 @@ Questi sono i meccanismi di funzionamento principale:
 
  <li> quando una schedula raggiunge il tempo per cui è stata programmata
  viene inserita nella prima posizione successiva a quella attualmente
- in play, saltando ogni file precedentemente inserito da una
+ in play, e successiva anche ad ogni file precedentemente inserito da una
  precedente schedula.</li>
 
  <li> tutto thread save, ossia le funzioni fatte sul player dalle varie
  schedule saranno sempre consistenti.</li>
 
- <li> le operazioni di insrimento e cancellazione dalla playlist vengono
+ <li> le operazioni di inserimento e cancellazione dalla playlist vengono
  fatte solo quando mancano piu' di 10 secondi alla fine del brano per
  non cadere in situazioni critiche e inconsistenti.</li>
 
- <li> la testa della playlist che se tutto è programmato correttamente
- tende sempre a crescere viene tagliata a 10 brani.</li>
+ <li> la testa della playlist, che se tutto è programmato correttamente
+ tende sempre a crescere, viene tagliata a 10 brani.</li>
 
  <li> la coda della playlist che se tutto è programmato correttamente
  tende sempre a crescere viene tagliata a 500 brani.</li>
@@ -100,9 +103,9 @@ Questi sono i meccanismi di funzionamento principale:
  <li> il player se in stato "stop" viene sempre rimesso in stato "play".</li>
 
  <li> il player se in stato "pause" rimarrà sempre in "pause" se non ci
- srà un intervento manuale.</li>
+ sarà un intervento manuale.</li>
 
- <li> è possibile visualizzare lo stato con interfaccia web.</li>
+ <li> è possibile visualizzare lo stato del player con interfaccia web.</li>
 </ul>
 
 {% endblocktrans %}
@@ -110,8 +113,31 @@ Questi sono i meccanismi di funzionamento principale:
 
 {% if params.docitem == "scheduler" %}
 {% blocktrans %}
-scheduler
-Documentation needs writers ......
+
+Lo scheduler è un programma che lanciato separatamente comanda
+all'istante di tempo opportuno il Player per attivare l'emissione
+delle programmazione preimpostata. Svolge anche altre funzioni logiche
+e di controllo quali l'esecuzione del player se non dovesse risultare
+attivo.  Ogni volta che una programmazione è stata inserita con
+successo nella playlist del player nel database di autoradio essa
+risulta come se fosse stata effettivamente messa in onda.Ovviamente se
+sul player vengono fatte operazioni manuali lo scheduler non ne puo
+tenere conto.
+
+Vengono estratte tutte le schedule in un intervallo di tempo a cavallo
+tra passato e futuro. Spot e programmi programmati nel passato e non
+ancora emessi vengono programmati immediatamente se il ritardo non è
+eccessivo. Le pubblicità che cadono durante l'emissione di un
+programma vengono anticipare o ritardate a seconda della vicinanza
+temporale all'inizio o alla fine delle parti del programma. I jingles
+che cadono durante l'emissione di programmi o publicità vengono
+eliminati.
+
+Lo scheduler provvede anche alla generazione dinamica delle playlist
+delle fasce pubblicitarie per l'eventuale emissione manuale della
+pubblicità.  Queste playlist vengono generate poco prima dell'orario
+programato per l'emissione.
+
 {% endblocktrans %}
 {% endif %}
 
@@ -124,8 +150,29 @@ Documentation needs writers ......
 
 {% if params.docitem == "jingle" %}
 {% blocktrans %}
-jingle
-Documentation needs writers ......
+
+Jingles: vengono emessi ad intervalli di tempo fissi. Per ogni jingle
+è possibile impostare da quale data a quale data effettuare
+l'emissione, da che ora a che ora effettuare l'emissione e in quali
+giorni della settimana. E' cosi' facile attivare promo di programmi o
+altro ad orari specifici.
+
+{% endblocktrans %}
+{% endif %}
+
+{% if params.docitem == "spot" %}
+{% blocktrans %}
+
+Spots: è possibile impostare qualsiasi numero di fasce pubblicitarie
+caratterizzate da un orario di emissione; ogni fascia è attivabile o
+disattivabile singolarmente. Ogni fascia pubblicitaria ha uno o piu'
+prologhi che annunciano la pubblicità. Ogni fascia pubblicitaria ha
+uno o piu' epiloghi che annunciano la fine della pubblicità. Per ogni
+spot (o prologo o epilogo) è possibile stabilire da quale data a quale
+data effettuare l'emissione, in quali giorni della settimana e in
+quale fascia pubblicitaria. Ogni spot ( o prologo o epilogo) ha una
+priorità che determina l'oridine di emissione.
+
 {% endblocktrans %}
 {% endif %}
 
@@ -135,7 +182,6 @@ program
 Documentation needs writers ......
 {% endblocktrans %}
 {% endif %}
-
 
 {% if params.docitem == "podcast" %}
 <h2>Podcast</h2>
@@ -155,21 +201,14 @@ quando ascoltare, dove ascoltare e come ascoltare i file audio.
 <h3>{% trans 'Come funziona il podcasting?' %}</h3>
 {% blocktrans %}
 Il procedimento è semplice: occorre scaricare ed installare sul
-proprio pc un software gratuito per il podcasting. Una volta
+proprio pc un software per il podcasting. Una volta
 installato il programma, bisogna indicare da quali fonti scaricare i
 file e con quale frequenza cercare nuovi brani.
 {% endblocktrans %}
 
-<h3>{% trans 'Come si usa il podcasting?' %}</h3>
-{% blocktrans %}
-Per utilizzare la risorsa occorre posizionarsi col mouse sull'icona
-"Podcast", cliccare col tasto destro del mouse e selezionare l'opzione
-"Copia collegamento". Una volta copiato il collegamento, utilizzarlo
-nell'ambito del programma scaricato.  
-{% endblocktrans %}
+Documentation needs writers ......
 
 {% endif %}
-
 
 {% if params.docitem == "programbook" %}
 {% blocktrans %}
@@ -177,7 +216,6 @@ programbook
 Documentation needs writers ......
 {% endblocktrans %}
 {% endif %}
-
 
 </div>
 

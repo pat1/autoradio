@@ -62,7 +62,7 @@ class Configure(models.Model):
 					   ,default='playlist',editable=False)
 
 	active = models.BooleanField(ugettext_lazy("Activate Playlist"),default=True,\
-                                         help_text=ugettext_lazy("activate/deacctivate the intere pllaylist class"))
+                                         help_text=ugettext_lazy("activate/deactivate the intere playlist class"))
         emission_starttime = models.TimeField(ugettext_lazy('Programmed start time'),\
                                                   help_text=ugettext_lazy("The start time from wich the playlist will be active"))
         emission_endtime = models.TimeField(ugettext_lazy('Programmed start time'),
@@ -78,9 +78,9 @@ class Configure(models.Model):
 class Playlist(models.Model):
     playlist = models.CharField(ugettext_lazy('Playlist name'),max_length=200)
     file = DeletingFileField(ugettext_lazy('File'),upload_to='playlist',max_length=255,\
-                                 help_text=ugettext_lazy("The playlist file to upload, format should be 'extm3u', 'm3u', 'pls'  "))
-    rec_date = models.DateTimeField(ugettext_lazy('Generation date',\
-                                                      help_text=ugettext_lazy("When the playlist was done (for reference only)")))
+                                 help_text=ugettext_lazy("The playlist file to upload, format should be extm3u, m3u, pls"))
+    rec_date = models.DateTimeField(ugettext_lazy('Generation date'),\
+                                                      help_text=ugettext_lazy("When the playlist was done (for reference only)"))
     active = models.BooleanField(ugettext_lazy("Active"),default=True,\
                                      help_text=ugettext_lazy("Activate the playlist for emission"))
 

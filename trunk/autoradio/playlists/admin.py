@@ -9,7 +9,7 @@ class ScheduleInline(admin.StackedInline):
     extra=2
 
 
-class PeriodicScheduleInline(admin.TabularInline):
+class PeriodicScheduleInline(admin.StackedInline):
     model = PeriodicSchedule
     extra=2
 
@@ -37,7 +37,7 @@ class PlaylistAdmin(admin.ModelAdmin):
     list_display = ('playlist','rec_date','was_recorded_today','active')
     search_fields = ['playlist','file']
     date_hierarchy = 'rec_date'
-    list_filter = ['active']
+    list_filter = ['rec_date','active']
     inlines = [
         ScheduleInline,PeriodicScheduleInline,
         ]

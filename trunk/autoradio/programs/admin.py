@@ -46,11 +46,11 @@ class ScheduleInline(admin.StackedInline):
     extra=2
     max_num=10
 
-class PeriodicScheduleInline(admin.TabularInline):
+class PeriodicScheduleInline(admin.StackedInline):
     model = PeriodicSchedule
     extra=2
 
-class AperiodicScheduleInline(admin.TabularInline):
+class AperiodicScheduleInline(admin.StackedInline):
     model = AperiodicSchedule
     extra=2
 

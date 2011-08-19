@@ -136,15 +136,42 @@ eliminati.
 Lo scheduler provvede anche alla generazione dinamica delle playlist
 delle fasce pubblicitarie per l'eventuale emissione manuale della
 pubblicità.  Queste playlist vengono generate poco prima dell'orario
-programato per l'emissione.
+programato per l'emissione e si possono trovare nella cartella
+specificata nel file di configurazione (playlistdir).
 
 {% endblocktrans %}
 {% endif %}
 
 {% if params.docitem == "playlist" %}
 {% blocktrans %}
-playlist
-Documentation needs writers ......
+
+
+
+ * Nome della playlist
+ * File uplodato
+ * Data in cui la playlist è stata composta
+ * Attivazione/disattivazione emissione della singola playlist
+ * schedule:
+  * Shuffle abilita/disabilita ordinamento casuale dei brani al momento dell'emissione
+  * Elenco di eventuali date e orari a cui fare l'emissione
+ * periodic schedule (eventuale programmazione periodica):
+  * Shuffle abilita/disabilita ordinamento casuale dei brani al momento dell'emissione
+  * Data inizio programmazione / Data fine programmazione (possono essere omesse)
+  * orario a cui affettuare l'eventuale emissione
+  * giorni a cui effettuare l'eventuale emissione
+
+
+==== Schedule ====
+
+Alla voce schedule è possibile avere l'elenco delle emissioni
+programmate ed effettuate
+
+==== Periodic Schedule ====
+
+Alla voce periodic schedule è possibile avere l'elenco delle emissioni periodiche
+programmate e ultima emissione
+
+
 {% endblocktrans %}
 {% endif %}
 

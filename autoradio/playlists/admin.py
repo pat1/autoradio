@@ -37,7 +37,7 @@ class PlaylistAdmin(admin.ModelAdmin):
     list_display = ('playlist','rec_date','was_recorded_today','active')
     search_fields = ['playlist','file']
     date_hierarchy = 'rec_date'
-    list_filter = ['rec_date','active']
+    list_filter = ['active']
     inlines = [
         ScheduleInline,PeriodicScheduleInline,
         ]

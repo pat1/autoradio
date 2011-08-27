@@ -51,7 +51,9 @@ def giorno_giorno():
 
 class Giorno(models.Model):
 
-        name = models.CharField(max_length=20,choices=giorno_giorno(),unique=True)
+        name = models.CharField(max_length=20,choices=giorno_giorno(),unique=True,\
+               help_text=ugettext_lazy("weekday name"))
+
         def __unicode__(self):
             return self.name
 
@@ -61,7 +63,8 @@ class Giorno(models.Model):
 
 class Configure(models.Model):
         sezione = models.CharField(max_length=50,unique=True,default='jingle',editable=False)
-	active = models.BooleanField(ugettext_lazy("Activate Jingle"),default=True)
+	active = models.BooleanField(ugettext_lazy("Activate Jingle"),default=True,
+                  help_text=ugettext_lazy("activate/deactivate the intere jingle class"))
         emission_freq = models.TimeField(ugettext_lazy('Frequency'))
 
 
@@ -75,20 +78,24 @@ class Configure(models.Model):
 class Jingle(models.Model):
 	
 	jingle = models.CharField(ugettext_lazy("Jingle name"),max_length=80,unique=True)
-	file = DeletingFileField(ugettext_lazy('File'),upload_to='jingles',max_length=255)
-	rec_date = models.DateTimeField(ugettext_lazy('Recording date'))
-	active = models.BooleanField(ugettext_lazy("Active"),default=True)
-
-	start_date = models.DateField(ugettext_lazy('Emission starting date'),null=True,blank=True)
-	end_date = models.DateField(ugettext_lazy('Emission end date'),null=True,blank=True)
-
-	start_time = models.TimeField(ugettext_lazy('Emission start time'),null=True,blank=True)
-	end_time = models.TimeField(ugettext_lazy('Emission end time'),null=True,blank=True)
-
-	giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Scheduled days'),null=True,blank=True)
-
-	priorita = models.IntegerField(ugettext_lazy("Priority"),default=50)
-
+	file = DeletingFileField(ugettext_lazy('File'),upload_to='jingles',max_length=255,\
+                 help_text=ugettext_lazy("The jingle file to upload"))
+	rec_date = models.DateTimeField(ugettext_lazy('Recording date'),\
+                 help_text=ugettext_lazy("When the jingle was done (for reference only)"))
+	active = models.BooleanField(ugettext_lazy("Active"),default=True,\
+                 help_text=ugettext_lazy("Activate the jingle for emission"))
+	start_date = models.DateField(ugettext_lazy('Emission starting date'),null=True,blank=True,\
+                 help_text=ugettext_lazy("The jingle will be scheduled starting from this date"))
+	end_date = models.DateField(ugettext_lazy('Emission end date'),null=True,blank=True,\
+                 help_text=ugettext_lazy("The jingle will be scheduled ending this date"))
+	start_time = models.TimeField(ugettext_lazy('Emission start time'),null=True,blank=True,\
+                 help_text=ugettext_lazy("The jingle will be scheduled starting from this date"))
+	end_time = models.TimeField(ugettext_lazy('Emission end time'),null=True,blank=True,\
+                 help_text=ugettext_lazy("The jingle will be scheduled ending this date"))
+	giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Scheduled days'),null=True,blank=True,\
+                 help_text=ugettext_lazy("The jingle will be scheduled those weekdays"))
+	priorita = models.IntegerField(ugettext_lazy("Priority"),default=50,\
+                 help_text=ugettext_lazy("When there are more spots that wait for emission from the same time, the emission will be ordered by this numer"))
 	emission_done = models.DateTimeField(ugettext_lazy('emission done'),null=True,editable=False )
 
 	

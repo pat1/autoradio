@@ -28,8 +28,10 @@
     <dd><a href="{% url podcast_episodes object.show.slug %}">{{ object.show.title }}</a></dd>
   <dt>{% trans "Author" %}</dt>{% for author in object.author.all %}
     <dd>{% if author.email %}<a href="mailto:{{ author.email }}">{% endif %}{% if author.first_name or author.last_name %}{% if author.first_name and author.last_name %}{{ author.first_name }} {{ author.last_name }}{% endif %}{% if author.first_name and not author.last_name %}{{ author.first_name }}{% endif %}{% if author.last_name and not author.first_name %}{{ author.last_name }}{% endif %}{% else %}{{ author.username }}{% endif %}{% if author.email %}</a>{% endif %}</dd>{% endfor %}
-  <dt>RSS</dt>
-    <dd><a href="{% url podcast_feed object.show.slug %}">{% trans "Subscribe" %}</a></dd>
+  <dt>feed web/RSS</dt>
+    <dd><a href="{% url podcast_feed object.show.slug %}">{% trans "Subscribe Feed RSS 2.0 and iTunes" %}</a></dd>
+    <dd><a href="{% url podcast_atom object.show.slug %}">{% trans "Subscribe Atom" %}</a></dd>
+    <dd><a href="{% url podcast_media object.show.slug %}">{% trans "Subscribe Media RSS" %}</a></dd>
   {% if object.show.feedburner %}<dt>FeedBurner</dt>
     <dd><a href="{{ object.show.feedburner }}">{% trans "Subscribe" %}</a></dd>{% endif %}
   {% if object.show.itunes %}<dt>iTunes</dt>
@@ -38,15 +40,24 @@
 
 <p>{% if object.summary %}{{ object.summary }}{% else %}{{ object.description|striptags }}{% endif %}</p>
 
-<h3>{% trans "Download this episode" %}</h3>
+<h3>{% trans "Listen this episode" %}</h3>
 
 <ul>
   {% for enclosure in enclosure_list %}
   {% if enclosure.file %}
-  <li><a href="{{ enclosure.file.url }}"><strong>{% if enclosure.title %}{{ enclosure.title }}{% else %}{{ object.title }}{% endif %}</strong></a> ({{ enclosure.file.size|filesizeformat }})  --> <a href="/player/{{ enclosure.file.url }}"><strong>{% trans "Listen" %}</strong></a> </li>
+  <li><strong>{% if enclosure.title %}{{ enclosure.title }}{% else %}{{ object.title }}{% endif %}: </strong><a href="{{ enclosure.file.url }}"><strong>{% trans "Download file" %}</strong></a> ({{ enclosure.file.size|filesizeformat }})  --> <a href="/player/{{ enclosure.file.url }}" target="_blank" class="playerPopup"><strong>{% trans "Listen" %}</strong></a> </li>
+<script type="text/javascript">
+   $("a.playerPopup").open({
+      width: 350,
+      height: 300,
+      scrollbars: false
+   });
+</script>
+
   {% endif %}
   {% endfor %}
 </ul>
+
 
 {% if object.captions %}<p><a href="{{ object.captions.url }}">{% trans "Download the closed captions" %}</a>.</p>{% endif %}
 

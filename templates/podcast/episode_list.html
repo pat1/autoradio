@@ -31,8 +31,11 @@
   <dt>{% trans "Author" %}</dt>
  {% for author in show.grouper.author.all %}
     <dd>{% if author.email %}<a href="mailto:{{ author.email }}">{% endif %}{% if author.first_name or author.last_name %}{% if author.first_name and author.last_name %}{{ author.first_name }} {{ author.last_name }}{% endif %}{% if author.first_name and not author.last_name %}{{ author.first_name }}{% endif %}{% if author.last_name and not author.first_name %}{{ author.last_name }}{% endif %}{% else %}{{ author.username }}{% endif %}{% if author.email %}</a>{% endif %}</dd>{% endfor %}
-  <dt>RSS</dt>
-    <dd><a href="{% url podcast_feed show.grouper.slug %}">{% trans "Subscribe" %}</a></dd>
+
+  <dt>{% trans "fedd web/RSS" %}</dt>
+    <dd><a href="{% url podcast_feed show.grouper.slug %}">{% trans "Subscribe Feed RSS 2.0 and iTunes" %}</a></dd>
+    <dd><a href="{% url podcast_atom show.grouper.slug %}">{% trans "Subscribe Atom" %}</a></dd>
+    <dd><a href="{% url podcast_media show.grouper.slug %}">{% trans "Subscribe Media RSS" %}</a></dd>
   {% if show.grouper.feedburner %}<dt>{% trans "FeedBurner" %}</dt>
     <dd><a href="{{ show.grouper.feedburner }}">{% trans "Subscribe" %}</a></dd>{% endif %}
   {% if show.grouper.itunes %}<dt>iTunes</dt>

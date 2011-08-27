@@ -9,6 +9,18 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>{% block title %}Django Podcast{% endblock %}</title>
 <link href="{{media_url}}sito/css/podcast.css" rel="stylesheet" type="text/css" media="screen" />
+
+<script type="text/javascript" src="{{media_url}}sito/playogg/js/jquery-1.4.1.min.js"></script>
+<script type="text/javascript" src="{{media_url}}sito/playogg/js/jquery.open.js"></script>
+
+<script type="text/javascript">
+   $("a.playerPopup").open({
+      width: 400,
+      height: 300,
+      scrollbars: false
+   });
+</script>
+
 </head>
 {% endblock %}
 

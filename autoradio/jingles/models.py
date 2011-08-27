@@ -95,7 +95,7 @@ class Jingle(models.Model):
 	giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Scheduled days'),null=True,blank=True,\
                  help_text=ugettext_lazy("The jingle will be scheduled those weekdays"))
 	priorita = models.IntegerField(ugettext_lazy("Priority"),default=50,\
-                 help_text=ugettext_lazy("When there are more spots that wait for emission from the same time, the emission will be ordered by this numer"))
+                 help_text=ugettext_lazy("When there are more jingle that wait for emission from the same time, the emission will be ordered by this numer"))
 	emission_done = models.DateTimeField(ugettext_lazy('emission done'),null=True,editable=False )
 
 	

@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it" >
+<head>
+<title> | Amministrazione</title>
+<link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/django/media/admin/css/base.css" />
+
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/django/media/admin/css/ie.css" /><![endif]-->
+
+<script type="text/javascript">window.__admin_media_prefix__ = "/django/media/admin/";</script>
+
+<meta name="robots" content="NONE,NOARCHIVE" />
+</head>
+
+
+<body class="">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name"><a href="http://127.0.0.1:8080/">AutoRadio Home</a> / <a href="http://127.0.0.1:8080/doc">AutoRadio Documentazione</a></h1>
+
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    <div class="breadcrumbs"><a href="http://127.0.0.1:8080/">Pagina iniziale</a></div>
+    
+
+        
+
+    <!-- Content -->
+    <div id="content" class="colM">
+        
+        
+        
+
+<h1><a href="../index.html">Documentazione</a></h1>
+
+<div id="content-main">
+
+
+
+
+
+
+
+
+
+<p>
+
+Lo scheduler è un programma che lanciato separatamente comanda
+all'istante di tempo opportuno il Player per attivare l'emissione
+delle programmazione preimpostata. Svolge anche altre funzioni logiche
+e di controllo quali l'esecuzione del player se non dovesse risultare
+attivo.  Ogni volta che una programmazione è stata inserita con
+successo nella playlist del player nel database di autoradio essa
+risulta come se fosse stata effettivamente messa in onda.Ovviamente se
+sul player vengono fatte operazioni manuali lo scheduler non ne puo
+tenere conto.
+
+</p>
+
+<p>
+
+Vengono estratte tutte le schedule in un intervallo di tempo a cavallo
+tra passato e futuro. Spot e programmi programmati nel passato e non
+ancora emessi vengono programmati immediatamente se il ritardo non è
+eccessivo. Le pubblicità che cadono durante l'emissione di un
+programma vengono anticipare o ritardate a seconda della vicinanza
+temporale all'inizio o alla fine delle parti del programma. I jingles
+che cadono durante l'emissione di programmi o publicità vengono
+eliminati.
+
+</p>
+
+<p>
+
+Lo scheduler provvede anche alla generazione dinamica delle playlist
+delle fasce pubblicitarie per l'eventuale emissione manuale della
+pubblicità.  Queste playlist vengono generate poco prima dell'orario
+programato per l'emissione e si possono trovare nella cartella
+specificata nel file di configurazione (playlistdir).
+
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+        
+        <br class="clear" />
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+</body>
+</html>

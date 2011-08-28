@@ -1,0 +1,25 @@
+NEWS
+----
+
+version 2.1
+-----------
+ * close bug autoradiod crash on playlist management - ID: 3388949
+ * a lot of new documentation
+ * userguide in italian
+ * player in podcast now is open in new windows using jquery
+
+version 2.0
+-----------
+
+The section program redesigned for podcasting:
+    * a program now can have different part
+    * programs now are available for podcasting
+    * web interface for podcasting
+A palimpsest in pdf format available in italian law standard format
+Integrated ogg web player that is compatible with a great number of user's browser
+You can use audaucious2 for player
+The communication with player now use Dbus
+Compatible with cherrypython3 and Django 1.3
+Tested and packaged for Fedora 15, Ubuntu 11.04, ubuntu server 11.04, debian 6.0.2 and testing.
+On line web documentation
+

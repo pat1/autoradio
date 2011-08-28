@@ -1,0 +1,73 @@
+{% extends "podcast/base.html" %}
+{% load i18n %}
+
+{% block allcontent %}
+
+<div id="return-wrap">
+<div id="return">
+<p>{% trans "A detail of one episode of one show" %}</p>
+</div>
+</div>
+
+<div id="content-wrap">
+<div id="content">
+{% block content %}
+
+<p class="back"><a href="{% url podcast_episodes object.show.slug %}">{% trans "Return to episodes" %}</a></p>
+
+<h2>{{ object.title }}</h2>
+
+{% if object.subtitle %}<h3>{{ object.subtitle }}</h3>{% endif %}
+
+{% if object.image %}<div class="image"><img src="{{ object.image.url }}" width="{{ object.image.width }}" height="{{ object.image.height }}" alt="{{ object.title }} {% trans "episode screenshot" %}" /></div>{% endif %}
+
+<dl>
+  <dt>{% trans "Date" %}</dt>
+    <dd>{{ object.date|date:"F g, Y, g:m a" }}</dd>
+  <dt>{% trans "Show" %}</dt>
+    <dd><a href="{% url podcast_episodes object.show.slug %}">{{ object.show.title }}</a></dd>
+  <dt>{% trans "Author" %}</dt>{% for author in object.author.all %}
+    <dd>{% if author.email %}<a href="mailto:{{ author.email }}">{% endif %}{% if author.first_name or author.last_name %}{% if author.first_name and author.last_name %}{{ author.first_name }} {{ author.last_name }}{% endif %}{% if author.first_name and not author.last_name %}{{ author.first_name }}{% endif %}{% if author.last_name and not author.first_name %}{{ author.last_name }}{% endif %}{% else %}{{ author.username }}{% endif %}{% if author.email %}</a>{% endif %}</dd>{% endfor %}
+  <dt>feed web/RSS</dt>
+    <dd><a href="{% url podcast_feed object.show.slug %}">{% trans "Subscribe Feed RSS 2.0 and iTunes" %}</a></dd>
+    <dd><a href="{% url podcast_atom object.show.slug %}">{% trans "Subscribe Atom" %}</a></dd>
+    <dd><a href="{% url podcast_media object.show.slug %}">{% trans "Subscribe Media RSS" %}</a></dd>
+  {% if object.show.feedburner %}<dt>FeedBurner</dt>
+    <dd><a href="{{ object.show.feedburner }}">{% trans "Subscribe" %}</a></dd>{% endif %}
+  {% if object.show.itunes %}<dt>iTunes</dt>
+    <dd><a href="{{ object.show.itunes }}">{% trans "Subscribe" %}</a></dd>{% endif %}
+</dl>
+
+<p>{% if object.summary %}{{ object.summary }}{% else %}{{ object.description|striptags }}{% endif %}</p>
+
+<h3>{% trans "Listen this episode" %}</h3>
+
+<ul>
+  {% for enclosure in enclosure_list %}
+  {% if enclosure.file %}
+  <li><strong>{% if enclosure.title %}{{ enclosure.title }}{% else %}{{ object.title }}{% endif %}: </strong><a href="{{ enclosure.file.url }}"><strong>{% trans "Download file" %}</strong></a> ({{ enclosure.file.size|filesizeformat }})  --> <a href="/player/{{ enclosure.file.url }}" target="_blank" class="playerPopup"><strong>{% trans "Listen" %}</strong></a> </li>
+<script type="text/javascript">
+   $("a.playerPopup").open({
+      width: 350,
+      height: 300,
+      scrollbars: false
+   });
+</script>
+
+  {% endif %}
+  {% endfor %}
+</ul>
+
+
+{% if object.captions %}<p><a href="{{ object.captions.url }}">{% trans "Download the closed captions" %}</a>.</p>{% endif %}
+
+{% endblock %}
+</div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<p>&#169; {% now "Y" %} {{ object.show.organization }}. <a href="{% url podcast_feed object.show.slug %}">{% trans "Subscribe" %}</a>.</p>
+
+{% endblock %}

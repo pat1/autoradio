@@ -1,0 +1,84 @@
+#!/usr/bin/env python
+# GPL. (C) 2007-2009 Paolo Patruno.
+
+# This program is free software; you can redistribute it and/or modify 
+# it under the terms of the GNU General Public License as published by 
+# the Free Software Foundation; either version 2 of the License, or 
+# (at your option) any later version. 
+# 
+# This program is distributed in the hope that it will be useful, 
+# but WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# GNU General Public License for more details. 
+# 
+# You should have received a copy of the GNU General Public License 
+# along with this program; if not, write to the Free Software 
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+# 
+
+# ToDo:
+# controllare gli inserimenti al livello di django ADMIN INTERFACE
+# controllare altri conflitti in districa oltre ai jingles
+# utilizzare mp3splt per spezzare i programmi per fare gli inserimenti pubblicitari
+# alternare meglio i jingle tenendo in considerazione la priorita
+# a cavallo della mezzanotte verificare il funzionamento
+
+
+from autoradio import daemon
+from autoradio import _version_
+from django.core import management
+from django.core.management import setup_environ
+import autoradio.autoradio_config
+
+
+autoradioweb = daemon.Daemon(
+        stdin="/dev/null",
+        stdout=autoradio.settings.logfileweb,
+        stderr=autoradio.settings.errfileweb,
+        pidfile=autoradio.settings.lockfileweb,
+        user=autoradio.settings.userweb,
+        group=autoradio.settings.groupweb
+)
+
+
+#class  mydaemon(daemon):
+#
+#    def optionparser(self):
+#        op = super(miodaemon, self).optionparser()
+#        op.add_option("-s", "--syncdb",action="store_false")
+#        return op 	  				 
+
+
+def main(cwd):
+
+    import os
+    try:
+        os.chdir(cwd)
+    except:
+        pass
+
+    setup_environ(autoradio.settings)
+    management.call_command("runserver",autoradio.settings.port,use_reloader=False)
+
+
+if __name__ == '__main__':
+
+    import sys, os
+    cwd=os.getcwd()
+
+    # this is a triky for ubuntu and debian that remove /var/run every boot
+    # ATTENTION, this should be a security problem
+    path=os.path.dirname(autoradio.settings.lockfileweb)
+    if (not os.path.lexists(path) and path == "/var/run/autoradio" ):
+        os.mkdir(path)
+        if (os.getuid() == 0):
+            os.chown(path,user,group)
+
+    if autoradioweb.service():
+
+        sys.stdout.write("Autoradioweb version "+_version_+"\n")
+        sys.stdout.write("Daemon started with pid %d\n" % os.getpid())
+        sys.stdout.write("Daemon stdout output\n")
+        sys.stderr.write("Daemon stderr output\n")
+
+        sys.exit(main(cwd))  # (this code was run as script)

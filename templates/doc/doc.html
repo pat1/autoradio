@@ -56,12 +56,16 @@ Developed with Python, Django, Dbus it works in an production enviroment
 {% endif %}
 
 {% if params.docitem == "player" %}
-{% blocktrans %}
 
+<p>
+{% blocktrans %}
 Partendo da una playlist è in grado di gestire differenti formati di
 audio digitali per poi inviare il suono o a una scheda audio o a un
 server audio.
+</p>
+{% endblocktrans %}
 
+{% blocktrans %}
 Esistono varie possibilità:
 <ul>
   <li>Audacious2:
@@ -72,48 +76,52 @@ Esistono varie possibilità:
   E' un player “antico” ma molto robusto.
   Consigliato solo su vecchie distribuzioni</li>
 </ul>
+{% endblocktrans %}
+
+{% blocktrans %}
 Questi sono i meccanismi di funzionamento principale:
+{% endblocktrans %}
 
 <ul>
- <li> deve essere sempre presente nel player una playlist di brani
+ <li>{% blocktrans %}deve essere sempre presente nel player una playlist di brani
  musicali ciascuno di durata non superiore a 7/8 minuti; brani piu'
  lunghi potrebbero comportare ritardi e cattiva gestione
  dell'emissione automatica. Per mantenere sempre piena la playlist si
  consiglia di prevedere almeno due volte al giorno il caricamento
- automatico di una playlist voluminosa.</li>
+ automatico di una playlist voluminosa.{% endblocktrans %}</li>
 
- <li> quando una schedula raggiunge il tempo per cui è stata programmata
+ <li>{% blocktrans %}quando una schedula raggiunge il tempo per cui è stata programmata
  viene inserita nella prima posizione successiva a quella attualmente
  in play, e successiva anche ad ogni file precedentemente inserito da una
- precedente schedula.</li>
+ precedente schedula.{% endblocktrans %}</li>
 
- <li> tutto thread save, ossia le funzioni fatte sul player dalle varie
- schedule saranno sempre consistenti.</li>
+ <li>{% blocktrans %}tutto thread save, ossia le funzioni fatte sul player dalle varie
+ schedule saranno sempre consistenti.{% endblocktrans %}</li>
 
- <li> le operazioni di inserimento e cancellazione dalla playlist vengono
+ <li>{% blocktrans %}le operazioni di inserimento e cancellazione dalla playlist vengono
  fatte solo quando mancano piu' di 10 secondi alla fine del brano per
- non cadere in situazioni critiche e inconsistenti.</li>
+ non cadere in situazioni critiche e inconsistenti.{% endblocktrans %}</li>
 
- <li> la testa della playlist, che se tutto è programmato correttamente
- tende sempre a crescere, viene tagliata a 10 brani.</li>
+ <li>{% blocktrans %}la testa della playlist, che se tutto è programmato correttamente
+ tende sempre a crescere, viene tagliata a 10 brani.{% endblocktrans %}</li>
 
- <li> la coda della playlist che se tutto è programmato correttamente
- tende sempre a crescere viene tagliata a 500 brani.</li>
+ <li>{% blocktrans %}la coda della playlist che se tutto è programmato correttamente
+ tende sempre a crescere viene tagliata a 500 brani.{% endblocktrans %}</li>
 
- <li> il player se in stato "stop" viene sempre rimesso in stato "play".</li>
+ <li>{% blocktrans %}il player se in stato "stop" viene sempre rimesso in stato "play".{% endblocktrans %}</li>
 
- <li> il player se in stato "pause" rimarrà sempre in "pause" se non ci
- sarà un intervento manuale.</li>
+ <li>{% blocktrans %}il player se in stato "pause" rimarrà sempre in "pause" se non ci
+ sarà un intervento manuale.{% endblocktrans %}</li>
 
- <li> è possibile visualizzare lo stato del player con interfaccia web.</li>
+ <li>{% blocktrans %}è possibile visualizzare lo stato del player con interfaccia web.{% endblocktrans %}</li>
 </ul>
 
-{% endblocktrans %}
 {% endif %}
 
 {% if params.docitem == "scheduler" %}
-{% blocktrans %}
 
+<p>
+{% blocktrans %}
 Lo scheduler è un programma che lanciato separatamente comanda
 all'istante di tempo opportuno il Player per attivare l'emissione
 delle programmazione preimpostata. Svolge anche altre funzioni logiche
@@ -123,7 +131,11 @@ successo nella playlist del player nel database di autoradio essa
 risulta come se fosse stata effettivamente messa in onda.Ovviamente se
 sul player vengono fatte operazioni manuali lo scheduler non ne puo
 tenere conto.
+{% endblocktrans %}
+</p>
 
+<p>
+{% blocktrans %}
 Vengono estratte tutte le schedule in un intervallo di tempo a cavallo
 tra passato e futuro. Spot e programmi programmati nel passato e non
 ancora emessi vengono programmati immediatamente se il ritardo non è
@@ -132,116 +144,305 @@ programma vengono anticipare o ritardate a seconda della vicinanza
 temporale all'inizio o alla fine delle parti del programma. I jingles
 che cadono durante l'emissione di programmi o publicità vengono
 eliminati.
+{% endblocktrans %}
+</p>
 
+<p>
+{% blocktrans %}
 Lo scheduler provvede anche alla generazione dinamica delle playlist
 delle fasce pubblicitarie per l'eventuale emissione manuale della
 pubblicità.  Queste playlist vengono generate poco prima dell'orario
 programato per l'emissione e si possono trovare nella cartella
 specificata nel file di configurazione (playlistdir).
-
 {% endblocktrans %}
+</p>
+
 {% endif %}
 
 {% if params.docitem == "playlist" %}
+
+<p>
 {% blocktrans %}
-
-
-
- * Nome della playlist
- * File uplodato
- * Data in cui la playlist è stata composta
- * Attivazione/disattivazione emissione della singola playlist
- * schedule:
-  * Shuffle abilita/disabilita ordinamento casuale dei brani al momento dell'emissione
-  * Elenco di eventuali date e orari a cui fare l'emissione
- * periodic schedule (eventuale programmazione periodica):
-  * Shuffle abilita/disabilita ordinamento casuale dei brani al momento dell'emissione
-  * Data inizio programmazione / Data fine programmazione (possono essere omesse)
-  * orario a cui affettuare l'eventuale emissione
-  * giorni a cui effettuare l'eventuale emissione
-
-
-==== Schedule ====
-
-Alla voce schedule è possibile avere l'elenco delle emissioni
-programmate ed effettuate
-
-==== Periodic Schedule ====
-
-Alla voce periodic schedule è possibile avere l'elenco delle emissioni periodiche
-programmate e ultima emissione
-
-
+Le playlist sono il "tappeto" musicale dell'emissione radiofonica.
+Ogni playlist puo' essere programmata per un istante preciso oppure
+per una emissione periodica ad iniziare da una una data specifica fino
+a una data finale per alcuni giorni della settimana specificati.  Le
+playlist prima di essere caricate vengono controllate e i brani
+musicali corrotti o mancanti vengono eliminati prima di essere
+inseriti. E' possibile specificare la durata della playlist che verrà
+inserita nel player. Una opzione permette di attivare la funzione di
+mescolamento dell'ordine della sequenza dei brani.
 {% endblocktrans %}
+</p>
+
+<p>
+{% blocktrans %}
+Per poter funzionare Autoradio deve sempre avere un discreto numero
+di brani musicali caricati nella playlist tra i quali inserire le
+altre programmazioni. Quando una playlist programmata viene mandata in
+onda essa viene inserita in testa ai brani già presenti nella lista
+del player.
+{% endblocktrans %}
+</p>
+
 {% endif %}
 
 {% if params.docitem == "jingle" %}
-{% blocktrans %}
 
-Jingles: vengono emessi ad intervalli di tempo fissi. Per ogni jingle
+<p>
+{% blocktrans %}
+I jingles vengono emessi ad intervalli di tempo fissi. Per ogni jingle
 è possibile impostare da quale data a quale data effettuare
 l'emissione, da che ora a che ora effettuare l'emissione e in quali
 giorni della settimana. E' cosi' facile attivare promo di programmi o
 altro ad orari specifici.
-
 {% endblocktrans %}
+</p>
+
+<p>
+{% blocktrans %}
+Il jingle programmato sarà quello con ultima data di emissione piu'
+vecchia; se ci sono piu' jingle con la stessa ultiuma data di
+emissione, i jingle vengono ordinati per il parametro impostabile
+della priorità.
+{% endblocktrans %}
+</p>
+
 {% endif %}
 
 {% if params.docitem == "spot" %}
-{% blocktrans %}
 
-Spots: è possibile impostare qualsiasi numero di fasce pubblicitarie
+<p>
+{% blocktrans %}
+E' possibile impostare qualsiasi numero di fasce pubblicitarie
 caratterizzate da un orario di emissione; ogni fascia è attivabile o
-disattivabile singolarmente. Ogni fascia pubblicitaria ha uno o piu'
-prologhi che annunciano la pubblicità. Ogni fascia pubblicitaria ha
-uno o piu' epiloghi che annunciano la fine della pubblicità. Per ogni
-spot (o prologo o epilogo) è possibile stabilire da quale data a quale
+disattivabile singolarmente. Una fascia pubblicitaria è composta da
+spot.  Ogni fascia pubblicitaria ha uno o piu' spot definiti come
+prologo che annunciano la pubblicità. Ogni fascia pubblicitaria ha uno
+o piu' spot definiti come epilogo che annunciano la fine della
+pubblicità.
+{% endblocktrans %}
+</p>
+
+<p>
+{% blocktrans %}
+Per ogni spot (o prologo o epilogo) è possibile stabilire da quale data a quale
 data effettuare l'emissione, in quali giorni della settimana e in
 quale fascia pubblicitaria. Ogni spot ( o prologo o epilogo) ha una
 priorità che determina l'oridine di emissione.
-
 {% endblocktrans %}
+</p>
+
 {% endif %}
 
 {% if params.docitem == "program" %}
-{% blocktrans %}
-program
-Documentation needs writers ......
-{% endblocktrans %}
+
+<p>{% blocktrans %}
+La gestione dei programmi è la sezione più articolata di Autoradio.
+Uno show è composto da episodi che a loro volta sono composti da
+enclosure (parti). Uno show ah alcuni parametri che lo definiscono nel
+palinsesto.  Un episodio ha dei parametri che definiscono quando deve
+essere mandato in onda da autoradio. Le enclosure (parti) permettono
+di spezzare episodi di lunga durata per facilitarne la messa in onda,
+il download e gli inserimenti pubblicitari.  Quando dal menù
+principale si seleziona programmi viene presentato il modulo per
+l'inserimento di un episodio di uno show. Se lo show a cui appartiene
+un episodio non è stato ancora definito bisogna farlo come prima
+operazione; selezionando il + a fianco della voce Show è possibile
+farlo.
+{% endblocktrans %}</p>
+
+
+<h3>{% trans 'La definizione di uno Show' %}</h3>
+
+<p>{% blocktrans %}
+Nella sezione principale vengono richieste alcune informazioni sullo show e vengono utilizzate alcune categorie definite dalla legislazione italiana.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Nella sezione "Podcast options" e "iTunes options"
+vengono richieste informazioni relative al servizio podcast ben
+descritto alle voci successive di questa documentazione.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Nella sezione "Periodic Schedules" e "APeriodic Schedules" vengono
+richieste informazioni necessarie alla compilazione del palinsesto e
+alla stampa del libro programmi richiesto dalla legislazione italiana,
+funzione ben descritta alle voce successiva di questa documentazione.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans %}
+Ogni Show puo' essere inserito in palinsesto a un istante preciso oppure
+per una emissione periodica ad iniziare da una una data specifica fino
+a una data finale per alcuni giorni della settimana specificati.
+{% endblocktrans %}</p>
+
+<p><strong>{% trans "FeedBurner and iTunes URLs" %}</strong></p>
+
+<p>{% blocktrans %}
+After saving at least one show and one episode, consider submitting
+your feed URL to FeedBurner for keeping track of podcast subscriber
+statistics. Your feed URL should be something like, where
+title-of-show is the slug of your show:
+{% endblocktrans %}</p>
+
+http://www.example.com/podcasts/title-of-show/feed/
+
+<p>{% blocktrans %}
+Remember to check the checkbox for "I'm a podcaster!" Your new
+FeedBurner URL should be something like:
+{% endblocktrans %}</p>
+
+http://feeds.feedburner.com/TitleOfShow
+
+<p>{% blocktrans %}
+You can now return to your website's admin and paste this URL into
+your Show's FeedBurner textbox. For bonus points, submit your
+FeedBurner URL to the iTunes Store. Your iTunes podcast URL should
+then be something like:
+{% endblocktrans %}</p>
+
+http://phobos.apple.com/WebObjects/MZStore.woa/wa/viewPodcast?id=000000000
+
+<p>{% blocktrans %}
+The advantage of submitting your FeedBurner URL to the iTunes Store
+allows you to track show statistics while also giving users the
+advantage of using the friendly iTunes interface. Return to the admin
+again and paste the iTunes show URL into the Show's iTunes URL
+textbox.
+{% endblocktrans %}</p>
+
+
+<p><strong>{% trans "Ping iTunes for new content" %}</strong></p>
+
+<p>{% blocktrans %}
+The iTunes Store checks new content daily but you might want to make a
+new episode available immediately in the iTunes Store. Visit your
+show's ping URL to make that episode available, which would be
+something like:
+{% endblocktrans %}</p
+
+https://phobos.apple.com/WebObjects/MZFinance.woa/wa/pingPodcast?id=000000000
+
+<p>{% blocktrans %}
+Alternatively, if you're a savvy developer, you could set up a cron
+job to handle this, but note that pinging too often could result in a
+removal from the iTunes Store.
+{% endblocktrans %}</p
+
+
+
+<p><strong>{% trans "Yahoo! Media RSS feed submission" %}</strong></p>
+
+<p>{% blocktrans %}
+Likewise, considering submitting your podcast to Yahoo! Search, which
+specifically accepts any kind of regularly published media-based
+(audio, video, image, document, etc.) RSS 2.0 feed or Media RSS feed.
+Your Media RSS feed should be something like:
+{% endblocktrans %}</p
+
+http://www.example.com/podcasts/title-of-show/media/
+
+<p><strong>{% trans "Google video sitemaps" %}</strong></p>
+
+<p>{% blocktrans %}
+If you're creating a video podcast, you can submit a video sitemap to
+Google Webmaster Tools. The video sitemap will help Google index
+videos in Google Video. The video sitemap URL should be something like:
+{% endblocktrans %}</p
+
+http://www.example.com/podcasts/title-of-show/sitemap.xml
+
+<p>{% blocktrans %}
+Additionally, you can add the video sitemap URL to your robots.txt file:
+{% endblocktrans %}</p
+
+Sitemap: http://www.example.com/podcasts/title-of-show/sitemap.xml
+
+<p>{% blocktrans %}
+Google allows the submission of a media RSS feed instead of the
+sitemap to Google Webmaster Tools if you prefer.
+{% endblocktrans %}</p
+
+<h3>{% trans 'La definizione di un Episodio' %}</h3>
+
+<p>{% blocktrans %}
+Un episodio è composto da una o piu' enclosure (parti) associate a un
+titolo e un file audio da caricare
+{% endblocktrans %}</p
+
+<p>{% blocktrans %}
+Un episodio ha una o più schedule che definiscono quando dovrà essere
+mandato in onda automaticamente da autoradio (prima emissione ed
+eventuali repliche).
+{% endblocktrans %}</p
+
+<p>{% blocktrans %}
+Per ogni episodio è possibile inserire dei metadati utili per
+effettuare un efficiente podcast/mediacast.
+{% endblocktrans %}</p
+
+<p><strong>{% trans "What is the Dublin Core namespace?" %}</strong></p>
+
+<p>{% blocktrans %}
+The Dublin Core namespace allows for meta data to be associated with
+content contained in an RSS feed. Additional details on
+the <a href="http://homepage.univie.ac.at/horst.prillinger/blog/archives/2005/01/000922.html">Dublin
+Core or the DC extension.</a>
+{% endblocktrans %}</p
+
 {% endif %}
 
 {% if params.docitem == "podcast" %}
 <h2>Podcast</h2>
 
-<h3>{% trans 'Che cosa è il podcasting?' %}</h3>
+<h3>{% trans 'Che cosa è il podcasting/mediacast?' %}</h3>
 {% blocktrans %}
-Il podcasting è un sistema che mette a disposizione brani audio e
-video attraverso Internet in formato feed RSS, in pratica è un
-servizio che automaticamente informa ed eventualmente scarica i nuovi
-file audio messi a disposizione su un sito. Tramite un programma in
-grado di leggere e decifrare questi feed, è possibile essere informati
-non appena un nuovo file audio viene pubblicato. Il podcasting
-consente un ascolto personalizzato dei contenuti: gli utenti scelgono
-quando ascoltare, dove ascoltare e come ascoltare i file audio.
+Il podcasting o in senso più generale il Mediacast è un sistema che
+mette a disposizione brani audio e video attraverso Internet in
+formato feed RSS, in pratica è un servizio che automaticamente informa
+ed eventualmente scarica i nuovi file audio messi a disposizione su un
+sito. Tramite un programma in grado di leggere e decifrare questi
+feed, è possibile essere informati non appena un nuovo file audio
+viene pubblicato. Il podcasting consente un ascolto personalizzato dei
+contenuti: gli utenti scelgono quando ascoltare, dove ascoltare e come
+ascoltare i file audio.
 {% endblocktrans %}
 
-<h3>{% trans 'Come funziona il podcasting?' %}</h3>
-{% blocktrans %}
+<h3>{% trans 'Come funziona il podcasting/mediacast?' %}</h3>
+<p>{% blocktrans %}
 Il procedimento è semplice: occorre scaricare ed installare sul
 proprio pc un software per il podcasting. Una volta
 installato il programma, bisogna indicare da quali fonti scaricare i
 file e con quale frequenza cercare nuovi brani.
-{% endblocktrans %}
+{% endblocktrans %}</p>
 
-Documentation needs writers ......
+
+<h3>{% trans 'Autoradio: un efficiente motore per il podcasting/mediacast' %}</h3>
+
+<p>{% blocktrans %}
+Autoradio fornisce una interfaccia web accessibile dal menu principale
+alla voce Mediacast per navigare i programmi e i relativi episodi
+fornendo i flussi web necessari per un efficiente podcasting della
+propria programmazione radiofonica.
+{% endblocktrans %}</p>
 
 {% endif %}
 
+
 {% if params.docitem == "programbook" %}
-{% blocktrans %}
-programbook
-Documentation needs writers ......
-{% endblocktrans %}
+
+<p>{% blocktrans %}
+Autoradio permette la stampa del Libro Programmi secondo la
+legislazione italiana. Selezionata l'apposita voce dal menu principale
+è possibile procedere alla stampa inserendo gli estremi delle date
+richieste. Viene generato un file PDF pronto per la stampa.  Alcune
+voci presenti nella stampa sono definite nella tabella "configure"
+della sezione "programmi" e modificabili dal pannello di
+amministrazione.
+{% endblocktrans %}</p>
+
 {% endif %}
 
 </div>

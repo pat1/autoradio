@@ -1,11 +1,12 @@
 NEWS
 ----
 
-version 2.1beta
----------------
-close bug autoradiod crash on playlist management - ID: 3388949
-
-
+version 2.1
+-----------
+ * close bug autoradiod crash on playlist management - ID: 3388949
+ * a lot of new documentation
+ * userguide in italian
+ * player in podcast now is open in new windows using jquery
 
 version 2.0
 -----------

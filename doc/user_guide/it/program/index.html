@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it" >
+<head>
+<title> | Amministrazione</title>
+<link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/django/media/admin/css/base.css" />
+
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/django/media/admin/css/ie.css" /><![endif]-->
+
+<script type="text/javascript">window.__admin_media_prefix__ = "/django/media/admin/";</script>
+
+<meta name="robots" content="NONE,NOARCHIVE" />
+</head>
+
+
+<body class="">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name"><a href="http://127.0.0.1:8080/">AutoRadio Home</a> / <a href="http://127.0.0.1:8080/doc">AutoRadio Documentazione</a></h1>
+
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    <div class="breadcrumbs"><a href="http://127.0.0.1:8080/">Pagina iniziale</a></div>
+    
+
+        
+
+    <!-- Content -->
+    <div id="content" class="colM">
+        
+        
+        
+
+<h1><a href="../index.html">Documentazione</a></h1>
+
+<div id="content-main">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>
+La gestione dei programmi è la sezione più articolata di Autoradio.
+Uno show è composto da episodi che a loro volta sono composti da
+enclosure (parti). Uno show ah alcuni parametri che lo definiscono nel
+palinsesto.  Un episodio ha dei parametri che definiscono quando deve
+essere mandato in onda da autoradio. Le enclosure (parti) permettono
+di spezzare episodi di lunga durata per facilitarne la messa in onda,
+il download e gli inserimenti pubblicitari.  Quando dal menù
+principale si seleziona programmi viene presentato il modulo per
+l'inserimento di un episodio di uno show. Se lo show a cui appartiene
+un episodio non è stato ancora definito bisogna farlo come prima
+operazione; selezionando il + a fianco della voce Show è possibile
+farlo.
+</p>
+
+
+<h3>La definizione di uno Show</h3>
+
+<p>
+Nella sezione principale vengono richieste alcune informazioni sullo show e vengono utilizzate alcune categorie definite dalla legislazione italiana.
+</p>
+
+<p>
+Nella sezione "Podcast options" e "iTunes options"
+vengono richieste informazioni relative al servizio podcast ben
+descritto alle voci successive di questa documentazione.
+</p>
+
+<p>
+Nella sezione "Periodic Schedules" e "APeriodic Schedules" vengono
+richieste informazioni necessarie alla compilazione del palinsesto e
+alla stampa del libro programmi richiesto dalla legislazione italiana,
+funzione ben descritta alle voce successiva di questa documentazione.
+</p>
+
+<p>
+Ogni Show puo' essere inserito in palinsesto a un istante preciso oppure
+per una emissione periodica ad iniziare da una una data specifica fino
+a una data finale per alcuni giorni della settimana specificati.
+</p>
+
+<p><strong>FeedBurner and iTunes URLs</strong></p>
+
+<p>
+After saving at least one show and one episode, consider submitting
+your feed URL to FeedBurner for keeping track of podcast subscriber
+statistics. Your feed URL should be something like, where
+title-of-show is the slug of your show:
+</p>
+
+http://www.example.com/podcasts/title-of-show/feed/
+
+<p>
+Remember to check the checkbox for "I'm a podcaster!" Your new
+FeedBurner URL should be something like:
+</p>
+
+http://feeds.feedburner.com/TitleOfShow
+
+<p>
+You can now return to your website's admin and paste this URL into
+your Show's FeedBurner textbox. For bonus points, submit your
+FeedBurner URL to the iTunes Store. Your iTunes podcast URL should
+then be something like:
+</p>
+
+http://phobos.apple.com/WebObjects/MZStore.woa/wa/viewPodcast?id=000000000
+
+<p>
+The advantage of submitting your FeedBurner URL to the iTunes Store
+allows you to track show statistics while also giving users the
+advantage of using the friendly iTunes interface. Return to the admin
+again and paste the iTunes show URL into the Show's iTunes URL
+textbox.
+</p>
+
+
+<p><strong>Ping iTunes for new content</strong></p>
+
+<p>
+The iTunes Store checks new content daily but you might want to make a
+new episode available immediately in the iTunes Store. Visit your
+show's ping URL to make that episode available, which would be
+something like:
+</p
+
+https://phobos.apple.com/WebObjects/MZFinance.woa/wa/pingPodcast?id=000000000
+
+<p>
+Alternatively, if you're a savvy developer, you could set up a cron
+job to handle this, but note that pinging too often could result in a
+removal from the iTunes Store.
+</p
+
+
+
+<p><strong>Yahoo! Media RSS feed submission</strong></p>
+
+<p>
+Likewise, considering submitting your podcast to Yahoo! Search, which
+specifically accepts any kind of regularly published media-based
+(audio, video, image, document, etc.) RSS 2.0 feed or Media RSS feed.
+Your Media RSS feed should be something like:
+</p
+
+http://www.example.com/podcasts/title-of-show/media/
+
+<p><strong>Google video sitemaps</strong></p>
+
+<p>
+If you're creating a video podcast, you can submit a video sitemap to
+Google Webmaster Tools. The video sitemap will help Google index
+videos in Google Video. The video sitemap URL should be something like:
+</p
+
+http://www.example.com/podcasts/title-of-show/sitemap.xml
+
+<p>
+Additionally, you can add the video sitemap URL to your robots.txt file:
+</p
+
+Sitemap: http://www.example.com/podcasts/title-of-show/sitemap.xml
+
+<p>
+Google allows the submission of a media RSS feed instead of the
+sitemap to Google Webmaster Tools if you prefer.
+</p
+
+<h3>La definizione di un Episodio</h3>
+
+<p>
+Un episodio è composto da una o piu' enclosure (parti) associate a un
+titolo e un file audio da caricare
+</p
+
+<p>
+Un episodio ha una o più schedule che definiscono quando dovrà essere
+mandato in onda automaticamente da autoradio (prima emissione ed
+eventuali repliche).
+</p
+
+<p>
+Per ogni episodio è possibile inserire dei metadati utili per
+effettuare un efficiente podcast/mediacast.
+</p
+
+<p><strong>What is the Dublin Core namespace?</strong></p>
+
+<p>
+The Dublin Core namespace allows for meta data to be associated with
+content contained in an RSS feed. Additional details on
+the <a href="http://homepage.univie.ac.at/horst.prillinger/blog/archives/2005/01/000922.html">Dublin
+Core or the DC extension.</a>
+</p
+
+
+
+
+
+
+
+
+</div>
+
+
+        
+        <br class="clear" />
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+</body>
+</html>

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-27 12:36+0200\n"
-"PO-Revision-Date: 2011-08-27 12:51+0200\n"
+"POT-Creation-Date: 2011-08-28 09:03+0200\n"
+"PO-Revision-Date: 2011-08-28 09:48+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,118 +18,126 @@ msgstr ""
 
 #: autoradio/jingles/models.py:55 autoradio/playlists/models.py:56
 #: autoradio/programs/models.py:253 autoradio/spots/models.py:57
+#: build/lib/autoradio/jingles/models.py:55
 #: build/lib/autoradio/playlists/models.py:56
 #: build/lib/autoradio/programs/models.py:253
+#: build/lib/autoradio/spots/models.py:57
 msgid "weekday name"
 msgstr "giorno della settimana"
 
-#: autoradio/jingles/models.py:66 build/lib/autoradio/jingles/models.py:64
+#: autoradio/jingles/models.py:66 build/lib/autoradio/jingles/models.py:66
 msgid "Activate Jingle"
 msgstr "Attivazione jingle"
 
-#: autoradio/jingles/models.py:67
+#: autoradio/jingles/models.py:67 build/lib/autoradio/jingles/models.py:67
 msgid "activate/deactivate the intere jingle class"
 msgstr "attivazione/disattivazione dell'intera classe jingle"
 
-#: autoradio/jingles/models.py:68 build/lib/autoradio/jingles/models.py:65
+#: autoradio/jingles/models.py:68 build/lib/autoradio/jingles/models.py:68
 msgid "Frequency"
 msgstr "Frequenza"
 
-#: autoradio/jingles/models.py:80 build/lib/autoradio/jingles/models.py:77
+#: autoradio/jingles/models.py:80 build/lib/autoradio/jingles/models.py:80
 msgid "Jingle name"
 msgstr "Nome jingle"
 
 #: autoradio/jingles/models.py:81 autoradio/playlists/models.py:80
-#: autoradio/spots/models.py:160 build/lib/autoradio/jingles/models.py:78
+#: autoradio/spots/models.py:160 build/lib/autoradio/jingles/models.py:81
 #: build/lib/autoradio/playlists/models.py:80
-#: build/lib/autoradio/spots/models.py:152 templates/schedule/index.html:15
+#: build/lib/autoradio/spots/models.py:160 templates/schedule/index.html:15
 msgid "File"
 msgstr "File"
 
-#: autoradio/jingles/models.py:82
+#: autoradio/jingles/models.py:82 build/lib/autoradio/jingles/models.py:82
 msgid "The jingle file to upload"
 msgstr "Il file con il jingle da caricare"
 
-#: autoradio/jingles/models.py:83 autoradio/programs/models.py:547
-#: build/lib/autoradio/jingles/models.py:79
+#: autoradio/jingles/models.py:83 autoradio/programs/models.py:543
+#: build/lib/autoradio/jingles/models.py:83
 #: build/lib/autoradio/programs/models.py:547
 msgid "Recording date"
 msgstr "Data registrazione"
 
-#: autoradio/jingles/models.py:84
+#: autoradio/jingles/models.py:84 build/lib/autoradio/jingles/models.py:84
 msgid "When the jingle was done (for reference only)"
 msgstr "Quando il jingle è stata fatto (solo per riferimento)"
 
 #: autoradio/jingles/models.py:85 autoradio/playlists/models.py:84
-#: autoradio/programs/models.py:308 autoradio/programs/models.py:546
+#: autoradio/programs/models.py:304 autoradio/programs/models.py:542
 #: autoradio/spots/models.py:122 autoradio/spots/models.py:164
-#: build/lib/autoradio/jingles/models.py:80
+#: build/lib/autoradio/jingles/models.py:85
 #: build/lib/autoradio/playlists/models.py:84
 #: build/lib/autoradio/programs/models.py:308
 #: build/lib/autoradio/programs/models.py:546
-#: build/lib/autoradio/spots/models.py:116
-#: build/lib/autoradio/spots/models.py:154
+#: build/lib/autoradio/spots/models.py:122
+#: build/lib/autoradio/spots/models.py:164
 msgid "Active"
 msgstr "Attivo"
 
-#: autoradio/jingles/models.py:86
+#: autoradio/jingles/models.py:86 build/lib/autoradio/jingles/models.py:86
 msgid "Activate the jingle for emission"
 msgstr "Attiva il jingle per la messa in onda"
 
-#: autoradio/jingles/models.py:87 build/lib/autoradio/jingles/models.py:82
+#: autoradio/jingles/models.py:87 build/lib/autoradio/jingles/models.py:87
 msgid "Emission starting date"
 msgstr "Data inizio emissione"
 
 #: autoradio/jingles/models.py:88 autoradio/jingles/models.py:92
+#: build/lib/autoradio/jingles/models.py:88
+#: build/lib/autoradio/jingles/models.py:92
 msgid "The jingle will be scheduled starting from this date"
 msgstr "Il jingle potrrà essere programmato a partire da questa data e ora"
 
-#: autoradio/jingles/models.py:89 build/lib/autoradio/jingles/models.py:83
+#: autoradio/jingles/models.py:89 build/lib/autoradio/jingles/models.py:89
 msgid "Emission end date"
 msgstr "Data finale emissione"
 
 #: autoradio/jingles/models.py:90 autoradio/jingles/models.py:94
+#: build/lib/autoradio/jingles/models.py:90
+#: build/lib/autoradio/jingles/models.py:94
 msgid "The jingle will be scheduled ending this date"
 msgstr "Il jingle sarà programmato fino a questa data"
 
-#: autoradio/jingles/models.py:91 build/lib/autoradio/jingles/models.py:85
+#: autoradio/jingles/models.py:91 build/lib/autoradio/jingles/models.py:91
 msgid "Emission start time"
 msgstr "Ora iniziale emissione"
 
-#: autoradio/jingles/models.py:93 build/lib/autoradio/jingles/models.py:86
+#: autoradio/jingles/models.py:93 build/lib/autoradio/jingles/models.py:93
 msgid "Emission end time"
 msgstr "Ora finale emissione"
 
-#: autoradio/jingles/models.py:95 build/lib/autoradio/jingles/models.py:88
+#: autoradio/jingles/models.py:95 build/lib/autoradio/jingles/models.py:95
 msgid "Scheduled days"
 msgstr "Giorni programmati"
 
-#: autoradio/jingles/models.py:96
+#: autoradio/jingles/models.py:96 build/lib/autoradio/jingles/models.py:96
 msgid "The jingle will be scheduled those weekdays"
 msgstr "Il jingle sarà programmato per questi giorni"
 
 #: autoradio/jingles/models.py:97 autoradio/spots/models.py:178
-#: build/lib/autoradio/jingles/models.py:90
-#: build/lib/autoradio/spots/models.py:163
+#: build/lib/autoradio/jingles/models.py:97
+#: build/lib/autoradio/spots/models.py:178
 msgid "Priority"
 msgstr "Priorità"
 
-#: autoradio/jingles/models.py:98
+#: autoradio/jingles/models.py:98 build/lib/autoradio/jingles/models.py:98
 msgid ""
 "When there are more jingle that wait for emission from the same time, the "
 "emission will be ordered by this numer"
-msgstr "Quando ci sono jingle che attendono di essere emessi dallo stesso tempo, l'ordine di emissione è determinato da questo numero"
+msgstr ""
+"Quando ci sono jingle che attendono di essere emessi dallo stesso tempo, "
+"l'ordine di emissione è determinato da questo numero"
 
-#: autoradio/jingles/models.py:99 autoradio/programs/models.py:737
-#: build/lib/autoradio/jingles/models.py:92
+#: autoradio/jingles/models.py:99 autoradio/programs/models.py:733
+#: build/lib/autoradio/jingles/models.py:99
 #: build/lib/autoradio/programs/models.py:737
 msgid "emission done"
 msgstr "emissione effettuata"
 
-#: autoradio/jingles/models.py:105 autoradio/programs/models.py:614
-#: autoradio/spots/models.py:188 build/lib/autoradio/jingles/models.py:98
+#: autoradio/jingles/models.py:105 autoradio/programs/models.py:610
+#: autoradio/spots/models.py:188 build/lib/autoradio/jingles/models.py:105
 #: build/lib/autoradio/programs/models.py:614
-#: build/lib/autoradio/spots/models.py:171
+#: build/lib/autoradio/spots/models.py:188
 msgid "Recorded today?"
 msgstr "Registrato oggi?"
 
@@ -146,7 +154,7 @@ msgstr "attivazione/disattivazione dell'intera classe playlist"
 #: build/lib/autoradio/playlists/models.py:66
 #: build/lib/autoradio/playlists/models.py:68
 #: build/lib/autoradio/programs/models.py:264
-#: build/lib/autoradio/spots/models.py:101
+#: build/lib/autoradio/spots/models.py:103
 msgid "Programmed start time"
 msgstr "Ora inizio programmazione"
 
@@ -215,7 +223,7 @@ msgstr "Durata massima (secondi)"
 msgid "If this time is set the playlist will be truncated"
 msgstr "Se questo tempo sarà impostato la playlist sarà troncata"
 
-#: autoradio/playlists/models.py:109 autoradio/programs/models.py:774
+#: autoradio/playlists/models.py:109 autoradio/programs/models.py:770
 #: build/lib/autoradio/playlists/models.py:109
 #: build/lib/autoradio/programs/models.py:774
 msgid "Programmed date"
@@ -229,11 +237,11 @@ msgstr "Questa è la data e l'ora alle quali la playlist sarà mandata in onda"
 #: autoradio/playlists/models.py:118 autoradio/playlists/models.py:157
 #: autoradio/spots/models.py:124 build/lib/autoradio/playlists/models.py:118
 #: build/lib/autoradio/playlists/models.py:157
-#: build/lib/autoradio/spots/models.py:117
+#: build/lib/autoradio/spots/models.py:124
 msgid "Emission done"
 msgstr "Emissione effettuata"
 
-#: autoradio/playlists/models.py:128 autoradio/programs/models.py:780
+#: autoradio/playlists/models.py:128 autoradio/programs/models.py:776
 #: build/lib/autoradio/playlists/models.py:128
 #: build/lib/autoradio/programs/models.py:780
 msgid "Programmed for today?"
@@ -245,7 +253,7 @@ msgstr "Programmato per oggi?"
 msgid "Linked Playlist"
 msgstr "Playlist correlata"
 
-#: autoradio/playlists/models.py:149 autoradio/programs/models.py:753
+#: autoradio/playlists/models.py:149 autoradio/programs/models.py:749
 #: build/lib/autoradio/playlists/models.py:149
 #: build/lib/autoradio/programs/models.py:753
 msgid "Programmed start date"
@@ -256,7 +264,7 @@ msgstr "Data inizio programmazione"
 msgid "The playlist will be scheduled starting from this date"
 msgstr "La playlist potrrà essere programmata a partire da questa data e ora"
 
-#: autoradio/playlists/models.py:151 autoradio/programs/models.py:755
+#: autoradio/playlists/models.py:151 autoradio/programs/models.py:751
 #: build/lib/autoradio/playlists/models.py:151
 #: build/lib/autoradio/programs/models.py:755
 msgid "Programmed end date"
@@ -267,7 +275,7 @@ msgstr "Data fine programmazione"
 msgid "The playlist will be scheduled ending this date"
 msgstr "La playlist sarà programmata fino a questa data"
 
-#: autoradio/playlists/models.py:153 autoradio/programs/models.py:757
+#: autoradio/playlists/models.py:153 autoradio/programs/models.py:753
 #: build/lib/autoradio/playlists/models.py:153
 #: build/lib/autoradio/programs/models.py:757
 msgid "Programmed time"
@@ -278,10 +286,10 @@ msgstr "Ora programmata"
 msgid "This is the time when the playlist will be on air"
 msgstr "Questa è l'ora alle quali la playlist sarà mandata in onda"
 
-#: autoradio/playlists/models.py:155 autoradio/programs/models.py:759
+#: autoradio/playlists/models.py:155 autoradio/programs/models.py:755
 #: autoradio/spots/models.py:173 build/lib/autoradio/playlists/models.py:155
 #: build/lib/autoradio/programs/models.py:759
-#: build/lib/autoradio/spots/models.py:161
+#: build/lib/autoradio/spots/models.py:173
 msgid "Programmed days"
 msgstr "Giorni programmati"
 
@@ -328,101 +336,117 @@ msgstr "Show attivo"
 msgid "activate/deactivate the intere program class"
 msgstr "attivazione/disattivazione dell'intera classe programmi"
 
-#: autoradio/programs/models.py:265 build/lib/autoradio/programs/models.py:265
-msgid "The start time from wich the program will be active"
-msgstr "ora da cui il programma sarà attivo"
+#: autoradio/programs/models.py:265
+msgid "The start time from wich the programs will be active"
+msgstr "ora da cui i programmi saranno attivi"
 
 #: autoradio/programs/models.py:266 autoradio/spots/models.py:105
 #: build/lib/autoradio/programs/models.py:266
-#: build/lib/autoradio/spots/models.py:102
+#: build/lib/autoradio/spots/models.py:105
 msgid "Programmed end time"
 msgstr "Ora fine programmazione"
 
-#: autoradio/programs/models.py:267 build/lib/autoradio/programs/models.py:267
-msgid "The end time the program will be active"
-msgstr "ora a cui il programma sarà disattivato"
+#: autoradio/programs/models.py:267
+msgid "The end time the programs will be active"
+msgstr "ora a cui i programmi saranno disattivati"
 
-#: autoradio/programs/models.py:291 build/lib/autoradio/programs/models.py:291
+#: autoradio/programs/models.py:271
+msgid "The station name for the print of programs book"
+msgstr "Il nome della emittente per la stampa del libro programmi"
+
+#: autoradio/programs/models.py:273
+msgid "The station channel for the print of programs book"
+msgstr "Il canale della emittente per la stampa del libro programmi"
+
+#: autoradio/programs/models.py:275
+msgid "The station kind of emission for the print of programs book"
+msgstr "Il tipo di emittente per la stampa del libro programmi"
+
+#: autoradio/programs/models.py:277
+msgid "The station type for the print of programs book"
+msgstr "Il tipo della emittente per la stampa del libro programmi"
+
+#: autoradio/programs/models.py:287 build/lib/autoradio/programs/models.py:291
 msgid "Code"
 msgstr "Codice"
 
-#: autoradio/programs/models.py:292 build/lib/autoradio/programs/models.py:292
+#: autoradio/programs/models.py:288 build/lib/autoradio/programs/models.py:292
 #: templates/schedule/index.html:15
 msgid "Type"
 msgstr "Tipo"
 
-#: autoradio/programs/models.py:293 build/lib/autoradio/programs/models.py:293
+#: autoradio/programs/models.py:289 build/lib/autoradio/programs/models.py:293
 msgid "SubType"
 msgstr "Sotto Tipo"
 
-#: autoradio/programs/models.py:294 build/lib/autoradio/programs/models.py:294
+#: autoradio/programs/models.py:290 build/lib/autoradio/programs/models.py:294
 msgid "Description"
 msgstr "Descrizione"
 
-#: autoradio/programs/models.py:300 build/lib/autoradio/programs/models.py:300
+#: autoradio/programs/models.py:296 build/lib/autoradio/programs/models.py:300
 msgid "autoproduction"
 msgstr "autoproduzione"
 
-#: autoradio/programs/models.py:300 build/lib/autoradio/programs/models.py:300
+#: autoradio/programs/models.py:296 build/lib/autoradio/programs/models.py:300
 msgid "eteroproduction"
 msgstr "eteroproduzione"
 
-#: autoradio/programs/models.py:307 build/lib/autoradio/programs/models.py:307
+#: autoradio/programs/models.py:303 build/lib/autoradio/programs/models.py:307
 msgid "show title"
 msgstr "Titolo dello show"
 
-#: autoradio/programs/models.py:308 build/lib/autoradio/programs/models.py:308
+#: autoradio/programs/models.py:304 build/lib/autoradio/programs/models.py:308
 msgid "Activate the show for emission"
 msgstr "Attiva lo show per la messa in onda"
 
-#: autoradio/programs/models.py:309 autoradio/programs/models.py:550
+#: autoradio/programs/models.py:305 autoradio/programs/models.py:546
 #: build/lib/autoradio/programs/models.py:309
 #: build/lib/autoradio/programs/models.py:550
 msgid "Auto-generated from Title."
 msgstr "auto generato dal titolo"
 
-#: autoradio/programs/models.py:310 build/lib/autoradio/programs/models.py:310
+#: autoradio/programs/models.py:306 build/lib/autoradio/programs/models.py:310
 msgid "Time length (seconds)"
 msgstr "Durata (secondi)"
 
-#: autoradio/programs/models.py:310 build/lib/autoradio/programs/models.py:310
+#: autoradio/programs/models.py:306 build/lib/autoradio/programs/models.py:310
 msgid "Time lenght how you want to see it in the palimpsest"
 msgstr "Durata dello show come dovrà comparire nel palinsesto"
 
-#: autoradio/programs/models.py:311 build/lib/autoradio/programs/models.py:311
+#: autoradio/programs/models.py:307 build/lib/autoradio/programs/models.py:311
 msgid "Program Type"
 msgstr "Tipo del programma"
 
-#: autoradio/programs/models.py:311 build/lib/autoradio/programs/models.py:311
+#: autoradio/programs/models.py:307 build/lib/autoradio/programs/models.py:311
 msgid ""
 "The categorization that follow the italian law (you have to use it to "
 "produce the programs book"
 msgstr "La categorizzazione dettata dalla legislazione italiana"
 
-#: autoradio/programs/models.py:313 build/lib/autoradio/programs/models.py:313
+#: autoradio/programs/models.py:309 build/lib/autoradio/programs/models.py:313
 msgid "Production"
 msgstr "Produttore"
 
-#: autoradio/programs/models.py:313 build/lib/autoradio/programs/models.py:313
+#: autoradio/programs/models.py:309 build/lib/autoradio/programs/models.py:313
 msgid "The type of production"
 msgstr "Il tipo di produzione"
 
-#: autoradio/programs/models.py:330 build/lib/autoradio/programs/models.py:330
+#: autoradio/programs/models.py:326 build/lib/autoradio/programs/models.py:330
 msgid "Name of the organization, company or Web site producing the podcast."
 msgstr ""
 
-#: autoradio/programs/models.py:331 build/lib/autoradio/programs/models.py:331
+#: autoradio/programs/models.py:327 build/lib/autoradio/programs/models.py:331
 msgid ""
 "URL of either the main website or the podcast section of the main website."
 msgstr ""
 
-#: autoradio/programs/models.py:332 build/lib/autoradio/programs/models.py:332
+#: autoradio/programs/models.py:328 build/lib/autoradio/programs/models.py:332
 msgid ""
 "Describe subject matter, media format, episode schedule and other relevant "
 "information while incorporating keywords."
 msgstr ""
 
-#: autoradio/programs/models.py:333 build/lib/autoradio/programs/models.py:333
+#: autoradio/programs/models.py:329 build/lib/autoradio/programs/models.py:333
 msgid ""
 "Default is American English. See <a href=\"http://en.wikipedia.org/wiki/"
 "List_of_ISO_639-1_codes\">ISO 639-1</a> and <a href=\"http://en.wikipedia."
@@ -430,25 +454,25 @@ msgid ""
 "a> for more language codes."
 msgstr ""
 
-#: autoradio/programs/models.py:334 build/lib/autoradio/programs/models.py:334
+#: autoradio/programs/models.py:330 build/lib/autoradio/programs/models.py:334
 msgid ""
 "See <a href=\"http://creativecommons.org/about/license/\">Creative Commons "
 "licenses</a> for more information."
 msgstr ""
 
-#: autoradio/programs/models.py:335 build/lib/autoradio/programs/models.py:335
+#: autoradio/programs/models.py:331 build/lib/autoradio/programs/models.py:335
 msgid ""
 "A URL pointing to additional copyright information. Consider a <a href="
 "\"http://creativecommons.org/licenses/\">Creative Commons license URL</a>."
 msgstr ""
 
-#: autoradio/programs/models.py:336 build/lib/autoradio/programs/models.py:336
+#: autoradio/programs/models.py:332 build/lib/autoradio/programs/models.py:336
 msgid ""
 "Remember to save the user's name and e-mail address in the <a href="
 "\"../../../auth/user/\">User application</a>.<br />"
 msgstr ""
 
-#: autoradio/programs/models.py:337 autoradio/programs/models.py:551
+#: autoradio/programs/models.py:333 autoradio/programs/models.py:547
 #: build/lib/autoradio/programs/models.py:337
 #: build/lib/autoradio/programs/models.py:551
 msgid ""
@@ -456,48 +480,48 @@ msgid ""
 "\"../../../auth/user/\">User application</a>."
 msgstr ""
 
-#: autoradio/programs/models.py:338 autoradio/programs/models.py:555
+#: autoradio/programs/models.py:334 autoradio/programs/models.py:551
 #: build/lib/autoradio/programs/models.py:338
 #: build/lib/autoradio/programs/models.py:555
 msgid "Limited to one user-specified category for the sake of sanity."
 msgstr ""
 
-#: autoradio/programs/models.py:339 autoradio/programs/models.py:556
+#: autoradio/programs/models.py:335 autoradio/programs/models.py:552
 #: build/lib/autoradio/programs/models.py:339
 #: build/lib/autoradio/programs/models.py:556
 msgid "A URL that identifies a categorization taxonomy."
 msgstr ""
 
-#: autoradio/programs/models.py:340 build/lib/autoradio/programs/models.py:340
+#: autoradio/programs/models.py:336 build/lib/autoradio/programs/models.py:340
 msgid ""
 "\"Time to Live,\" the number of minutes a channel can be cached before "
 "refreshing."
 msgstr ""
 
-#: autoradio/programs/models.py:341 build/lib/autoradio/programs/models.py:341
+#: autoradio/programs/models.py:337 build/lib/autoradio/programs/models.py:341
 msgid ""
 "An attractive, original square JPEG (.jpg) or PNG (.png) image of 600x600 "
 "pixels. Image will be scaled down to 50x50 pixels at smallest in iTunes."
 msgstr ""
 
-#: autoradio/programs/models.py:342 build/lib/autoradio/programs/models.py:342
+#: autoradio/programs/models.py:338 build/lib/autoradio/programs/models.py:342
 msgid ""
 "Fill this out after saving this show and at least one episode. URL should "
 "look like \"http://feeds.feedburner.com/TitleOfShow\". See <a href=\"http://"
 "code.google.com/p/django-podcast/\">documentation</a> for more."
 msgstr ""
 
-#: autoradio/programs/models.py:344 build/lib/autoradio/programs/models.py:344
+#: autoradio/programs/models.py:340 build/lib/autoradio/programs/models.py:344
 msgid "Looks best if only a few words, like a tagline."
 msgstr ""
 
-#: autoradio/programs/models.py:345 autoradio/programs/models.py:563
+#: autoradio/programs/models.py:341 autoradio/programs/models.py:559
 #: build/lib/autoradio/programs/models.py:345
 #: build/lib/autoradio/programs/models.py:563
 msgid "Allows 4,000 characters. Description will be used if summary is blank."
 msgstr ""
 
-#: autoradio/programs/models.py:346 build/lib/autoradio/programs/models.py:346
+#: autoradio/programs/models.py:342 build/lib/autoradio/programs/models.py:346
 msgid ""
 "If selecting a category group with no child category (e.g., Comedy, Kids & "
 "Family, Music, News & Politics or TV & Film), save that parent category with "
@@ -506,32 +530,32 @@ msgid ""
 "<br />"
 msgstr ""
 
-#: autoradio/programs/models.py:347 autoradio/programs/models.py:567
+#: autoradio/programs/models.py:343 autoradio/programs/models.py:563
 #: build/lib/autoradio/programs/models.py:347
 #: build/lib/autoradio/programs/models.py:567
 msgid "\"Clean\" will put the clean iTunes graphic by it."
 msgstr ""
 
-#: autoradio/programs/models.py:348 build/lib/autoradio/programs/models.py:348
+#: autoradio/programs/models.py:344 build/lib/autoradio/programs/models.py:348
 msgid ""
 "Check to block this show from iTunes. <br />Show will remain blocked until "
 "unchecked."
 msgstr ""
 
-#: autoradio/programs/models.py:349 build/lib/autoradio/programs/models.py:349
+#: autoradio/programs/models.py:345 build/lib/autoradio/programs/models.py:349
 msgid ""
 "The show's new URL feed if changing the URL of the current show feed. Must "
 "continue old feed for at least two weeks and write a 301 redirect for old "
 "feed."
 msgstr ""
 
-#: autoradio/programs/models.py:350 build/lib/autoradio/programs/models.py:350
+#: autoradio/programs/models.py:346 build/lib/autoradio/programs/models.py:350
 msgid ""
 "A comma-demlimited list of up to 12 words for iTunes searches. Perhaps "
 "include misspellings of the title."
 msgstr ""
 
-#: autoradio/programs/models.py:351 build/lib/autoradio/programs/models.py:351
+#: autoradio/programs/models.py:347 build/lib/autoradio/programs/models.py:351
 msgid ""
 "Fill this out after saving this show and at least one episode. URL should "
 "look like \"http://phobos.apple.com/WebObjects/MZStore.woa/wa/viewPodcast?"
@@ -539,17 +563,17 @@ msgid ""
 "\">documentation</a> for more."
 msgstr ""
 
-#: autoradio/programs/models.py:545 build/lib/autoradio/programs/models.py:545
+#: autoradio/programs/models.py:541 build/lib/autoradio/programs/models.py:545
 msgid ""
 "Make it specific but avoid explicit language. Limit to 100 characters for a "
 "Google video sitemap."
 msgstr ""
 
-#: autoradio/programs/models.py:553 build/lib/autoradio/programs/models.py:553
+#: autoradio/programs/models.py:549 build/lib/autoradio/programs/models.py:553
 msgid "Avoid explicit language. Google video sitempas allow 2,048 characters."
 msgstr ""
 
-#: autoradio/programs/models.py:554 build/lib/autoradio/programs/models.py:554
+#: autoradio/programs/models.py:550 build/lib/autoradio/programs/models.py:554
 msgid ""
 "For video podcasts. Good captioning choices include <a href=\"http://en."
 "wikipedia.org/wiki/SubViewer\">SubViewer</a>, <a href=\"http://en.wikipedia."
@@ -557,43 +581,43 @@ msgid ""
 "\">TimedText</a>."
 msgstr ""
 
-#: autoradio/programs/models.py:557 build/lib/autoradio/programs/models.py:557
+#: autoradio/programs/models.py:553 build/lib/autoradio/programs/models.py:557
 msgid "The frequency with which the episode's data changes. For sitemaps."
 msgstr ""
 
-#: autoradio/programs/models.py:558 build/lib/autoradio/programs/models.py:558
+#: autoradio/programs/models.py:554 build/lib/autoradio/programs/models.py:558
 msgid ""
 "The relative priority of this episode compared to others. 1.0 is the most "
 "important. For sitemaps."
 msgstr ""
 
-#: autoradio/programs/models.py:562 build/lib/autoradio/programs/models.py:562
+#: autoradio/programs/models.py:558 build/lib/autoradio/programs/models.py:562
 msgid "Looks best if only a few words like a tagline."
 msgstr ""
 
-#: autoradio/programs/models.py:566 build/lib/autoradio/programs/models.py:566
+#: autoradio/programs/models.py:562 build/lib/autoradio/programs/models.py:566
 msgid ""
 "A comma-delimited list of words for searches, up to 12; perhaps include "
 "misspellings."
 msgstr ""
 
-#: autoradio/programs/models.py:568 build/lib/autoradio/programs/models.py:568
+#: autoradio/programs/models.py:564 build/lib/autoradio/programs/models.py:568
 msgid ""
 "Check to block this episode from iTunes because <br />its content might "
 "cause the entire show to be <br />removed from iTunes."
 msgstr ""
 
-#: autoradio/programs/models.py:570 build/lib/autoradio/programs/models.py:570
+#: autoradio/programs/models.py:566 build/lib/autoradio/programs/models.py:570
 msgid ""
 "Role codes provided by the <a href=\"http://www.ebu.ch/en/technical/metadata/"
 "specifications/role_codes.php\">European Broadcasting Union</a>."
 msgstr ""
 
-#: autoradio/programs/models.py:573 build/lib/autoradio/programs/models.py:573
+#: autoradio/programs/models.py:569 build/lib/autoradio/programs/models.py:573
 msgid "If used, selection must match respective Scheme selection."
 msgstr ""
 
-#: autoradio/programs/models.py:574 build/lib/autoradio/programs/models.py:574
+#: autoradio/programs/models.py:570 build/lib/autoradio/programs/models.py:574
 msgid ""
 "A still image from a video file, but for episode artwork to display in "
 "iTunes, image must be <a href=\"http://answers.yahoo.com/question/index?"
@@ -601,97 +625,97 @@ msgid ""
 "before episode uploading!"
 msgstr ""
 
-#: autoradio/programs/models.py:575 build/lib/autoradio/programs/models.py:575
+#: autoradio/programs/models.py:571 build/lib/autoradio/programs/models.py:575
 msgid ""
 "Media RSS text transcript. Must use <media:text> tags. Please see the <a "
 "href=\"https://www.google.com/webmasters/tools/video/en/video."
 "html#tagMediaText\">Media RSS 2.0</a> specification for syntax."
 msgstr ""
 
-#: autoradio/programs/models.py:576 build/lib/autoradio/programs/models.py:576
+#: autoradio/programs/models.py:572 build/lib/autoradio/programs/models.py:576
 msgid "Check to deny episode to be shown to users from specified countries."
 msgstr ""
 
-#: autoradio/programs/models.py:577 build/lib/autoradio/programs/models.py:577
+#: autoradio/programs/models.py:573 build/lib/autoradio/programs/models.py:577
 msgid ""
 "A space-delimited list of <a href=\"http://en.wikipedia.org/wiki/ISO_3166-"
 "1_alpha-2#Officially_assigned_code_elements\">ISO 3166-1-coded countries</a>."
 msgstr ""
 
-#: autoradio/programs/models.py:579 build/lib/autoradio/programs/models.py:579
+#: autoradio/programs/models.py:575 build/lib/autoradio/programs/models.py:579
 msgid "Start date and time that the media is valid."
 msgstr ""
 
-#: autoradio/programs/models.py:580 build/lib/autoradio/programs/models.py:580
+#: autoradio/programs/models.py:576 build/lib/autoradio/programs/models.py:580
 msgid "End date and time that the media is valid."
 msgstr ""
 
-#: autoradio/programs/models.py:582 build/lib/autoradio/programs/models.py:582
+#: autoradio/programs/models.py:578 build/lib/autoradio/programs/models.py:582
 msgid "Any helper name to distinguish this time period."
 msgstr ""
 
-#: autoradio/programs/models.py:584 build/lib/autoradio/programs/models.py:584
+#: autoradio/programs/models.py:580 build/lib/autoradio/programs/models.py:584
 msgid ""
 "Check to allow Google to show a preview of your media in search results."
 msgstr ""
 
-#: autoradio/programs/models.py:585 build/lib/autoradio/programs/models.py:585
+#: autoradio/programs/models.py:581 build/lib/autoradio/programs/models.py:585
 msgid ""
 "Start time (minutes) of the media's preview, <br />shown on Google.com "
 "search results before <br />clicking through to see full video."
 msgstr ""
 
-#: autoradio/programs/models.py:586 build/lib/autoradio/programs/models.py:586
+#: autoradio/programs/models.py:582 build/lib/autoradio/programs/models.py:586
 msgid "Start time (seconds) of the media's preview."
 msgstr ""
 
-#: autoradio/programs/models.py:587 build/lib/autoradio/programs/models.py:587
+#: autoradio/programs/models.py:583 build/lib/autoradio/programs/models.py:587
 msgid ""
 "End time (minutes) of the media's preview, <br />shown on Google.com search "
 "results before <br />clicking through to see full video."
 msgstr ""
 
-#: autoradio/programs/models.py:588 build/lib/autoradio/programs/models.py:588
+#: autoradio/programs/models.py:584 build/lib/autoradio/programs/models.py:588
 msgid "End time (seconds) of the media's preview."
 msgstr ""
 
-#: autoradio/programs/models.py:589 build/lib/autoradio/programs/models.py:589
+#: autoradio/programs/models.py:585 build/lib/autoradio/programs/models.py:589
 msgid ""
 "Check to allow Google to host your media after it expires. Must set "
 "expiration date in Dublin Core."
 msgstr ""
 
-#: autoradio/programs/models.py:675 build/lib/autoradio/programs/models.py:675
+#: autoradio/programs/models.py:671 build/lib/autoradio/programs/models.py:675
 msgid "Title is generally only useful with multiple enclosures."
 msgstr ""
 
-#: autoradio/programs/models.py:676 build/lib/autoradio/programs/models.py:676
+#: autoradio/programs/models.py:672 build/lib/autoradio/programs/models.py:676
 msgid ""
 "Either upload or use the \"Player\" text box below. If uploading, file must "
 "be less than or equal to 30 MB for a Google video sitemap."
 msgstr ""
 
-#: autoradio/programs/models.py:680 build/lib/autoradio/programs/models.py:680
+#: autoradio/programs/models.py:676 build/lib/autoradio/programs/models.py:680
 msgid "Measured in frames per second (fps), often 29.97."
 msgstr ""
 
-#: autoradio/programs/models.py:681 build/lib/autoradio/programs/models.py:681
+#: autoradio/programs/models.py:677 build/lib/autoradio/programs/models.py:681
 msgid "Measured in kilobits per second (kbps), often 128 or 192."
 msgstr ""
 
-#: autoradio/programs/models.py:682 build/lib/autoradio/programs/models.py:682
+#: autoradio/programs/models.py:678 build/lib/autoradio/programs/models.py:682
 msgid "Measured in kilohertz (kHz), often 44.1."
 msgstr ""
 
-#: autoradio/programs/models.py:683 build/lib/autoradio/programs/models.py:683
+#: autoradio/programs/models.py:679 build/lib/autoradio/programs/models.py:683
 msgid "Number of channels; 2 for stereo, 1 for mono."
 msgstr ""
 
-#: autoradio/programs/models.py:685 build/lib/autoradio/programs/models.py:685
+#: autoradio/programs/models.py:681 build/lib/autoradio/programs/models.py:685
 msgid "MD-5 or SHA-1 file hash."
 msgstr ""
 
-#: autoradio/programs/models.py:686 build/lib/autoradio/programs/models.py:686
+#: autoradio/programs/models.py:682 build/lib/autoradio/programs/models.py:686
 msgid ""
 "URL of the player console that plays the media. Could be your own .swf, but "
 "most likely a YouTube URL, such as <a href=\"http://www.youtube.com/v/"
@@ -700,25 +724,25 @@ msgid ""
 "\">http://www.youtube.com/watch?v=UZCfK8pVztw</a>)."
 msgstr ""
 
-#: autoradio/programs/models.py:687 build/lib/autoradio/programs/models.py:687
+#: autoradio/programs/models.py:683 build/lib/autoradio/programs/models.py:687
 msgid ""
 "Check to allow Google to embed your external player in search results on <a "
 "href=\"http://video.google.com\">Google Video</a>."
 msgstr ""
 
-#: autoradio/programs/models.py:688 build/lib/autoradio/programs/models.py:688
+#: autoradio/programs/models.py:684 build/lib/autoradio/programs/models.py:688
 msgid ""
 "Width of the browser window in <br />which the URL should be opened. <br /"
 ">YouTube's default is 425."
 msgstr ""
 
-#: autoradio/programs/models.py:689 build/lib/autoradio/programs/models.py:689
+#: autoradio/programs/models.py:685 build/lib/autoradio/programs/models.py:689
 msgid ""
 "Height of the browser window in <br />which the URL should be opened. <br /"
 ">YouTube's default is 344."
 msgstr ""
 
-#: autoradio/programs/models.py:690 build/lib/autoradio/programs/models.py:690
+#: autoradio/programs/models.py:686 build/lib/autoradio/programs/models.py:690
 msgid ""
 "Include any number of media files; for example, perhaps include an iPhone-"
 "optimized, AppleTV-optimized and Flash Video set of video files. Note that "
@@ -726,57 +750,57 @@ msgid ""
 "after clicking \"Save and continue editing.\""
 msgstr ""
 
-#: autoradio/programs/models.py:705 autoradio/programs/models.py:722
+#: autoradio/programs/models.py:701 autoradio/programs/models.py:718
 #: build/lib/autoradio/programs/models.py:705
 #: build/lib/autoradio/programs/models.py:722
 msgid "Linked episode:"
 msgstr "Programma correlato"
 
-#: autoradio/programs/models.py:707 build/lib/autoradio/programs/models.py:707
+#: autoradio/programs/models.py:703 build/lib/autoradio/programs/models.py:707
 msgid "programmed date"
 msgstr "data programmata"
 
-#: autoradio/programs/models.py:708 build/lib/autoradio/programs/models.py:708
+#: autoradio/programs/models.py:704 build/lib/autoradio/programs/models.py:708
 msgid "This is the date and time when the program will be on air"
 msgstr "Questa è la data e l'ora alle quali il programma sarà mandato in onda"
 
-#: autoradio/programs/models.py:718 build/lib/autoradio/programs/models.py:718
+#: autoradio/programs/models.py:714 build/lib/autoradio/programs/models.py:718
 msgid "Scheduled for today?"
 msgstr "Programmato per oggi?"
 
-#: autoradio/programs/models.py:732 build/lib/autoradio/programs/models.py:732
+#: autoradio/programs/models.py:728 build/lib/autoradio/programs/models.py:732
 msgid "Linked schedule:"
 msgstr "Programmazione collegata"
 
-#: autoradio/programs/models.py:735 build/lib/autoradio/programs/models.py:735
+#: autoradio/programs/models.py:731 build/lib/autoradio/programs/models.py:735
 msgid "Linked enclosure:"
 msgstr "Parti correlate"
 
-#: autoradio/programs/models.py:751 build/lib/autoradio/programs/models.py:751
+#: autoradio/programs/models.py:747 build/lib/autoradio/programs/models.py:751
 msgid "refer to show:"
 msgstr "riferito allo show"
 
-#: autoradio/programs/models.py:754 build/lib/autoradio/programs/models.py:754
+#: autoradio/programs/models.py:750 build/lib/autoradio/programs/models.py:754
 msgid "The program will be in palimpsest starting from this date"
 msgstr "Lo show sarà in palinsesto a partire da questa data e ora"
 
-#: autoradio/programs/models.py:756 build/lib/autoradio/programs/models.py:756
+#: autoradio/programs/models.py:752 build/lib/autoradio/programs/models.py:756
 msgid "The program will be in palimpsest ending this date"
 msgstr "Lo show sarà in palinseto fino a questa data"
 
-#: autoradio/programs/models.py:758 build/lib/autoradio/programs/models.py:758
+#: autoradio/programs/models.py:754 build/lib/autoradio/programs/models.py:758
 msgid "This is the time when the program is planned in palimpsest"
 msgstr "Questa è l'ora alla quale lo show è previsto in palinsesto"
 
-#: autoradio/programs/models.py:760 build/lib/autoradio/programs/models.py:760
+#: autoradio/programs/models.py:756 build/lib/autoradio/programs/models.py:760
 msgid "The program will be in palimpsest those weekdays"
 msgstr "Lo show sarà in palinsesto per questi giorni"
 
-#: autoradio/programs/models.py:772 build/lib/autoradio/programs/models.py:772
+#: autoradio/programs/models.py:768 build/lib/autoradio/programs/models.py:772
 msgid "refer to Show:"
 msgstr "riferito allo Show"
 
-#: autoradio/programs/models.py:775 build/lib/autoradio/programs/models.py:775
+#: autoradio/programs/models.py:771 build/lib/autoradio/programs/models.py:775
 msgid "This is the date and time when the program is planned in palimsest"
 msgstr "Questa è la data e l'ora alle quali lo show è previsto in palinsesto"
 
@@ -796,102 +820,117 @@ msgstr "Data e ora finale"
 msgid "Elaborate palimpsest ending to this date and time"
 msgstr "Elabor ail palinsesto terminando questa data e ora"
 
-#: autoradio/spots/models.py:101 build/lib/autoradio/spots/models.py:100
+#: autoradio/spots/models.py:101 build/lib/autoradio/spots/models.py:101
 msgid "Activate Spot"
 msgstr "Attivare Spot"
 
-#: autoradio/spots/models.py:102
+#: autoradio/spots/models.py:102 build/lib/autoradio/spots/models.py:102
 msgid "activate/deactivate the intere spot class"
 msgstr "attivazione/disattivazione dell'intera classe spot"
 
-#: autoradio/spots/models.py:104
+#: autoradio/spots/models.py:104 build/lib/autoradio/spots/models.py:104
 msgid "The start time from wich the spot will be active"
 msgstr "ora da cui lo spot sarà attivo"
 
-#: autoradio/spots/models.py:106
+#: autoradio/spots/models.py:106 build/lib/autoradio/spots/models.py:106
 msgid "The end time the spot will be active"
 msgstr "ora a cui lo spot sarà disattivato"
 
-#: autoradio/spots/models.py:119
+#: autoradio/spots/models.py:119 build/lib/autoradio/spots/models.py:119
 msgid "The name of commercial break"
 msgstr "Nome della fascia pubblicitaria"
 
-#: autoradio/spots/models.py:121
+#: autoradio/spots/models.py:121 build/lib/autoradio/spots/models.py:121
 msgid "This is the date and time when the commercial break will be on air"
-msgstr "Questa è la data e l'ora alle quali la fascia pubblitaria sarà mandata in onda"
+msgstr ""
+"Questa è la data e l'ora alle quali la fascia pubblitaria sarà mandata in "
+"onda"
 
-#: autoradio/spots/models.py:123
+#: autoradio/spots/models.py:123 build/lib/autoradio/spots/models.py:123
 msgid "Activate the commercial break for emission"
 msgstr "Attiva la fascia pubblicitaria per la messa in onda"
 
-#: autoradio/spots/models.py:158 build/lib/autoradio/spots/models.py:151
+#: autoradio/spots/models.py:158 build/lib/autoradio/spots/models.py:158
 msgid "Spot Name"
 msgstr "Nome Spot"
 
-#: autoradio/spots/models.py:159
+#: autoradio/spots/models.py:159 build/lib/autoradio/spots/models.py:159
 msgid "The name of the spot"
 msgstr "Il nome dello spot"
 
-#: autoradio/spots/models.py:161
+#: autoradio/spots/models.py:161 build/lib/autoradio/spots/models.py:161
 msgid "The spot file to upload"
 msgstr "Il file con lo spot da caricare"
 
-#: autoradio/spots/models.py:162 build/lib/autoradio/spots/models.py:153
+#: autoradio/spots/models.py:162 build/lib/autoradio/spots/models.py:162
 msgid "Record date"
 msgstr "Data registrazione"
 
-#: autoradio/spots/models.py:163
+#: autoradio/spots/models.py:163 build/lib/autoradio/spots/models.py:163
 msgid "When the spot was done (for reference only)"
 msgstr "Quando lo spot è stato fatto (solo per riferimento)"
 
-#: autoradio/spots/models.py:165
+#: autoradio/spots/models.py:165 build/lib/autoradio/spots/models.py:165
 msgid "Activate the spot for emission"
 msgstr "Attiva lo spot per la messa in onda"
 
-#: autoradio/spots/models.py:166 build/lib/autoradio/spots/models.py:156
+#: autoradio/spots/models.py:166 build/lib/autoradio/spots/models.py:166
 msgid "Programmed starting date"
 msgstr "Data inizio programmazione"
 
-#: autoradio/spots/models.py:167
+#: autoradio/spots/models.py:167 build/lib/autoradio/spots/models.py:167
 msgid "The spot will be scheduled starting from this date"
 msgstr "Lo spot potrrà essere programmato a partire da questa data e ora"
 
-#: autoradio/spots/models.py:168 build/lib/autoradio/spots/models.py:157
+#: autoradio/spots/models.py:168 build/lib/autoradio/spots/models.py:168
 msgid "Programmed ending date"
 msgstr "Data fine programmazione"
 
-#: autoradio/spots/models.py:169
+#: autoradio/spots/models.py:169 build/lib/autoradio/spots/models.py:169
 msgid "The spot will be scheduled ending this date"
 msgstr "Lo spot sarà programmato fino a questa data"
 
-#: autoradio/spots/models.py:174
+#: autoradio/spots/models.py:174 build/lib/autoradio/spots/models.py:174
 msgid "The spot will be scheduled those weekdays"
 msgstr "Lo spot sarà programmato per questi giorni"
 
-#: autoradio/spots/models.py:176
+#: autoradio/spots/models.py:176 build/lib/autoradio/spots/models.py:176
 msgid "The spot will be included in those commercial break"
 msgstr "Lo spot sarà incluso in queste fascie pubblicitarie"
 
-#: autoradio/spots/models.py:179
+#: autoradio/spots/models.py:179 build/lib/autoradio/spots/models.py:179
 msgid ""
 "The order of the spots in commercial breaks will be ordered by this numer"
-msgstr "L'ordine di emissione dello spot all'interno della fascia pubblicitaria è determinato da questo numero"
+msgstr ""
+"L'ordine di emissione dello spot all'interno della fascia pubblicitaria è "
+"determinato da questo numero"
 
-#: autoradio/spots/models.py:180 build/lib/autoradio/spots/models.py:164
+#: autoradio/spots/models.py:180 build/lib/autoradio/spots/models.py:180
 msgid "Prologue"
 msgstr "Prologo"
 
-#: autoradio/spots/models.py:181
+#: autoradio/spots/models.py:181 build/lib/autoradio/spots/models.py:181
 msgid "This spot will be the firt in commercial breaks to introduce the others"
-msgstr "Questo sarà il primo spot della fascia pubblicitaria usato come introduzione agli altri"
+msgstr ""
+"Questo sarà il primo spot della fascia pubblicitaria usato come introduzione "
+"agli altri"
 
-#: autoradio/spots/models.py:182 build/lib/autoradio/spots/models.py:165
+#: autoradio/spots/models.py:182 build/lib/autoradio/spots/models.py:182
 msgid "Epilogue"
 msgstr "Epilogo"
 
-#: autoradio/spots/models.py:183
+#: autoradio/spots/models.py:183 build/lib/autoradio/spots/models.py:183
 msgid "This spot will be the last in commercial breaks to leave-taking"
-msgstr "Questo sarà l'ultimo spot della fascia pubblicitaria usato come commiato"
+msgstr ""
+"Questo sarà l'ultimo spot della fascia pubblicitaria usato come commiato"
+
+#: build/lib/autoradio/programs/models.py:265
+msgid "The start time from wich the program will be active"
+msgstr "ora da cui il programma sarà attivo"
+
+#: build/lib/autoradio/programs/models.py:267
+msgid "The end time the program will be active"
+msgstr "ora a cui il programma sarà disattivato"
 
 #: templates/base.html:35
 msgid "Home"
@@ -939,7 +978,7 @@ msgstr "Documentazione"
 
 #: templates/doc/doc.html:6
 msgid "Documentation Home"
-msgstr "Documentazione"
+msgstr "Indice documentazione"
 
 #: templates/doc/doc.html:11
 msgid ""
@@ -1045,13 +1084,17 @@ msgstr ""
 " <li>documentazione disponibile in linea su web</li>\n"
 "</ul>\n"
 
-#: templates/doc/doc.html:59
+#: templates/doc/doc.html:61
 msgid ""
-"\n"
 "\n"
 "Partendo da una playlist è in grado di gestire differenti formati di\n"
 "audio digitali per poi inviare il suono o a una scheda audio o a un\n"
 "server audio.\n"
+"</p>\n"
+msgstr ""
+
+#: templates/doc/doc.html:68
+msgid ""
 "\n"
 "Esistono varie possibilità:\n"
 "<ul>\n"
@@ -1064,49 +1107,73 @@ msgid ""
 "  E' un player “antico” ma molto robusto.\n"
 "  Consigliato solo su vecchie distribuzioni</li>\n"
 "</ul>\n"
-"Questi sono i meccanismi di funzionamento principale:\n"
+msgstr ""
+
+#: templates/doc/doc.html:81
+msgid ""
 "\n"
-"<ul>\n"
-" <li> deve essere sempre presente nel player una playlist di brani\n"
+"Questi sono i meccanismi di funzionamento principale:\n"
+msgstr ""
+
+#: templates/doc/doc.html:86
+msgid ""
+"deve essere sempre presente nel player una playlist di brani\n"
 " musicali ciascuno di durata non superiore a 7/8 minuti; brani piu'\n"
 " lunghi potrebbero comportare ritardi e cattiva gestione\n"
 " dell'emissione automatica. Per mantenere sempre piena la playlist si\n"
 " consiglia di prevedere almeno due volte al giorno il caricamento\n"
-" automatico di una playlist voluminosa.</li>\n"
-"\n"
-" <li> quando una schedula raggiunge il tempo per cui è stata programmata\n"
-" viene inserita nella prima posizione successiva a quella attualmente\n"
-" in play, e successiva anche ad ogni file precedentemente inserito da una\n"
-" precedente schedula.</li>\n"
-"\n"
-" <li> tutto thread save, ossia le funzioni fatte sul player dalle varie\n"
-" schedule saranno sempre consistenti.</li>\n"
-"\n"
-" <li> le operazioni di inserimento e cancellazione dalla playlist vengono\n"
-" fatte solo quando mancano piu' di 10 secondi alla fine del brano per\n"
-" non cadere in situazioni critiche e inconsistenti.</li>\n"
-"\n"
-" <li> la testa della playlist, che se tutto è programmato correttamente\n"
-" tende sempre a crescere, viene tagliata a 10 brani.</li>\n"
-"\n"
-" <li> la coda della playlist che se tutto è programmato correttamente\n"
-" tende sempre a crescere viene tagliata a 500 brani.</li>\n"
-"\n"
-" <li> il player se in stato \"stop\" viene sempre rimesso in stato \"play\"."
-"</li>\n"
-"\n"
-" <li> il player se in stato \"pause\" rimarrà sempre in \"pause\" se non ci\n"
-" sarà un intervento manuale.</li>\n"
-"\n"
-" <li> è possibile visualizzare lo stato del player con interfaccia web.</"
-"li>\n"
-"</ul>\n"
-"\n"
+" automatico di una playlist voluminosa."
 msgstr ""
 
-#: templates/doc/doc.html:115
+#: templates/doc/doc.html:93
 msgid ""
-"\n"
+"quando una schedula raggiunge il tempo per cui è stata programmata\n"
+" viene inserita nella prima posizione successiva a quella attualmente\n"
+" in play, e successiva anche ad ogni file precedentemente inserito da una\n"
+" precedente schedula."
+msgstr ""
+
+#: templates/doc/doc.html:98
+msgid ""
+"tutto thread save, ossia le funzioni fatte sul player dalle varie\n"
+" schedule saranno sempre consistenti."
+msgstr ""
+
+#: templates/doc/doc.html:101
+msgid ""
+"le operazioni di inserimento e cancellazione dalla playlist vengono\n"
+" fatte solo quando mancano piu' di 10 secondi alla fine del brano per\n"
+" non cadere in situazioni critiche e inconsistenti."
+msgstr ""
+
+#: templates/doc/doc.html:105
+msgid ""
+"la testa della playlist, che se tutto è programmato correttamente\n"
+" tende sempre a crescere, viene tagliata a 10 brani."
+msgstr ""
+
+#: templates/doc/doc.html:108
+msgid ""
+"la coda della playlist che se tutto è programmato correttamente\n"
+" tende sempre a crescere viene tagliata a 500 brani."
+msgstr ""
+
+#: templates/doc/doc.html:111
+msgid "il player se in stato \"stop\" viene sempre rimesso in stato \"play\"."
+msgstr ""
+
+#: templates/doc/doc.html:113
+msgid ""
+"il player se in stato \"pause\" rimarrà sempre in \"pause\" se non ci\n"
+" sarà un intervento manuale."
+msgstr ""
+
+#: templates/doc/doc.html:116
+msgid "è possibile visualizzare lo stato del player con interfaccia web."
+msgstr ""
+
+#: templates/doc/doc.html:124
+msgid ""
 "\n"
 "Lo scheduler è un programma che lanciato separatamente comanda\n"
 "all'istante di tempo opportuno il Player per attivare l'emissione\n"
@@ -1117,6 +1184,10 @@ msgid ""
 "risulta come se fosse stata effettivamente messa in onda.Ovviamente se\n"
 "sul player vengono fatte operazioni manuali lo scheduler non ne puo\n"
 "tenere conto.\n"
+msgstr ""
+
+#: templates/doc/doc.html:138
+msgid ""
 "\n"
 "Vengono estratte tutte le schedule in un intervallo di tempo a cavallo\n"
 "tra passato e futuro. Spot e programmi programmati nel passato e non\n"
@@ -1126,109 +1197,306 @@ msgid ""
 "temporale all'inizio o alla fine delle parti del programma. I jingles\n"
 "che cadono durante l'emissione di programmi o publicità vengono\n"
 "eliminati.\n"
+msgstr ""
+
+#: templates/doc/doc.html:151
+msgid ""
 "\n"
 "Lo scheduler provvede anche alla generazione dinamica delle playlist\n"
 "delle fasce pubblicitarie per l'eventuale emissione manuale della\n"
 "pubblicità.  Queste playlist vengono generate poco prima dell'orario\n"
 "programato per l'emissione e si possono trovare nella cartella\n"
 "specificata nel file di configurazione (playlistdir).\n"
-"\n"
 msgstr ""
 
-#: templates/doc/doc.html:146
+#: templates/doc/doc.html:165
 msgid ""
 "\n"
-"\n"
-"\n"
-"\n"
-" * Nome della playlist\n"
-" * File uplodato\n"
-" * Data in cui la playlist è stata composta\n"
-" * Attivazione/disattivazione emissione della singola playlist\n"
-" * schedule:\n"
-"  * Shuffle abilita/disabilita ordinamento casuale dei brani al momento "
-"dell'emissione\n"
-"  * Elenco di eventuali date e orari a cui fare l'emissione\n"
-" * periodic schedule (eventuale programmazione periodica):\n"
-"  * Shuffle abilita/disabilita ordinamento casuale dei brani al momento "
-"dell'emissione\n"
-"  * Data inizio programmazione / Data fine programmazione (possono essere "
-"omesse)\n"
-"  * orario a cui affettuare l'eventuale emissione\n"
-"  * giorni a cui effettuare l'eventuale emissione\n"
-"\n"
-"\n"
-"==== Schedule ====\n"
-"\n"
-"Alla voce schedule è possibile avere l'elenco delle emissioni\n"
-"programmate ed effettuate\n"
-"\n"
-"==== Periodic Schedule ====\n"
-"\n"
-"Alla voce periodic schedule è possibile avere l'elenco delle emissioni "
-"periodiche\n"
-"programmate e ultima emissione\n"
-"\n"
-"\n"
+"Le playlist sono il \"tappeto\" musicale dell'emissione radiofonica.\n"
+"Ogni playlist puo' essere programmata per un istante preciso oppure\n"
+"per una emissione periodica ad iniziare da una una data specifica fino\n"
+"a una data finale per alcuni giorni della settimana specificati.  Le\n"
+"playlist prima di essere caricate vengono controllate e i brani\n"
+"musicali corrotti o mancanti vengono eliminati prima di essere\n"
+"inseriti. E' possibile specificare la durata della playlist che verrà\n"
+"inserita nel player. Una opzione permette di attivare la funzione di\n"
+"mescolamento dell'ordine della sequenza dei brani.\n"
 msgstr ""
 
 #: templates/doc/doc.html:179
 msgid ""
 "\n"
+"Per poter funzionare Autoradio deve sempre avere un discreto numero\n"
+"di brani musicali caricati nella playlist tra i quali inserire le\n"
+"altre programmazioni. Quando una playlist programmata viene mandata in\n"
+"onda essa viene inserita in testa ai brani già presenti nella lista\n"
+"del player.\n"
+msgstr ""
+
+#: templates/doc/doc.html:193
+msgid ""
 "\n"
-"Jingles: vengono emessi ad intervalli di tempo fissi. Per ogni jingle\n"
+"I jingles vengono emessi ad intervalli di tempo fissi. Per ogni jingle\n"
 "è possibile impostare da quale data a quale data effettuare\n"
 "l'emissione, da che ora a che ora effettuare l'emissione e in quali\n"
 "giorni della settimana. E' cosi' facile attivare promo di programmi o\n"
 "altro ad orari specifici.\n"
-"\n"
 msgstr ""
 
-#: templates/doc/doc.html:191
+#: templates/doc/doc.html:203
 msgid ""
 "\n"
-"\n"
-"Spots: è possibile impostare qualsiasi numero di fasce pubblicitarie\n"
-"caratterizzate da un orario di emissione; ogni fascia è attivabile o\n"
-"disattivabile singolarmente. Ogni fascia pubblicitaria ha uno o piu'\n"
-"prologhi che annunciano la pubblicità. Ogni fascia pubblicitaria ha\n"
-"uno o piu' epiloghi che annunciano la fine della pubblicità. Per ogni\n"
-"spot (o prologo o epilogo) è possibile stabilire da quale data a quale\n"
-"data effettuare l'emissione, in quali giorni della settimana e in\n"
-"quale fascia pubblicitaria. Ogni spot ( o prologo o epilogo) ha una\n"
-"priorità che determina l'oridine di emissione.\n"
-"\n"
-msgstr ""
-
-#: templates/doc/doc.html:207
-msgid ""
-"\n"
-"program\n"
-"Documentation needs writers ......\n"
+"Il jingle programmato sarà quello con ultima data di emissione piu'\n"
+"vecchia; se ci sono piu' jingle con la stessa ultiuma data di\n"
+"emissione, i jingle vengono ordinati per il parametro impostabile\n"
+"della priorità.\n"
 msgstr ""
 
 #: templates/doc/doc.html:216
-msgid "Che cosa è il podcasting?"
-msgstr ""
-
-#: templates/doc/doc.html:217
 msgid ""
 "\n"
-"Il podcasting è un sistema che mette a disposizione brani audio e\n"
-"video attraverso Internet in formato feed RSS, in pratica è un\n"
-"servizio che automaticamente informa ed eventualmente scarica i nuovi\n"
-"file audio messi a disposizione su un sito. Tramite un programma in\n"
-"grado di leggere e decifrare questi feed, è possibile essere informati\n"
-"non appena un nuovo file audio viene pubblicato. Il podcasting\n"
-"consente un ascolto personalizzato dei contenuti: gli utenti scelgono\n"
-"quando ascoltare, dove ascoltare e come ascoltare i file audio.\n"
+"E' possibile impostare qualsiasi numero di fasce pubblicitarie\n"
+"caratterizzate da un orario di emissione; ogni fascia è attivabile o\n"
+"disattivabile singolarmente. Una fascia pubblicitaria è composta da\n"
+"spot.  Ogni fascia pubblicitaria ha uno o piu' spot definiti come\n"
+"prologo che annunciano la pubblicità. Ogni fascia pubblicitaria ha uno\n"
+"o piu' spot definiti come epilogo che annunciano la fine della\n"
+"pubblicità.\n"
 msgstr ""
 
 #: templates/doc/doc.html:228
-msgid "Come funziona il podcasting?"
+msgid ""
+"\n"
+"Per ogni spot (o prologo o epilogo) è possibile stabilire da quale data a "
+"quale\n"
+"data effettuare l'emissione, in quali giorni della settimana e in\n"
+"quale fascia pubblicitaria. Ogni spot ( o prologo o epilogo) ha una\n"
+"priorità che determina l'oridine di emissione.\n"
 msgstr ""
 
-#: templates/doc/doc.html:229
+#: templates/doc/doc.html:240
+msgid ""
+"\n"
+"La gestione dei programmi è la sezione più articolata di Autoradio.\n"
+"Uno show è composto da episodi che a loro volta sono composti da\n"
+"enclosure (parti). Uno show ah alcuni parametri che lo definiscono nel\n"
+"palinsesto.  Un episodio ha dei parametri che definiscono quando deve\n"
+"essere mandato in onda da autoradio. Le enclosure (parti) permettono\n"
+"di spezzare episodi di lunga durata per facilitarne la messa in onda,\n"
+"il download e gli inserimenti pubblicitari.  Quando dal menù\n"
+"principale si seleziona programmi viene presentato il modulo per\n"
+"l'inserimento di un episodio di uno show. Se lo show a cui appartiene\n"
+"un episodio non è stato ancora definito bisogna farlo come prima\n"
+"operazione; selezionando il + a fianco della voce Show è possibile\n"
+"farlo.\n"
+msgstr ""
+
+#: templates/doc/doc.html:256
+msgid "La definizione di uno Show"
+msgstr ""
+
+#: templates/doc/doc.html:258
+msgid ""
+"\n"
+"Nella sezione principale vengono richieste alcune informazioni sullo show e "
+"vengono utilizzate alcune categorie definite dalla legislazione italiana.\n"
+msgstr ""
+
+#: templates/doc/doc.html:262
+msgid ""
+"\n"
+"Nella sezione \"Podcast options\" e \"iTunes options\"\n"
+"vengono richieste informazioni relative al servizio podcast ben\n"
+"descritto alle voci successive di questa documentazione.\n"
+msgstr ""
+
+#: templates/doc/doc.html:268
+msgid ""
+"\n"
+"Nella sezione \"Periodic Schedules\" e \"APeriodic Schedules\" vengono\n"
+"richieste informazioni necessarie alla compilazione del palinsesto e\n"
+"alla stampa del libro programmi richiesto dalla legislazione italiana,\n"
+"funzione ben descritta alle voce successiva di questa documentazione.\n"
+msgstr ""
+
+#: templates/doc/doc.html:275
+msgid ""
+"\n"
+"Ogni Show puo' essere inserito in palinsesto a un istante preciso oppure\n"
+"per una emissione periodica ad iniziare da una una data specifica fino\n"
+"a una data finale per alcuni giorni della settimana specificati.\n"
+msgstr ""
+
+#: templates/doc/doc.html:281
+msgid "FeedBurner and iTunes URLs"
+msgstr "FeedBurner e iTunes URL"
+
+#: templates/doc/doc.html:283
+msgid ""
+"\n"
+"After saving at least one show and one episode, consider submitting\n"
+"your feed URL to FeedBurner for keeping track of podcast subscriber\n"
+"statistics. Your feed URL should be something like, where\n"
+"title-of-show is the slug of your show:\n"
+msgstr "\nDopo aver salvato almeno uno show e un episodio prendi in considerazione la possibilità di registrare la URL del tuo flusso a FeedBurner per tener traccia delle iscrizioni al tuo flusso con elaborazioni statistiche. La URL del tuo flusso dovrebbe essere qualche cosa del genere, dove \"title-of-show\" è lo slug del tuo show:\n"
+
+#: templates/doc/doc.html:292
+msgid ""
+"\n"
+"Remember to check the checkbox for \"I'm a podcaster!\" Your new\n"
+"FeedBurner URL should be something like:\n"
+msgstr "\nRicordati di spuntare la casella \"I'm a podcaster!\" La tua nuova URL FeedBurner dovrebbe essere qualche cosa del tipo:\n"
+
+#: templates/doc/doc.html:299
+msgid ""
+"\n"
+"You can now return to your website's admin and paste this URL into\n"
+"your Show's FeedBurner textbox. For bonus points, submit your\n"
+"FeedBurner URL to the iTunes Store. Your iTunes podcast URL should\n"
+"then be something like:\n"
+msgstr ""
+"\n"
+"Puoi tornare all'amministrazione del sito e ricopiare la URL nella casella\n"
+" FeedBurner dello show. Per avere ulteriori benefici, invia la tua FeedBurner URL a iTunes Store. La tua iTunes podcast URL dovrebbe essere qualche cosa del genere:\n"
+
+#: templates/doc/doc.html:308
+msgid ""
+"\n"
+"The advantage of submitting your FeedBurner URL to the iTunes Store\n"
+"allows you to track show statistics while also giving users the\n"
+"advantage of using the friendly iTunes interface. Return to the admin\n"
+"again and paste the iTunes show URL into the Show's iTunes URL\n"
+"textbox.\n"
+msgstr "\nI vantaggi di inviare la tua FeedBurner URL a iTunes Store permette di accumulare statistiche e di dare la possibilità agli utenti di usare l'interfacci amichevole di ITunes. Ritorna all'amministrazione e incolla la iTunes show URL nella casella iTunes URL dello show.\n"
+
+#: templates/doc/doc.html:317
+msgid "Ping iTunes for new content"
+msgstr "Sollecita iTunes per i nuovi contenuti"
+
+#: templates/doc/doc.html:319
+msgid ""
+"\n"
+"The iTunes Store checks new content daily but you might want to make a\n"
+"new episode available immediately in the iTunes Store. Visit your\n"
+"show's ping URL to make that episode available, which would be\n"
+"something like:\n"
+msgstr "\niTunes Store testa i nuovi contenuti quotidianamente, ma tu potresti volere un nuovo episodio disponibile immediatamente nel iTunes Store. Visita la URL di sollecito (ping) del tuo show per rendere quell'episodio disponibile, che dovrebbe assomigliare ad una cosa del genere:\n"
+
+#: templates/doc/doc.html:328
+msgid ""
+"\n"
+"Alternatively, if you're a savvy developer, you could set up a cron\n"
+"job to handle this, but note that pinging too often could result in a\n"
+"removal from the iTunes Store.\n"
+msgstr "\nIn alternativa se sei uno sviluppatore evoluto puoi impostare un \"cron job\" per gestire automaticamente questa cosa, ma non fare il sollecito troppo frequentemente perchè iTunes Store potrebbe procedere con una rimozione.\n"
+
+#: templates/doc/doc.html:336
+msgid "Yahoo! Media RSS feed submission"
+msgstr "Registrazione a Yahoo! Media RSS"
+
+#: templates/doc/doc.html:338
+msgid ""
+"\n"
+"Likewise, considering submitting your podcast to Yahoo! Search, which\n"
+"specifically accepts any kind of regularly published media-based\n"
+"(audio, video, image, document, etc.) RSS 2.0 feed or Media RSS feed.\n"
+"Your Media RSS feed should be something like:\n"
+msgstr ""
+"\n"
+"D'altro conto considera di registrare il tuo flusso al motore di ricerca Yahoo!, che nello specifico accetta qualsiasi tipo di media (audio, video, immagini, documenti, etc.) pubblicati regolarmente con flussi  RSS 2.0 o Media RSS.\n"
+"Il tuo flusso Media RSS dovrebbe essere qualche cosa del genere:\n"
+
+#: templates/doc/doc.html:347
+msgid "Google video sitemaps"
+msgstr ""
+
+#: templates/doc/doc.html:349
+msgid ""
+"\n"
+"If you're creating a video podcast, you can submit a video sitemap to\n"
+"Google Webmaster Tools. The video sitemap will help Google index\n"
+"videos in Google Video. The video sitemap URL should be something like:\n"
+msgstr ""
+"\n"
+"Se stai creando un flusso video, puoi inviare un video sitemap a Google Webmaster Tools. Il video sitemap aiuta Google ad incicizzare il video in Google Video.\n"
+"La URL del video sitemap dovrebbe essere qualche cosa del genere:\n"
+
+#: templates/doc/doc.html:357
+msgid ""
+"\n"
+"Additionally, you can add the video sitemap URL to your robots.txt file:\n"
+msgstr "\nIn aggiunta puoi inserire la URL del video sitemap nel tuo file robots.txt:\n"
+
+#: templates/doc/doc.html:363
+msgid ""
+"\n"
+"Google allows the submission of a media RSS feed instead of the\n"
+"sitemap to Google Webmaster Tools if you prefer.\n"
+msgstr "\nGoogle permette la registrazione a Google Webmaster Tools di un flusso media RSS invece del sitemap se preferisci.\n"
+
+#: templates/doc/doc.html:368
+msgid "La definizione di un Episodio"
+msgstr ""
+
+#: templates/doc/doc.html:370
+msgid ""
+"\n"
+"Un episodio è composto da una o piu' enclosure (parti) associate a un\n"
+"titolo e un file audio da caricare\n"
+msgstr ""
+
+#: templates/doc/doc.html:375
+msgid ""
+"\n"
+"Un episodio ha una o più schedule che definiscono quando dovrà essere\n"
+"mandato in onda automaticamente da autoradio (prima emissione ed\n"
+"eventuali repliche).\n"
+msgstr ""
+
+#: templates/doc/doc.html:381
+msgid ""
+"\n"
+"Per ogni episodio è possibile inserire dei metadati utili per\n"
+"effettuare un efficiente podcast/mediacast.\n"
+msgstr ""
+
+#: templates/doc/doc.html:386
+msgid "What is the Dublin Core namespace?"
+msgstr "Cosa è il Dublin Core namespace?"
+
+#: templates/doc/doc.html:388
+msgid ""
+"\n"
+"The Dublin Core namespace allows for meta data to be associated with\n"
+"content contained in an RSS feed. Additional details on\n"
+"the <a href=\"http://homepage.univie.ac.at/horst.prillinger/blog/"
+"archives/2005/01/000922.html\">Dublin\n"
+"Core or the DC extension.</a>\n"
+msgstr "\nIl Dublin Core namespace permette ai metadati di essere associati con il contenuto di un flusso RSS. Ulteriori dettagli a <a href=\"http://homepage.univie.ac.at/horst.prillinger/blog/archives/2005/01/000922.html\">Dublin Core or the DC extension.</a>\n"
+
+#: templates/doc/doc.html:400
+msgid "Che cosa è il podcasting/mediacast?"
+msgstr ""
+
+#: templates/doc/doc.html:401
+msgid ""
+"\n"
+"Il podcasting o in senso più generale il Mediacast è un sistema che\n"
+"mette a disposizione brani audio e video attraverso Internet in\n"
+"formato feed RSS, in pratica è un servizio che automaticamente informa\n"
+"ed eventualmente scarica i nuovi file audio messi a disposizione su un\n"
+"sito. Tramite un programma in grado di leggere e decifrare questi\n"
+"feed, è possibile essere informati non appena un nuovo file audio\n"
+"viene pubblicato. Il podcasting consente un ascolto personalizzato dei\n"
+"contenuti: gli utenti scelgono quando ascoltare, dove ascoltare e come\n"
+"ascoltare i file audio.\n"
+msgstr ""
+
+#: templates/doc/doc.html:413
+msgid "Come funziona il podcasting/mediacast?"
+msgstr ""
+
+#: templates/doc/doc.html:414
 msgid ""
 "\n"
 "Il procedimento è semplice: occorre scaricare ed installare sul\n"
@@ -1237,11 +1505,29 @@ msgid ""
 "file e con quale frequenza cercare nuovi brani.\n"
 msgstr ""
 
-#: templates/doc/doc.html:241
+#: templates/doc/doc.html:422
+msgid "Autoradio: un efficiente motore per il podcasting/mediacast"
+msgstr ""
+
+#: templates/doc/doc.html:424
 msgid ""
 "\n"
-"programbook\n"
-"Documentation needs writers ......\n"
+"Autoradio fornisce una interfaccia web accessibile dal menu principale\n"
+"alla voce Mediacast per navigare i programmi e i relativi episodi\n"
+"fornendo i flussi web necessari per un efficiente podcasting della\n"
+"propria programmazione radiofonica.\n"
+msgstr ""
+
+#: templates/doc/doc.html:436
+msgid ""
+"\n"
+"Autoradio permette la stampa del Libro Programmi secondo la\n"
+"legislazione italiana. Selezionata l'apposita voce dal menu principale\n"
+"è possibile procedere alla stampa inserendo gli estremi delle date\n"
+"richieste. Viene generato un file PDF pronto per la stampa.  Alcune\n"
+"voci presenti nella stampa sono definite nella tabella \"configure\"\n"
+"della sezione \"programmi\" e modificabili dal pannello di\n"
+"amministrazione.\n"
 msgstr ""
 
 #: templates/doc/index.html:9
@@ -1308,11 +1594,11 @@ msgstr "Come cominciare a emettere musica."
 
 #: templates/doc/index.html:46
 msgid "How to start to use jingles to promote your brand."
-msgstr "Come usare i jingle per promuover eil tuo marchio."
+msgstr "Come usare i jingle per promuovere il tuo marchio."
 
 #: templates/doc/index.html:49
 msgid "Organize radio advertisement."
-msgstr ""
+msgstr "Organizza la pubblicità."
 
 #: templates/doc/index.html:52
 msgid "Record your programs and set when it will be on air."

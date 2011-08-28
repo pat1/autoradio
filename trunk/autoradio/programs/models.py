@@ -262,23 +262,19 @@ class Configure(models.Model):
 	active = models.BooleanField(ugettext_lazy("Active show"),default=True,\
                                          help_text=ugettext_lazy("activate/deactivate the intere program class"))
         emission_starttime = models.TimeField(ugettext_lazy('Programmed start time'),\
-                                                  help_text=ugettext_lazy("The start time from wich the program will be active"))
+                                                  help_text=ugettext_lazy("The start time from wich the programs will be active"))
         emission_endtime = models.TimeField(ugettext_lazy('Programmed end time'),
-                                            help_text=ugettext_lazy("The end time the program will be active"))
+                                            help_text=ugettext_lazy("The end time the programs will be active"))
 
 
-        radiostation = models.CharField(max_length=50,unique=True\
-					   ,default='Radio',editable=True)
-        channel = models.CharField(max_length=80,unique=True\
-					   ,default='103',editable=True)
-
-        mezzo = models.CharField(max_length=50,unique=True\
-					   ,default='analogico terrestre',editable=True)
-
-        type = models.CharField(max_length=50,unique=True\
-					   ,default='radiofonica',editable=True)
-
-
+        radiostation = models.CharField(max_length=50,unique=True, default='Radio',editable=True,\
+                       help_text=ugettext_lazy("The station name for the print of programs book"))
+        channel = models.CharField(max_length=80,unique=True, default='103', editable=True,\
+                       help_text=ugettext_lazy("The station channel for the print of programs book"))
+        mezzo = models.CharField(max_length=50,unique=True, default='analogico terrestre', editable=True,\
+                       help_text=ugettext_lazy("The station kind of emission for the print of programs book"))
+        type = models.CharField(max_length=50,unique=True, default='radiofonica', editable=True,\
+                       help_text=ugettext_lazy("The station type for the print of programs book"))
 
         def __unicode__(self):
             return self.sezione+" "+self.active.__str__()+" "\

@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it" >
+<head>
+<title> | Amministrazione</title>
+<link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/django/media/admin/css/base.css" />
+
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/django/media/admin/css/ie.css" /><![endif]-->
+
+<script type="text/javascript">window.__admin_media_prefix__ = "/django/media/admin/";</script>
+
+<meta name="robots" content="NONE,NOARCHIVE" />
+</head>
+
+
+<body class="">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name"><a href="http://127.0.0.1:8080/">AutoRadio Home</a> / <a href="http://127.0.0.1:8080/doc">AutoRadio Documentazione</a></h1>
+
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    <div class="breadcrumbs"><a href="http://127.0.0.1:8080/">Pagina iniziale</a></div>
+    
+
+        
+
+    <!-- Content -->
+    <div id="content" class="colM">
+        
+        
+        
+
+<h1><a href="../index.html">Documentazione</a></h1>
+
+<div id="content-main">
+
+
+
+
+
+
+
+<p>
+
+Partendo da una playlist è in grado di gestire differenti formati di
+audio digitali per poi inviare il suono o a una scheda audio o a un
+server audio.
+</p>
+
+
+
+Esistono varie possibilità:
+<ul>
+  <li>Audacious2:
+  Questo player è disponibile su tutte le nuove distribuzioni.
+  Permette l'invio diretto a un server per lo streaming per la realizzazione di web radio.
+  Questo è il player preferito pe l'utilizzo con AutoRadio.</li>
+  <li>Xmms:
+  E' un player “antico” ma molto robusto.
+  Consigliato solo su vecchie distribuzioni</li>
+</ul>
+
+
+
+Questi sono i meccanismi di funzionamento principale:
+
+
+<ul>
+ <li>deve essere sempre presente nel player una playlist di brani
+ musicali ciascuno di durata non superiore a 7/8 minuti; brani piu'
+ lunghi potrebbero comportare ritardi e cattiva gestione
+ dell'emissione automatica. Per mantenere sempre piena la playlist si
+ consiglia di prevedere almeno due volte al giorno il caricamento
+ automatico di una playlist voluminosa.</li>
+
+ <li>quando una schedula raggiunge il tempo per cui è stata programmata
+ viene inserita nella prima posizione successiva a quella attualmente
+ in play, e successiva anche ad ogni file precedentemente inserito da una
+ precedente schedula.</li>
+
+ <li>tutto thread save, ossia le funzioni fatte sul player dalle varie
+ schedule saranno sempre consistenti.</li>
+
+ <li>le operazioni di inserimento e cancellazione dalla playlist vengono
+ fatte solo quando mancano piu' di 10 secondi alla fine del brano per
+ non cadere in situazioni critiche e inconsistenti.</li>
+
+ <li>la testa della playlist, che se tutto è programmato correttamente
+ tende sempre a crescere, viene tagliata a 10 brani.</li>
+
+ <li>la coda della playlist che se tutto è programmato correttamente
+ tende sempre a crescere viene tagliata a 500 brani.</li>
+
+ <li>il player se in stato "stop" viene sempre rimesso in stato "play".</li>
+
+ <li>il player se in stato "pause" rimarrà sempre in "pause" se non ci
+ sarà un intervento manuale.</li>
+
+ <li>è possibile visualizzare lo stato del player con interfaccia web.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+        
+        <br class="clear" />
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+</body>
+</html>

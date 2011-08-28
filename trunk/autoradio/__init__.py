@@ -1,2 +1,2 @@
 
-_version_="2.1beta"
+_version_="2.1"

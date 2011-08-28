@@ -1,9 +1,8 @@
+autoradio (2.1) unstable; urgency=low
 
-autoradio (2.1beta-1) unstable; urgency=low
+  * upstream release 2.1 (Closes: #3388949)
 
-  * upstream release 2.1beta (Closes: #3388949)
-
- -- Paolo Patruno <p.patruno@iperbole.bologna.it>  Fri, 12 Aug 2011 11:52:43  +0200
+ -- Paolo Patruno <p.patruno@iperbole.bologna.it>  Fri, 28 Aug 2011 11:52:43  +0200
 
 autoradio (2.0-1) unstable; urgency=low
 

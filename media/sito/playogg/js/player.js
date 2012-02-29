@@ -14,7 +14,7 @@
 	  //alert("you have flash");
       haveflash=true;
     };
-      createPlayer(media_url+media,"html5player","flashplayer","javaplayer");
+      createPlayer(media,"html5player","flashplayer","javaplayer");
     }
     
     // try to update flash becouse after I am hidden !
@@ -108,7 +108,7 @@ function  createPlayer(playURL,html5id,flashid,javaid){
 		immagine.innerHTML='<img src="'+imgURL+'player.png">';
 		immagine.setAttribute("id",id);
 		immagine.setAttribute("type","audio/ogg");
-		immagine.setAttribute("href",media_url+playURL);
+		immagine.setAttribute("href",playURL);
 		//		immagine.setAttribute("href","player.m3u");
 		//              application/xspf+xml
 

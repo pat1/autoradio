@@ -29,7 +29,7 @@ def index(request):
 
     scheds=autoradio.autoradio_core.schedules([])
 
-    return render_to_response('schedule/index.html', {'schedule': scheds.get_all_refine(genfile=False),'media_url':autoradio.settings.MEDIA_URL })
+    return render_to_response('schedule/index.html', {'schedule': scheds.get_all_refine(genfile=False),'site_media_url':autoradio.settings.SITE_MEDIA_URL})
 
 
 def stato(request):
@@ -44,7 +44,7 @@ def stato(request):
         xmmsweb="<p>Error getting player status !!</p>"
         xmmsweb=xmmsweb+"<p>Start autoradiod or verify settings</p>"
 
-    return render_to_response('xmms/index.html', {'xmmsweb': xmmsweb,'media_url':autoradio.settings.MEDIA_URL })
+    return render_to_response('xmms/index.html', {'xmmsweb': xmmsweb,'site_media_url':autoradio.settings.SITE_MEDIA_URL })
 
 
 #----------------------------------------------------
@@ -192,7 +192,7 @@ def programsbook(request):
         form = ExtremeForm() # An unbound form
 
     return render_to_response('palimpsest/extreme.html', {
-        'form': form,'media_url':autoradio.settings.MEDIA_URL
+        'form': form,'site_media_url':autoradio.settings.SITE_MEDIA_URL
     })
 
 
@@ -220,7 +220,7 @@ def episode_detail(request, show_slug, episode_slug):
         slug=episode_slug,
         slug_field='slug',
         extra_context={
-            'enclosure_list': Enclosure.objects.filter(episode__show__slug__exact=show_slug).filter(episode__slug__exact=episode_slug).order_by('-episode__date'),'media_url':autoradio.settings.MEDIA_URL},
+            'enclosure_list': Enclosure.objects.filter(episode__show__slug__exact=show_slug).filter(episode__slug__exact=episode_slug).order_by('-episode__date'),'site_media_url':autoradio.settings.SITE_MEDIA_URL},
         template_name='podcast/episode_detail.html')
 
 
@@ -236,7 +236,7 @@ def episode_list(request, slug):
 #    return object_list(
 #        request,
 #        queryset=Episode.objects.published().filter(show__slug__exact=slug),
-#        extra_context={'media_url':autoradio.settings.MEDIA_URL},
+#        extra_context={'site_media_url':autoradio.settings.SITE_MEDIA_URL},
 #        template_name='podcast/episode_list.html')
 
 # from: http://code.google.com/p/django-podcast/issues/detail?id=12
@@ -246,7 +246,7 @@ def episode_list(request, slug):
     except:
         return HttpResponseRedirect(reverse('podcast_shows'))
 
-    context = {'show':show, 'media_url':autoradio.settings.MEDIA_URL}
+    context = {'show':show, 'site_media_url':autoradio.settings.SITE_MEDIA_URL}
     return object_list(
         request,
         queryset=Episode.objects.published().filter(show__slug__exact=slug),
@@ -268,7 +268,7 @@ def episode_sitemap(request, slug):
         mimetype='application/xml',
         queryset=Episode.objects.published().filter(show__slug__exact=slug).order_by('-date'),
         extra_context={
-            'enclosure_list': Enclosure.objects.filter(episode__show__slug__exact=slug).order_by('-episode__date'),'media_url':autoradio.settings.MEDIA_URL},
+            'enclosure_list': Enclosure.objects.filter(episode__show__slug__exact=slug).order_by('-episode__date'),'site_media_url':autoradio.settings.SITE_MEDIA_URL},
         template_name='podcast/episode_sitemap.html')
 
 
@@ -284,7 +284,7 @@ def show_list(request):
     return object_list(
         request,
         queryset=Show.objects.all().order_by('title'),
-        extra_context={'media_url':autoradio.settings.MEDIA_URL},
+        extra_context={'site_media_url':autoradio.settings.SITE_MEDIA_URL},
         template_name='podcast/show_list.html')
 
 
@@ -301,7 +301,7 @@ def show_list_feed(request, slug):
         request,
         mimetype='application/rss+xml',
         queryset=Episode.objects.filter(show__slug__exact=slug).order_by('-date')[0:21],
-        extra_context={'media_url':autoradio.settings.MEDIA_URL},
+        extra_context={'site_media_url':autoradio.settings.SITE_MEDIA_URL},
         template_name='podcast/show_feed.html')
 
 
@@ -319,7 +319,7 @@ def show_list_media(request, slug):
         mimetype='application/rss+xml',
         queryset=Episode.objects.filter(show__slug__exact=slug).order_by('-date')[0:21],
         extra_context={
-            'enclosure_list': Enclosure.objects.filter(episode__show__slug__exact=slug).order_by('-episode__date'),'media_url':autoradio.settings.MEDIA_URL},
+            'enclosure_list': Enclosure.objects.filter(episode__show__slug__exact=slug).order_by('-episode__date'),'site_media_url':autoradio.settings.SITE_MEDIA_URL},
         template_name='podcast/show_feed_media.html')
 
 
@@ -337,7 +337,7 @@ def show_list_atom(request, slug):
         mimetype='application/rss+xml',
         queryset=Episode.objects.filter(show__slug__exact=slug).order_by('-date')[0:21],
         extra_context={
-            'enclosure_list': Enclosure.objects.filter(episode__show__slug__exact=slug).order_by('-episode__date'),'media_url':autoradio.settings.MEDIA_URL},
+            'enclosure_list': Enclosure.objects.filter(episode__show__slug__exact=slug).order_by('-episode__date'),'site_media_url':autoradio.settings.SITE_MEDIA_URL},
         template_name='podcast/show_feed_atom.html')
 
 

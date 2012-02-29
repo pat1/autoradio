@@ -32,7 +32,7 @@ class schedule:
         self.djobj=djobj
         self.scheduledatetime=scheduledatetime
         self.media=media
-        self.mediaweb = self.media[len(settings.MEDIA_URL)+1:]
+        #self.mediaweb = self.media[len(settings.MEDIA_URL)+1:]
         self.length=length
         self.type=type
         self.emission_done=emission_done
@@ -88,7 +88,7 @@ class schedule:
         yield self.djobj
         yield self.title
         yield self.scheduledatetime
-        yield self.mediaweb
+        yield self.media
         yield str((datetime(2000,1,1)+timedelta(seconds=int(self.length))).time())
         yield self.type
         yield self.emission_done

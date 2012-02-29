@@ -1,10 +1,16 @@
 == TODO ==
 
+24/02/2012
+
+insert div in player with background image with overflow set to hidden
+and add little button images so the user can click on windows without player action.
+Or an image that shift visible area on click ....
+
+
 30/09/2010
 
  * error on week days on italian locale
  * on programbook programtype 5 need subtype 5a
-
 
 
 20/09/2009

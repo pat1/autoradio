@@ -1,6 +1,13 @@
 NEWS
 ----
 
+version 2.2
+-----------
+ * close bug on web player ( multiple windows on multiple enclosure)
+ * close bug on web player ( do not play for media path error )
+ * close bug that don not show multiple enclosure for rss and atom feed
+ * better site configuration
+
 version 2.1
 -----------
  * close bug autoradiod crash on playlist management - ID: 3388949

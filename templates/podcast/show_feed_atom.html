@@ -10,14 +10,17 @@
     <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>
 
     {% for episode in show.list %}
-    <entry>
-        <title>{{ episode.title }}</title>
-        <link href="{{ episode.enclosure_set.all.0.file.url }}"/>
-        <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
-        <updated>{{ episode.date|date:"Y-m-d" }}T{{ episode.date|date:"H:i:s" }}Z</updated>
-        <summary>{% if episode.summary %}{{ episode.summary }}{% else %}{{ episode.description }}{% endif %}</summary>
-    </entry>
-    {% endfor %}
 
+      {% for enclosure in episode.enclosure_set.all %}<item>
+
+        <entry>
+          <title>{{ episode.title }}{% if enclosure.title %}: {{ enclosure.title }}{% endif %}</title>
+          <link href="{{ enclosure.file.url }}"/>
+          <id>tag:{{ enclosure.file.url }},{{ episode.title }},{{ enclosure.title }},{{ episode.date|date:"H:i:s" }},{{ enclosure.id }}</id>
+          <updated>{{ episode.date|date:"Y-m-d" }}T{{ episode.date|date:"H:i:s" }}Z</updated>
+          <summary>{% if episode.summary %}{{ episode.summary }}{% else %}{{ episode.description }}{% endif %}</summary>
+        </entry>
+      {% endfor %}
+    {% endfor %}
 {% endfor %}
 </feed>

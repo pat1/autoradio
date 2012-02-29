@@ -4,7 +4,7 @@
 1)")}
 
 %define name autoradio
-%define version 2.1beta
+%define version 2.2
 %define release 1%{?dist}
 
 Summary: radio automation software

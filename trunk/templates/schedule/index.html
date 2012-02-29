@@ -32,7 +32,7 @@
 	<td {% if future %} bgcolor="#884488" {%else %} bgcolor="#00FF00" {% endif %}> {%if datet %} {% if future %} {% trans "in" %} {{ datet|timeuntil }} {% else %} {{ datet|timesince }} {% trans "ago" %} {% endif %}{% endif %}</td>
 	<td> {{ datetdone|timesince }} {%if datetdone %} {% trans "ago" %} {% endif %}</td>
 	<td> {{ length }}</td>
-	<td> <a href="{{ media  }}">{% trans "Download" %}</a></td>
+	<td> <a href="{{ media }}">{% trans "Download" %}</a></td>
       </tr>
     {% endfor %}
     </table>

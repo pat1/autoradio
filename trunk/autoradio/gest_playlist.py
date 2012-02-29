@@ -103,7 +103,7 @@ class gest_playlist:
             if (player == "amarok"):
                 playlist.ar_filename=playlist.playlist.playlist
             else:
-                playlist.ar_filename=playlist.playlist.file.path
+                playlist.ar_filename=playlist.playlist.file.url
 
             playlist.ar_scheduledatetime=playlist.emission_date
             playlist.ar_emission_done=playlist.emission_done

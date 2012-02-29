@@ -7,8 +7,8 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>{% block title %}Django Podcast{% endblock %}</title>
-<link href="{{site_media_url}}sito/css/podcast.css" rel="stylesheet" type="text/css" media="screen" />
+<title>{% block title %}Universal Ogg player {% endblock %}</title>
+<link href="{{site_media_url}}sito/css/player.css" rel="stylesheet" type="text/css" media="screen" />
 
 <script type="text/javascript" src="{{site_media_url}}sito/playogg/js/jquery-1.4.1.min.js"></script>
 <script type="text/javascript" src="{{site_media_url}}sito/playogg/js/jquery.open.js"></script>
@@ -26,27 +26,28 @@
 
 <body>
 
+{% block header %}
 <div id="header-wrap" style="background: url({{ site_media_url }}sito/mediacastlogo.png) left bottom no-repeat;">
 <div id="header">
-{% block header %}
-<h1>{% trans "Autoradio Mediacast" %}</h1>
+
+<h1>{% trans "OGG Player" %}</h1>
+</div>
+</div>
 {% endblock %}
-</div>
-</div>
 
 
 {% block allcontent %}
-
 {% endblock %}
 
-
+<!--
 <div id="footer-wrap">
 <div id="footer">
 {% block footer %}
-<p>&#169; {% now "Y" %} {{ object.show.organization }}.</p>
+
 {% endblock %}
 </div>
 </div>
+-->
 
 </body>
 </html>

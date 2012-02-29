@@ -12,32 +12,32 @@
     <creativeCommons:license>{{ show.grouper.copyright }}</creativeCommons:license>{% endifequal %}{% endifequal %}
     
     {% for episode in show.list %}
-    <item>
+      <item>
+        <title{% if episode.title_type %} type="{{ episode.title_type|lower }}"{% endif %}>{{ episode.title }}</title>
         <pubDate>{{ episode.date|date:"r" }} GMT</pubDate>
+        <description{% if episode.description_type %} type="{{ episode.description_type|lower }}"{% endif %}>{{ episode.description }}</description>
         {% for enclosure in episode.enclosure_set.all %}
-        <media:content{% if enclosure.file %} url="{{ enclosure.file.url }}"{% endif %}{% if enclosure.file.medium %} medium="{{ enclosure.file.medium|lower }}"{% endif %}{% if enclosure.file.mime %} type="{{ enclosure.file.mime|lower }}"{% endif %} fileSize="{{ enclosure.file.size }}" lang="{{ episode.show.language|lower }}"{% if enclosure.expression %} expression="{{ enclosure.expression|lower }}"{% endif %}{% if enclosure.bitrate %} bitrate="{{ enclosure.bitrate }}"{% endif %}{% if enclosure.frame %} framerate="{{ enclosure.frame }}"{% endif %}{% if enclosure.sample %} samplingrate="{{ enclosure.sample }}"{% endif %}{% if enclosure.channel %} channels="{{ enclosure.channel }}"{% endif %}{% ifequal enclosure.medium "Image" %} width="{{ enclosure.file.width }}" height="{{ enclosure.file.height }}"{% endifequal %}{% if forloop.first	%} isDefault="true"{% endif %}>
-            {% if enclosure.player %}<media:player url="{{ enclosure.player }}"{% if enclosure.width %} width="{{ enclosure.width }}"{% endif %}{% if enclosure.height %} height="{{ enclosure.height }}"{% endif %}/>{% endif %}
-            <media:title{% if episode.title_type %} type="{{ episode.title_type|lower }}"{% endif %}>{{ episode.title }}</media:title>
-            <media:description{% if episode.description_type %} type="{{ episode.description_type|lower }}"{% endif %}>{{ episode.description }}</media:description>
-            <media:credit role="productioncompany">{{ episode.show.organization }}</media:credit>
-            {% if episode.role %}<media:credit role="{{ episode.role|lower }}" scheme="urn:ebu">{{ episode.show.author.all.0.first_name }} {{ episode.show.author.all.0.last_name }}</media:credit>{% endif %}
-            {% if episode.media_category %}{% for category in episode.media_category.all %}
-            <media:category>{{ category.name }}</media:category>
-            {% endfor %}{% endif %}
-            {% if enclosure.hash %}<media:hash{% if enclosure.algo %} algo="{{ enclosure.algo|lower }}"{% endif %}>{{ enclosure.hash }}</media:hash>{% endif %}
-            {% if episode.text %}{{ episode.text }}{% endif %}
-            {% if episode.image %}<media:thumbnail url="{{ episode.image.url }}" width="{{ episode.image.width }}" height="{{ episode.image.height }}"/>{% endif %}
-            {% if episode.rating %}<media:rating scheme="urn:{{ episode.rating|lower }}">{{ episode.standard|lower }}</media:rating>{% endif %}
-            {% if episode.deny %}<media:restriction relationship="deny" type="country">{{ episode.restriction }}</media:restriction>{% endif %}
-            {% if episode.keywords %}<media:keywords>{{ episode.keywords }}</media:keywords>{% endif %}
-            <dcterms:valid>{% if episode.start %}start={{ episode.start|date:"r" }}; {% endif %}{% if episode.end %}end={{ episode.end|date:"r" }}; {% endif %}{% if episode.scheme %}scheme={{ episode.scheme }}; {% endif %}{% if episode.name %}name={{ episode.name }};{% endif %}</dcterms:valid>
-            {% if episode.preview %}<gm:preview enabled="true"{% if episode.preview_start_mins and episode.preview_start_secs %} start="{{ episode.preview_start_mins }}:{{ episode.preview_start_secs }}"{% endif %}{% if episode.preview_end_mins and episode.preview_end_secs %} end="{{ episode.preview_end_mins }}:{{ episode.preview_end_secs }}{% endif %}"/>{% endif %}
-            {% if episode.start and episode.end and episode.host %}<gm:hostOnExpire enabled="true">{% endif %}
-        </media:content>
+          <media:content{% if enclosure.file %} url="{{ enclosure.file.url }}"{% endif %}{% if enclosure.file.medium %} medium="{{ enclosure.file.medium|lower }}"{% endif %}{% if enclosure.file.mime %} type="{{ enclosure.file.mime|lower }}"{% endif %} fileSize="{{ enclosure.file.size }}" lang="{{ episode.show.language|lower }}"{% if enclosure.expression %} expression="{{ enclosure.expression|lower }}"{% endif %}{% if enclosure.bitrate %} bitrate="{{ enclosure.bitrate }}"{% endif %}{% if enclosure.frame %} framerate="{{ enclosure.frame }}"{% endif %}{% if enclosure.sample %} samplingrate="{{ enclosure.sample }}"{% endif %}{% if enclosure.channel %} channels="{{ enclosure.channel }}"{% endif %}{% ifequal enclosure.medium "Image" %} width="{{ enclosure.file.width }}" height="{{ enclosure.file.height }}"{% endifequal %}{% if forloop.first	%} isDefault="true"{% endif %}>
+          {% if enclosure.player %}<media:player url="{{ enclosure.player }}"{% if enclosure.width %} width="{{ enclosure.width }}"{% endif %}{% if enclosure.height %} height="{{ enclosure.height }}"{% endif %}/>{% endif %}
+          {% if enclosure.title %}<media:title>{{ enclosure.title }}</media:title>{% endif %}
+          <media:credit role="productioncompany">{{ episode.show.organization }}</media:credit>
+          {% if episode.role %}<media:credit role="{{ episode.role|lower }}" scheme="urn:ebu">{{ episode.show.author.all.0.first_name }} {{ episode.show.author.all.0.last_name }}</media:credit>{% endif %}
+          {% if episode.media_category %}{% for category in episode.media_category.all %}
+          <media:category>{{ category.name }}</media:category>
+          {% endfor %}{% endif %}
+          {% if enclosure.hash %}<media:hash{% if enclosure.algo %} algo="{{ enclosure.algo|lower }}"{% endif %}>{{ enclosure.hash }}</media:hash>{% endif %}
+          {% if episode.text %}{{ episode.text }}{% endif %}
+          {% if episode.image %}<media:thumbnail url="{{ episode.image.url }}" width="{{ episode.image.width }}" height="{{ episode.image.height }}"/>{% endif %}
+          {% if episode.rating %}<media:rating scheme="urn:{{ episode.rating|lower }}">{{ episode.standard|lower }}</media:rating>{% endif %}
+          {% if episode.deny %}<media:restriction relationship="deny" type="country">{{ episode.restriction }}</media:restriction>{% endif %}
+          {% if episode.keywords %}<media:keywords>{{ episode.keywords }}</media:keywords>{% endif %}
+          <dcterms:valid>{% if episode.start %}start={{ episode.start|date:"r" }}; {% endif %}{% if episode.end %}end={{ episode.end|date:"r" }}; {% endif %}{% if episode.scheme %}scheme={{ episode.scheme }}; {% endif %}{% if episode.name %}name={{ episode.name }};{% endif %}</dcterms:valid>
+          {% if episode.preview %}<gm:preview enabled="true"{% if episode.preview_start_mins and episode.preview_start_secs %} start="{{ episode.preview_start_mins }}:{{ episode.preview_start_secs }}"{% endif %}{% if episode.preview_end_mins and episode.preview_end_secs %} end="{{ episode.preview_end_mins }}:{{ episode.preview_end_secs }}{% endif %}"/>{% endif %}
+          {% if episode.start and episode.end and episode.host %}<gm:hostOnExpire enabled="true">{% endif %}
+          </media:content>
         {% endfor %}
       </item>
     {% endfor %}
-
-</channel>
+  </channel>
 {% endfor %}
 </rss>

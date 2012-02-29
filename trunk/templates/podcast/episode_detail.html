@@ -45,9 +45,9 @@
 <ul>
   {% for enclosure in enclosure_list %}
   {% if enclosure.file %}
-  <li><strong>{% if enclosure.title %}{{ enclosure.title }}{% else %}{{ object.title }}{% endif %}: </strong><a href="{{ enclosure.file.url }}"><strong>{% trans "Download file" %}</strong></a> ({{ enclosure.file.size|filesizeformat }})  --> <a href="/player/{{ enclosure.file.url }}" target="_blank" class="playerPopup"><strong>{% trans "Listen" %}</strong></a> </li>
+  <li><strong>{% if enclosure.title %}{{ enclosure.title }}{% else %}{{ object.title }}{% endif %}: </strong><a href="{{ enclosure.file.url }}"><strong>{% trans "Download file" %}</strong></a> ({{ enclosure.file.size|filesizeformat }})  --> <a href="/player/{{ enclosure.file.url }}" target="_blank" class="playerPopup{{ enclosure.id }}"><strong>{% trans "Listen" %}</strong></a> </li>
 <script type="text/javascript">
-   $("a.playerPopup").open({
+   $("a.playerPopup{{ enclosure.id }}").open({
       width: 350,
       height: 300,
       scrollbars: false

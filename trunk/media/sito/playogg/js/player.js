@@ -101,33 +101,12 @@ function  createPlayer(playURL,html5id,flashid,javaid){
 	    //alert(id);
 
 	    if ( id == "plugin"){
-
-		// Creiamo il nuovo elemento Anchor
-
-		immagine = document.createElement("A");
-		immagine.innerHTML='<img src="'+imgURL+'player.png">';
-		immagine.setAttribute("id",id);
-		immagine.setAttribute("type","audio/ogg");
-		immagine.setAttribute("href",playURL);
-		//		immagine.setAttribute("href","player.m3u");
-		//              application/xspf+xml
-
-		// inseriamola quindi nel nostro tag <player>
-		document.getElementById("player").appendChild(immagine);
-
+		$("#player").append('<a type="audio/ogg" href="'+playURL+'" id='+id+'"><b>player</b><a>')
+		$("#player").css({background:'url('+imgURL+'player.png)'})
 	    }
 	    else{
-		// Creiamo il nuovo elemento IMG e
-		// impostiamo l'attributo src, che recupera l'immagine
-		immagine = document.createElement("IMG");
-		immagine.setAttribute("src",imgURL+"player.png");
-		immagine.setAttribute("id",id);
-		immagine.setAttribute("alt","Play OGG");
-		//immagine.setAttribute("onclick","buttonPlayStop(event,'"+playURL+"','"+html5id+"','"+flashid+"','"+javaid+"')");
-
-		// inseriamola quindi nel nostro tag <player>
-		document.getElementById("player").appendChild(immagine);
-
+		$("#player").append('<div id="'+id+'" style="background-image: url('+imgURL+'player.png)"> <b>Play OGG</b></div>')
+		$("#player").css({background:'url('+imgURL+'player.png)'})
 		$("#"+id).click(function (event) { 
 			buttonPlayStop(event,playURL,html5id,flashid,javaid);
 		    });
@@ -231,9 +210,11 @@ function html5buttonPlayStop(PlayerID,html5id,playURL)
        	myAudio.setAttribute('src', playURL);
 	myAudio.play();
 	setPlayerButton(PlayerID,"stop");
+	$("#"+PlayerID).css({backgroundPosition:'270px 262px'}).attr("title","STOP")
     }else{
 	myAudio.pause();
 	setPlayerButton(PlayerID,"play");
+	$("#"+PlayerID).css({backgroundPosition:'75px 262px'}).attr("title","PLAY")
     }
 }
 
@@ -245,11 +226,13 @@ function flashbuttonPlayStop(PlayerID,flashid,playURL)
 	oggStop(flashid);
 	flStatus = false;
 	setPlayerButton(PlayerID,"play");
+	$("#"+PlayerID).css({backgroundPosition:'270px 262px'}).attr("title","STOP")
     }
     else{
 	oggPlayURL(flashid,playURL);
 	flStatus = true;
 	setPlayerButton(PlayerID,"stop");
+	$("#"+PlayerID).css({backgroundPosition:'75px 262px'}).attr("title","PLAY")
     } 
 }
 
@@ -273,11 +256,13 @@ function javabuttonPlayStop(PlayerID,javaid,playURL)
 	javaAudio.doStop();
 	javaStatus = false;
 	setPlayerButton(PlayerID,"play");
+	$("#"+PlayerID).css({backgroundPosition:'270px 262px'}).attr("title","STOP")
     } 
     else{
 	javaAudio.doPlay();
 	javaStatus = true;
 	setPlayerButton(PlayerID,"stop");
+	$("#"+PlayerID).css({backgroundPosition:'75px 262px'}).attr("title","PLAY")
     }
 }
 

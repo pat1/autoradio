@@ -1,6 +1,4 @@
 body { margin: 0; padding: 0; border: 0; font-family: arial, helvetica, sans-serif; font-size: 100%; background: #234f32; }
-div#player { width: 288px; height 300px; position: fixed; top: 50%; margin-top: -150px ; left: 50%; margin-left:-144px; }
-div#player img {padding:0; visibility:show; }
 div#header-wrap, div#footer-wrap { background: #092e20; }
 div#content-wrap { background: #234f32; width: 960px; margin: 0 auto; }
 div#header, div#content, div#footer { width: 960px; margin: 0 auto; color: #fff; }
@@ -35,3 +33,8 @@ div.image { float: right; margin: 0 16px 16px; border: 1px solid #94da3a; paddin
 div.image img { padding: 0; }
 a { color: #b25603; }
 a:hover { background: #e0ffb8; color: #574f32; text-decoration: none; }
+
+div#player { width: 288px; height: 300px; position: fixed; top: 50%; margin-top: -150px ; left: 50%; margin-left:-144px; }
+div#player img {padding:0; visibility:show; }
+div#player a, #player div { display:  block; width: 50px; height: 50px; background-position: 75px 262px;position: absolute; top: 10px; left: 112px; border:2px solid #666;  }
+div#player a b, #player div b { display: none; }

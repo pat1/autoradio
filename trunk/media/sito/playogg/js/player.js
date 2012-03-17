@@ -226,13 +226,13 @@ function flashbuttonPlayStop(PlayerID,flashid,playURL)
 	oggStop(flashid);
 	flStatus = false;
 	setPlayerButton(PlayerID,"play");
-	$("#"+PlayerID).css({backgroundPosition:'270px 262px'}).attr("title","STOP")
+	$("#"+PlayerID).css({backgroundPosition:'75px 262px'}).attr("title","STOP")
     }
     else{
 	oggPlayURL(flashid,playURL);
 	flStatus = true;
 	setPlayerButton(PlayerID,"stop");
-	$("#"+PlayerID).css({backgroundPosition:'75px 262px'}).attr("title","PLAY")
+	$("#"+PlayerID).css({backgroundPosition:'270px 262px'}).attr("title","PLAY")
     } 
 }
 
@@ -256,13 +256,13 @@ function javabuttonPlayStop(PlayerID,javaid,playURL)
 	javaAudio.doStop();
 	javaStatus = false;
 	setPlayerButton(PlayerID,"play");
-	$("#"+PlayerID).css({backgroundPosition:'270px 262px'}).attr("title","STOP")
+	$("#"+PlayerID).css({backgroundPosition:'75px 262px'}).attr("title","STOP")
     } 
     else{
 	javaAudio.doPlay();
 	javaStatus = true;
 	setPlayerButton(PlayerID,"stop");
-	$("#"+PlayerID).css({backgroundPosition:'75px 262px'}).attr("title","PLAY")
+	$("#"+PlayerID).css({backgroundPosition:'270px 262px'}).attr("title","PLAY")
     }
 }
 

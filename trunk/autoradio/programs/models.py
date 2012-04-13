@@ -8,7 +8,7 @@ from autoradio.programs.managers import EpisodeManager
 
 import datetime
 import calendar
-
+from django.db.models import Q
 
 from  django import VERSION as djversion
 
@@ -668,7 +668,7 @@ class Enclosure(models.Model):
         ("1","1")
         )
 
-    title = models.CharField(max_length=255, blank=True, help_text=ugettext_lazy('Title is generally only useful with multiple enclosures.'))
+    title = models.CharField(max_length=255, blank=True, default=None, help_text=ugettext_lazy('Title is generally only useful with multiple enclosures.'))
     file = DeletingFileField(upload_to='podcasts/episodes/files/', help_text=ugettext_lazy('Either upload or use the "Player" text box below. If uploading, file must be less than or equal to 30 MB for a Google video sitemap.'),blank=False, null=False,max_length=255)
     mime = models.CharField('Format', max_length=255, choices=MIME_CHOICES, blank=True)
     medium = models.CharField(max_length=255, blank=True, choices=MEDIUM_CHOICES)
@@ -687,6 +687,17 @@ class Enclosure(models.Model):
 
     class Meta:
         ordering = ['mime', 'file']
+
+
+    def save(self, *args, **kwargs):
+        """
+        Return a default title numbered by enclosure number
+        a missing title is not a good idea for rss and web interface
+        """
+        if  self.title == "":
+            self.title = "Part "+str(Enclosure.objects.filter(Q(episode=self.episode)).all().count()+1)
+        super(Enclosure, self).save(*args, **kwargs)
+
 
     def __unicode__(self):
         return u'%s' % (self.file)

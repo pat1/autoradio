@@ -3,6 +3,13 @@ NEWS
 
 version 2.2
 -----------
+ * autoradiod now take in account audacious and audacious2 executables
+ * changed SITE_MEDIA_PREFIX to MEDIA_SITE_PREFIX in config files
+ * close bug on wrong path for static media
+ * avoid to save enclosure without title, naming enclosure with auto part number 
+
+version 2.2
+-----------
  * close bug on web player ( multiple windows on multiple enclosure)
  * close bug on web player ( do not play for media path error )
  * close bug that don not show multiple enclosure for rss and atom feed

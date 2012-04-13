@@ -173,7 +173,17 @@ def audacious_watchdog(session):
    except:
       logging.error("audacious_watchdog: audacious is not running or error on is_running")
       import subprocess
-      subprocess.Popen("audacious2" , shell=True)
+      try:
+         logging.info("audacious_watchdog: try launching audacious")
+         subprocess.Popen("audacious" , shell=True)
+      except:
+         logging.error("audacious_watchdog: error launching audacious")
+         try:
+            logging.info("audacious_watchdog: try launching audacious2")
+            subprocess.Popen("audacious2" , shell=True)
+         except:
+            logging.error("audacious_watchdog: error launching audacious2")
+
       import time
       time.sleep(5)
       logging.info("audacious_watchdog: launch_audacious")

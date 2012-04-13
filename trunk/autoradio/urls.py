@@ -29,6 +29,6 @@ urlpatterns = patterns('',
 if ( settings.SERVE_STATIC ):
 #serve local static files
     urlpatterns += patterns('',
-                            (r'^'+settings.SITE_MEDIA_PREFIX[1:]+'(.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_SITE_ROOT, 'show_indexes': True}),
                             (r'^'+settings.MEDIA_PREFIX[1:]+'(.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+                            (r'^'+settings.MEDIA_SITE_PREFIX[1:]+'(.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_SITE_ROOT, 'show_indexes': True}),
                             )

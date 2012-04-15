@@ -2,6 +2,97 @@ from django.contrib import admin
 from models import Giorno, Configure, ProgramType, Show, Schedule, \
     PeriodicSchedule,AperiodicSchedule,Episode,Enclosure,ScheduleDone
 from autoradio.programs.models import ParentCategory, ChildCategory, MediaCategory
+from django import forms
+from django.utils.translation import ugettext_lazy
+
+
+class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
+    def clean(self):
+        import mutagen, os
+
+        # get forms that actually have valid data
+        count = 0
+        for form in self.forms:
+            try:
+                if form.cleaned_data:
+                    count += 1
+
+                    file = form.cleaned_data.get('file',False)
+                    if file:
+                        if not file.content_type in ["video/ogg","audio/oga"]:
+                            raise forms.ValidationError(ugettext_lazy("Content-Type is not audio/oga or video/ogg"))
+                        if not os.path.splitext(file.name)[1] in [".ogg",".oga",".Ogg",".Oga",".OGG"]:
+                            raise forms.ValidationError(ugettext_lazy("Doesn't have proper extension: .ogg, .oga"))
+                        #Check file if it is a known media file. The check is based on mutagen file test.
+                        try:
+                            mut=mutagen.File(file.temporary_file_path())
+                            audio = not mut is None
+                            sample_rate=mut.info.sample_rate
+                        except:
+                            audio = False
+                            sample_rate=0
+
+                        if not audio:
+                            raise forms.ValidationError(ugettext_lazy("Not a valid audio file"))
+
+                        if not sample_rate == 44100:
+                            raise forms.ValidationError(ugettext_lazy("Sample rate is Not 44100Hz: cannot use it in podcasting web interface"))
+            
+                        return file
+
+                    else:
+                        raise forms.ValidationError(ugettext_lazy("Couldn't read uploaded file"))
+
+            except AttributeError:
+                # annoyingly, if a subform is invalid Django explicity raises
+                # an AttributeError for cleaned_data
+                pass
+
+        if count < 1:
+            raise forms.ValidationError(ugettext_lazy('You must have at least one Enclosure'))
+
+
+
+
+class MyEnclosureAdminForm(forms.ModelForm):
+    """
+    Check file if it is a known media file.
+    """
+    class Meta:
+        model = Enclosure
+
+    def clean_file(self):
+
+	    import mutagen, os
+
+	    file = self.cleaned_data.get('file',False)
+            file
+	    if file:
+                if not file.content_type in ["video/ogg","audio/oga"]:
+                    raise forms.ValidationError(ugettext_lazy("Content-Type is not audio/oga or video/ogg"))
+                if not os.path.splitext(file.name)[1] in [".ogg",".oga",".Ogg",".Oga",".OGG"]:
+                    raise forms.ValidationError(ugettext_lazy("Doesn't have proper extension: .ogg, .oga"))
+                #Check file if it is a known media file. The check is based on mutagen file test.
+                try:
+                    mut=mutagen.File(file.temporary_file_path())
+                    audio = not mut is None
+                    sample_rate=mut.info.sample_rate
+                except:
+                    audio = False
+                    sample_rate=0
+
+                if not audio:
+                    raise forms.ValidationError(ugettext_lazy("Not a valid audio file"))
+
+                if not sample_rate == 44100:
+                    raise forms.ValidationError(ugettext_lazy("Sample rate is Not 44100Hz: cannot use it in podcasting web interface"))
+            
+                return file
+
+
+
+	    else:
+		    raise forms.ValidationError(ugettext_lazy("Couldn't read uploaded file"))
 
 
 class CategoryInline(admin.StackedInline):
@@ -38,6 +129,7 @@ class EnclosureInline(admin.StackedInline):
                 }),
         )
 
+    formset = MyEnclosureInlineFormset
 
 
 class ScheduleInline(admin.StackedInline):
@@ -229,13 +321,13 @@ admin.site.register(ScheduleDone, ScheduleDoneAdmin)
 
 class EnclosureAdmin(admin.ModelAdmin):
 
-    list_display = ('title',)
+    list_display = ('episode','title',)
     list_filter = ['medium','mime','bitrate']
     search_fields = ['title','file']
 
     fieldsets = (
         (None, {
-                'fields': ('title', 'file',)
+                'fields': ('episode','title', 'file',)
                 }),
         ('Podcast options', {
                 'classes': ('collapse',),
@@ -244,5 +336,6 @@ class EnclosureAdmin(admin.ModelAdmin):
                 }),
         )
 
+    form = MyEnclosureAdminForm
 
 admin.site.register(Enclosure, EnclosureAdmin)

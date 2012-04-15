@@ -161,6 +161,16 @@ INSTALLED_APPS = (
     'autoradio.doc',
 )
 
+# django save the files on memory, but large files are saved in a path.
+# The size of "large file" can be defined in settings using 
+# FILE_UPLOAD_MAX_MEMORY_SIZE and The FILE_UPLOAD_HANDLERS by default are:
+#("django.core.files.uploadhandler.MemoryFileUploadHandler",
+# "django.core.files.uploadhandler.TemporaryFileUploadHandler",)
+
+# remove MemoryFileUploadHandler
+FILE_UPLOAD_HANDLERS = (
+"django.core.files.uploadhandler.TemporaryFileUploadHandler",)
+
 try:
     import django_extensions
     INSTALLED_APPS += 'django_extensions',

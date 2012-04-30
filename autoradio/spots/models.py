@@ -100,9 +100,9 @@ class Configure(models.Model):
         sezione = models.CharField(max_length=50,unique=True,default='spot',editable=False)
 	active = models.BooleanField(ugettext_lazy("Activate Spot"),default=True,\
                  help_text=ugettext_lazy("activate/deactivate the intere spot class"))
-        emission_starttime = models.TimeField(ugettext_lazy('Programmed start time'),\
+        emission_starttime = models.TimeField(ugettext_lazy('Programmed start time'),null=True,blank=True,\
                  help_text=ugettext_lazy("The start time from wich the spot will be active"))
-        emission_endtime = models.TimeField(ugettext_lazy('Programmed end time'),\
+        emission_endtime = models.TimeField(ugettext_lazy('Programmed end time'),null=True,blank=True,\
                  help_text=ugettext_lazy("The end time the spot will be active"))
 
 

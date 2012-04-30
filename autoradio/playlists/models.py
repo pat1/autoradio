@@ -63,9 +63,9 @@ class Configure(models.Model):
 
 	active = models.BooleanField(ugettext_lazy("Activate Playlist"),default=True,\
                                          help_text=ugettext_lazy("activate/deactivate the intere playlist class"))
-        emission_starttime = models.TimeField(ugettext_lazy('Programmed start time'),\
+        emission_starttime = models.TimeField(ugettext_lazy('Programmed start time'),null=True,blank=True,\
                                                   help_text=ugettext_lazy("The start time from wich the playlist will be active"))
-        emission_endtime = models.TimeField(ugettext_lazy('Programmed start time'),
+        emission_endtime = models.TimeField(ugettext_lazy('Programmed start time'),null=True,blank=True,\
                                             help_text=ugettext_lazy("The end time the playlist will be active"))
 
 

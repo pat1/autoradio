@@ -65,7 +65,8 @@ class gest_program:
             firth=True
             for enclosure in schedule.episode.enclosure_set.order_by('id'):
                 logging.debug("PROGRAM: files: %s", enclosure.file.path)
-                ar_filename=enclosure.file.url
+                ar_filename=enclosure.file.path
+                ar_url=enclosure.file.url
                 ar_title=schedule.episode.show.title+" / "\
                     +schedule.episode.title+" / "\
                     +enclosure.title
@@ -100,6 +101,7 @@ class gest_program:
 
                 programma=scheduledone
                 programma.ar_filename=ar_filename
+                programma.ar_url=ar_url
                 programma.ar_length=ar_length
                 programma.ar_title=ar_title
                 programma.ar_emission_done=ar_emission_done
@@ -125,6 +127,7 @@ def main():
         #pass
 
         print programma.ar_filename
+        print programma.ar_url
         print programma.ar_scheduledatetime
         print programma.ar_length
 

@@ -40,6 +40,7 @@ configspec['autoradioweb']['lockfile'] = "string(default='/tmp/autoradioweb.lock
 configspec['autoradioweb']['user']     = "string(default=None)"
 configspec['autoradioweb']['group']    = "string(default=None)"
 configspec['autoradioweb']['port']    = "string(default='8080')"
+configspec['autoradioweb']['permit_no_playable_files'] = "boolean(default=False)"
 
 
 configspec['database']={}
@@ -109,6 +110,7 @@ lockfileweb             = config['autoradioweb']['lockfile']
 userweb                 = config['autoradioweb']['user']
 groupweb                = config['autoradioweb']['group']
 port                    = config['autoradioweb']['port']
+permit_no_playable_files= config['autoradioweb']['permit_no_playable_files']
 
 # section database
 DATABASE_USER     = config['database']['DATABASE_USER']        

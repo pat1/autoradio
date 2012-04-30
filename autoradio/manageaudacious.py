@@ -87,9 +87,10 @@ def ManageAudacious (session,schedule):
       else:
          raise AudaciousError("ManageAudacious: type not supported: %s"% schedule.type)
 
-      media=schedule.media
       if operation == "loadPlaylist":
-         media=shuffle_playlist(schedule.media,schedule.shuffle,relative_path=False,length=schedule.maxlength)
+         media=shuffle_playlist(schedule.filename,schedule.shuffle,relative_path=False,length=schedule.maxlength)
+      else:
+         media=schedule.filename
 
       aud=autoaudacious.audacious()
 
@@ -246,7 +247,7 @@ def main():
     #media = raw_input("dammi il media? ")
 
     scheduledatetime=datetime.now()+timedelta(seconds=5)
-    sched=autoradio_core.schedule(programma,scheduledatetime,media,type=type,shuffle=shuffle,maxlength=maxlength)
+    sched=autoradio_core.schedule(programma,scheduledatetime,media,filename=media,type=type,shuffle=shuffle,maxlength=maxlength)
 
     threadschedule=ScheduleProgram(session,sched)
     threadschedule.start()

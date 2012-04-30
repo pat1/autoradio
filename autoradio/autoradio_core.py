@@ -17,14 +17,15 @@ class schedule:
     attributes:
     djobj : dajngo retrive object
     scheduledatetime : datetime of schedule
-    media
+    media : url of media
+    filename : path of media
     length=None : time length in seconds
     type=None   : "spot"/""playlist"/"jingle"/"programma"
     emission_done=None
     shuffle=False
     title=None):
     """
-    def __init__ (self,djobj,scheduledatetime,media,length=None,type=None,emission_done=None,\
+    def __init__ (self,djobj,scheduledatetime,media,filename,length=None,type=None,emission_done=None,\
                       shuffle=False,maxlength=None,title=None):
         """
         init of schedule object:
@@ -32,6 +33,7 @@ class schedule:
         self.djobj=djobj
         self.scheduledatetime=scheduledatetime
         self.media=media
+        self.filename=filename
         #self.mediaweb = self.media[len(settings.MEDIA_URL)+1:]
         self.length=length
         self.type=type
@@ -105,7 +107,7 @@ class schedules(list):
         english:
         try to extricate from an schedules ensemble
         the more easy operation is to delete jingles inside programs and spots
-        italian: cerca di sdistricarsi tra un insieme di schedule
+        italiano: cerca di districarsi tra un insieme di schedule
         la prima operazione da fare e' togliere i jingle che coincidono con programmi e pubblicita'
         '''
         logging.debug("execute districa")
@@ -202,29 +204,30 @@ class schedules(list):
 
         for fascia in spots.get_fasce(genfile):
 
-            # remove prefix
-            media = spots.ar_filename
+            media = spots.ar_url
+            filename = spots.ar_filename
             scheduledatetime=spots.ar_scheduledatetime
             length=spots.ar_length
             emission_done=spots.ar_emission_done
             number=spots.ar_spots_in_fascia
             #print scheduledatetime,media,length,number,emission_done
             if (number <> 0 ):
-                self.append(schedule(fascia,scheduledatetime,media,length,"spot",emission_done,title=str(fascia)))
+                self.append(schedule(fascia,scheduledatetime,media,filename,length,"spot",emission_done,title=str(fascia)))
 
 
         programs=gest_program(now,minelab)
 
         for programma in programs.get_program():
 
-            media = programma.ar_filename
+            media = programma.ar_url
+            filename = programma.ar_filename
             scheduledatetime=programma.ar_scheduledatetime
             length=programma.ar_length
             emission_done=programma.ar_emission_done
             title=programma.ar_title
 
             #print scheduledatetime,media,length,emission_done
-            self.append(schedule(programma,scheduledatetime,media,length,"program",\
+            self.append(schedule(programma,scheduledatetime,media,filename,length,"program",\
                                      emission_done,title=title))
 
 
@@ -232,14 +235,15 @@ class schedules(list):
 
         for playlist in playlists.get_playlist():
 
-            media = playlist.ar_filename
+            media = playlist.ar_url
+            filename = playlist.ar_filename
             scheduledatetime=playlist.ar_scheduledatetime
             length=playlist.ar_length
             maxlength=playlist.length
             emission_done=playlist.ar_emission_done
             shuffle=playlist.ar_shuffle
             #print scheduledatetime,media,length,emission_done
-            self.append(schedule(playlist,scheduledatetime,media,length,"playlist",\
+            self.append(schedule(playlist,scheduledatetime,media,filename,length,"playlist",\
                                      emission_done,shuffle,maxlength,title=str(playlist)))
 
 
@@ -248,14 +252,15 @@ class schedules(list):
         for jingle in jingles.get_jingle():
 
             # remove prefix
-            media = jingle.ar_filename
+            media = jingle.ar_url
+            filename = jingle.ar_filename
             scheduledatetime=jingle.ar_scheduledatetime
 
             length=jingle.ar_length
             emission_done=jingle.ar_emission_done
 
             #print scheduledatetime,media,length,emission_done
-            self.append(schedule(jingle,scheduledatetime,media,length,"jingle",\
+            self.append(schedule(jingle,scheduledatetime,media,filename,length,"jingle",\
                                      emission_done,title=str(jingle)))
 
 

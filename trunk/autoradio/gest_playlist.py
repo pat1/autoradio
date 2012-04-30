@@ -103,8 +103,9 @@ class gest_playlist:
             if (player == "amarok"):
                 playlist.ar_filename=playlist.playlist.playlist
             else:
-                playlist.ar_filename=playlist.playlist.file.url
+                playlist.ar_filename=playlist.playlist.file.path
 
+            playlist.ar_url=playlist.playlist.file.url
             playlist.ar_scheduledatetime=playlist.emission_date
             playlist.ar_emission_done=playlist.emission_done
 
@@ -137,6 +138,8 @@ class gest_playlist:
                 playlist.ar_filename=playlist.playlist.playlist
             else:
                 playlist.ar_filename=playlist.playlist.file.path
+
+            playlist.ar_url=playlist.playlist.file.url
 
             #print self.timesched_min, self.timesched_max
 
@@ -198,6 +201,7 @@ def main():
             print "--------------------------------"
             print "found schedule: ",playlist
             print playlist.ar_filename
+            print playlist.ar_url
             print playlist.ar_scheduledatetime
             print playlist.ar_length
             print "playlist",playlist.playlist

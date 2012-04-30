@@ -1,11 +1,12 @@
 NEWS
 ----
 
-svn
----
+version 2.4
+-----------
  * file uplodated now are validated: 
-   enclosure can be ogg 44100hx only for best web player functionality
-   othe can be audio file mp3/ogg/flac
+   new config parameter permit_no_playable_files (default = False):
+   enclosure can be ogg 44100Hz only for best web player functionality;
+   in all other cases files can be audio file mp3/ogg/flac
 
 version 2.3
 -----------

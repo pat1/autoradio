@@ -135,7 +135,7 @@ def main(cwd):
           for schedule in scheds.get_all_refine(now):
 
               scheduledatetime=schedule.scheduledatetime
-              media=schedule.media
+              filename=schedule.filename
               type=schedule.type
               emission_done=schedule.emission_done
 
@@ -178,12 +178,12 @@ def main(cwd):
                   #print "ora attuale", datetime.now()
 
                   if (player == "amarok") :
-                      threadschedule=manageplayer.ScheduleProgram(kapp,function,operation,media,scheduledatetime,obj)
+                      threadschedule=manageplayer.ScheduleProgram(kapp,function,operation,filename,scheduledatetime,obj)
                   else:
-                      #threadschedule=ScheduleProgram(session,function,operation,media,scheduledatetime,obj,shuffle,length)
+                      #threadschedule=ScheduleProgram(session,function,operation,filename,scheduledatetime,obj,shuffle,length)
                       threadschedule=manageplayer.ScheduleProgram(session,schedule)
 
-                  logging.debug (" %s %s programmed for %s seconds forward", type,media,threadschedule.deltasec)
+                  logging.debug (" %s %s programmed for %s seconds forward", type,filename,threadschedule.deltasec)
                   threadschedule.start()
 
           first = False

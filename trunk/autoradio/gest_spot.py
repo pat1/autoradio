@@ -86,6 +86,9 @@ class gest_spot:
             self.ar_spots_in_fascia=self.count_spots()
             self.ar_filename=self.get_fascia_playlist_media(genfile)
 
+            # TODO: add the real http to the file path
+            self.ar_url=self.ar_filename
+
             self.ar_scheduledatetime=datetime.combine(self.oggi, fascia.emission_time)
 
             # if we are around midnight we have to check the correct date (today, iesterday, tomorrow)

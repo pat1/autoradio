@@ -261,9 +261,9 @@ class Configure(models.Model):
 					   ,default='show',editable=False)
 	active = models.BooleanField(ugettext_lazy("Active show"),default=True,\
                                          help_text=ugettext_lazy("activate/deactivate the intere program class"))
-        emission_starttime = models.TimeField(ugettext_lazy('Programmed start time'),\
+        emission_starttime = models.TimeField(ugettext_lazy('Programmed start time'),null=True,blank=True,\
                                                   help_text=ugettext_lazy("The start time from wich the programs will be active"))
-        emission_endtime = models.TimeField(ugettext_lazy('Programmed end time'),
+        emission_endtime = models.TimeField(ugettext_lazy('Programmed end time'),null=True,blank=True,\
                                             help_text=ugettext_lazy("The end time the programs will be active"))
 
 

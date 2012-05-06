@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# GPL. (C) 2007-2009 Paolo Patruno.
+# GPL. (C) 2007-2012 Paolo Patruno.
 
 # This program is free software; you can redistribute it and/or modify 
 # it under the terms of the GNU General Public License as published by 
@@ -17,11 +17,9 @@
 # 
 
 # ToDo:
-# controllare gli inserimenti al livello di django ADMIN INTERFACE
 # controllare altri conflitti in districa oltre ai jingles
 # utilizzare mp3splt per spezzare i programmi per fare gli inserimenti pubblicitari
 # alternare meglio i jingle tenendo in considerazione la priorita
-# a cavallo della mezzanotte verificare il funzionamento
 
 
 from autoradio.autoradio_config import *
@@ -50,7 +48,7 @@ def main(cwd):
     #from threading import *
     import autoradio.autoradio_core
 
-    if (player == "amarok") :
+    if (player == "amarok1") :
         import autoradio.manageamarok as manageplayer 
 
     elif (player == "xmms"):
@@ -58,9 +56,11 @@ def main(cwd):
         import autoradio.managexmms as manageplayer
         import autoradio.xmmsweb as playerweb
 
-    elif (player == "audacious"):
-        import autoradio.manageaudacious as manageplayer
-        import autoradio.audaciousweb as playerweb
+    elif (player == "audacious" or player == "amarok" or player == "vlc"):
+#        import autoradio.manageaudacious as manageplayer
+#        import autoradio.audaciousweb as playerweb
+        import autoradio.managempris as manageplayer
+        import autoradio.mprisweb as playerweb
 
     else:
         logging.error('wrong player %s' % player)
@@ -104,7 +104,7 @@ def main(cwd):
 
       first = True
 
-      if (player == "amarok") :
+      if (player == "amarok1") :
           kapp=KdeInit()
           function=manageplayer.ManageAmarok
           ok=amarok_watchdog(kapp)
@@ -122,12 +122,12 @@ def main(cwd):
           #p = subprocess.Popen("xmmsweb.py")
 
 
-          if (player == "amarok"):
+          if (player == "amarok1"):
               ok=manageplayer.amarok_watchdog(kapp)
           elif (player == "xmms"):
               ok=manageplayeer.xmms_watchdog(session)
           elif (player == "audacious"):
-              ok=manageplayer.audacious_watchdog(session)
+              ok=manageplayer.player_watchdog(player,session)
 
       while ( True):
 
@@ -177,11 +177,11 @@ def main(cwd):
                   #print "ora schedulata", scheduledatetime
                   #print "ora attuale", datetime.now()
 
-                  if (player == "amarok") :
+                  if (player == "amarok1") :
                       threadschedule=manageplayer.ScheduleProgram(kapp,function,operation,filename,scheduledatetime,obj)
                   else:
                       #threadschedule=ScheduleProgram(session,function,operation,filename,scheduledatetime,obj,shuffle,length)
-                      threadschedule=manageplayer.ScheduleProgram(session,schedule)
+                      threadschedule=manageplayer.ScheduleProgram(player,session,schedule)
 
                   logging.debug (" %s %s programmed for %s seconds forward", type,filename,threadschedule.deltasec)
                   threadschedule.start()
@@ -192,7 +192,7 @@ def main(cwd):
           #now I advance minsched and wait the right time to proced
           now=now+datetime.timedelta(0,60*minsched)
           while ( datetime.datetime.now() < now):
-              if (player == "amarok"):
+              if (player == "amarok1"):
                   ok=manageplayer.save_status(kapp)
 
               else:
@@ -219,12 +219,12 @@ def main(cwd):
               #logging.debug ( "wake up: %s  %d",__name__,os.getpid() )
 
           #sometime adjust playlist (will be deleted)
-          if (player == "amarok"):
+          if (player == "amarok1"):
               ok=manageplayer.amarok_watchdog(kapp)
           elif (player == "xmms"):
               ok=manageplayer.xmms_watchdog(session)
           elif (player == "audacious"):
-              ok=manageplayer.audacious_watchdog(session)
+              ok=manageplayer.player_watchdog(player,session)
 
 
     except KeyboardInterrupt :

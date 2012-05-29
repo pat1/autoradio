@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2009 Paolo Patruno.
 
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
+from django.conf import settings
+
 import logging
 from datetime import *
 
@@ -121,11 +125,12 @@ class gest_palimpsest:
 
             if (self.timesched_min < self.timesched_max):
 
-                program.ar_scheduledatetime=datetime.datetime.combine(self.datesched_min.date(), program.time)
+                program.ar_scheduledatetime=datetime.combine(self.datesched_min.date(), program.time)
                 
             else:
                 # we are around midnight we have to check the correct date (today, tomorrow)
-                if self.ar_scheduledatetime.time() > time(12):
+
+                if program.time > time(12):
                     program.ar_scheduledatetime=datetime.combine(self.datesched_min.date(), program.time)
                 else:
                     program.ar_scheduledatetime=datetime.combine(self.datesched_max.date(), program.time)

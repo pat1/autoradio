@@ -135,7 +135,7 @@ class schedules(list):
                     endscheduledatetime=scheduledatetime+timedelta(seconds=length)
 
                     if (type == "jingle" or type == "playlist"): continue
-                    # here we have jingle versus programs ans spot
+                    # here we have jingle versus programs and spot
 
                     if (( scheduledatetime < scheduledatetimej and scheduledatetimej < endscheduledatetime )\
                             or \
@@ -251,11 +251,9 @@ class schedules(list):
 
         for jingle in jingles.get_jingle():
 
-            # remove prefix
             media = jingle.ar_url
             filename = jingle.ar_filename
             scheduledatetime=jingle.ar_scheduledatetime
-
             length=jingle.ar_length
             emission_done=jingle.ar_emission_done
 
@@ -400,12 +398,15 @@ class palimpsests(list):
             for program in pro.get_program():
 
                 length=program.show.length
+                if length is None:
+                    logging.warning("get_palimpsest: %s legth is None; setting default to 3600 sec",str(program))
+                    length = 3600
                 pdatetime_start=program.ar_scheduledatetime
                 title=str(program)
                 pdatetime_end=program.ar_scheduledatetime+timedelta(seconds=length)
-                code=str(program.show.type.code)
-                type=str(program.show.type.type)
-                subtype=str(program.show.type.subtype)
+                code=program.show.type.code
+                type=program.show.type.type
+                subtype=program.show.type.subtype
                 production=program.show.production
                 note=""
 
@@ -513,36 +514,36 @@ def main():
 
     logging.basicConfig(level=logging.INFO,)
 
-    pali=palimpsests([])
+#    pali=palimpsests([])
 
-    print "------- palimpsest --------"
-    for prog in pali.get_palimpsest(datetime.now()-timedelta(days=1),datetime.now()):
-        print "------- program --------"
+#    print "------- palimpsest --------"
+#    for prog in pali.get_palimpsest(datetime.now()-timedelta(days=1),datetime.now()):
+#        print "------- program --------"
+#
+#        print prog
+#
+#        #for elemento in prog:
+#        #    print elemento
 
-        print prog
 
-        #for elemento in prog:
-        #    print elemento
-
-
-    #scheds=schedules([])
+    scheds=schedules([])
 
     # get the schedule of my insterest
     # I do a list
-    #print "------- schedules --------"
-    #for sched in scheds.get_all_refine():
-    #
+    print "------- schedules --------"
+    for sched in scheds.get_all_refine():
+    
 
-    #    print "------- schedule --------"
+        print "------- schedule --------"
 
-    #    for elemento in sched:
-    #        print elemento
+        for elemento in sched:
+            print elemento
 
-    #    #print sched.type
-    #    #print sched.media
-    #    #print sched.scheduledatetime
-    #    #print sched.shuffle
-    #    #print sched.length
+        print sched.type
+        print sched.media
+        print sched.scheduledatetime
+        print sched.shuffle
+        print sched.length
 
 
 

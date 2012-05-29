@@ -2,13 +2,14 @@
 # This Python file uses the following encoding: utf-8
 # GPL. (C) 2007-2009 Paolo Patruno.
 
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
+from django.conf import settings
+
 import logging
 from datetime import *
-
 from autoradio_config import *
-
 from django.db.models import Q
-
 from spots.models import Configure
 from spots.models import Spot
 from spots.models import Fascia

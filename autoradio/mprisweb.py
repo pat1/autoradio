@@ -12,7 +12,7 @@ Show mediaplayer playlist on a simple web server.
 #    sys.path.insert(0, compatCherryPyPath)
 #finally:
 
-from autoradio_config import *
+import autoradio_config
 import cherrypy
 import os
 import datetime
@@ -222,7 +222,7 @@ if __name__ == '__main__':
 
     # Start the CherryPy server.
     try:
-        start_http_server(iht=True,player=player,session=0)
+        start_http_server(iht=True,player=autoradio_config.player,session=0)
     except:
         print "Error"
         raise

@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2007-2009 Paolo Patruno.
 
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
+from django.conf import settings
+
 import logging
 import datetime
 

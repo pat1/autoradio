@@ -21,20 +21,23 @@
 # utilizzare mp3splt per spezzare i programmi per fare gli inserimenti pubblicitari
 # alternare meglio i jingle tenendo in considerazione la priorita
 
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
+from django.conf import settings
 
-from autoradio.autoradio_config import *
+import autoradio.settings
+import autoradio.autoradio_config
 from autoradio import daemon
 from autoradio import _version_
-import os
 
 autoradiod = daemon.Daemon(
         stdin="/dev/null",
-        stdout=logfile,
-        stderr=errfile,
-        pidfile=lockfile,
-        user=user,
-        group=group,
-        env=env
+        stdout=autoradio.autoradio_config.logfile,
+        stderr=autoradio.autoradio_config.errfile,
+        pidfile=autoradio.autoradio_config.lockfile,
+        user=autoradio.autoradio_config.user,
+        group=autoradio.autoradio_config.group,
+        env=autoradio.autoradio_config.env
 )
 
 
@@ -48,22 +51,22 @@ def main(cwd):
     #from threading import *
     import autoradio.autoradio_core
 
-    if (player == "amarok1") :
+    if (autoradio.autoradio_config.player == "amarok1") :
         import autoradio.manageamarok as manageplayer 
 
-    elif (player == "xmms"):
+    elif (autoradio.autoradio_config.player == "xmms"):
         #    from managepytone import *
         import autoradio.managexmms as manageplayer
         import autoradio.xmmsweb as playerweb
 
-    elif (player == "audacious" or player == "amarok" or player == "vlc"):
+    elif (autoradio.autoradio_config.player == "audacious" or autoradio.autoradio_config.player == "amarok" or player == "vlc"):
 #        import autoradio.manageaudacious as manageplayer
 #        import autoradio.audaciousweb as playerweb
         import autoradio.managempris as manageplayer
         import autoradio.mprisweb as playerweb
 
     else:
-        logging.error('wrong player %s' % player)
+        logging.error('wrong player %s' % autoradio.autoradio_config.player)
         raise Exception()
 
     try:
@@ -74,7 +77,7 @@ def main(cwd):
     #def signalhandler(signum, frame):
     #    logging.info( 'Signal handler called with signal %d', signum)
 
-    handler = logging.handlers.RotatingFileHandler(logfile, maxBytes=5000000, backupCount=10)
+    handler = logging.handlers.RotatingFileHandler(autoradio.autoradio_config.logfile, maxBytes=5000000, backupCount=10)
     formatter=logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
     handler.setFormatter(formatter)
@@ -88,7 +91,7 @@ def main(cwd):
 
     #signal.signal(signal.SIGALRM, signalhandler)
 
-    f = open(timestampfile, "w")
+    f = open(autoradio.autoradio_config.timestampfile, "w")
     f.write(str(datetime.datetime.now()))
     f.close()
 
@@ -104,7 +107,7 @@ def main(cwd):
 
       first = True
 
-      if (player == "amarok1") :
+      if (autoradio.autoradio_config.player == "amarok1") :
           kapp=KdeInit()
           function=manageplayer.ManageAmarok
           ok=amarok_watchdog(kapp)
@@ -122,12 +125,12 @@ def main(cwd):
           #p = subprocess.Popen("xmmsweb.py")
 
 
-          if (player == "amarok1"):
+          if (autoradio.autoradio_config.player == "amarok1"):
               ok=manageplayer.amarok_watchdog(kapp)
-          elif (player == "xmms"):
+          elif (autoradio.autoradio_config.player == "xmms"):
               ok=manageplayeer.xmms_watchdog(session)
-          elif (player == "audacious"):
-              ok=manageplayer.player_watchdog(player,session)
+          elif (autoradio.autoradio_config.player == "audacious"):
+              ok=manageplayer.player_watchdog(autoradio.autoradio_config.player,session)
 
       while ( True):
 
@@ -164,35 +167,35 @@ def main(cwd):
               #if it is the first time I start from minsched minuti in the past
               if (first and ( type == "program" or type == "spot" or type == "playlist")): 
                   #recovery programmi, playlist e pubblicita' not emitted in a ragionable past time range
-                  startschedsec=-60*minsched
+                  startschedsec=-60 * autoradio.autoradio_config.minsched
               elif (first and ( type == "jingle")):
                   startschedsec=0
               else:
-                  startschedsec=60*minsched
+                  startschedsec=60*autoradio.autoradio_config.minsched
 
 
-              endschedsec = 60*minsched*2
+              endschedsec = 60*autoradio.autoradio_config.minsched*2
               if ( startschedsec < sec and sec <= endschedsec ):
 
                   #print "ora schedulata", scheduledatetime
                   #print "ora attuale", datetime.now()
 
-                  if (player == "amarok1") :
+                  if (autoradio.autoradio_config.player == "amarok1") :
                       threadschedule=manageplayer.ScheduleProgram(kapp,function,operation,filename,scheduledatetime,obj)
                   else:
                       #threadschedule=ScheduleProgram(session,function,operation,filename,scheduledatetime,obj,shuffle,length)
-                      threadschedule=manageplayer.ScheduleProgram(player,session,schedule)
+                      threadschedule=manageplayer.ScheduleProgram(autoradio.autoradio_config.player,session,schedule)
 
                   logging.debug (" %s %s programmed for %s seconds forward", type,filename,threadschedule.deltasec)
                   threadschedule.start()
 
           first = False
-          sleepsec=minsched/5.*60.
+          sleepsec=autoradio.autoradio_config.minsched/5.*60.
 
           #now I advance minsched and wait the right time to proced
-          now=now+datetime.timedelta(0,60*minsched)
+          now=now+datetime.timedelta(0,60*autoradio.autoradio_config.minsched)
           while ( datetime.datetime.now() < now):
-              if (player == "amarok1"):
+              if (autoradio.autoradio_config.player == "amarok1"):
                   ok=manageplayer.save_status(kapp)
 
               else:
@@ -200,7 +203,7 @@ def main(cwd):
 
               if ( ok ) :
 
-                  f = open(timestampfile, "w")
+                  f = open(autoradio.autoradio_config.timestampfile, "w")
                   f.write(str(datetime.datetime.now()))
                   f.close()
 
@@ -219,12 +222,12 @@ def main(cwd):
               #logging.debug ( "wake up: %s  %d",__name__,os.getpid() )
 
           #sometime adjust playlist (will be deleted)
-          if (player == "amarok1"):
+          if (autoradio.autoradio_config.player == "amarok1"):
               ok=manageplayer.amarok_watchdog(kapp)
-          elif (player == "xmms"):
+          elif (autoradio.autoradio_config.player == "xmms"):
               ok=manageplayer.xmms_watchdog(session)
-          elif (player == "audacious"):
-              ok=manageplayer.player_watchdog(player,session)
+          elif (autoradio.autoradio_config.player == "audacious"):
+              ok=manageplayer.player_watchdog(autoradio.autoradio_config.player,session)
 
 
     except KeyboardInterrupt :
@@ -260,7 +263,7 @@ if __name__ == '__main__':
 
     # this is a triky for ubuntu and debian that remove /var/run every boot
     # ATTENTION, this should be a security problem
-    path=os.path.dirname(lockfile)
+    path=os.path.dirname(autoradio.autoradio_config.lockfile)
     if (not os.path.lexists(path) and path == "/var/run/autoradio" ):
         os.mkdir(path)
         if (os.getuid() == 0):

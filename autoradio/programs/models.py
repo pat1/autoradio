@@ -277,9 +277,20 @@ class Configure(models.Model):
                        help_text=ugettext_lazy("The station type for the print of programs book"))
 
         def __unicode__(self):
+
+            if self.emission_starttime is None:
+                emission_starttime = "- infinite"
+            else:
+                emission_starttime = self.emission_starttime.isoformat()
+
+            if self.emission_endtime is None:
+                emission_endtime = "+ infinite"
+            else:
+                emission_endtime = self.emission_endtime.isoformat()
+
             return self.sezione+" "+self.active.__str__()+" "\
-		+self.emission_starttime.isoformat()+" "\
-		+self.emission_endtime.isoformat()
+		+emission_starttime+" "\
+		+emission_endtime
 
 
 class ProgramType(models.Model):

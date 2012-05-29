@@ -2,6 +2,10 @@
 # This Python file uses the following encoding: utf-8
 # GPL. (C) 2007-2009 Paolo Patruno.
 
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
+from django.conf import settings
+
 import logging
 from datetime import *
 
@@ -88,6 +92,7 @@ class gest_jingle:
         # we select every jingle active at "now"
         # if not selected some time limits is like 00 for start and 24 for end
         # warning: if you set 18:00 for start and nothing for end it start 18:00 and stop at 24:00
+
         self.jingles= Jingle.objects.filter\
             (Q(start_date__lte=self.oggi) | Q(start_date__isnull=True),\
              Q(end_date__gte=self.oggi)   | Q(end_date__isnull=True),\
@@ -95,6 +100,8 @@ class gest_jingle:
              Q(end_time__gte=self.ora)    | Q(end_time__isnull=True),\
              Q(giorni__name__exact=self.giorno) , Q(active__exact=True))\
              .order_by('emission_done','priorita')
+
+
 
 # TODO: we have to add case were start_time > end_time
 
@@ -117,7 +124,6 @@ class gest_jingle:
 
 #        for datac in time_iterator(self.datesched_min,self.datesched_max,self.emission_freq):
         for datac in time_iterator(self.now,self.datesched_max,self.emission_freq):
-
             jingle=many_jingles.next()
             jingle.ar_filename=jingle.file.path
             jingle.ar_url=jingle.file.url
@@ -143,10 +149,16 @@ def main():
     
     for jingle in jingles.get_jingle():
 
-        print jingle.ar_filename
+        print "----------------------------"
+        print jingle
         print jingle.ar_url
+        print jingle.ar_filename
         print jingle.ar_scheduledatetime
         print jingle.ar_length
+        print jingle.ar_emission_done
+
+        for giorno in jingle.giorni.all():
+            print giorno
 
 if __name__ == '__main__':
     main()  # (this code was run as script)

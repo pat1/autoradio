@@ -1,14 +1,18 @@
 #!/usr/bin/env python
-# GPL. (C) 2007 Paolo Patruno.
+# GPL. (C) 2007-2012 Paolo Patruno.
 
 import logging
 import dbus
 import autompris
 from datetime import *
 from threading import *
-from django.conf import settings
 import os
 import autoradio_config
+
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+from django.conf import settings
+
 
 class PlayerError(Exception):
 
@@ -102,10 +106,7 @@ def ManagePlayer (player,session,schedule):
             raise PlayerError("Managempris: ERROR in playlist_clear_up")
 
          #print settings.MEDIA_ROOT
-         #pos=aud.get_playlist_posauto(autopath=settings.MEDIA_ROOT,securesec=10)
-
-         pos=aud.get_playlist_posauto(autopath="/cacca",securesec=10)
-
+         pos=aud.get_playlist_posauto(autopath=settings.MEDIA_ROOT,securesec=10)
          curpos=aud.get_playlist_pos()
 
          # inserisco il file nella playlist
@@ -129,15 +130,16 @@ def ManagePlayer (player,session,schedule):
          if schedule.shuffle:
             os.remove(media)
 
-      logging.info( "Managempris: write in django: %s",schedule.djobj)
+      logging.info( "Managempris: write   in django: %s",schedule.djobj)
       ar_emitted(schedule.djobj)
-      logging.info( "Managempris: write in django: %s",schedule.djobj)
+      logging.info( "Managempris: written in django: %s",schedule.djobj)
+
+      aud.play_ifnot()
 
    except PlayerError, e:
       logging.error(e)
       
-      
-   return  aud.play_ifnot()
+   return
 
 
 
@@ -221,7 +223,7 @@ def main():
     maxlength=None
 
     type="program"
-    media = "/home/pat1/tmp/pippo.mp3"
+    media = "/home/pat1/svn/autoradio/trunk/media/pippo.mp3"
     #media = "/home/pat1/Musica/STOP AL PANICO/ISOLA POSSE STOP AL PANICO.mp3"
     #media = "/home/autoradio/django/media/playlist/tappeto_musicale.m3u"
     #media = raw_input("dammi il media? ")

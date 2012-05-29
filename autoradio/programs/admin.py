@@ -4,6 +4,7 @@ from models import Giorno, Configure, ProgramType, Show, Schedule, \
 from autoradio.programs.models import ParentCategory, ChildCategory, MediaCategory
 from django import forms
 from django.utils.translation import ugettext_lazy
+import autoradio.settings
 
 
 class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
@@ -19,24 +20,57 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
 
                     file = form.cleaned_data.get('file',False)
                     if file:
-                        if not file.content_type in ["video/ogg","audio/oga"]:
-                            raise forms.ValidationError(ugettext_lazy("Content-Type is not audio/oga or video/ogg"))
-                        if not os.path.splitext(file.name)[1] in [".ogg",".oga",".Ogg",".Oga",".OGG"]:
-                            raise forms.ValidationError(ugettext_lazy("Doesn't have proper extension: .ogg, .oga"))
+
+                        if autoradio.settings.permit_no_playable_files:
+
+                            try:
+                                type = file.content_type in ["audio/mpeg","audio/flac","video/ogg"]
+                            except:
+                                return file
+
+                            if not type:
+                                raise forms.ValidationError(ugettext_lazy("Content-Type is not audio/mpeg or audio/flac or video/ogg"))
+
+                            if not os.path.splitext(file.name)[1] in [".mp3",".wav",".ogg",".oga",".flac",
+							      ".Mp3",".Wav",".Ogg",".Oga",".Flac",
+							      ".MP3",".WAV",".OGG",".OGA",".FLAC" ]:
+                                raise forms.ValidationError(ugettext_lazy("Doesn't have proper extension: .mp3, .wav, .ogg, .oga, .flac"))
+                    #Check file if it is a known media file. The check is based on mutagen file test.
+                            try:
+                                audio = not mutagen.File(file.temporary_file_path()) is None
+                            except:
+                                audio = False
+
+                            if not audio:
+                                raise forms.ValidationError(ugettext_lazy("Not a valid audio file"))
+                            return file
+
+                        else:
+
+                            try:
+                                type = file.content_type in ["video/ogg","audio/oga"]
+                            except:
+                                return file
+
+                            if not type:
+                                raise forms.ValidationError(ugettext_lazy("Content-Type is not audio/oga or video/ogg"))
+
+                            if not os.path.splitext(file.name)[1] in [".ogg",".oga",".Ogg",".Oga",".OGG"]:
+                                raise forms.ValidationError(ugettext_lazy("Doesn't have proper extension: .ogg, .oga"))
                         #Check file if it is a known media file. The check is based on mutagen file test.
-                        try:
-                            mut=mutagen.File(file.temporary_file_path())
-                            audio = not mut is None
-                            sample_rate=mut.info.sample_rate
-                        except:
-                            audio = False
-                            sample_rate=0
+                            try:
+                                mut=mutagen.File(file.temporary_file_path())
+                                audio = not mut is None
+                                sample_rate=mut.info.sample_rate
+                            except:
+                                audio = False
+                                sample_rate=0
 
-                        if not audio:
-                            raise forms.ValidationError(ugettext_lazy("Not a valid audio file"))
+                            if not audio:
+                                raise forms.ValidationError(ugettext_lazy("Not a valid audio file"))
 
-                        if not sample_rate == 44100:
-                            raise forms.ValidationError(ugettext_lazy("Sample rate is Not 44100Hz: cannot use it in podcasting web interface"))
+                            if not sample_rate == 44100:
+                                raise forms.ValidationError(ugettext_lazy("Sample rate is Not 44100Hz: cannot use it in podcasting web interface"))
             
                         return file
 
@@ -53,7 +87,6 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
 
 
 
-
 class MyEnclosureAdminForm(forms.ModelForm):
     """
     Check file if it is a known media file.
@@ -66,13 +99,18 @@ class MyEnclosureAdminForm(forms.ModelForm):
 	    import mutagen, os
 
 	    file = self.cleaned_data.get('file',False)
-            file
 	    if file:
 
                 if autoradio.settings.permit_no_playable_files:
 
-                    if not file.content_type in ["audio/mpeg","audio/flac","video/ogg"]:
+                    try:
+                        type = file.content_type in ["audio/mpeg","audio/flac","video/ogg"]
+                    except:
+                        return file
+
+                    if not type:
                         raise forms.ValidationError(ugettext_lazy("Content-Type is not audio/mpeg or audio/flac or video/ogg"))
+    
                     if not os.path.splitext(file.name)[1] in [".mp3",".wav",".ogg",".oga",".flac",
 							      ".Mp3",".Wav",".Ogg",".Oga",".Flac",
 							      ".MP3",".WAV",".OGG",".OGA",".FLAC" ]:
@@ -89,8 +127,14 @@ class MyEnclosureAdminForm(forms.ModelForm):
 
                 else:
 
-                    if not file.content_type in ["video/ogg","audio/oga"]:
+                    try:
+                        type = file.content_type in ["video/ogg","audio/oga"]
+                    except:
+                        return file
+
+                    if not type:
                         raise forms.ValidationError(ugettext_lazy("Content-Type is not audio/oga or video/ogg"))
+
                     if not os.path.splitext(file.name)[1] in [".ogg",".oga",".Ogg",".Oga",".OGG"]:
                         raise forms.ValidationError(ugettext_lazy("Doesn't have proper extension: .ogg, .oga"))
                     #Check file if it is a known media file. The check is based on mutagen file test.

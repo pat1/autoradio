@@ -74,10 +74,3 @@ env           = config['autoradiod']['env']
 import locale
 locale.setlocale(locale.LC_ALL, config['autoradiod']['locale'])
 
-
-####
-
-from django.core.management import setup_environ
-import settings
-setup_environ(settings)
-

@@ -22,11 +22,13 @@ configspec['django']['USE_I18N']="boolean(default=True)"
 configspec['django']['LOCALE_PATHS']="list(default=list('locale',))"
 configspec['django']['ADMINS']="list(default=list('',))"
 configspec['django']['MANAGERS']="list(default=list('',))"                  
-configspec['django']['MEDIA_ROOT']="string(default='media/')"
-configspec['django']['MEDIA_SITE_ROOT']="string(default='media/')"
+configspec['django']['MEDIA_ROOT']="string(default='%s/media/')" % os.getcwd()
+configspec['django']['MEDIA_SITE_ROOT']="string(default='%s/media/')" % os.getcwd()
 configspec['django']['TEMPLATE_DIRS']="list(default=list('templates',))"
 configspec['django']['BASE_URL']="string(default='/django/')"
 configspec['django']['ADMIN_MEDIA_PREFIX']="string(default='/django/media/admin/')"
+configspec['django']['STATIC_URL']="string(default='/django/media/admin/')"
+configspec['django']['STATIC_ROOT'] = "string(default='/usr/lib/python2.7/site-packages/django/contrib/admin/static/admin/')"
 configspec['django']['MEDIA_PREFIX']="string(default='/media/')"
 configspec['django']['MEDIA_SITE_PREFIX']="string(default='/media/sito/')"
 configspec['django']['SERVE_STATIC']="boolean(default=True)"
@@ -91,10 +93,16 @@ LOCALE_PATHS            = config['django']['LOCALE_PATHS']
 ADMINS                  = config['django']['ADMINS']                    
 MANAGERS                = config['django']['MANAGERS']                  
 MEDIA_ROOT              = config['django']['MEDIA_ROOT']
+if "%s" in MEDIA_ROOT:
+    MEDIA_ROOT = MEDIA_ROOT  % os.getcwd()
 MEDIA_SITE_ROOT         = config['django']['MEDIA_SITE_ROOT']
+if "%s" in MEDIA_SITE_ROOT:
+    MEDIA_SITE_ROOT = MEDIA_SITE_ROOT  % os.getcwd()
 TEMPLATE_DIRS           = config['django']['TEMPLATE_DIRS']
 BASE_URL                = config['django']['BASE_URL']
 ADMIN_MEDIA_PREFIX      = config['django']['ADMIN_MEDIA_PREFIX']
+STATIC_URL              = config['django']['STATIC_URL']
+STATIC_URL              = config['django']['STATIC_URL']
 MEDIA_PREFIX            = config['django']['MEDIA_PREFIX']
 MEDIA_SITE_PREFIX       = config['django']['MEDIA_SITE_PREFIX']
 SERVE_STATIC            = config['django']['SERVE_STATIC']
@@ -156,6 +164,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.admindocs',
+    'django.contrib.staticfiles',
     'autoradio.programs',
     'autoradio.jingles',
     'autoradio.spots',

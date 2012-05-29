@@ -16,13 +16,16 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 # 
 
-
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
+from django.conf import settings
 
 from django.core import management
-from django.core.management import setup_environ
+import autoradio.settings
 import autoradio.autoradio_config
-import sys, os, optparse, autoradio.daemon
+import sys, optparse, autoradio.daemon
 from autoradio import  _version_
+
 
 def initdb(cwd):
     p = optparse.OptionParser(usage="usage: %prog [options]",version="%prog "+_version_)
@@ -40,7 +43,6 @@ def initdb(cwd):
         #os.chdir(cwd)
 
     if (options.syncdb):
-        setup_environ(autoradio.settings)
         management.call_command("syncdb")
 
 

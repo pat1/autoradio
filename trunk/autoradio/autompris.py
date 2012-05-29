@@ -204,6 +204,7 @@ class mediaplayer:
         Try to secure that there are some time (securesec) to complete all operations in time:
         if xmms change song during operation will be a big problem
         '''
+
         try:
 
             pos=self.get_playlist_securepos(securesec=securesec)
@@ -213,12 +214,22 @@ class mediaplayer:
             pos+=1
 
             metadata=self.tracklist.GetMetadata(pos)
+
             try:
-                file=metadata["URI"]
+                #Fix how older versions of Audacious misreport the URI of the song.
+                if metadata is not None:
+                    if metadata.has_key ("URI") and not metadata.has_key ("location"):
+                        metadata["location"] = metadata["URI"]
+
+                file=metadata["location"]
+
             except:
                 return pos
 
             filepath=os.path.dirname(file)
+
+            #print "file://"+autopath
+            #print os.path.commonprefix ((filepath,"file://"+autopath))
 
             # ora controllo se ci sono gia dei file accodati nella playlist da autoradio
             # l'unica possibilita di saperlo e verificare il path del file
@@ -227,7 +238,13 @@ class mediaplayer:
 
                 metadata=self.tracklist.GetMetadata(pos)
                 try:
-                    file=metadata["URI"]
+
+                    #Fix how older versions of Audacious misreport the URI of the song.
+                    if metadata is not None:
+                        if metadata.has_key ("URI") and not metadata.has_key ("location"):
+                            metadata["location"] = metadata["URI"]
+
+                    file=metadata["location"]
                 except:
                     return pos
 

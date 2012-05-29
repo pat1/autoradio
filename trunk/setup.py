@@ -8,11 +8,10 @@ from distutils.core import Command
 #from distutils.cmd import Command
 
 from django.core import management
-from django.core.management import setup_environ
-from autoradio import settings
 from autoradio import _version_
 
-setup_environ(settings)
+os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
+from django.conf import settings
 
 
 class distclean(Command):
@@ -175,7 +174,7 @@ setup(name='autoradio',
                 'autoradio.jingles', 'autoradio.programs',
                 'autoradio.player', 'autoradio.doc'],
       package_data={'autoradio.programs': ['fixtures/*.json']},
-      scripts=['autoradiod','autoradioweb','autoradioctrl'],
+      scripts=['autoradiod','autoradioweb','autoradioctrl','autoradio.wsgi'],
       data_files = data_files,
       license = "GNU GPL v2",
       requires= [ "mutagen","django","reportlab"],

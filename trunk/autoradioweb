@@ -23,13 +23,15 @@
 # alternare meglio i jingle tenendo in considerazione la priorita
 # a cavallo della mezzanotte verificare il funzionamento
 
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
+from django.conf import settings
 
 from autoradio import daemon
 from autoradio import _version_
 from django.core import management
-from django.core.management import setup_environ
 import autoradio.autoradio_config
-
+import autoradio.settings
 
 autoradioweb = daemon.Daemon(
         stdin="/dev/null",
@@ -57,7 +59,6 @@ def main(cwd):
     except:
         pass
 
-    setup_environ(autoradio.settings)
     management.call_command("runserver",autoradio.settings.port,use_reloader=False)
 
 

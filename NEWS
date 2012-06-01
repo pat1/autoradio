@@ -1,6 +1,16 @@
 NEWS
 ----
 
+version 2.6
+-----------
+ * lot of bugs corrected
+ * new config parameter to check presence of tags in file uploaded
+ * now mysql with innodb (transaction) works well
+
+version 2.5
+-----------
+   working version
+
 version 2.4
 -----------
  * file uplodated now are validated: 

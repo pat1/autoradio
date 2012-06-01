@@ -1,28 +1,17 @@
 == TODO ==
 
-24/02/2012
+1/06/2012
 
-insert div in player with background image with overflow set to hidden
-and add little button images so the user can click on windows without player action.
-Or an image that shift visible area on click ....
-
+ * link in home page to spot playlist is wrong
+ * verify the order for the enclusure emissions
+ * utilizzare mp3splt sper spezzare i programmi e inserirli nei podcast
+ * alternare meglio i jingle tenendo in considerazione la priorita
 
 30/09/2010
 
- * error on week days on italian locale
  * on programbook programtype 5 need subtype 5a
 
 
-20/09/2009
-
-# controllare gli inserimenti al livello di django ADMIN INTERFACE
-# utilizzare mp3splt sper spezzare i programmi per fare gli inserimenti pubblicitari
-# alternare meglio i jingle tenendo in considerazione la priorita
-# a cavallo della mezzanotte verificare il funzionamento
-
-#obsolete amarok
-# effettuare la scrittura di emission_done in django tramite dcop
-# tenere un log delle emissioni tramite dcop o tramite il plugin playlog
 
 
 

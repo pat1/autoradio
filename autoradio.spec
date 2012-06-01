@@ -4,7 +4,7 @@
 1)")}
 
 %define name autoradio
-%define version 2.3
+%define version 2.6
 %define release 1%{?dist}
 
 Summary: radio automation software
@@ -12,6 +12,8 @@ Name: %{name}
 Version: %{version}
 Release: %{release}
 Source0: %{name}-%{version}.tar.gz
+# tmpfiles.d configuration for the /var/run directory
+Source1:  %{name}-tmpfiles.conf
 License: GNU GPL v2
 Group: Development/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -20,7 +22,8 @@ BuildArch: noarch
 Vendor: Paolo Patruno <p.patruno@iperbole.bologna.it>
 Url: http://autoradiobc.sf.net
 BuildRequires: python-configobj , Django >= 1.0.3 , help2man, python-setuptools
-Requires:python-mutagen >= 1.17 , Django >= 1.0.3,  python-configobj, python-cherrypy, python-reportlab >= 2.0,  python-docutils, sqlite >= 3.6.22
+Requires:python-mutagen >= 1.17 , Django >= 1.0.3,  python-configobj, python-cherrypy, python-reportlab >= 2.0,  python-docutils, sqlite >= 3.6.22, speex-tools, python-magic
+Requires: initscripts
 %if 0%{?fedora} < 10
 Requires: pyxmms, xmms
 %else
@@ -67,37 +70,53 @@ Developed with Python, Django, Dbus it works in an production enviroment
 %install
 %{__python} setup.py install --single-version-externally-managed --root=$RPM_BUILD_ROOT
 
-%{__install} -d %{buildroot}%{_var}/{run/autoradio,log/autoradio}
+##%{__install} -d -m 0710 %{buildroot}%{_var}/{run/autoradio,log/autoradio}
+
+mkdir -p %{buildroot}%{_localstatedir}/run/
+mkdir -p %{buildroot}%{_localstatedir}/log/
+%{__install} -d -m 0710 %{buildroot}%{_localstatedir}/{run/autoradio,log/autoradio}
+
+mkdir -p %{buildroot}%{_sysconfdir}/tmpfiles.d
+%{__install} -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/tmpfiles.d/%{name}.conf
 
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sat Apr 14 2012 Paolo Patruno <p.patruno@iperbole.bologna.it> - 2.3-2%{?dist}
+- tmpfiles.d is a service provided by both systemd and upstart in Fedora 15 and later for managing temporary files and directories for daemons https://fedoraproject.org/wiki/Packaging:Tmpfiles.d
 
-* Fri Aug 12 2011 Paolo Patruno <pat1@localhost.localdomain> - 2.1beta-1%{?dist}
+* Sat Apr 14 2012 Paolo Patruno <p.patruno@iperbole.bologna.it> - 2.3-1%{?dist}
+- updated to 2.3
+
+
+* Fri Aug 12 2011 Paolo Patruno <p.patruno@iperbole.bologna.it> - 2.1beta-1%{?dist}
 - upstream version 2.1beta
 
 %files
 %defattr(-,root,root)
 
-%doc COPYING README
-%config(noreplace) %{_sysconfdir}/autoradio/autoradio-site.cfg
-%dir %{python_sitelib}/autoradio
-%{python_sitelib}/autoradio/*
-%{python_sitelib}/autoradio-*
+%doc COPYING README doc/*
+%config(noreplace) %{_sysconfdir}/%{name}/autoradio-site.cfg
+%dir %{python_sitelib}/%{name}
+%{python_sitelib}/%{name}/*
+%{python_sitelib}/%{name}-*
 %{_mandir}/man1/*
+
+%config(noreplace) %{_sysconfdir}/tmpfiles.d/%{name}.conf
 
 #%{_datadir}/autoradio/locale/*
 %{_bindir}/autoradiod
 %{_bindir}/autoradioweb
 %{_bindir}/autoradioctrl
+%{_bindir}/autoradio.wsgi
 
 %attr(-,autoradio,autoradio) %dir %{_datadir}/autoradio
-%attr(-,autoradio,autoradio) %{_datadir}/autoradio/*
+%attr(-,autoradio,autoradio) %{_datadir}/%{name}/*
 
-%attr(-,autoradio,autoradio) %dir %{_var}/log/autoradio/
-%attr(-,autoradio,autoradio) %dir %{_var}/run/autoradio/
+%attr(-,autoradio,autoradio) %dir %{_var}/log/%{name}/
+%attr(-,autoradio,autoradio) %dir %{_var}/run/%{name}/
 
 
 %pre

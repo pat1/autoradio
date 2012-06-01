@@ -98,10 +98,12 @@ Player (xmms or audacious in alternative):
 In debian/ubuntu distribution you need those packeges: python
 python-setuptools, python-django, python-django-extensions, python-configobj, gettext
 python-reportlab, audacious, python-mutagen (>=1.17) ,python-cherrypy3
-, python-dbus
+, python-dbus, python-magic
 
 In Fedora distibution you need those pckages: python-mutagen >= 1.17 ,
 Django, python-configobj, python-cherrypy, python-reportlab, python-docutils,
+python-magic and
+
 pyxmms, xmms
 or
 dbus-python, audacious >= 1.5

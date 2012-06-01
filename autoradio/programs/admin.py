@@ -6,6 +6,19 @@ from django import forms
 from django.utils.translation import ugettext_lazy
 import autoradio.settings
 
+import magic
+
+ma = magic.open(magic.MAGIC_MIME_TYPE)
+ma.load()
+
+mymime_audio=("application/ogg","audio/mpeg", "audio/mp4", "audio/x-flac", "audio/x-wav") 
+mymime_ogg=("application/ogg",)
+
+webmime_audio = ("audio/mpeg","audio/flac","video/ogg")
+websuffix_audio = (".mp3",".wav",".ogg",".oga",".flac",".Mp3",".Wav",".Ogg",".Oga",".Flac",".MP3",".WAV",".OGG",".OGA",".FLAC" )
+
+webmime_ogg = ("video/ogg","audio/oga")
+websuffix_ogg = (".ogg",".oga",".Ogg",".Oga",".OGG")
 
 class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
     def clean(self):
@@ -24,53 +37,74 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
                         if autoradio.settings.permit_no_playable_files:
 
                             try:
-                                type = file.content_type in ["audio/mpeg","audio/flac","video/ogg"]
+                                type = file.content_type in webmime_audio
                             except:
+                                #here when the file is not uploaded (modify for example)
                                 return file
 
                             if not type:
                                 raise forms.ValidationError(ugettext_lazy("Content-Type is not audio/mpeg or audio/flac or video/ogg"))
 
-                            if not os.path.splitext(file.name)[1] in [".mp3",".wav",".ogg",".oga",".flac",
-							      ".Mp3",".Wav",".Ogg",".Oga",".Flac",
-							      ".MP3",".WAV",".OGG",".OGA",".FLAC" ]:
+                            if not os.path.splitext(file.name)[1] in websuffix_audio:
                                 raise forms.ValidationError(ugettext_lazy("Doesn't have proper extension: .mp3, .wav, .ogg, .oga, .flac"))
-                    #Check file if it is a known media file. The check is based on mutagen file test.
+
                             try:
-                                audio = not mutagen.File(file.temporary_file_path()) is None
+                                mime = ma.file(file.temporary_file_path())
+                                audio = mime in mymime_audio
                             except:
-                                audio = False
+                                audio=False
 
                             if not audio:
                                 raise forms.ValidationError(ugettext_lazy("Not a valid audio file"))
-                            return file
+
+                            if autoradio.settings.require_tags_in_enclosure:
+                                #Check file if it is a known media file. The check is based on mutagen file test.
+                                try:
+                                    audio = not mutagen.File(file.temporary_file_path()) is None
+                                except:
+                                    audio = False
+
+                                if not audio:
+                                    raise forms.ValidationError(ugettext_lazy("Not a valid audio file: probably no tags present"))
 
                         else:
 
                             try:
-                                type = file.content_type in ["video/ogg","audio/oga"]
+                                type = file.content_type in webmime_ogg
                             except:
+                                #here when the file is not uploaded (modify for example)
                                 return file
 
                             if not type:
                                 raise forms.ValidationError(ugettext_lazy("Content-Type is not audio/oga or video/ogg"))
 
-                            if not os.path.splitext(file.name)[1] in [".ogg",".oga",".Ogg",".Oga",".OGG"]:
+                            if not os.path.splitext(file.name)[1] in websuffix_ogg:
                                 raise forms.ValidationError(ugettext_lazy("Doesn't have proper extension: .ogg, .oga"))
-                        #Check file if it is a known media file. The check is based on mutagen file test.
+
                             try:
-                                mut=mutagen.File(file.temporary_file_path())
-                                audio = not mut is None
-                                sample_rate=mut.info.sample_rate
+                                mime = ma.file(file.temporary_file_path())
+                                audio = mime in mymime_ogg
                             except:
-                                audio = False
-                                sample_rate=0
+                                audio=False
 
                             if not audio:
-                                raise forms.ValidationError(ugettext_lazy("Not a valid audio file"))
+                                raise forms.ValidationError(ugettext_lazy("Not a valid ogg/oga vorbis audio file"))
 
-                            if not sample_rate == 44100:
-                                raise forms.ValidationError(ugettext_lazy("Sample rate is Not 44100Hz: cannot use it in podcasting web interface"))
+                            if autoradio.settings.require_tags_in_enclosure:
+                                #Check file if it is a known media file. The check is based on mutagen file test.
+                                try:
+                                    mut=mutagen.File(file.temporary_file_path())
+                                    audio = not mut is None
+                                    sample_rate=mut.info.sample_rate
+                                except:
+                                    audio = False
+                                    sample_rate=0
+
+                                if not audio:
+                                    raise forms.ValidationError(ugettext_lazy("Not a valid ogg/oga vorbis audio file: probably no tags present"))
+
+                                if not sample_rate == 44100:
+                                    raise forms.ValidationError(ugettext_lazy("Sample rate is Not 44100Hz: cannot use it in podcasting web interface"))
             
                         return file
 

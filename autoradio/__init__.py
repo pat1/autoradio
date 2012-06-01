@@ -1,2 +1,2 @@
 
-_version_="2.5"
+_version_="2.6"

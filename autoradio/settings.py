@@ -43,6 +43,7 @@ configspec['autoradioweb']['user']     = "string(default=None)"
 configspec['autoradioweb']['group']    = "string(default=None)"
 configspec['autoradioweb']['port']    = "string(default='8080')"
 configspec['autoradioweb']['permit_no_playable_files'] = "boolean(default=False)"
+configspec['autoradioweb']['require_tags_in_enclosure'] = "boolean(default=False)"
 
 
 configspec['database']={}
@@ -119,6 +120,7 @@ userweb                 = config['autoradioweb']['user']
 groupweb                = config['autoradioweb']['group']
 port                    = config['autoradioweb']['port']
 permit_no_playable_files= config['autoradioweb']['permit_no_playable_files']
+require_tags_in_enclosure= config['autoradioweb']['require_tags_in_enclosure']
 
 # section database
 DATABASE_USER     = config['database']['DATABASE_USER']        
@@ -129,17 +131,31 @@ DATABASE_ENGINE   = config['database']['DATABASE_ENGINE']
 DATABASE_NAME     = config['database']['DATABASE_NAME']        
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.'+DATABASE_ENGINE,
-        'NAME':    DATABASE_NAME,
-        'USER':    DATABASE_USER,
-        'PASSWORD':DATABASE_PASSWORD,
-        'HOST':    DATABASE_HOST,
-        'PORT':    DATABASE_PORT,
+if DATABASE_ENGINE == "mysql":
+    # Recommended for MySQL. See http://code.djangoproject.com/ticket/13906 
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.'+DATABASE_ENGINE,
+            'NAME':    DATABASE_NAME,
+            'USER':    DATABASE_USER,
+            'PASSWORD':DATABASE_PASSWORD,
+            'HOST':    DATABASE_HOST,
+            'PORT':    DATABASE_PORT,
+            'OPTIONS': {'init_command': 'SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED'}, 
+            }
         }
-    }
-
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.'+DATABASE_ENGINE,
+            'NAME':    DATABASE_NAME,
+            'USER':    DATABASE_USER,
+            'PASSWORD':DATABASE_PASSWORD,
+            'HOST':    DATABASE_HOST,
+            'PORT':    DATABASE_PORT,
+            }
+        }
+    
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (

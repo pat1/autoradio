@@ -4,19 +4,10 @@ from django import forms
 from django.utils.translation import ugettext_lazy
 import autoradio.settings
 import magic
+import autoradio.mime
 
 ma = magic.open(magic.MAGIC_MIME_TYPE)
 ma.load()
-
-mymime_audio=("application/ogg","audio/mpeg", "audio/mp4", "audio/x-flac", "audio/x-wav") 
-mymime_ogg=("application/ogg",)
-
-webmime_audio = ("audio/mpeg","audio/flac","video/ogg")
-websuffix_audio = (".mp3",".wav",".ogg",".oga",".flac",".Mp3",".Wav",".Ogg",".Oga",".Flac",".MP3",".WAV",".OGG",".OGA",".FLAC" )
-
-webmime_ogg = ("video/ogg","audio/oga")
-websuffix_ogg = (".ogg",".oga",".Ogg",".Oga",".OGG")
-
 
 class MyJingleAdminForm(forms.ModelForm):
     """

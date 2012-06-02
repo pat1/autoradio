@@ -5,20 +5,13 @@ from autoradio.programs.models import ParentCategory, ChildCategory, MediaCatego
 from django import forms
 from django.utils.translation import ugettext_lazy
 import autoradio.settings
+import autoradio.mime
 
 import magic
 
 ma = magic.open(magic.MAGIC_MIME_TYPE)
 ma.load()
 
-mymime_audio=("application/ogg","audio/mpeg", "audio/mp4", "audio/x-flac", "audio/x-wav") 
-mymime_ogg=("application/ogg",)
-
-webmime_audio = ("audio/mpeg","audio/flac","video/ogg")
-websuffix_audio = (".mp3",".wav",".ogg",".oga",".flac",".Mp3",".Wav",".Ogg",".Oga",".Flac",".MP3",".WAV",".OGG",".OGA",".FLAC" )
-
-webmime_ogg = ("video/ogg","audio/oga")
-websuffix_ogg = (".ogg",".oga",".Ogg",".Oga",".OGG")
 
 class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
     def clean(self):
@@ -43,7 +36,7 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
                                 return file
 
                             if not type:
-                                raise forms.ValidationError(ugettext_lazy("Content-Type is not audio/mpeg or audio/flac or video/ogg"))
+                                raise forms.ValidationError(ugettext_lazy("Browser say that Content-Type is not audio"))
 
                             if not os.path.splitext(file.name)[1] in websuffix_audio:
                                 raise forms.ValidationError(ugettext_lazy("Doesn't have proper extension: .mp3, .wav, .ogg, .oga, .flac"))
@@ -76,7 +69,7 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
                                 return file
 
                             if not type:
-                                raise forms.ValidationError(ugettext_lazy("Content-Type is not audio/oga or video/ogg"))
+                                raise forms.ValidationError(ugettext_lazy("Browser say that Content-Type is not audio ogg vorbis"))
 
                             if not os.path.splitext(file.name)[1] in websuffix_ogg:
                                 raise forms.ValidationError(ugettext_lazy("Doesn't have proper extension: .ogg, .oga"))

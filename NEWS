@@ -1,6 +1,11 @@
 NEWS
 ----
 
+version 2.6.1
+-------------
+ * (bug corrected) firefox chrome etc. when upload files say different mime type
+ * logo.gif file path was wrong in template
+
 version 2.6
 -----------
  * lot of bugs corrected

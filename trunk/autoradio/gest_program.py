@@ -101,7 +101,8 @@ class gest_program:
                     firth=False
 
                 else:
-                   ar_scheduledatetime=schedule.emission_date+timedelta(seconds=lengthold)
+                    lengthold=ar_length
+                    ar_scheduledatetime=ar_scheduledatetime+timedelta(seconds=lengthold)
 
                 programma=scheduledone
                 programma.ar_filename=ar_filename

@@ -6,7 +6,7 @@
 # Author:        Marc 'BlackJack' Rintsch
 #                Paolo Patruno
 # Created:       2004-11-09
-# Last modified: 2009-08-11
+# Last modified: 2012-08-04
 # Copyright:     (c) 2004-2009
 # Licence:       GPL
 #-----------------------------------------------------------------------------
@@ -41,6 +41,7 @@ import random
 import logging
 from itertools import chain
 import mutagen
+import urllib2
 
 __author__ = "Marc 'BlackJack' Rintsch <marc(at)rintsch(dot)de>"
 __version__ = '0.5.0'
@@ -227,7 +228,8 @@ class PlaylistEntryFactory:
         :returns: `True` if url, `False` otherwise.
         :rtype: bool
         """
-        return path[:5] == "http:"
+        return path[:5] in  ("http:","file:")
+    
 
 
     def create_entry(self, path):
@@ -379,6 +381,11 @@ def read_playlist(infile, absolute_paths=True):
         if len(filename) == 0 or filename[0] == "#": # skip empty and comment lines
             log.debug("ignore %s", filename)
             continue
+
+        # convert thinks like %20 in file name
+        filename=urllib2.url2pathname(filename)
+        if filename[:7] == "file://" :
+            filename=filename[7:]
 
         if factory.is_media_file(filename):
             log.debug("found %s", filename)

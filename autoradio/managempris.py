@@ -127,8 +127,11 @@ def ManagePlayer (player,session,schedule):
       finally:
          #signal.alarm(0)
          lock.release()
-         if schedule.shuffle:
-            os.remove(media)
+
+         # here we have a problem ... sometime the player is not ready when the file is deleted !
+         # so we comment it out
+#         if schedule.shuffle:
+#            os.remove(media)
 
       logging.info( "Managempris: write   in django: %s",schedule.djobj)
       ar_emitted(schedule.djobj)

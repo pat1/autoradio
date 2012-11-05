@@ -124,8 +124,8 @@ class mediaplayer:
                 mtimelength=metadata["mtimelength"]
                 mtimeposition=metadata["mtimeposition"]
 
-                timed=datetime.timedelta(seconds=datetime.timedelta(microseconds=mtimelength).seconds)
-                toend=timed-datetime.timedelta(seconds=datetime.timedelta(microseconds=mtimeposition).seconds)
+                timed=datetime.timedelta(seconds=datetime.timedelta(milliseconds=mtimelength).seconds)
+                toend=timed-datetime.timedelta(seconds=datetime.timedelta(milliseconds=mtimeposition).seconds)
 
                 newpos=self.get_playlist_pos()
 
@@ -335,8 +335,8 @@ class mediaplayer:
             "file": file,
             "title": title,
             "artist": artist,
-            "mtimelength": mtimelength,
-            "mtimeposition": mtimeposition
+            "mtimelength": mtimelength/1000,
+            "mtimeposition": mtimeposition/1000
             }
 
         return mymeta

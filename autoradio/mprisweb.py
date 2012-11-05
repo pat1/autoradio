@@ -17,6 +17,7 @@ import cherrypy
 import os
 import datetime
 import autompris
+import autompris2
 
 cpversion3=cherrypy.__version__.startswith("3")
 maxplele=100      # max number of elements in playlist
@@ -107,7 +108,10 @@ class HomePage:
 
 
         try:
-            mp= autompris.mediaplayer(player="audacious",session=0)
+            if  self.player == "vlc":
+                mp= autompris2.mediaplayer(player=self.player,session=0)
+            else:
+                mp= autompris.mediaplayer(player=self.player,session=0)
 
         except:
 
@@ -223,6 +227,7 @@ if __name__ == '__main__':
     # Start the CherryPy server.
     try:
         start_http_server(iht=True,player=autoradio_config.player,session=0)
+#        start_http_server(iht=True,player="vlc",session=0)
     except:
         print "Error"
         raise

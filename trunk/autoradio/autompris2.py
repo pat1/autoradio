@@ -81,7 +81,7 @@ class mediaplayer:
         # -----------------------------------------------------------
 
     def __str__(self):
-        return self.player.PlaybackStatus
+        return self.Properties.Get("org.mpris.MediaPlayer2.Player" ,"PlaybackStatus")
     
 
     def play_ifnot(self):
@@ -90,8 +90,7 @@ class mediaplayer:
         '''
         # I check if mediaplayer is playing .... otherside I try to play
 
-        if (not self.player.PlaybackStatus == "Playing"):
-
+        if (not self.isplaying()):
             self.player.Play()
 
     def isplaying(self):
@@ -99,7 +98,162 @@ class mediaplayer:
         return true if is playing.
         '''
 
-        return self.player.PlaybackStatus == "Playing"
+        return self.Properties.Get("org.mpris.MediaPlayer2.Player" ,"PlaybackStatus") == "Playing"
+
+
+
+    def get_playlist_securepos(self,securesec=10):
+        '''
+        Try to secure that there are some time (securesec) to complete all operations in time:
+        if audacious change song during operation will be a big problem
+        '''
+        try:
+ 
+            self.play_ifnot()   #force to play
+
+            mintimed=datetime.timedelta(seconds=securesec)
+            toend=datetime.timedelta(seconds=0)
+            volte=0
+
+            while ( toend < mintimed ):
+                # take the current position
+
+                pos=self.get_playlist_pos()
+                metadata=self.get_metadata(pos)
+
+                mtimelength=metadata["mtimelength"]
+                mtimeposition=metadata["mtimeposition"]
+
+                timed=datetime.timedelta(seconds=datetime.timedelta(microseconds=mtimelength).seconds)
+                toend=timed-datetime.timedelta(seconds=datetime.timedelta(microseconds=mtimeposition).seconds)
+
+                newpos=self.get_playlist_pos()
+
+                print toend
+
+                if (pos != newpos):
+                    #inconsistenza: retry
+                    print "retry"
+                    toend=datetime.timedelta(seconds=0)
+                if ( toend < mintimed ):
+                    volte +=1
+                    if volte > 10 :
+                        break                       # timeout , I have to play
+                    time.sleep(securesec+1)
+            return pos
+
+        except :
+            return None
+
+
+    def playlist_clear_up(self,atlast=10):
+        '''
+        clear playlist starting from current position up.
+        "atlast" numer of song are retained
+        '''
+        try:
+            self.play_ifnot()   #force to play
+
+            # take the current position (if error set pos=0)
+            pos=self.get_playlist_securepos()
+            if pos is None:
+                return False
+
+                # delete the old ones
+            if pos > atlast :
+
+                op=self.get_playlist()
+
+                for prm in xrange(0,pos-atlast): 
+                    self.tracklist.RemoveTrack( op[prm]  )
+
+            time.sleep(1)
+            return True
+
+        except:
+            return False
+
+
+
+    def playlist_clear_down(self,atlast=500):
+        '''
+        clear playlist starting from current position + atlast doen.
+        "atlast" numer of song are retained for future play
+        '''
+        try:
+            self.play_ifnot()   #force to play
+
+           # take the current position (if error set pos=0)
+            pos=self.get_playlist_securepos()
+            if pos is None:
+                return False
+
+            length=self.get_playlist_len()
+
+                #elimino il troppo
+            if length-pos > atlast :
+
+                op=self.get_playlist()
+
+                print length,pos+atlast
+                for prm in xrange(length-1,pos+atlast,-1): 
+                    self.tracklist.RemoveTrack( op[prm] )
+
+            time.sleep(1)
+            return True
+
+        except:
+            return False
+
+
+
+    def get_playlist_posauto(self,autopath,securesec=10):
+        '''
+        get  playlist position skipping file with path equal to  autopath.
+        Try to secure that there are some time (securesec) to complete all operations in time:
+        if player change song during operation will be a big problem
+        '''
+
+        try:
+
+            pos=self.get_playlist_securepos(securesec=securesec)
+            if pos is None:
+                return pos
+
+            pos+=1
+
+            metadata=self.get_metadata(pos)
+
+            try:
+                file=metadata["file"]
+
+            except:
+                return pos
+
+            filepath=os.path.dirname(file)
+
+            #print "file://"+autopath
+            #print os.path.commonprefix ((filepath,"file://"+autopath))
+
+            # ora controllo se ci sono gia dei file accodati nella playlist da autoradio
+            # l'unica possibilita di saperlo e verificare il path del file
+            while ( os.path.commonprefix ((filepath,"file://"+autopath)) == "file://"+autopath ):
+                pos+=1
+
+                metadata=self.get_metadata(pos)
+                try:
+                    file=metadata["file"]
+                except:
+                    return pos
+
+                filepath=os.path.dirname(file)
+
+            # here I have found the first file added by autoradio
+            return pos-1
+
+        except :
+            return None
+
 
 
     def get_playlist(self):
@@ -116,13 +270,22 @@ class mediaplayer:
         if self.HasTrackList == 1:
             return len(self.Properties.Get("org.mpris.MediaPlayer2.TrackList" ,"Tracks"))
         else:
-            raise Error
+            return None
 
 
     def get_playlist_pos(self):
         "get current position"
         
-        return
+        current=self.Properties.Get("org.mpris.MediaPlayer2.Player" ,"Metadata")["mpris:trackid"]
+        metadatas=self.tracklist.GetTracksMetadata(self.get_playlist())
+        
+        id=0
+        for metadata in metadatas:
+            if metadata["mpris:trackid"] == current:
+                return id
+            id +=1
+
+        return None
 
     def get_metadata(self,pos=None):
         "get metadata for position"
@@ -179,15 +342,33 @@ class mediaplayer:
         return mymeta
 
 
-# TODO !!!
+    def playlist_add_atpos(self,media,pos):
+        "add media at pos postion in the playlist"
 
+        print self.get_playlist()[pos]
+
+        self.tracklist.AddTrack(media,self.get_playlist()[pos],False)
+        time.sleep(1)
+        return None
+            
 
 def main():
 
     mp=mediaplayer(player="vlc")
-    mp.play_ifnot()
-    for id  in xrange(mp.get_playlist_len()):
-        print mp.get_metadata(id)
+    print mp
+#    mp.play_ifnot()
+#    print mp
+
+#    for id  in xrange(mp.get_playlist_len()):
+#        print mp.get_metadata(id)
+
+    print mp.get_playlist_pos()
+    print mp.get_playlist_securepos()
+    print mp.playlist_clear_up(atlast=2)
+    print mp.playlist_clear_down(atlast=5)
+    print mp.get_playlist()
+    posauto=mp.get_playlist_posauto(autopath="/casa")
+    print mp.playlist_add_atpos("file:///home",posauto)
 
 if __name__ == '__main__':
     main()  # (this code was run as script)

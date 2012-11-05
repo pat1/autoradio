@@ -64,6 +64,8 @@ class ScheduleProgram:
         "init schedule"
         
         self.deltasec=secondi( schedule.scheduledatetime - datetime.now())
+        # round to nearest future
+        if self.deltasec < 5 : self.deltasec = 5
         self.player=player
         self.session=session
         self.function=ManagePlayer

@@ -5,6 +5,8 @@ import dbus
 import time
 import datetime
 import os
+import gobject
+from dbus.mainloop.glib import DBusGMainLoop
 
 # ------- dbus mpris2 interface ---------
 # http://specifications.freedesktop.org/mpris-spec/latest/index.html
@@ -62,7 +64,7 @@ class mediaplayer:
 #            from dbus import glib
 #            glib.init_threads()
 
-        self.bus = dbus.SessionBus()
+        self.bus = dbus.SessionBus(mainloop=DBusGMainLoop())
 
         # -----------------------------------------------------------
         mediaplayer_obj      = self.bus.get_object("org.mpris.MediaPlayer2."+player, '/org/mpris/MediaPlayer2')
@@ -276,7 +278,11 @@ class mediaplayer:
     def get_playlist_pos(self):
         "get current position"
         
-        current=self.Properties.Get("org.mpris.MediaPlayer2.Player" ,"Metadata")["mpris:trackid"]
+        try:
+            current=self.Properties.Get("org.mpris.MediaPlayer2.Player" ,"Metadata")["mpris:trackid"]
+        except:
+            return None
+
         metadatas=self.tracklist.GetTracksMetadata(self.get_playlist())
         
         id=0
@@ -345,14 +351,39 @@ class mediaplayer:
     def playlist_add_atpos(self,media,pos):
         "add media at pos postion in the playlist"
 
-        print self.get_playlist()[pos]
+        if pos is not None:
+            pos=0
+            print self.get_playlist()[pos]
 
-        self.tracklist.AddTrack(media,self.get_playlist()[pos],False)
+            self.tracklist.AddTrack(media,self.get_playlist()[pos],False)
+        else:
+            # the playlist is empty
+            self.tracklist.AddTrack(media,"/org/mpris/MediaPlayer2/TrackList/NoTrack",False)
+
         time.sleep(1)
         return None
+
+    def trackremoved_callback(self,op):
+        print "removed:",op
             
+    def trackadded_callback(self,diz,op):
+        print "added:",diz
+        print "added:",op
+            
+    def connect(self):
+        self.tracklist.connect_to_signal('TrackRemoved', self.trackremoved_callback)
+        self.tracklist.connect_to_signal('TrackAdded', self.trackadded_callback)
+
+
+    def loop(self):
+        '''start the main loop'''
+        mainloop = gobject.MainLoop()
+        mainloop.run()
 
 def main():
+
+#    must be done before connecting to DBus
+#    DBusGMainLoop(set_as_default=True,
 
     mp=mediaplayer(player="vlc")
     print mp
@@ -362,6 +393,9 @@ def main():
 #    for id  in xrange(mp.get_playlist_len()):
 #        print mp.get_metadata(id)
 
+    #mp.connect()
+    #print "connected"
+    #mp.loop()
     print mp.get_playlist_pos()
     print mp.get_playlist_securepos()
     print mp.playlist_clear_up(atlast=2)

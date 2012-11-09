@@ -2,7 +2,7 @@
 # This Python file uses the following encoding: utf-8
 # GPL. (C) 2007-2009 Paolo Patruno.
 
-import os
+import os, sys
 os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
 from django.conf import settings
 
@@ -17,7 +17,7 @@ from spots.models import Giorno
 
 #used to get metadata from audio files
 import mutagen
-import os,tempfile,shutil
+import tempfile,shutil
 
 
 class gest_spot:
@@ -186,7 +186,7 @@ class gest_spot:
             logging.debug( "SPOT: include %s", filename)
 
             if genfile :
-                f.write(os.path.basename(filename))
+                f.write(os.path.basename(filename.encode(sys.getfilesystemencoding())))
                 f.write("\n")
 
             # calcolo la lunghezza della fascia

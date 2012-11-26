@@ -25,11 +25,11 @@ configspec['autoradiod']['group']         = "string(default=None)"
 configspec['autoradiod']['env']={}
 #configspec['autoradiod']['env']['display']       = "string(default=':0.0')"
 
-config    = ConfigObj ('/etc/autoradio/autoradio-site.cfg',file_error=False,configspec=configspec)
+config    = ConfigObj ('/etc/autoradio/autoradio-site.cfg',file_error=False,configspec=configspec,interpolation="Template")
 
-usrconfig = ConfigObj (os.path.expanduser('~/.autoradio.cfg'),file_error=False)
+usrconfig = ConfigObj (os.path.expanduser('~/.autoradio.cfg'),file_error=False,interpolation="Template")
 config.merge(usrconfig)
-usrconfig = ConfigObj ('autoradio.cfg',file_error=False)
+usrconfig = ConfigObj ('autoradio.cfg',file_error=False,interpolation="Template")
 config.merge(usrconfig)
 
 val = Validator()

@@ -133,6 +133,8 @@ DATABASE_NAME     = config['database']['DATABASE_NAME']
 
 if DATABASE_ENGINE == "mysql":
     # Recommended for MySQL. See http://code.djangoproject.com/ticket/13906 
+    # to avoid "Lost connection to MySQL server at 'reading authorization packet', system error: 0"
+    # connect_timeout=30
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.'+DATABASE_ENGINE,
@@ -141,7 +143,8 @@ if DATABASE_ENGINE == "mysql":
             'PASSWORD':DATABASE_PASSWORD,
             'HOST':    DATABASE_HOST,
             'PORT':    DATABASE_PORT,
-            'OPTIONS': {'init_command': 'SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED'}, 
+            'OPTIONS': {'init_command': 'SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED',
+                        'connect_timeout':60}, 
             }
         }
 else:

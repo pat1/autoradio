@@ -34,13 +34,16 @@ class NotSupportedException(dbus.DBusException):
 
 class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
 
+    def attach_player(self,player):
+        self.player=player
+
     @dbus.service.method(IFACE)
     def Raise(self):
         pass
 
     @dbus.service.method(IFACE)
     def Quit(self):
-        mp.playlist.write("autoplayer.xspf")
+        self.player.playlist.write("autoplayer.xspf")
         loop.quit()
 
     @dbus.service.property(IFACE, signature="b")
@@ -70,7 +73,7 @@ class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
 
     @dbus.service.property(PLAYER_IFACE, signature="s")
     def PlaybackStatus(self):
-        return mp.playmode
+        return self.player.playmode
 
     @dbus.service.property(PLAYER_IFACE, signature="s")
     def LoopStatus(self):
@@ -89,7 +92,7 @@ class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
     @dbus.service.property(PLAYER_IFACE, signature="a{sv}")
     def Metadata(self):
         #raise
-        return {"mpris:trackid":mp.playlist.current,}
+        return {"mpris:trackid":self.player.playlist.current,}
 
     @dbus.service.property(PLAYER_IFACE, signature="d")
     def Volume(self):
@@ -98,7 +101,7 @@ class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
 
     @dbus.service.property(PLAYER_IFACE, signature="x")
     def Position(self):
-        return mp.position()
+        return self.player.position()
 
     @dbus.service.property(PLAYER_IFACE, signature="d")
     def MinimumRate(self):
@@ -137,39 +140,39 @@ class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
 
     @dbus.service.method(PLAYER_IFACE)
     def Next(self):
-      mp.next()
+      self.player.next()
 
     @dbus.service.method(PLAYER_IFACE)
     def Previous(self):
-      mp.previous()
+      self.player.previous()
 
     @dbus.service.method(PLAYER_IFACE)
     def Pause(self):
-      mp.pause()
+      self.player.pause()
 
     @dbus.service.method(PLAYER_IFACE)
     def PlayPause(self):
-      mp.playpause()
+      self.player.playpause()
 
     @dbus.service.method(PLAYER_IFACE)
     def Stop(self):
-      mp.stop()
+      self.player.stop()
 
     @dbus.service.method(PLAYER_IFACE)
     def Play(self):
-      mp.play()
+      self.player.play()
 
     @dbus.service.method(PLAYER_IFACE,in_signature='x')
     def Seek(self,offset):
-      mp.seek(offset)
+      self.player.seek(offset)
 
     @dbus.service.method(PLAYER_IFACE,in_signature='sx')
     def SetPosition(self,trackid,position):
-      mp.setposition(trackid,position)
+      self.player.setposition(trackid,position)
 
     @dbus.service.method(PLAYER_IFACE,in_signature='s')
     def OpenUri(self,uri):
-      mp.openuri(uri)
+      self.player.openuri(uri)
 
 #tracklist
 
@@ -191,16 +194,16 @@ class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
         metadata=[]
         for id in trackids:
             metadata.append({"mpris:trackid":id,
-                             "mpris:length":mp.playlist[id].time,
-                             "xesam:title":mp.playlist[id].title,
-                             "xesam:artist":mp.playlist[id].artist,
-                             "xesam:url":mp.playlist[id].path})
+                             "mpris:length":self.player.playlist[id].time,
+                             "xesam:title":self.player.playlist[id].title,
+                             "xesam:artist":self.player.playlist[id].artist,
+                             "xesam:url":self.player.playlist[id].path})
         return metadata
 
     @dbus.service.property(TRACKLIST_IFACE, signature="as")
     def Tracks(self):
         tracks=[]
-        for track in mp.playlist:
+        for track in self.player.playlist:
             tracks.append(track)
         return tracks
 
@@ -215,13 +218,13 @@ class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
         if aftertrack == "/org/mpris/MediaPlayer2/TrackList/NoTrack":
             aftertrack=None
 
-        mp=mp.playlist.addtrack(uri,aftertrack,setascurrent)
+        self.player=self.player.playlist.addtrack(uri,aftertrack,setascurrent)
 
     def removetrack(self,uri, trackid):
-        mp.playlist.removetrack(mp.playlist.index(trackid))
+        self.player.playlist.removetrack(self.player.playlist.index(trackid))
 
     def goto(self,trackid):
-        self.playlist.set_current(mp.playlist.index(trackid))
+        self.playlist.set_current(self.player.playlist.index(trackid))
         self.stop()
         self.play()
 
@@ -403,10 +406,18 @@ class Player:
       #          self.forward_callback(60)
 
     except(gst.QueryError):
-      pass
-			    
+        print "error printinfo"
+
     return True
 
+  def save_playlist(self,path):
+      try:
+          self.playlist.write(path)
+      except:
+          print "errore saving playlist"
+
+      print "playlist saved",path
+      return True
 
 if __name__ == '__main__':
   # (this code was run as script)
@@ -415,10 +426,7 @@ if __name__ == '__main__':
 
   pl=playlist.Playlist()
   pl.read("autoplayer.xspf")
-  print pl
-
   plmpris=playlist.Playlist_mpris2(pl)
-  print plmpris
 
   for media in sys.argv[1:]:
       print "add media:",media
@@ -438,22 +446,19 @@ if __name__ == '__main__':
 
       session_bus = dbus.SessionBus()
       name = dbus.service.BusName('org.mpris.MediaPlayer2.AutoPlayer', session_bus)
-      object = AutoPlayer(session_bus, '/org/mpris/MediaPlayer2')
-
+      ap = AutoPlayer(session_bus, '/org/mpris/MediaPlayer2')
+      ap.attach_player(mp)
+      
 #  gobject.MainLoop().run()
 
-      gobject.timeout_add(1000,mp.printinfo)  
+      gobject.timeout_add( 1000,ap.player.printinfo)
+      gobject.timeout_add(60000,ap.player.save_playlist,"autoplayer.xspf")
 
 #  while True:
 #    context.iteration(True) 
 
-#  try:
-#  except(KeyboardInterrupt):
-#    print "vorrei uscire, grazie !"
-#    loop.quit()
-
       loop.run()
 
   except KeyboardInterrupt :
-      mp.playlist.write("autoplayer.xspf")
+      ap.player.playlist.write("autoplayer.xspf")
       loop.quit()

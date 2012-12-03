@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# GPL. (C) 2012 Paolo Patruno.
 
 import sys, time, thread
 import glib, gobject
@@ -11,51 +13,224 @@ import gobject
 import dbus
 import dbus.service
 import dbus.mainloop.glib
+import logging
 
-class AutoPlayerException(dbus.DBusException):
-    _dbus_error_name = 'com.example.AutoPlayerException'
+PLAYER_IFACE="org.mpris.MediaPlayer2.Player"
+TRACKLIST_IFACE="org.mpris.MediaPlayer2.TrackList"
+IFACE="org.mpris.MediaPlayer2"
 
-class AutoPlayer(dbus.service.Object):
 
-    @dbus.service.method("com.example.AutoPlayerInterface")
-    def Pause(self):
-      pl.pause()
+#
+# Use logging for ouput at different *levels*.
+#
+logging.getLogger().setLevel(logging.INFO)
+log = logging.getLogger("mkplaylist")
+handler = logging.StreamHandler(sys.stderr)
+log.addHandler(handler)
 
-    @dbus.service.method("com.example.AutoPlayerInterface")
-    def Stop(self):
-      pl.stop()
 
-    @dbus.service.method("com.example.AutoPlayerInterface")
-    def Play(self):
-      pl.play()
+class NotSupportedException(dbus.DBusException):
+    _dbus_error_name = 'org.mpris.MediaPlayer2.Player.NotSupported'
 
-    @dbus.service.method("com.example.AutoPlayerInterface",
-                         in_signature='', out_signature='')
-    def RaiseException(self):
-        raise AutoPlayerException('The RaiseException method does what you might '
-                            'expect')
+class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
 
-    @dbus.service.method("com.example.AutoPlayerInterface",
-                         in_signature='', out_signature='(ss)')
-    def GetTuple(self):
-        return ("Hello Tuple", " from example-service.py")
+    @dbus.service.method(IFACE)
+    def Raise(self):
+        pass
 
-    @dbus.service.method("com.example.AutoPlayerInterface",
-                         in_signature='', out_signature='a{ss}')
-    def GetDict(self):
-        return {"first": "Hello Dict", "second": " from example-service.py"}
-
-    @dbus.service.method("com.example.AutoPlayerInterface",
-                         in_signature='', out_signature='')
-    def Exit(self):
+    @dbus.service.method(IFACE)
+    def Quit(self):
+        mp.playlist.write("autoplayer.xspf")
         loop.quit()
 
+    @dbus.service.property(IFACE, signature="b")
+    def CanQuit(self):
+        return True
+
+    @dbus.service.property(IFACE, signature="b")
+    def CanSetFullscreen(self):
+        return False
+
+    @dbus.service.property(IFACE, signature="b")
+    def CanRaise(self):
+        return False
+
+    @dbus.service.property(IFACE, signature="b")
+    def HasTrackList(self):
+        return True
+
+    @dbus.service.property(IFACE, signature="b")
+    def Identity(self):
+        return "Autoradio Player"
+
+    # TODO:
+    #DesktopEntry 	         s 	Read only 		
+    #SupportedUriSchemes 	as 	Read only 		
+    #SupportedMimeTypes 	as 	Read only 		
+
+    @dbus.service.property(PLAYER_IFACE, signature="s")
+    def PlaybackStatus(self):
+        return mp.playmode
+
+    @dbus.service.property(PLAYER_IFACE, signature="s")
+    def LoopStatus(self):
+        #raise
+        return None
+
+    @dbus.service.property(PLAYER_IFACE, signature="d")
+    def Rate(self):
+        return 1.0
+
+    @dbus.service.property(PLAYER_IFACE, signature="b")
+    def Shuffle(self):
+        #raise
+        return None
+
+    @dbus.service.property(PLAYER_IFACE, signature="a{sv}")
+    def Metadata(self):
+        #raise
+        return {"mpris:trackid":mp.playlist.current,}
+
+    @dbus.service.property(PLAYER_IFACE, signature="d")
+    def Volume(self):
+        #raise
+        return None
+
+    @dbus.service.property(PLAYER_IFACE, signature="x")
+    def Position(self):
+        return mp.position()
+
+    @dbus.service.property(PLAYER_IFACE, signature="d")
+    def MinimumRate(self):
+        return 1.0
+
+    @dbus.service.property(PLAYER_IFACE, signature="d")
+    def MaximumRate(self):
+        return 1.0
+
+    @dbus.service.property(PLAYER_IFACE, signature="b")
+    def CanGoNext(self):
+        return True
+
+    @dbus.service.property(PLAYER_IFACE, signature="b")
+    def CanGoPrevious(self):
+        return True
+
+    @dbus.service.property(PLAYER_IFACE, signature="b")
+    def CanSeek(self):
+        return True
+
+    @dbus.service.property(PLAYER_IFACE, signature="b")
+    def CanControl(self):
+        return True
+
+    @dbus.service.property(PLAYER_IFACE, signature="b")
+    def CanPlay(self):
+        if current is None :
+            return False
+        else:
+            return True
+
+    @dbus.service.property(PLAYER_IFACE, signature="b")
+    def CanPause(self):
+        return True
+
+    @dbus.service.method(PLAYER_IFACE)
+    def Next(self):
+      mp.next()
+
+    @dbus.service.method(PLAYER_IFACE)
+    def Previous(self):
+      mp.previous()
+
+    @dbus.service.method(PLAYER_IFACE)
+    def Pause(self):
+      mp.pause()
+
+    @dbus.service.method(PLAYER_IFACE)
+    def PlayPause(self):
+      mp.playpause()
+
+    @dbus.service.method(PLAYER_IFACE)
+    def Stop(self):
+      mp.stop()
+
+    @dbus.service.method(PLAYER_IFACE)
+    def Play(self):
+      mp.play()
+
+    @dbus.service.method(PLAYER_IFACE,in_signature='x')
+    def Seek(self,offset):
+      mp.seek(offset)
+
+    @dbus.service.method(PLAYER_IFACE,in_signature='sx')
+    def SetPosition(self,trackid,position):
+      mp.setposition(trackid,position)
+
+    @dbus.service.method(PLAYER_IFACE,in_signature='s')
+    def OpenUri(self,uri):
+      mp.openuri(uri)
+
+#tracklist
+
+    @dbus.service.method(TRACKLIST_IFACE,in_signature='ssb', out_signature='')
+    def AddTrack(self,uri, aftertrack, setascurrent):
+        self.addtrack(uri, aftertrack, setascurrent)
+
+    @dbus.service.method(TRACKLIST_IFACE,in_signature='s', out_signature='')
+    def RemoveTrack(self, trackid):
+        self.removetrack(trackid)
+
+    @dbus.service.method(TRACKLIST_IFACE,in_signature='s', out_signature='')
+    def GoTo(self, trackid):
+        self.goto(trackid)
+
+    @dbus.service.method(TRACKLIST_IFACE,in_signature='as', out_signature='aa{sv}')
+    def GetTracksMetadata(self,trackids):
+        #todo
+        metadata=[]
+        for id in trackids:
+            metadata.append({"mpris:trackid":id,
+                             "mpris:length":mp.playlist[id].time,
+                             "xesam:title":mp.playlist[id].title,
+                             "xesam:artist":mp.playlist[id].artist,
+                             "xesam:url":mp.playlist[id].path})
+        return metadata
+
+    @dbus.service.property(TRACKLIST_IFACE, signature="as")
+    def Tracks(self):
+        tracks=[]
+        for track in mp.playlist:
+            tracks.append(track)
+        return tracks
+
+
+    @dbus.service.property(TRACKLIST_IFACE, signature="b")
+    def CanEditTracks(self):
+        return True
+
+
+    def addtrack(self,uri, aftertrack, setascurrent):
+
+        if aftertrack == "/org/mpris/MediaPlayer2/TrackList/NoTrack":
+            aftertrack=None
+
+        mp=mp.playlist.addtrack(uri,aftertrack,setascurrent)
+
+    def removetrack(self,uri, trackid):
+        mp.playlist.removetrack(mp.playlist.index(trackid))
+
+    def goto(self,trackid):
+        self.playlist.set_current(mp.playlist.index(trackid))
+        self.stop()
+        self.play()
 
 class Player:
 	
   def __init__(self,myplaylist=None):
     self.playlist=myplaylist
     self.player = gst.element_factory_make("playbin2", "player")
+    self.playmode = "Stopped"
     if self.player is None:
       print "Error: creating player"
     fakesink = gst.element_factory_make("fakesink", "fakesink")
@@ -70,9 +245,9 @@ class Player:
     if t == gst.MESSAGE_EOS:
       self.player.set_state(gst.STATE_NULL)
       print "fine file"
-      self.playlist.advance()
+      self.playlist.next()
       if self.playlist.current is None:
-        self.playmode = False
+        self.playmode = "Stopped"
         print "fine playlist"
       else:
         self.play()
@@ -81,7 +256,7 @@ class Player:
       self.player.set_state(gst.STATE_NULL)
       err, debug = message.parse_error()
       print "Error: %s" % err, debug
-      self.playmode = False
+      self.playmode = "Stopped"
 
     elif t == gst.MESSAGE_STATE_CHANGED:
       if isinstance(message.src, gst.Pipeline):
@@ -91,6 +266,27 @@ class Player:
 #    else:
 #      print >> sys.stderr," Unexpected message received.\n"
 ##      self.playmode = False
+
+
+  def next(self):
+      print "next"
+      self.playlist.next()
+      if self.playlist.current is None:
+          self.playmode = "Stopped"
+          print "fine playlist"
+      else:
+          self.stop()
+          self.play()
+
+  def previous(self):
+      print "previous"
+      self.playlist.previous()
+      if self.playlist.current is None:
+          self.playmode = "Stopped"
+          print "fine playlist"
+      else:
+          self.stop()
+          self.play()
 
 
   def convert_ns(self, t):
@@ -104,34 +300,38 @@ class Player:
     return "%i:%02i:%02i" %(h,m,s)
 
 
-  def rewind_callback(self,t):
+  def seek(self,t):
     try:
       pos_int = self.player.query_position(gst.FORMAT_TIME, None)[0]
-      seek_ns = pos_int - (t * 1000000000)
-      self.player.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, seek_ns)
+      self.player.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, pos_int + t )
     except:
-      print "error in seek rewind"
+      print "error in seek"
 
-  def forward_callback(self,t):
+
+  def setposition(self,trackid,t):
     try:
-      pos_int = self.player.query_position(gst.FORMAT_TIME, None)[0]
-      seek_ns = pos_int + (t * 1000000000)
-      self.player.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, seek_ns)
+        pos_int = self.player.query_position(gst.FORMAT_TIME, None)[0]
+        if t >= 0 and t <= pos_int : 
+            self.player.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, t)
     except:
-      print "error in seek forward"
+        print "error in setposition"
 	
   def play(self):
-
-    uri = self.playlist.get_current()
-    if uri is not None:
-      self.player.set_property("uri", uri)
-      ret = self.player.set_state(gst.STATE_PLAYING)
-      if ret == gst.STATE_CHANGE_FAILURE:
-        print >> sys.stderr, "Unable to set the pipeline to the playing state."
-      else:
-        self.playmode = True
+    print "play"
+    if self.playlist.get_current() is None:
+      self.playmode = "Stopped"
     else:
-      self.playmode = False
+        uri = self.playlist.get_current().path
+        if uri is not None:
+            self.player.set_property("uri", uri)
+            ret = self.player.set_state(gst.STATE_PLAYING)
+            if ret == gst.STATE_CHANGE_FAILURE:
+                print >> sys.stderr, "Unable to set the pipeline to the playing state."
+            else:
+                self.playmode = "Playing"
+        else:
+            self.playmode = "Stopped"
+
     return True
 
 
@@ -144,9 +344,9 @@ class Player:
       if ret == gst.STATE_CHANGE_FAILURE:
         print >> sys.stderr, "Unable to set the pipeline to the pause state."
       else:
-        self.playmode = False
+        self.playmode = "Paused"
     else:
-      self.playmode = False
+      self.playmode = "Stopped"
     return True
 
 
@@ -159,13 +359,13 @@ class Player:
       if ret == gst.STATE_CHANGE_FAILURE:
         print >> sys.stderr, "Unable to set the pipeline to the stop state."
       else:
-        self.playmode = False
+        self.playmode = "Stopped"
     else:
-      self.playmode = False
+      self.playmode = "Stopped"
     return True
 
   def loop(self):
-    while self.playmode:
+    while self.playmode == "Playing":
       try:
         pos_int = self.player.query_position(gst.FORMAT_TIME, None)[0]
         dur_int = self.player.query_duration(gst.FORMAT_TIME, None)[0]
@@ -180,6 +380,18 @@ class Player:
 
     print "end player"
     loop.quit()
+
+
+
+  def position(self):
+    try:
+      pos_int = self.player.query_position(gst.FORMAT_TIME, None)[0]
+
+    except(gst.QueryError):
+      pass
+			    
+    return pos_int
+
 
   def printinfo(self):
     try:
@@ -198,37 +410,50 @@ class Player:
 
 if __name__ == '__main__':
   # (this code was run as script)
-  pl=playlist.Playlist(sys.argv[1:])
-#  p=Player(pl)
-#  p.start()
+
+  logging.basicConfig(level=logging.DEBUG,)
+
+  pl=playlist.Playlist()
+  pl.read("autoplayer.xspf")
   print pl
 
-  pl = Player(pl)
-  pl.play()
-#  thread.start_new_thread(pl.loop, ())
+  plmpris=playlist.Playlist_mpris2(pl)
+  print plmpris
+
+  for media in sys.argv[1:]:
+      print "add media:",media
+      plmpris=plmpris.addtrack(media,setascurrent=True)
+
+  mp = Player(plmpris)
+  mp.play()
+#  thread.start_new_thread(mp.loop, ())
+
+  try:
   
-  dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+      dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
-  gobject.threads_init()
-  loop = gobject.MainLoop()
-  context = loop.get_context()
+      gobject.threads_init()
+      loop = gobject.MainLoop()
+#  context = loop.get_context()
 
-  session_bus = dbus.SessionBus()
-  name = dbus.service.BusName('com.example.AutoPlayer', session_bus)
-  object = AutoPlayer(session_bus, '/player')
+      session_bus = dbus.SessionBus()
+      name = dbus.service.BusName('org.mpris.MediaPlayer2.AutoPlayer', session_bus)
+      object = AutoPlayer(session_bus, '/org/mpris/MediaPlayer2')
 
 #  gobject.MainLoop().run()
 
-  gobject.timeout_add(1000,pl.printinfo)  
-#  gobject.timeout_add(1000,pl.pause)  
-#  gobject.timeout_add(1230,pl.play)  
-  while True:
-    context.iteration(True) 
+      gobject.timeout_add(1000,mp.printinfo)  
+
+#  while True:
+#    context.iteration(True) 
 
 #  try:
 #  except(KeyboardInterrupt):
 #    print "vorrei uscire, grazie !"
 #    loop.quit()
 
-#  loop.run()
+      loop.run()
 
+  except KeyboardInterrupt :
+      mp.playlist.write("autoplayer.xspf")
+      loop.quit()

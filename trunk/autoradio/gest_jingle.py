@@ -125,7 +125,7 @@ class gest_jingle:
 #        for datac in time_iterator(self.datesched_min,self.datesched_max,self.emission_freq):
         for datac in time_iterator(self.now,self.datesched_max,self.emission_freq):
             jingle=many_jingles.next()
-            jingle.ar_filename=jingle.file.path
+            jingle.ar_filename=jingle.file.path.encode("utf8")
             jingle.ar_url=jingle.file.url
 #            jingle.ar_filename=jingle.get_file_filename()
             jingle.ar_scheduledatetime=datac

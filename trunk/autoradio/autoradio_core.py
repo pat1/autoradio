@@ -109,9 +109,13 @@ class schedules(list):
         the more easy operation is to delete jingles inside programs and spots
         italiano: cerca di districarsi tra un insieme di schedule
         la prima operazione da fare e' togliere i jingle che coincidono con programmi e pubblicita'
+
+        return True if need other call to self to manage new modification
+
         '''
         logging.debug("execute districa")
 
+        needrecompute=False
 
     #Spots
         #v=0
@@ -186,6 +190,7 @@ class schedules(list):
                     if ( scheduledatetime < scheduledatetimej and scheduledatetimej < endscheduledatetime ): 
                         logging.debug( "adding time to program; this spot overlapped %s", str(self[v]))
                         schedule.length=schedule.length+lengthj
+                        needrecompute=True
 
             #v += 1
 
@@ -221,15 +226,13 @@ class schedules(list):
                     if ( scheduledatetime < scheduledatetimej and scheduledatetimej < halfscheduledatetime ): 
                         logging.debug( "anticipate this spot overlapped start time in the firth half %s", str(self[v]))
 
-                        ##we have to anticipate a epsilon to be shure to go before 
-                        #self[v].scheduledatetime=scheduledatetime-timedelta(seconds=30)
-
                         #we have to anticipate start program - spot length
                         self[v].scheduledatetime=scheduledatetime-timedelta(seconds=lengthj)
 
                         #recompute 
                         scheduledatetimej=self[v].scheduledatetime
                         endscheduledatetimej=scheduledatetimej+timedelta(seconds=lengthj)
+                        needrecompute=True
 
 
                     #ending in the firth half of program
@@ -242,6 +245,7 @@ class schedules(list):
                         #recompute 
                         scheduledatetimej=self[v].scheduledatetime
                         endscheduledatetimej=scheduledatetimej+timedelta(seconds=lengthj)
+                        needrecompute=True
 
                     #start in the second half of program
                     if ( scheduledatetimej < endscheduledatetime ): 
@@ -253,6 +257,7 @@ class schedules(list):
                         #recompute 
                         scheduledatetimej=self[v].scheduledatetime
                         endscheduledatetimej=scheduledatetimej+timedelta(seconds=lengthj)
+                        needrecompute=True
 
 
     #Jingles
@@ -289,6 +294,7 @@ class schedules(list):
                         self[v].scheduledatetime=None
 
             #v += 1
+        return needrecompute
 
 
     def purge(self):
@@ -377,7 +383,8 @@ class schedules(list):
 
 
         self.get_all(now,genfile)
-        self.districa()
+        while self.districa():
+            pass
         self.purge()
         self.sort()
 

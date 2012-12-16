@@ -112,9 +112,154 @@ class schedules(list):
         '''
         logging.debug("execute districa")
 
+
+    #Spots
+        #v=0
+        for v,schedulej in enumerate(self):
+
+            scheduledatetimej=schedulej.scheduledatetime
+            if ( scheduledatetimej == None ): continue
+
+            lengthj=schedulej.length
+            typej=schedulej.type
+            endscheduledatetimej=scheduledatetimej+timedelta(seconds=lengthj)
+            #print "elaborate          ",typej,scheduledatetimej,endscheduledatetimej
+
+            if (typej == "spot"):
+
+                for schedule in self:
+
+                    scheduledatetime=schedule.scheduledatetime
+                    if ( scheduledatetime== None ): continue
+
+                    length=schedule.length
+                    type=schedule.type
+                    endscheduledatetime=scheduledatetime+timedelta(seconds=length)
+                    halfscheduledatetime=scheduledatetime+timedelta(seconds=length/2)
+
+                    if (type == "spot" or type == "playlist" or type == "jingle" ): continue
+
+                    # here we have spot versus programs
+
+                    #starting in the firth half of program
+                    if ( scheduledatetime < scheduledatetimej and scheduledatetimej < halfscheduledatetime ): 
+                        logging.debug( "anticipate this spot overlapped start time in the firth half %s", str(self[v]))
+
+                        ##we have to anticipate a epsilon to be shure to go before 
+                        #self[v].scheduledatetime=scheduledatetime-timedelta(seconds=30)
+
+                        #we have to anticipate start program - spot length
+                        self[v].scheduledatetime=scheduledatetime-timedelta(seconds=lengthj)
+
+                        #recompute 
+                        scheduledatetimej=self[v].scheduledatetime
+                        endscheduledatetimej=scheduledatetimej+timedelta(seconds=lengthj)
+
+
+                    #ending in the firth half of program
+                    if ( endscheduledatetimej > scheduledatetime and endscheduledatetimej < halfscheduledatetime ): 
+                        logging.debug( "anticipate this spot overlapped end time in the firth half %s", str(self[v]))
+
+                        #we have to anticipate start program - spot length
+                        self[v].scheduledatetime=scheduledatetime-timedelta(seconds=lengthj)
+
+                        #recompute 
+                        scheduledatetimej=self[v].scheduledatetime
+                        endscheduledatetimej=scheduledatetimej+timedelta(seconds=lengthj)
+
+                    #start in the second half of program
+                    if ( scheduledatetimej < endscheduledatetime ): 
+                        logging.debug( "postpone this spot overlapped in the second half %s", str(self[v]))
+
+                        #we have to postpone start program - spot length
+                        self[v].scheduledatetime=endscheduledatetime
+
+                        #recompute 
+                        scheduledatetimej=self[v].scheduledatetime
+                        endscheduledatetimej=scheduledatetimej+timedelta(seconds=lengthj)
+
+                    # this case is not so simple
+                    # after moving spots we have spots overlapped
+                    # this is possible when we have programs without time interval for spots like more enclosure in one episode
+                    # here is more simple to simulate one enclosure more long to include spots length
+                    # recompute programs length overlapped with spots
+                    if ( scheduledatetime < scheduledatetimej and scheduledatetimej < endscheduledatetime ): 
+                        logging.debug( "adding time to program; this spot overlapped %s", str(self[v]))
+                        schedule.length=schedule.length+lengthj
+
+            #v += 1
+
+
+        #now we can have programs overlapped
+        for v,schedulej in enumerate(self):
+
+            scheduledatetimej=schedulej.scheduledatetime
+            if ( scheduledatetimej == None ): continue
+
+            lengthj=schedulej.length
+            typej=schedulej.type
+            endscheduledatetimej=scheduledatetimej+timedelta(seconds=lengthj)
+            #print "elaborate          ",typej,scheduledatetimej,endscheduledatetimej
+
+            if (typej == "program"):
+
+                for schedule in self:
+
+                    scheduledatetime=schedule.scheduledatetime
+                    if ( scheduledatetime== None ): continue
+
+                    length=schedule.length
+                    type=schedule.type
+                    endscheduledatetime=scheduledatetime+timedelta(seconds=length)
+                    halfscheduledatetime=scheduledatetime+timedelta(seconds=length/2)
+
+                    if (type == "spot" or type == "playlist" or type == "jingle" ): continue
+
+                    # here we have program versus programs
+
+                    #starting in the firth half of program
+                    if ( scheduledatetime < scheduledatetimej and scheduledatetimej < halfscheduledatetime ): 
+                        logging.debug( "anticipate this spot overlapped start time in the firth half %s", str(self[v]))
+
+                        ##we have to anticipate a epsilon to be shure to go before 
+                        #self[v].scheduledatetime=scheduledatetime-timedelta(seconds=30)
+
+                        #we have to anticipate start program - spot length
+                        self[v].scheduledatetime=scheduledatetime-timedelta(seconds=lengthj)
+
+                        #recompute 
+                        scheduledatetimej=self[v].scheduledatetime
+                        endscheduledatetimej=scheduledatetimej+timedelta(seconds=lengthj)
+
+
+                    #ending in the firth half of program
+                    if ( endscheduledatetimej > scheduledatetime and endscheduledatetimej < halfscheduledatetime ): 
+                        logging.debug( "anticipate this spot overlapped end time in the firth half %s", str(self[v]))
+
+                        #we have to anticipate start program - spot length
+                        self[v].scheduledatetime=scheduledatetime-timedelta(seconds=lengthj)
+
+                        #recompute 
+                        scheduledatetimej=self[v].scheduledatetime
+                        endscheduledatetimej=scheduledatetimej+timedelta(seconds=lengthj)
+
+                    #start in the second half of program
+                    if ( scheduledatetimej < endscheduledatetime ): 
+                        logging.debug( "postpone this spot overlapped in the second half %s", str(self[v]))
+
+                        #we have to postpone start program - spot length
+                        self[v].scheduledatetime=endscheduledatetime
+
+                        #recompute 
+                        scheduledatetimej=self[v].scheduledatetime
+                        endscheduledatetimej=scheduledatetimej+timedelta(seconds=lengthj)
+
+
     #Jingles
-        v=0
-        for schedulej in self:
+    # remove jingles overlapped with programs and spots
+
+        #v=0
+        for v,schedulej in enumerate(self):
 
             scheduledatetimej=schedulej.scheduledatetime
             if ( scheduledatetimej == None ): continue
@@ -143,44 +288,7 @@ class schedules(list):
                         logging.debug( "remove this jingle overlapped %s", str(self[v]))
                         self[v].scheduledatetime=None
 
-            v += 1
-
-
-    #Spots
-        v=0
-        for schedulej in self:
-
-            scheduledatetimej=schedulej.scheduledatetime
-            if ( scheduledatetimej == None ): continue
-
-            lengthj=schedulej.length
-            typej=schedulej.type
-            endscheduledatetimej=scheduledatetimej+timedelta(seconds=lengthj)
-            #print "elaborate          ",typej,scheduledatetimej,endscheduledatetimej
-
-            if (typej == "spot"):
-
-                for schedule in self:
-
-                    scheduledatetime=schedule.scheduledatetime
-                    if ( scheduledatetime== None ): continue
-
-                    length=schedule.length
-                    type=schedule.type
-                    endscheduledatetime=scheduledatetime+timedelta(seconds=length)
-                    halfscheduledatetime=scheduledatetime+timedelta(seconds=length/2)
-
-                    if (type == "spot" or type == "playlist" or type == "jingle" ): continue
-
-                    # here we have spot versus programs
-
-                    if ( scheduledatetime < scheduledatetimej and scheduledatetimej < halfscheduledatetime ): 
-                        logging.debug( "anticipate this spot overlapped %s", str(self[v]))
-
-                        #we have to anticipate a epsilon to be shure to go before 
-                        self[v].scheduledatetime=scheduledatetime-timedelta(seconds=30)
-
-            v += 1
+            #v += 1
 
 
     def purge(self):

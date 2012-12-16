@@ -69,7 +69,7 @@ class gest_program:
             firth=True
             for enclosure in schedule.episode.enclosure_set.order_by('id'):
                 logging.debug("PROGRAM: files: %s", enclosure.file.path)
-                ar_filename=enclosure.file.path
+                ar_filename=enclosure.file.path.encode("UTF-8")
                 ar_url=enclosure.file.url
                 ar_title=schedule.episode.show.title+" / "\
                     +schedule.episode.title+" / "\

@@ -53,11 +53,25 @@ autoradioweb = daemon.Daemon(
 
 def main(cwd):
 
-    import os
+    import os,logging,logging.handlers
     try:
         os.chdir(cwd)
     except:
         pass
+
+
+    handler = logging.handlers.RotatingFileHandler(autoradio.settings.logfileweb, maxBytes=5000000, backupCount=10)
+    formatter=logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+
+    handler.setFormatter(formatter)
+    #handler.setLevel(logging.DEBUG)
+
+    # Add the log message handler to the root logger
+    logging.getLogger('').addHandler(handler)
+    logging.getLogger('').setLevel(logging.DEBUG)
+
+    logging.info('Starting up autoradioweb version '+_version_)
+
 
     management.call_command("runserver",autoradio.settings.port,use_reloader=False)
 

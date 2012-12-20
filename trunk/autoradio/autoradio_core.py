@@ -117,9 +117,12 @@ class schedules(list):
 
         needrecompute=False
 
-    #Spots
+        #Spots
         #v=0
         for v,schedulej in enumerate(self):
+
+            # add the default adjustedlength  !!! Attention
+            schedulej.adjustedlength= schedulej.length
 
             scheduledatetimej=schedulej.scheduledatetime
             if ( scheduledatetimej == None ): continue
@@ -172,7 +175,7 @@ class schedules(list):
                         endscheduledatetimej=scheduledatetimej+timedelta(seconds=lengthj)
 
                     #start in the second half of program
-                    if ( scheduledatetimej < endscheduledatetime ): 
+                    if ( scheduledatetimej >= halfscheduledatetime and scheduledatetimej < endscheduledatetime ):
                         logging.debug( "postpone this spot overlapped in the second half %s", str(self[v]))
 
                         #we have to postpone start program - spot length
@@ -189,31 +192,34 @@ class schedules(list):
                     # recompute programs length overlapped with spots
                     if ( scheduledatetime < scheduledatetimej and scheduledatetimej < endscheduledatetime ): 
                         logging.debug( "adding time to program; this spot overlapped %s", str(self[v]))
-                        schedule.length=schedule.length+lengthj
+                        schedule.adjustedlength=schedule.length+lengthj
                         needrecompute=True
 
             #v += 1
 
 
-        #now we can have programs overlapped
+        #now we can have programs overlapped bt programs
         for v,schedulej in enumerate(self):
 
             scheduledatetimej=schedulej.scheduledatetime
             if ( scheduledatetimej == None ): continue
 
-            lengthj=schedulej.length
+            lengthj=schedulej.adjustedlength
             typej=schedulej.type
             endscheduledatetimej=scheduledatetimej+timedelta(seconds=lengthj)
             #print "elaborate          ",typej,scheduledatetimej,endscheduledatetimej
 
             if (typej == "program"):
 
-                for schedule in self:
+                for vv,schedule in enumerate(self):
+
+                    #do not compare with itself
+                    if schedule == schedulej and str(schedule) == str(schedulej): continue
 
                     scheduledatetime=schedule.scheduledatetime
                     if ( scheduledatetime== None ): continue
 
-                    length=schedule.length
+                    length=schedule.adjustedlength
                     type=schedule.type
                     endscheduledatetime=scheduledatetime+timedelta(seconds=length)
                     halfscheduledatetime=scheduledatetime+timedelta(seconds=length/2)
@@ -223,11 +229,12 @@ class schedules(list):
                     # here we have program versus programs
 
                     #starting in the firth half of program
-                    if ( scheduledatetime < scheduledatetimej and scheduledatetimej < halfscheduledatetime ): 
-                        logging.debug( "anticipate this spot overlapped start time in the firth half %s", str(self[v]))
+                    if ( scheduledatetime <= scheduledatetimej and scheduledatetimej < halfscheduledatetime ): 
+                        logging.debug( "postpone this program overlapped start time in the firth half")
+                        logging.debug( "postpone %s, over %s", str(self[v]),str(self[vv]))
 
-                        #we have to anticipate start program - spot length
-                        self[v].scheduledatetime=scheduledatetime-timedelta(seconds=lengthj)
+                        #we have to postpone start program - spot length
+                        self[v].scheduledatetime=endscheduledatetime
 
                         #recompute 
                         scheduledatetimej=self[v].scheduledatetime
@@ -237,7 +244,8 @@ class schedules(list):
 
                     #ending in the firth half of program
                     if ( endscheduledatetimej > scheduledatetime and endscheduledatetimej < halfscheduledatetime ): 
-                        logging.debug( "anticipate this spot overlapped end time in the firth half %s", str(self[v]))
+                        logging.debug( "anticipate this program overlapped end time in the firth half")
+                        logging.debug( "anticipate %s, over %s", str(self[v]),str(self[vv]))
 
                         #we have to anticipate start program - spot length
                         self[v].scheduledatetime=scheduledatetime-timedelta(seconds=lengthj)
@@ -248,10 +256,11 @@ class schedules(list):
                         needrecompute=True
 
                     #start in the second half of program
-                    if ( scheduledatetimej < endscheduledatetime ): 
-                        logging.debug( "postpone this spot overlapped in the second half %s", str(self[v]))
+                    if ( scheduledatetimej >= halfscheduledatetime and scheduledatetimej < endscheduledatetime ):
+                        logging.debug( "postpone this program overlapped in the second half")
+                        logging.debug( "postpone %s, over %s", str(self[v]),str(self[vv]))
 
-                        #we have to postpone start program - spot length
+                        #we have to postpone
                         self[v].scheduledatetime=endscheduledatetime
 
                         #recompute 

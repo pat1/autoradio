@@ -22,7 +22,7 @@ class Track(collections.namedtuple('Track',("path","time","artist","album","titl
 
       metadata=collections.OrderedDict()
       metadata["path"] =self.path
-      metadata["time"] = m.info.length*1000000000000
+      metadata["time"] = int(m.info.length*1000000000)
       metadata["artist"]=None
       metadata["album"]=None
       metadata["title"]=None
@@ -222,8 +222,20 @@ class Playlist(list):
             no = 0
           if no > 0:
             f.write( '\t\t<trackNum>%i</trackNum>\n' % no )
+
+        #if float are seconds; if integer nanosec
+        # out should be millisec
         if type(track.get('time')) == float:
           tm = track['time']*1000000
+          print "float"
+        elif type(track.get('time')) == int:
+          tm = track['time']/1000000.
+          print "integer"
+        else:
+          tm= None
+
+        print "tm",tm
+        if tm is not None:
           if tm%1 >= 0.5:	
             tm = int(tm) + 1
           else:

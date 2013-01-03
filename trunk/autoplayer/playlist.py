@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# GPL. (C) 2012 Paolo Patruno.
+# GPL. (C) 2013 Paolo Patruno.
 
 import logging
 import collections
@@ -10,9 +10,7 @@ from xml.sax import make_parser, handler, SAXParseException
 from xml.dom.minidom import Document
 import urllib
 
-#Track=collection.namedtuple("track",("path","time","artist","album","title"))
-
-class Track(collections.namedtuple('Track',("path","time","artist","album","title"))):
+class Track(collections.namedtuple('Track',("path","time","artist","album","title","id"))):
   __slots__ = ()
 
   def get_metadata(self):
@@ -24,21 +22,22 @@ class Track(collections.namedtuple('Track',("path","time","artist","album","titl
 
       metadata=collections.OrderedDict()
       metadata["path"] =self.path
-      metadata["time"] = m.info.length*1000000000
+      metadata["time"] = m.info.length*1000000000000
       metadata["artist"]=None
       metadata["album"]=None
       metadata["title"]=None
+      metadata["id"]=None
 
       value = m.get("artist")
       if value:
-        metadata["artist"]=value[0]
-        value = m.get("album")[0]
+        metadata["artist"]=value[0]#.encode("UTF-8")
+      value = m.get("album")
       if value:
-        metadata["album"]=value
-        value = m.get("title")[0]
+        metadata["album"]=value[0]#.encode("UTF-8")
+      value = m.get("title")
       if value:
-        metadata["title"]=value
-      self
+        metadata["title"]=value[0]#.encode("UTF-8")
+
 #    except:
       #log.info("Could not read info from file: %s ",self.path)
 #      print "errore"
@@ -53,7 +52,7 @@ def is_xml(data):
 	
   parser = make_parser ()
   try:
-    parser.feed(data.encode('utf-8'))
+    parser.feed(data)
   except:
     return 0
   else:
@@ -63,7 +62,7 @@ def parse_xspf2(data):
   handler = XSPFParser2()
   parser = make_parser()
   parser.setContentHandler(handler)
-  parser.feed(data.encode('utf-8'))
+  parser.feed(data)
   return handler
 
 class XSPFParser2(handler.ContentHandler):
@@ -98,7 +97,7 @@ class XSPFParser2(handler.ContentHandler):
         s.tracks.append(s.track)
         del s.track
     elif s.path == "/playlist/title":
-      s.track['title'] = s.content
+      s.title = s.content
     elif s.path == "/playlist/trackList/track/location":
       s.track['location'] = urllib.unquote(s.content)
     elif s.path == "/playlist/trackList/track/title":
@@ -107,21 +106,26 @@ class XSPFParser2(handler.ContentHandler):
       s.track['creator'] = s.content
     elif s.path == "/playlist/trackList/track/album":
       s.track['album'] = s.content
+    elif s.path == "/playlist/trackList/track/extension/id":
+      s.track['id'] = s.content
 		
     s.path = s.path.rsplit("/", 1)[0]
 
 
 class Playlist(list):
 	
-  def __init__(self,media=None,tracks=None):
+  def __init__(self,media=None,tracks=None,current=None,position=None):
     super( Playlist, self ).__init__([])
-    
+
+    self.current=current
+    self.position=position
+
     if media is not None:
       for ele in media:
         if ele.lower().endswith(".xspf"):
           self.read(ele)
         else:
-          track_meta=Track(ele,None,None,None,None)
+          track_meta=Track(ele,None,None,None,None,None)
         #print track_meta.get_metadata().values()
           tr=Track._make(track_meta.get_metadata().values())
           self.append(tr)
@@ -134,33 +138,43 @@ class Playlist(list):
 
     try:
       with open(path, "r") as f:
-        data = f.read().decode('utf-8')
-    except UnicodeDecodeError,e:
-      logging.debug( "PLAYLIST: unicode decode error")
+        data = f.read()
+
+    except IOError :
+      logging.warning( "PLAYLIST: error opening file %s" % path)
       return
-    except:
-      logging.debug( "PLAYLIST: error opening file %s" % path)
-      return
-		
+
     if data.strip() == "": #empty
-      logging.debug( "PLAYLIST: empty")
+      logging.info( "PLAYLIST: empty")
       return
 
     logging.debug( "PLAYLIST: parse")
     parser = make_parser ()
     try:
-      parser.feed(data.encode('utf-8'))
+      parser.feed(data)
     except:
       logging.debug( "PLAYLIST: not XML")
-      return
+      raise
+#      return
     else:
       p = parse_xspf2(data)
       logging.debug( "PLAYLIST: xspf parsed")
+
       for ele in p.tracks:
 
         track=Track._make(Track(ele.get('location',None),ele.get('time',None),ele.get('creator',None),
-                    ele.get('album',None),ele.get('title',None)).get_metadata().values())
+                    ele.get('album',None),ele.get('title',None),ele.get('id',None)).get_metadata().values())
         s.append(track)
+
+
+      #TODO read from file !!!!
+      #s.current=s[2][5]
+      #s.position=0
+
+      s.current="1"
+      s.position=180000000000
+      logging.info ( "current: %s" % s.current)
+      logging.info ( "position: %s" % s.position)
 
 
   def write(s,path):
@@ -169,7 +183,10 @@ class Playlist(list):
     xspf_vlc_compatibility=False
     xspf_audacious_compatibility=False
     xspf_qmmp_compatibility=False
-    PEYOTE_EXTNSION="bho"
+
+    #TODO write to file !!!
+    logging.info ( "current: %s" % s.current)
+    logging.info ( "position: %s" % s.position)
 
     with open(path, "w") as f:
 			#head
@@ -185,24 +202,28 @@ class Playlist(list):
         f.write('\t<track>\n')
         if track.get('title') not in ['', None]:
           f.write( '\t\t<title>%s</title>\n' \
-                     % doc.createTextNode(track['title']).toxml() )
+                     % doc.createTextNode(track['title'].encode("utf-8")).toxml() )
         if track.get('artist') not in ['', None]:
           f.write('\t\t<creator>%s</creator>\n' \
-                    % doc.createTextNode(track['artist']).toxml() )
+                    % doc.createTextNode(track['artist'].encode("utf-8")).toxml() )
         if track.get('album') not in ['', None]:
           f.write( '\t\t<album>%s</album>\n' \
-                     % doc.createTextNode(track['album']).toxml() )
-        if track.get('id') not in ['', None]:
-          if type(track['id']) == int:
-            no = track['id']
-          elif type(track['id']) in [unicode, str]:
-            no = int( track['id'].split("/")[0].lstrip('0') )
+                     % doc.createTextNode(track['album'].encode("utf-8")).toxml() )
+        if track.get('tracknum') not in ['', None]:
+          if type(track['tracknum']) == int:
+            no = track['tracknum']
+          elif type(track['tracknum']) in [unicode, str]:
+            cnum=track['tracknum'].split("/")[0].lstrip('0')
+            if cnum != "":
+              no = int( track['tracknum'].split("/")[0].lstrip('0') )
+            else:
+              no=0
           else:
             no = 0
-            if no > 0:
-              f.write( '\t\t<trackNum>%i</trackNum>\n' % no )
+          if no > 0:
+            f.write( '\t\t<trackNum>%i</trackNum>\n' % no )
         if type(track.get('time')) == float:
-          tm = track['time']*1000
+          tm = track['time']*1000000
           if tm%1 >= 0.5:	
             tm = int(tm) + 1
           else:
@@ -220,7 +241,41 @@ class Playlist(list):
                                   
         #write the location
         f.write( '\t\t<location>%s</location>\n' \
-                   % doc.createTextNode(location).toxml() )
+                   % doc.createTextNode(location.encode("utf-8")).toxml() )
+
+
+        #write other info:
+        keys = set(track.keys())
+        keys.discard('title')
+        keys.discard('artist')
+        keys.discard('album')
+        keys.discard('tracknum')
+        keys.discard('time')
+        keys.discard('path')
+        if len(keys) > 0:
+          f.write('\t\t<extension application="autoplayer">\n')
+          for k in sorted(keys):
+            if track[k] != None:
+              v = track[k]
+              t = type(v)
+              if t in [str, unicode]:
+                t = "str"
+                v = unicode(v)
+              elif t == bool:
+                t = "bool"
+                v = '1' if v else '0'
+              elif t in [int, long]:
+                t = "int"
+                v = str(v).encode("utf-8")
+              elif t == float:
+                t = "float"
+                v = repr(v)
+              else:
+                continue
+              v = doc.createTextNode(v).toxml()
+          
+              f.write(u"\t\t\t<%s type='%s'>%s</%s>\n"	% (k, t, v, k))
+          f.write('\t\t</extension>\n')
         f.write('\t</track>\n')
 			#tail
       f.write('</trackList>\n')
@@ -229,32 +284,43 @@ class Playlist(list):
 
 class Playlist_mpris2(collections.OrderedDict):
 	
-  def __init__(self,playlist=Playlist([])):
+  def __init__(self,playlist=Playlist([]),current=None,position=None):
     super( Playlist_mpris2, self ).__init__(collections.OrderedDict())
     for id,track in enumerate(playlist):
-      self[str(id)]=track
+      if (track.id is None):
+        self[str(id)]=track
+      else:
+        self[track.id]=track
 
     if len (self) == 0 :
       self.current = None
     else:
-      self.current = self.keys()[0]
+      #self.current = self.keys()[0]
+      if current is None:
+        self.current = self.keys()[0]
+      else:
+        self.current=current
+
+    self.position=position
+
+    self.redefine_id()
 
   def get_current(self):
     if self.current is not None: 
       return self[self.current]
     else:
-      return Track(None,None,None,None,None)
+      return Track(None,None,None,None,None,None)
 
   def set_current(self,id):
     if id in self.keys():
       self.current=id
     else:
-      print "set_current: invalid id"
+      logging.warning ("set_current: invalid id")
 
   def next(self):
 
     self.current = self.nextid(self.current)
-    print "current:",self.current
+    logging.info ( "current: %s" % self.current)
 
   def nextid(self,id):
 
@@ -273,7 +339,7 @@ class Playlist_mpris2(collections.OrderedDict):
   def previous(self):
 
     self.current = self.previousid(self.current)
-    print "current:",self.current
+    logging.info ( "current: %s" % self.current)
 
 
   def previousid(self,id):
@@ -324,16 +390,22 @@ class Playlist_mpris2(collections.OrderedDict):
       else:
         newself.current=self.current
 
+    newself.redefine_id()
     return newself
 
 
   def removetrack(self,trackid):
     self.pop(trackid,None)
 
-  def write(self,path):
-    Playlist(tracks=self.values()).write(path)
+  def redefine_id(self):
+    tracks=[]
+    for id,track in self.iteritems():
+      tr=Track._make((track.path,track.time,track.artist,track.album,track.title,str(id)))
+      self[id]=tr
     
-
+  def write(self,path):
+    Playlist(tracks=self.values(),current=self.current,position=self.position).write(path)
+    
 def main():
 
   import logging
@@ -350,28 +422,31 @@ def main():
   print "-------------- playlist ------------------"
   p=Playlist(media)
 
-  print p
-
   print "--------- playlist ord dict -----------------------"
   op=Playlist_mpris2(p)
-  print op
-
 
   op=op.addtrack(uri,aftertrack="1",setascurrent=True)
-  print op
+
+  op.write("/tmp/tmp.xspf")
 
   print "--------- playlist from file -----------------------"
 
   p=Playlist(["/tmp/tmp.xspf"])
-  print p
 
   print "--------- playlist from file ord dict -----------------------"
   op=Playlist_mpris2(p)
+
+  op=op.addtrack(uri,aftertrack="1",setascurrent=True)
   print op
 
   op.write("/tmp/tmpout.xspf")
 
-
+  print "--------- reread playlist from file ord dict -----------------------"
+  p=Playlist(["/tmp/tmpout.xspf"])
+  op=Playlist_mpris2(p)
+  print op
+  op.write("/tmp/tmpout2.xspf")
+  
 if __name__ == '__main__':
   main()  # (this code was run as script)
     

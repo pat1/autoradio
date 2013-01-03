@@ -412,6 +412,10 @@ class Player:
 
 
   def seek(self,t):
+    """
+    t in microseconds
+    """
+
     logging.info("seek")
     try:
       pos_int = self.player.query_position(gst.FORMAT_TIME, None)[0]
@@ -424,6 +428,9 @@ class Player:
 
 
   def setposition(self,trackid,t):
+    """
+    t in microseconds
+    """
 
     if trackid != self.playlist.current:
         logging.warning( "setposition trackid is not current trackid")
@@ -431,14 +438,15 @@ class Player:
     try:
       logging.info("set position")
       pos_int = self.player.query_duration(gst.FORMAT_TIME, None)[0]
+      tnano=t*1000
 
-      if t >= 0 and t <= pos_int : 
+      if tnano >= 0 and tnano <= pos_int : 
         logging.info("set position to: %s; len: %s" % (str(t),str(pos_int)))
 
         #if wait: self.playbin.get_state(timeout=50*gst.MSECOND)
         event = gst.event_new_seek(1.0, gst.FORMAT_TIME,
                 gst.SEEK_FLAG_FLUSH|gst.SEEK_FLAG_ACCURATE,
-                gst.SEEK_TYPE_SET, t, gst.SEEK_TYPE_NONE, 0)
+                gst.SEEK_TYPE_SET, tnano, gst.SEEK_TYPE_NONE, 0)
         res = self.player.send_event(event)
         if res:
           self.player.set_new_stream_time(0L)
@@ -517,6 +525,9 @@ class Player:
 
 
   def position(self):
+    """
+    return microseconds
+    """
     try:
       pos_int = self.player.query_position(gst.FORMAT_TIME, None)[0]
 
@@ -524,7 +535,7 @@ class Player:
       logging.warning( "gst.QueryError in query_position" )
       return None
 			    
-    return pos_int
+    return pos_int/1000.
 
 
   def printinfo(self):
@@ -534,7 +545,6 @@ class Player:
 #      if dur_int == -1:
 #        print "bho"
       print self.playmode,self.convert_ns(pos_int)+"//"+self.convert_ns(dur_int)
-      #          self.forward_callback(60)
 
     except(gst.QueryError):
         #print "error printinfo"
@@ -544,7 +554,7 @@ class Player:
 
   def save_playlist(self,path):
 
-      self.playlist.position=self.position()
+      self.playlist.position=self.position()*1000
 
       try:
           self.playlist.write(path)
@@ -569,7 +579,7 @@ class Player:
     time.sleep(1)
     logging.info ( "recover last status from disk")
     if self.playlist.position is not None:
-      self.setposition(self.playlist.current,self.playlist.position)
+      self.setposition(self.playlist.current,self.playlist.position/1000)
     time.sleep(1)
     self.play()
 

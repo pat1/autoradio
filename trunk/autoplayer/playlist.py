@@ -70,6 +70,9 @@ class XSPFParser2(handler.ContentHandler):
   def __init__(s):
     s.path = u""
     s.tracks = []
+    s.current=None
+    s.position=None
+    s.extensionapplication=None
 
   def parseFile(s, fileName):
 	   
@@ -86,6 +89,9 @@ class XSPFParser2(handler.ContentHandler):
     s.content = ""
     if s.path == "/playlist/trackList/track":
       s.track = {}
+    elif s.path == "/playlist/extension":
+    #if name == 'extension':
+      s.extensionapplication=  attrs.get('application',None) 
 
   def characters(s, content):
     s.content = s.content + content
@@ -108,7 +114,13 @@ class XSPFParser2(handler.ContentHandler):
       s.track['album'] = s.content
     elif s.path == "/playlist/trackList/track/extension/id":
       s.track['id'] = s.content
-		
+    elif s.path == "/playlist/extension/current":
+      if s.extensionapplication == "autoplayer":
+        s.current = str(s.content)
+    elif s.path == "/playlist/extension/position":
+      if s.extensionapplication == "autoplayer":
+        s.position = int(s.content)
+
     s.path = s.path.rsplit("/", 1)[0]
 
 
@@ -171,10 +183,12 @@ class Playlist(list):
       #s.current=s[2][5]
       #s.position=0
 
-      s.current="1"
-      s.position=180000000000
-      logging.info ( "current: %s" % s.current)
-      logging.info ( "position: %s" % s.position)
+      s.current=p.current
+      s.position=p.position
+      #s.current="1"
+      #s.position=180000000000
+      logging.info ( "read from xspf current: %s" % s.current)
+      logging.info ( "read from xspf position: %s" % s.position)
 
 
   def write(s,path):
@@ -193,24 +207,24 @@ class Playlist(list):
       else:
         f.write('<playlist version="1" xmlns="http://xspf.org/ns/0/">\n')
 
-      #TODO write to file !!!
-      logging.info ( "current: %s" % s.current)
-      logging.info ( "position: %s" % s.position)
+      logging.info ( "writing to xspf current: %s" % s.current)
+      logging.info ( "writing to xspf position: %s" % s.position)
 
-      #<extension application="http://example.com">
-      #    <cl:clip start="25000" end="34500"/>
-      #</extension>
+      if s.current is not None or s.position is not None:
+        f.write('\t<extension application="autoplayer">\n')
 
-      f.write('\t<extension application="autoplayer">\n')
-      k="current"
-      t="int"
-      v = doc.createTextNode(str(s.current).encode("utf-8")).toxml()
-      f.write(u"\t\t<%s type='%s'>%s</%s>\n"	% (k, t, v, k))
+        if s.current is not None :
+          k="current"
+          t="int"
+          v = doc.createTextNode(str(s.current)).toxml()
+          f.write(u"\t\t<%s type='%s'>%s</%s>\n"	% (k, t, v, k))
 
-      k="current"
-      v = doc.createTextNode(str(s.position).encode("utf-8")).toxml()
-      f.write(u"\t\t<%s type='%s'>%s</%s>\n"	% (k, t, v, k))
-      f.write('\t</extension>\n')
+        if s.position is not None:
+          k="position"
+          v = doc.createTextNode(str(s.position)).toxml()
+          f.write(u"\t\t<%s type='%s'>%s</%s>\n"	% (k, t, v, k))
+
+        f.write('\t</extension>\n')
 
       f.write('<trackList>\n')
       for track in s:

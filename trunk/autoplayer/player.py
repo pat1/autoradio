@@ -77,7 +77,7 @@ class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
     @dbus.service.property(PLAYER_IFACE, signature="s")
     def LoopStatus(self):
         #raise
-        return None
+        return "None"
 
     @dbus.service.property(PLAYER_IFACE, signature="d")
     def Rate(self):
@@ -86,7 +86,7 @@ class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
     @dbus.service.property(PLAYER_IFACE, signature="b")
     def Shuffle(self):
         #raise
-        return None
+        return False
 
     @dbus.service.property(PLAYER_IFACE, signature="a{sv}")
     def Metadata(self):
@@ -96,7 +96,7 @@ class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
     @dbus.service.property(PLAYER_IFACE, signature="d")
     def Volume(self):
         #raise
-        return None
+        return 1.0
 
     @dbus.service.property(PLAYER_IFACE, signature="x")
     def Position(self):
@@ -128,7 +128,7 @@ class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
 
     @dbus.service.property(PLAYER_IFACE, signature="b")
     def CanPlay(self):
-        if current is None :
+        if self.player.playlist.current is None :
             return False
         else:
             return True
@@ -190,14 +190,16 @@ class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
 
     @dbus.service.method(TRACKLIST_IFACE,in_signature='as', out_signature='aa{sv}')
     def GetTracksMetadata(self,trackids):
-        #todo
         metadata=[]
         for id in trackids:
             meta={}
             for key,attr in ("mpris:trackid","id"),("mpris:length","time"),("xesam:title","title"),("xesam:artist","artist"),("xesam:url","path"):
                 myattr= getattr(self.player.playlist[id],attr,None)
                 if myattr is not None:
-                    meta[key]=myattr
+                  if key == "mpris:length":
+                    myattr=long(round(myattr/1000.))
+                  meta[key]=myattr
+                    
             metadata.append(meta)
 
         return metadata
@@ -554,15 +556,19 @@ class Player:
 
   def save_playlist(self,path):
 
+    position=self.position()
+    if position is None:
+      self.playlist.position=position
+    else:
       self.playlist.position=self.position()*1000
 
-      try:
-          self.playlist.write(path)
-      except:
-          logging.error( "errore saving playlist")
+    try:
+      self.playlist.write(path)
+    except:
+      logging.error( "errore saving playlist")
 
-      logging.info ( "playlist saved %s" % path)
-      return True
+    logging.info ( "playlist saved %s" % path)
+    return True
 
 
   def initialize(self):

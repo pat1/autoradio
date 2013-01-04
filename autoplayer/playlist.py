@@ -184,10 +184,6 @@ class Playlist(list):
     xspf_audacious_compatibility=False
     xspf_qmmp_compatibility=False
 
-    #TODO write to file !!!
-    logging.info ( "current: %s" % s.current)
-    logging.info ( "position: %s" % s.position)
-
     with open(path, "w") as f:
 			#head
       f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
@@ -196,6 +192,26 @@ class Playlist(list):
                   ' xmlns:vlc="%s">\n' % VLC_NS)
       else:
         f.write('<playlist version="1" xmlns="http://xspf.org/ns/0/">\n')
+
+      #TODO write to file !!!
+      logging.info ( "current: %s" % s.current)
+      logging.info ( "position: %s" % s.position)
+
+      #<extension application="http://example.com">
+      #    <cl:clip start="25000" end="34500"/>
+      #</extension>
+
+      f.write('\t<extension application="autoplayer">\n')
+      k="current"
+      t="int"
+      v = doc.createTextNode(str(s.current).encode("utf-8")).toxml()
+      f.write(u"\t\t<%s type='%s'>%s</%s>\n"	% (k, t, v, k))
+
+      k="current"
+      v = doc.createTextNode(str(s.position).encode("utf-8")).toxml()
+      f.write(u"\t\t<%s type='%s'>%s</%s>\n"	% (k, t, v, k))
+      f.write('\t</extension>\n')
+
       f.write('<trackList>\n')
       for track in s:
         track=track._asdict()
@@ -227,19 +243,13 @@ class Playlist(list):
         # out should be millisec
         if type(track.get('time')) == float:
           tm = track['time']*1000000
-          print "float"
         elif type(track.get('time')) == int:
           tm = track['time']/1000000.
-          print "integer"
         else:
           tm= None
 
-        print "tm",tm
         if tm is not None:
-          if tm%1 >= 0.5:	
-            tm = int(tm) + 1
-          else:
-            tm = int(tm)
+          tm = int(round(tm))
           f.write('\t\t<duration>%i</duration>\n' % tm )
 
         #write location

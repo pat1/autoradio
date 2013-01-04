@@ -537,7 +537,7 @@ class Player:
       logging.warning( "gst.QueryError in query_position" )
       return None
 			    
-    return pos_int/1000.
+    return int(round(pos_int/1000.))
 
 
   def printinfo(self):
@@ -585,7 +585,7 @@ class Player:
     time.sleep(1)
     logging.info ( "recover last status from disk")
     if self.playlist.position is not None:
-      self.setposition(self.playlist.current,self.playlist.position/1000)
+      self.setposition(self.playlist.current,int(round(self.playlist.position/1000.)))
     time.sleep(1)
     self.play()
 

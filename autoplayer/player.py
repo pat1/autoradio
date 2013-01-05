@@ -13,6 +13,13 @@ import dbus.service
 import dbus.mainloop.glib
 import logging
 
+#ifdef property_enabled
+logging.info('The source is in property_enabled')
+#else
+logging.info('The source is not in property_enabled')
+#endif
+
+
 PLAYER_IFACE="org.mpris.MediaPlayer2.Player"
 TRACKLIST_IFACE="org.mpris.MediaPlayer2.TrackList"
 IFACE="org.mpris.MediaPlayer2"
@@ -30,7 +37,11 @@ STATUS_PLAYLIST="autoplayer.xspf"
 class NotSupportedException(dbus.DBusException):
   _dbus_error_name = 'org.mpris.MediaPlayer2.Player.NotSupported'
 
+#ifdef property_enabled
 class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
+#else
+class AutoPlayer(dbus.service.Object):
+#endif
 
     def attach_player(self,player):
         self.player=player
@@ -45,23 +56,43 @@ class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
         self.player.save_playlist(STATUS_PLAYLIST)
         loop.quit()
 
+#ifdef property_enabled
     @dbus.service.property(IFACE, signature="b")
+#else
+    @dbus.service.method(IFACE, out_signature="b")
+#endif
     def CanQuit(self):
         return True
 
+#ifdef property_enabled
     @dbus.service.property(IFACE, signature="b")
+#else
+    @dbus.service.method(IFACE, out_signature="b")
+#endif
     def CanSetFullscreen(self):
         return False
 
+#ifdef property_enabled
     @dbus.service.property(IFACE, signature="b")
+#else
+    @dbus.service.method(IFACE, out_signature="b")
+#endif
     def CanRaise(self):
         return False
 
+#ifdef property_enabled
     @dbus.service.property(IFACE, signature="b")
+#else
+    @dbus.service.method(IFACE, out_signature="b")
+#endif
     def HasTrackList(self):
         return True
 
+#ifdef property_enabled
     @dbus.service.property(IFACE, signature="b")
+#else
+    @dbus.service.method(IFACE, out_signature="b")
+#endif
     def Identity(self):
         return "Autoradio Player"
 
@@ -70,70 +101,130 @@ class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
     #SupportedUriSchemes 	as 	Read only 		
     #SupportedMimeTypes 	as 	Read only 		
 
+#ifdef property_enabled
     @dbus.service.property(PLAYER_IFACE, signature="s")
+#else
+    @dbus.service.method(PLAYER_IFACE, out_signature="s")
+#endif
     def PlaybackStatus(self):
         return self.player.playmode
 
+#ifdef property_enabled
     @dbus.service.property(PLAYER_IFACE, signature="s")
+#else
+    @dbus.service.method(PLAYER_IFACE, out_signature="s")
+#endif
     def LoopStatus(self):
         #raise
         return "None"
 
+#ifdef property_enabled
     @dbus.service.property(PLAYER_IFACE, signature="d")
+#else
+    @dbus.service.method(PLAYER_IFACE, out_signature="d")
+#endif
     def Rate(self):
         return 1.0
 
+#ifdef property_enabled
     @dbus.service.property(PLAYER_IFACE, signature="b")
+#else
+    @dbus.service.method(PLAYER_IFACE, out_signature="b")
+#endif
     def Shuffle(self):
         #raise
         return False
 
+#ifdef property_enabled
     @dbus.service.property(PLAYER_IFACE, signature="a{sv}")
+#else
+    @dbus.service.method(PLAYER_IFACE, out_signature="a{sv}")
+#endif
     def Metadata(self):
         #raise
         return {"mpris:trackid":self.player.playlist.current,}
 
+#ifdef property_enabled
     @dbus.service.property(PLAYER_IFACE, signature="d")
+#else
+    @dbus.service.method(PLAYER_IFACE, out_signature="d")
+#endif
     def Volume(self):
         #raise
         return 1.0
 
+#ifdef property_enabled
     @dbus.service.property(PLAYER_IFACE, signature="x")
+#else
+    @dbus.service.method(PLAYER_IFACE, out_signature="x")
+#endif
     def Position(self):
         return self.player.position()
 
+#ifdef property_enabled
     @dbus.service.property(PLAYER_IFACE, signature="d")
+#else
+    @dbus.service.method(PLAYER_IFACE, out_signature="d")
+#endif
     def MinimumRate(self):
         return 1.0
 
+#ifdef property_enabled
     @dbus.service.property(PLAYER_IFACE, signature="d")
+#else
+    @dbus.service.method(PLAYER_IFACE, out_signature="d")
+#endif
     def MaximumRate(self):
         return 1.0
 
+#ifdef property_enabled
     @dbus.service.property(PLAYER_IFACE, signature="b")
+#else
+    @dbus.service.method(PLAYER_IFACE, out_signature="b")
+#endif
     def CanGoNext(self):
         return True
 
+#ifdef property_enabled
     @dbus.service.property(PLAYER_IFACE, signature="b")
+#else
+    @dbus.service.method(PLAYER_IFACE, out_signature="b")
+#endif
     def CanGoPrevious(self):
         return True
 
+#ifdef property_enabled
     @dbus.service.property(PLAYER_IFACE, signature="b")
+#else
+    @dbus.service.method(PLAYER_IFACE, out_signature="b")
+#endif
     def CanSeek(self):
         return True
 
+#ifdef property_enabled
     @dbus.service.property(PLAYER_IFACE, signature="b")
+#else
+    @dbus.service.method(PLAYER_IFACE, out_signature="b")
+#endif
     def CanControl(self):
         return True
 
+#ifdef property_enabled
     @dbus.service.property(PLAYER_IFACE, signature="b")
+#else
+    @dbus.service.method(PLAYER_IFACE, out_signature="b")
+#endif
     def CanPlay(self):
         if self.player.playlist.current is None :
             return False
         else:
             return True
 
+#ifdef property_enabled
     @dbus.service.property(PLAYER_IFACE, signature="b")
+#else
+    @dbus.service.method(PLAYER_IFACE, out_signature="b")
+#endif
     def CanPause(self):
         return True
 
@@ -204,7 +295,11 @@ class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
 
         return metadata
 
+#ifdef property_enabled
     @dbus.service.property(TRACKLIST_IFACE, signature="as")
+#else
+    @dbus.service.method(TRACKLIST_IFACE, out_signature="as")
+#endif
     def Tracks(self):
         tracks=[]
         for track in self.player.playlist:
@@ -212,7 +307,11 @@ class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
         return tracks
 
 
+#ifdef property_enabled
     @dbus.service.property(TRACKLIST_IFACE, signature="b")
+#else
+    @dbus.service.method(TRACKLIST_IFACE, out_signature="b")
+#endif
     def CanEditTracks(self):
         return True
 

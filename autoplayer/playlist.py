@@ -45,18 +45,42 @@ class Track(collections.namedtuple('Track',("path","time","artist","album","titl
       return metadata
 
 
-def is_xml(data):
-  # returns : empty -1, xml 1, else 0
-  if data.strip() == "":
-    return -1
-	
-  parser = make_parser ()
-  try:
-    parser.feed(data)
-  except:
-    return 0
-  else:
-    return 1
+def parse_pls(lines):
+
+#    titles = {}
+    songs = {}
+    for line in lines:
+      spl = line.split( '=', 1)
+      if len(spl) == 2:
+        name, value = spl
+
+        if name.lower().startswith('file'):
+          num = name[4:]
+          try:
+            n = int(num)
+          except:
+            pass
+          else:
+            songs["%05d" % n]  = value
+
+        #elif name.lower().startswith('title'):
+        #  num = name[4:]
+        #  try:
+        #    n = int(num)
+        #  except:
+        #    pass
+        #  else:
+        #    titles["%05d" % n]  = value
+
+        else:
+          logging.debug( "PLAYLIST: skip this line from pls playlist: %s",line)
+
+    ret = []
+    for k in sorted(songs.keys()):
+#      ret.append( (songs[k], titles.get(k, None) ) )
+      ret.append(songs[k])
+    return ret
+				
 
 def parse_xspf2(data):
   handler = XSPFParser2()
@@ -94,18 +118,22 @@ class XSPFParser2(handler.ContentHandler):
       s.extensionapplication=  attrs.get('application',None) 
 
   def characters(s, content):
-    s.content = s.content + content
+    s.content += content
 
   def endElement(s, name):
 
-    if s.path == "/playlist/trackList/track":
-      if s.track.get('location'):
-        s.tracks.append(s.track)
-        del s.track
-    elif s.path == "/playlist/title":
+    if s.path == "/playlist/title":
       s.title = s.content
+    elif s.path == "/playlist/extension/current":
+      if s.extensionapplication == "autoplayer":
+        s.current = str(s.content)
+    elif s.path == "/playlist/extension/position":
+      if s.extensionapplication == "autoplayer":
+        s.position = int(s.content)
     elif s.path == "/playlist/trackList/track/location":
-      s.track['location'] = urllib.unquote(s.content)
+      # mmmm this is for audacious but I think is wrong
+      #s.track['location'] = urllib.unquote(s.content)
+      s.track['location'] = urllib.unquote(s.content.encode("UTF-8"))
     elif s.path == "/playlist/trackList/track/title":
       s.track['title'] = s.content
     elif s.path == "/playlist/trackList/track/creator":
@@ -114,12 +142,10 @@ class XSPFParser2(handler.ContentHandler):
       s.track['album'] = s.content
     elif s.path == "/playlist/trackList/track/extension/id":
       s.track['id'] = s.content
-    elif s.path == "/playlist/extension/current":
-      if s.extensionapplication == "autoplayer":
-        s.current = str(s.content)
-    elif s.path == "/playlist/extension/position":
-      if s.extensionapplication == "autoplayer":
-        s.position = int(s.content)
+    elif s.path == "/playlist/trackList/track":
+      if s.track.get('location'):
+        s.tracks.append(s.track)
+        del s.track
 
     s.path = s.path.rsplit("/", 1)[0]
 
@@ -134,7 +160,9 @@ class Playlist(list):
 
     if media is not None:
       for ele in media:
-        if ele.lower().endswith(".xspf"):
+        if ele.lower().endswith(".xspf") or \
+        ele.lower().endswith(".m3u") or \
+        ele.lower().endswith(".pls") :
           self.read(ele)
         else:
           track_meta=Track(ele,None,None,None,None,None)
@@ -165,10 +193,31 @@ class Playlist(list):
     try:
       parser.feed(data)
     except:
-      logging.debug( "PLAYLIST: not XML")
-      raise
-#      return
+
+      lines = data.split('\n')
+      lines = map(lambda line: line.strip().rstrip(), lines)
+      lines = filter(lambda line: line if line != "" and line[0] != '#' else None, lines)
+      if lines == []:
+        return
+
+      #detect type of playlist
+      if '[playlist]' in lines:
+        logging.debug( "PLAYLIST: is PLS")
+        lines = parse_pls(lines)
+
+      for location in lines:
+
+        if    not 'http://' in location.lower() and \
+              not 'file://' in location.lower():
+          location = 'file://' + location
+
+        location=urllib.unquote(location.encode("UTF-8"))
+        track=Track._make(Track(location,None,None,None,None,None).get_metadata().values())
+        s.append(track)
+
     else:
+      logging.debug( "PLAYLIST: is XML")
+
       p = parse_xspf2(data)
       logging.debug( "PLAYLIST: xspf parsed")
 
@@ -269,15 +318,15 @@ class Playlist(list):
         #write location
         #make valid quoted location
         location = track['path']
-
+        #location = location.encode("utf-8")
         if    not 'http://' in location.lower() and \
               not 'file://' in location.lower():
-          location = urllib.quote( location )
           location = 'file://' + location
+        location = urllib.quote( location )
                                   
         #write the location
         f.write( '\t\t<location>%s</location>\n' \
-                   % doc.createTextNode(location.encode("utf-8")).toxml() )
+                   % doc.createTextNode(location).toxml() )
 
 
         #write other info:

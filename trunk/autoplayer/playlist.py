@@ -8,7 +8,7 @@ import mutagen
 import sys
 from xml.sax import make_parser, handler, SAXParseException
 from xml.dom.minidom import Document
-import urllib
+import urllib, urlparse
 
 class Track(collections.namedtuple('Track',("path","time","artist","album","title","id"))):
   __slots__ = ()
@@ -132,8 +132,12 @@ class XSPFParser2(handler.ContentHandler):
         s.position = int(s.content)
     elif s.path == "/playlist/trackList/track/location":
       # mmmm this is for audacious but I think is wrong
-      #s.track['location'] = urllib.unquote(s.content)
-      s.track['location'] = urllib.unquote(s.content.encode("UTF-8"))
+      ##s.track['location'] = urllib.unquote(s.content)
+      #s.track['location'] = urllib.unquote(s.content.encode("UTF-8"))
+
+      url=urlparse.urlsplit(s.content)
+      s.track['location']=urlparse.urljoin("file://",urllib.unquote(url.path.encode("UTF-8")))
+
     elif s.path == "/playlist/trackList/track/title":
       s.track['title'] = s.content
     elif s.path == "/playlist/trackList/track/creator":
@@ -207,11 +211,9 @@ class Playlist(list):
 
       for location in lines:
 
-        if    not 'http://' in location.lower() and \
-              not 'file://' in location.lower():
-          location = 'file://' + location
+        url=urlparse.urlsplit(location)
+        location=urlparse.urljoin("file://",urllib.unquote(url.path.encode("UTF-8")))
 
-        location=urllib.unquote(location.encode("UTF-8"))
         track=Track._make(Track(location,None,None,None,None,None).get_metadata().values())
         s.append(track)
 
@@ -318,16 +320,20 @@ class Playlist(list):
         #write location
         #make valid quoted location
         location = track['path']
-        #location = location.encode("utf-8")
-        if    not 'http://' in location.lower() and \
-              not 'file://' in location.lower():
-          location = 'file://' + location
-        location = urllib.quote( location )
+
+        url=urlparse.urlsplit(location)
+        location=urlparse.urljoin("file://",urllib.quote(url.path))
+        #location=urlparse.urljoin("file://",urllib.quote(url.path.encode("UTF-8")))
+
+        ##location = location.encode("utf-8")
+        #if    not 'http://' in location.lower() and \
+        #      not 'file://' in location.lower():
+        #  location = 'file://' + location
+        #location = urllib.quote( location )
                                   
         #write the location
         f.write( '\t\t<location>%s</location>\n' \
                    % doc.createTextNode(location).toxml() )
-
 
         #write other info:
         keys = set(track.keys())

@@ -2,6 +2,13 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2013 Paolo Patruno.
 
+# Authors: Paolo Patruno <p.patruno@iperbole.bologna.it> 
+# Based on :
+# mpDris2 from Jean-Philippe Braun <eon@patapon.info>,
+#              Mantas Mikulėnas <grawity@gmail.com>
+# mpDris from: Erik Karlsson <pilo@ayeon.org>
+# Some bits taken from quodlibet mpris plugin by <christoph.reiter@gmx.at>
+
 import sys, time, thread
 import gobject
 import pygst
@@ -12,36 +19,354 @@ import dbus
 import dbus.service
 import dbus.mainloop.glib
 import logging
+import signal
 
-#ifdef property_enabled
-logging.info('The source is in property_enabled')
-#else
-logging.info('The source is not in property_enabled')
-#endif
 
+identity = "Auto Player"
+
+# Interface MediaPlayer2.Player
+# Signals
+# Seeked 	(x: Position)
+#
+# Interface MediaPlayer2.TrackList
+# Signals
+# TrackListReplaced 	(ao: Tracks, o: CurrentTrack) 	
+# TrackAdded 	(a{sv}: Metadata, o: AfterTrack) 	
+# TrackRemoved 	(o: TrackId) 	
+# TrackMetadataChanged 	(o: TrackId, a{sv}: Metadata) 	
+                                               
+
+# python dbus bindings don't include annotations and properties
+MPRIS2_INTROSPECTION = """<node name="/org/mpris/MediaPlayer2">
+  <interface name="org.freedesktop.DBus.Introspectable">
+    <method name="Introspect">
+      <arg direction="out" name="xml_data" type="s"/>
+    </method>
+  </interface>
+  <interface name="org.freedesktop.DBus.Properties">
+    <method name="Get">
+      <arg direction="in" name="interface_name" type="s"/>
+      <arg direction="in" name="property_name" type="s"/>
+      <arg direction="out" name="value" type="v"/>
+    </method>
+    <method name="GetAll">
+      <arg direction="in" name="interface_name" type="s"/>
+      <arg direction="out" name="properties" type="a{sv}"/>
+    </method>
+    <method name="Set">
+      <arg direction="in" name="interface_name" type="s"/>
+      <arg direction="in" name="property_name" type="s"/>
+      <arg direction="in" name="value" type="v"/>
+    </method>
+    <signal name="PropertiesChanged">
+      <arg name="interface_name" type="s"/>
+      <arg name="changed_properties" type="a{sv}"/>
+      <arg name="invalidated_properties" type="as"/>
+    </signal>
+  </interface>
+  <interface name="org.mpris.MediaPlayer2">
+    <method name="Raise"/>
+    <method name="Quit"/>
+    <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="false"/>
+    <property name="CanQuit" type="b" access="read"/>
+    <property name="CanRaise" type="b" access="read"/>
+    <property name="HasTrackList" type="b" access="read"/>
+    <property name="Identity" type="s" access="read"/>
+    <property name="DesktopEntry" type="s" access="read"/>
+    <property name="SupportedUriSchemes" type="as" access="read"/>
+    <property name="SupportedMimeTypes" type="as" access="read"/>
+    <property name="CanSetFullscreen" type="b" access="read"/>
+  </interface>
+  <interface name="org.mpris.MediaPlayer2.Player">
+    <method name="Next"/>
+    <method name="Previous"/>
+    <method name="Pause"/>
+    <method name="PlayPause"/>
+    <method name="Stop"/>
+    <method name="Play"/>
+    <method name="Seek">
+      <arg direction="in" name="Offset" type="x"/>
+    </method>
+    <method name="SetPosition">
+      <arg direction="in" name="TrackId" type="o"/>
+      <arg direction="in" name="Position" type="x"/>
+    </method>
+    <method name="OpenUri">
+      <arg direction="in" name="Uri" type="s"/>
+    </method>
+    <signal name="Seeked">
+      <arg name="Position" type="x"/>
+    </signal>
+    <property name="PlaybackStatus" type="s" access="read">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+    </property>
+    <property name="LoopStatus" type="s" access="readwrite">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+    </property>
+    <property name="Rate" type="d" access="readwrite">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+    </property>
+    <property name="Shuffle" type="b" access="readwrite">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+    </property>
+    <property name="Metadata" type="a{sv}" access="read">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+    </property>
+    <property name="Volume" type="d" access="readwrite">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="false"/>
+    </property>
+    <property name="Position" type="x" access="read">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="false"/>
+    </property>
+    <property name="MinimumRate" type="d" access="read">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+    </property>
+    <property name="MaximumRate" type="d" access="read">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+    </property>
+    <property name="CanGoNext" type="b" access="read">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+    </property>
+    <property name="CanGoPrevious" type="b" access="read">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+    </property>
+    <property name="CanPlay" type="b" access="read">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+    </property>
+    <property name="CanPause" type="b" access="read">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+    </property>
+    <property name="CanSeek" type="b" access="read">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+    </property>
+    <property name="CanControl" type="b" access="read">
+      <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="false"/>
+    </property>
+  </interface>
+  <interface name="org.mpris.MediaPlayer2.TrackList">
+    <property access="read" type="b" name="CanEditTracks" />
+    <method name="GoTo">
+      <arg direction="in"  type="s" name="trackid" />
+    </method>
+    <property access="read" type="as" name="Tracks" />
+    <method name="AddTrack">
+      <arg direction="in"  type="s" name="uri" />
+      <arg direction="in"  type="s" name="aftertrack" />
+      <arg direction="in"  type="b" name="setascurrent" />
+    </method>
+    <method name="GetTracksMetadata">
+      <arg direction="in"  type="as" name="trackids" />
+      <arg direction="out" type="aa{sv}" />
+    </method>
+    <method name="RemoveTrack">
+      <arg direction="in"  type="s" name="trackid" />
+    </method>
+    <signal name="TrackListReplaced">
+      <arg type="ao" />
+      <arg type="o" />
+    </signal>
+    <signal name="TrackAdded">
+      <arg type="a{sv}" />
+      <arg type="o" />
+    </signal>
+    <signal name="TrackRemoved">
+      <arg type="o" />
+    </signal>
+    <signal name="TrackMetadataChanged">
+      <arg type="o" />
+      <arg type="a{sv}" />
+    </signal>
+  </interface>
+</node>"""
+
+
+# MPRIS allowed metadata tags : not used
+allowed_tags = {
+    'mpris:trackid': dbus.ObjectPath,
+    'mpris:length': long,
+    'mpris:artUrl': str,
+    'xesam:album': str,
+    'xesam:albumArtist': list,
+    'xesam:artist': list,
+    'xesam:asText': str,
+    'xesam:audioBPM': int,
+    'xesam:comment': list,
+    'xesam:composer': list,
+    'xesam:contentCreated': str,
+    'xesam:discNumber': int,
+    'xesam:firstUsed': str,
+    'xesam:genre': list,
+    'xesam:lastUsed': str,
+    'xesam:lyricist': str,
+    'xesam:title': str,
+    'xesam:trackNumber': int,
+    'xesam:url': str,
+    'xesam:useCount': int,
+    'xesam:userRating': float,
+}
 
 PLAYER_IFACE="org.mpris.MediaPlayer2.Player"
 TRACKLIST_IFACE="org.mpris.MediaPlayer2.TrackList"
 IFACE="org.mpris.MediaPlayer2"
 STATUS_PLAYLIST="autoplayer.xspf"
 
-#def _get_uri(self):
-#        uri = self.filename
-#        if not uri:
-#            return
-#        if uri.split(':')[0] not in (
-#                'http', 'https', 'file', 'udp', 'rtp', 'rtsp'):
-#            uri = 'file:' + pathname2url(path.realpath(uri))
-#        return uri
-
 class NotSupportedException(dbus.DBusException):
   _dbus_error_name = 'org.mpris.MediaPlayer2.Player.NotSupported'
 
-#ifdef property_enabled
-class AutoPlayer(dbus.service.Object, dbus.service.PropertiesInterface):
-#else
+
 class AutoPlayer(dbus.service.Object):
-#endif
+    ''' The base object of an MPRIS player '''
+
+    __name = "org.mpris.MediaPlayer2.AutoPlayer"
+    __path = "/org/mpris/MediaPlayer2"
+    __introspect_interface = "org.freedesktop.DBus.Introspectable"
+    __prop_interface = dbus.PROPERTIES_IFACE
+
+    def __init__(self):
+        dbus.service.Object.__init__(self, dbus.SessionBus(),
+                                     AutoPlayer.__path)
+
+        self._bus = dbus.SessionBus()
+        self._uname = self._bus.get_unique_name()
+        self._dbus_obj = self._bus.get_object("org.freedesktop.DBus",
+                                              "/org/freedesktop/DBus")
+        self._dbus_obj.connect_to_signal("NameOwnerChanged",
+                                         self._name_owner_changed_callback,
+                                         arg0=self.__name)
+
+        self.acquire_name()
+
+    def _name_owner_changed_callback(self, name, old_owner, new_owner):
+        if name == self.__name and old_owner == self._uname and new_owner != "":
+            try:
+                pid = self._dbus_obj.GetConnectionUnixProcessID(new_owner)
+            except:
+                pid = None
+            logger.info("Replaced by %s (PID %s)" % (new_owner, pid or "unknown"))
+            loop.quit()
+
+    def acquire_name(self):
+        self._bus_name = dbus.service.BusName(AutoPlayer.__name,
+                                              bus=self._bus,
+                                              allow_replacement=True,
+                                              replace_existing=True)
+
+    def release_name(self):
+        if hasattr(self, "_bus_name"):
+            del self._bus_name
+
+
+    def __PlaybackStatus(self):
+        return self.player.playmode
+
+    def __Metadata(self):
+        return {"mpris:trackid":self.player.playlist.current,}
+
+    def __Position(self):
+        return self.player.position()
+
+    def __CanPlay(self):
+        if self.player.playlist.current is None :
+            return False
+        else:
+            return True
+
+    def __Tracks(self):
+        tracks=[]
+        for track in self.player.playlist:
+            tracks.append(track)
+        return tracks
+
+
+    __root_interface = IFACE
+    __root_props = {
+        "CanQuit": (True, None),
+        "CanRaise": (False, None),
+        "DesktopEntry": ("AutoPlayer", None),
+        "HasTrackList": (True, None),
+        "Identity": (identity, None),
+        "SupportedUriSchemes": (dbus.Array(signature="s"), None),
+        "SupportedMimeTypes": (dbus.Array(signature="s"), None),
+        "CanSetFullscreen": (False, None),
+    }
+
+    __player_interface = PLAYER_IFACE
+    __player_props = {
+        "PlaybackStatus": (__PlaybackStatus, None),
+        "LoopStatus": (False, None),
+        "Rate": (1.0, None),
+        "Shuffle": (False, None),
+        "Metadata": (__Metadata, None),
+        "Volume": (1.0, None),
+        "Position": (__Position, None),
+        "MinimumRate": (1.0, None),
+        "MaximumRate": (1.0, None),
+        "CanGoNext": (True, None),
+        "CanGoPrevious": (True, None),
+        "CanPlay": (__CanPlay, None),
+        "CanPause": (True, None),
+        "CanSeek": (True, None),
+        "CanControl": (True, None),
+    }
+
+    __tracklist_interface = TRACKLIST_IFACE
+    __tracklist_props = {
+        "CanEditTracks": (True, None),
+        "Tracks": (__Tracks, None),
+}
+
+    __prop_mapping = {
+        __player_interface: __player_props,
+        __root_interface: __root_props,
+        __tracklist_interface: __tracklist_props,
+    }
+
+
+    @dbus.service.method(__introspect_interface)
+    def Introspect(self):
+        return MPRIS2_INTROSPECTION
+
+    @dbus.service.signal(__prop_interface, signature="sa{sv}as")
+    def PropertiesChanged(self, interface, changed_properties,
+                          invalidated_properties):
+        pass
+
+    @dbus.service.method(__prop_interface,
+                         in_signature="ss", out_signature="v")
+    def Get(self, interface, prop):
+        getter, setter = self.__prop_mapping[interface][prop]
+        if callable(getter):
+            return getter(self)
+        return getter
+
+    @dbus.service.method(__prop_interface,
+                         in_signature="ssv", out_signature="")
+    def Set(self, interface, prop, value):
+        getter, setter = self.__prop_mapping[interface][prop]
+        if setter is not None:
+            setter(self,value)
+
+    @dbus.service.method(__prop_interface,
+                         in_signature="s", out_signature="a{sv}")
+    def GetAll(self, interface):
+        read_props = {}
+        props = self.__prop_mapping[interface]
+        for key, (getter, setter) in props.iteritems():
+            if callable(getter):
+                getter = getter()
+            read_props[key] = getter
+        return read_props
+
+    def update_property(self, interface, prop):
+        getter, setter = self.__prop_mapping[interface][prop]
+        if callable(getter):
+            value = getter()
+        else:
+            value = getter
+        logger.debug('Updated property: %s = %s' % (prop, value))
+        self.PropertiesChanged(interface, {prop: value}, [])
+        return value
+
 
     def attach_player(self,player):
         self.player=player
@@ -54,179 +379,9 @@ class AutoPlayer(dbus.service.Object):
     def Quit(self):
         logging.info("save playlist: %s" % STATUS_PLAYLIST )
         self.player.save_playlist(STATUS_PLAYLIST)
+        self.release_name()
         loop.quit()
 
-#ifdef property_enabled
-    @dbus.service.property(IFACE, signature="b")
-#else
-    @dbus.service.method(IFACE, out_signature="b")
-#endif
-    def CanQuit(self):
-        return True
-
-#ifdef property_enabled
-    @dbus.service.property(IFACE, signature="b")
-#else
-    @dbus.service.method(IFACE, out_signature="b")
-#endif
-    def CanSetFullscreen(self):
-        return False
-
-#ifdef property_enabled
-    @dbus.service.property(IFACE, signature="b")
-#else
-    @dbus.service.method(IFACE, out_signature="b")
-#endif
-    def CanRaise(self):
-        return False
-
-#ifdef property_enabled
-    @dbus.service.property(IFACE, signature="b")
-#else
-    @dbus.service.method(IFACE, out_signature="b")
-#endif
-    def HasTrackList(self):
-        return True
-
-#ifdef property_enabled
-    @dbus.service.property(IFACE, signature="b")
-#else
-    @dbus.service.method(IFACE, out_signature="b")
-#endif
-    def Identity(self):
-        return "Autoradio Player"
-
-    # TODO:
-    #DesktopEntry 	         s 	Read only 		
-    #SupportedUriSchemes 	as 	Read only 		
-    #SupportedMimeTypes 	as 	Read only 		
-
-#ifdef property_enabled
-    @dbus.service.property(PLAYER_IFACE, signature="s")
-#else
-    @dbus.service.method(PLAYER_IFACE, out_signature="s")
-#endif
-    def PlaybackStatus(self):
-        return self.player.playmode
-
-#ifdef property_enabled
-    @dbus.service.property(PLAYER_IFACE, signature="s")
-#else
-    @dbus.service.method(PLAYER_IFACE, out_signature="s")
-#endif
-    def LoopStatus(self):
-        #raise
-        return "None"
-
-#ifdef property_enabled
-    @dbus.service.property(PLAYER_IFACE, signature="d")
-#else
-    @dbus.service.method(PLAYER_IFACE, out_signature="d")
-#endif
-    def Rate(self):
-        return 1.0
-
-#ifdef property_enabled
-    @dbus.service.property(PLAYER_IFACE, signature="b")
-#else
-    @dbus.service.method(PLAYER_IFACE, out_signature="b")
-#endif
-    def Shuffle(self):
-        #raise
-        return False
-
-#ifdef property_enabled
-    @dbus.service.property(PLAYER_IFACE, signature="a{sv}")
-#else
-    @dbus.service.method(PLAYER_IFACE, out_signature="a{sv}")
-#endif
-    def Metadata(self):
-        #raise
-        return {"mpris:trackid":self.player.playlist.current,}
-
-#ifdef property_enabled
-    @dbus.service.property(PLAYER_IFACE, signature="d")
-#else
-    @dbus.service.method(PLAYER_IFACE, out_signature="d")
-#endif
-    def Volume(self):
-        #raise
-        return 1.0
-
-#ifdef property_enabled
-    @dbus.service.property(PLAYER_IFACE, signature="x")
-#else
-    @dbus.service.method(PLAYER_IFACE, out_signature="x")
-#endif
-    def Position(self):
-        return self.player.position()
-
-#ifdef property_enabled
-    @dbus.service.property(PLAYER_IFACE, signature="d")
-#else
-    @dbus.service.method(PLAYER_IFACE, out_signature="d")
-#endif
-    def MinimumRate(self):
-        return 1.0
-
-#ifdef property_enabled
-    @dbus.service.property(PLAYER_IFACE, signature="d")
-#else
-    @dbus.service.method(PLAYER_IFACE, out_signature="d")
-#endif
-    def MaximumRate(self):
-        return 1.0
-
-#ifdef property_enabled
-    @dbus.service.property(PLAYER_IFACE, signature="b")
-#else
-    @dbus.service.method(PLAYER_IFACE, out_signature="b")
-#endif
-    def CanGoNext(self):
-        return True
-
-#ifdef property_enabled
-    @dbus.service.property(PLAYER_IFACE, signature="b")
-#else
-    @dbus.service.method(PLAYER_IFACE, out_signature="b")
-#endif
-    def CanGoPrevious(self):
-        return True
-
-#ifdef property_enabled
-    @dbus.service.property(PLAYER_IFACE, signature="b")
-#else
-    @dbus.service.method(PLAYER_IFACE, out_signature="b")
-#endif
-    def CanSeek(self):
-        return True
-
-#ifdef property_enabled
-    @dbus.service.property(PLAYER_IFACE, signature="b")
-#else
-    @dbus.service.method(PLAYER_IFACE, out_signature="b")
-#endif
-    def CanControl(self):
-        return True
-
-#ifdef property_enabled
-    @dbus.service.property(PLAYER_IFACE, signature="b")
-#else
-    @dbus.service.method(PLAYER_IFACE, out_signature="b")
-#endif
-    def CanPlay(self):
-        if self.player.playlist.current is None :
-            return False
-        else:
-            return True
-
-#ifdef property_enabled
-    @dbus.service.property(PLAYER_IFACE, signature="b")
-#else
-    @dbus.service.method(PLAYER_IFACE, out_signature="b")
-#endif
-    def CanPause(self):
-        return True
 
     @dbus.service.method(PLAYER_IFACE)
     def Next(self):
@@ -256,6 +411,8 @@ class AutoPlayer(dbus.service.Object):
     @dbus.service.method(PLAYER_IFACE,in_signature='x')
     def Seek(self,offset):
       self.player.seek(offset)
+      self.update_property(PLAYER_IFACE,'Seeked')
+
 
     @dbus.service.method(PLAYER_IFACE,in_signature='sx')
     def SetPosition(self,trackid,position):
@@ -264,20 +421,33 @@ class AutoPlayer(dbus.service.Object):
     @dbus.service.method(PLAYER_IFACE,in_signature='s')
     def OpenUri(self,uri):
       self.player.openuri(uri)
+      self.update_property(TRACKLIST_IFACE,'TrackAdded')
+      #self.update_property(TRACKLIST_IFACE,'TrackListReplaced')
+
+      # If the media player implements the TrackList interface, then the opened 
+      # track should be made part of the tracklist, the 
+      # org.mpris.MediaPlayer2.TrackList.TrackAdded
+      # or 
+      # org.mpris.MediaPlayer2.TrackList.TrackListReplaced
+      # signal should be fired, as well as the
+      # org.freedesktop.DBus.Properties.PropertiesChanged
+      # signal on the tracklist interface. 
+
 
 #tracklist
 
     @dbus.service.method(TRACKLIST_IFACE,in_signature='ssb', out_signature='')
     def AddTrack(self,uri, aftertrack, setascurrent):
-        self.addtrack(uri, aftertrack, setascurrent)
+        self.player.addtrack(uri, aftertrack, setascurrent)
 
     @dbus.service.method(TRACKLIST_IFACE,in_signature='s', out_signature='')
     def RemoveTrack(self, trackid):
-        self.removetrack(trackid)
+        self.player.removetrack(trackid)
+        self.update_property(TRACKLIST_IFACE,'TrackRemoved')
 
     @dbus.service.method(TRACKLIST_IFACE,in_signature='s', out_signature='')
     def GoTo(self, trackid):
-        self.goto(trackid)
+        self.player.goto(trackid)
 
     @dbus.service.method(TRACKLIST_IFACE,in_signature='as', out_signature='aa{sv}')
     def GetTracksMetadata(self,trackids):
@@ -295,42 +465,6 @@ class AutoPlayer(dbus.service.Object):
 
         return metadata
 
-#ifdef property_enabled
-    @dbus.service.property(TRACKLIST_IFACE, signature="as")
-#else
-    @dbus.service.method(TRACKLIST_IFACE, out_signature="as")
-#endif
-    def Tracks(self):
-        tracks=[]
-        for track in self.player.playlist:
-            tracks.append(track)
-        return tracks
-
-
-#ifdef property_enabled
-    @dbus.service.property(TRACKLIST_IFACE, signature="b")
-#else
-    @dbus.service.method(TRACKLIST_IFACE, out_signature="b")
-#endif
-    def CanEditTracks(self):
-        return True
-
-
-    def addtrack(self,uri, aftertrack, setascurrent):
-
-        if aftertrack == "/org/mpris/MediaPlayer2/TrackList/NoTrack":
-            aftertrack=None
-
-        self.player.playlist=self.player.playlist.addtrack(uri,aftertrack,setascurrent)
-
-    def removetrack(self,uri, trackid):
-        self.player.playlist.removetrack(self.player.playlist.index(trackid))
-
-    def goto(self,trackid):
-        self.playlist.set_current(self.player.playlist.index(trackid))
-        self.stop()
-        self.loaduri()
-        self.play()
 
 class Player:
 	
@@ -407,66 +541,6 @@ class Player:
           self.playmode = "Paused"
         elif new_state == gst.STATE_PLAYING :
           self.playmode = "Playing"
-
-
-  def on_message_old(self, bus, message):
-
-    t = message.type
-    logging.info("Message type %s received; source %s" % (t,type(message.src))) 
-
-    if t == gst.MESSAGE_EOS:
-      logging.info( "fine file")
-      self.player.set_state(gst.STATE_NULL)      
-      self.next()
-
-    elif t == gst.MESSAGE_ERROR:
-      self.player.set_state(gst.STATE_NULL)
-      err, debug = message.parse_error()
-      logging.error( " %s: %s " % (err, debug))
-      self.playmode = "Stopped"
-
-    elif t == gst.MESSAGE_STATE_CHANGED:
-      if isinstance(message.src, gst.Pipeline):
-        old_state, new_state, pending_state = message.parse_state_changed()
-
-        # gst.STATE_NULL	    the NULL state or initial state of an element
-        # gst.STATE_PAUSED	    the element is PAUSED
-        # gst.STATE_PLAYING	    the element is PLAYING
-        # gst.STATE_READY	    the element is ready to go to PAUSED
-        # gst.STATE_VOID_PENDING    no pending state
-
-        if pending_state == gst.STATE_VOID_PENDING:
-
-          logging.info("Pipeline state changed from %s to %s. Pendig: %s"%
-                       (gst.element_state_get_name(old_state),
-                        gst.element_state_get_name (new_state),
-                        gst.element_state_get_name (pending_state)))
-
-          if new_state == gst.STATE_NULL :
-            self.playmode = "Stopped"
-          elif new_state == gst.STATE_PAUSED:
-            self.playmode = "Paused"
-          elif new_state == gst.STATE_PLAYING :
-            self.playmode = "Playing"
-
-#        elif new_state == gst.STATE_READY :
-#            self.playmode = "Stopped"
-#        elif new_state == gst.STATE_VOID_PENDING:
-#            self.playmode = "Stopped"
-#      else:
-#        old_state, new_state, pending_state = message.parse_state_changed()
-#        logging.info("Non cagato state changed from %s to %s. Pendig: %s"%
-#               (gst.element_state_get_name(old_state), gst.element_state_get_name (new_state),gst.element_state_get_name (pending_state)))
-
-
-#    elif t == gst.MESSAGE_STREAM_STATUS:
-#        logging.info("Message type %s received: %s" % (t,message)) 
-  
-#    else:
-#        logging.info("Message type %s received" % t) 
-#        logging.debug("Message type %s received: %s" % (t,message)) 
-##      print >> sys.stderr," Unexpected message received.\n"
-##      self.playmode = False
 
 
   def next(self):
@@ -690,6 +764,40 @@ class Player:
 
     return False
 
+  def addtrack(self,uri, aftertrack, setascurrent):
+
+    if aftertrack == "/org/mpris/MediaPlayer2/TrackList/NoTrack":
+      aftertrack=None
+
+    self.playlist=self.playlist.addtrack(uri,aftertrack,setascurrent)
+
+  def removetrack(self,uri, trackid):
+    self.playlist.removetrack(self.playlist.keys().index(trackid))
+        
+  def goto(self,trackid):
+    self.playlist.set_current(str(self.playlist.keys().index(trackid)))
+    self.stop()
+    self.loaduri()
+    self.play()
+
+
+# Handle signals more gracefully
+def handle_sigint(signum, frame):
+    logger.debug('Caught SIGINT, exiting.')
+    #ap.release_name()
+    loop.quit()
+
+
+#def _get_uri(self):
+#        uri = self.filename
+#        if not uri:
+#            return
+#        if uri.split(':')[0] not in (
+#                'http', 'https', 'file', 'udp', 'rtp', 'rtsp'):
+#            uri = 'file:' + pathname2url(path.realpath(uri))
+#        return uri
+
+
 if __name__ == '__main__':
   # (this code was run as script)
 
@@ -707,26 +815,37 @@ if __name__ == '__main__':
   plmpris=playlist.Playlist_mpris2(pl,pl.current,pl.position)
 
   for media in sys.argv[1:]:
-      logging.info( "add media: %s" %media)
-      plmpris=plmpris.addtrack(media,setascurrent=True)
+    logging.info( "add media: %s" %media)
+    plmpris=plmpris.addtrack(media,setascurrent=True)
 
   mp = Player(plmpris)
 
   try:  
-      dbus_loop=dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-      session_bus = dbus.SessionBus(mainloop=dbus_loop)
+    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+    loop = gobject.MainLoop()
 
-      name = dbus.service.BusName('org.mpris.MediaPlayer2.AutoPlayer', session_bus)
-      ap = AutoPlayer(session_bus, '/org/mpris/MediaPlayer2')
-      ap.attach_player(mp)
+    # Export our DBUS service
+    #if not dbus_service:
+    #dbus_service = MPRIS2Interface()
+    #else:
+    # Add our service to the session bus
+    #  dbus_service.acquire_name()
+
+    ap = AutoPlayer()
+    ap.attach_player(mp)
       
-      gobject.timeout_add(  100,ap.player.initialize)
-      gobject.timeout_add(  200,ap.player.recoverstatus)
-      gobject.timeout_add( 1000,ap.player.printinfo)
-      gobject.timeout_add(60000,ap.player.save_playlist,"autoplayer.xspf")
+    gobject.timeout_add(  100,ap.player.initialize)
+    gobject.timeout_add(  200,ap.player.recoverstatus)
+    gobject.timeout_add( 1000,ap.player.printinfo)
 
-      loop = gobject.MainLoop()
-      loop.run()
+    gobject.timeout_add(60000,ap.player.save_playlist,"autoplayer.xspf")
+
+    signal.signal(signal.SIGINT, handle_sigint)
+
+    loop.run()
+
+    # Clean up
+    logger.debug('Exiting')
 
 
 #  thread.start_new_thread(mp.loop, ())
@@ -738,6 +857,7 @@ if __name__ == '__main__':
 
 
   except KeyboardInterrupt :
-      logging.info("save playlist: %s" % STATUS_PLAYLIST )
-      ap.player.save_playlist(STATUS_PLAYLIST)
-      loop.quit()
+    logging.info("save playlist: %s" % STATUS_PLAYLIST )
+    ap.player.save_playlist(STATUS_PLAYLIST)
+    ap.release_name()
+    loop.quit()

@@ -420,8 +420,14 @@ class AutoPlayer(dbus.service.Object):
 
     @dbus.service.method(PLAYER_IFACE,in_signature='s')
     def OpenUri(self,uri):
-      self.player.openuri(uri)
-      self.update_property(TRACKLIST_IFACE,'TrackAdded')
+      self.player.addtrack(uri,setascurrent=True)
+      self.player.stop()
+      self.player.loaduri()
+      self.player.play()
+
+      #todo
+      # those are signal not propoertyes
+      #self.update_property(TRACKLIST_IFACE,'TrackAdded')
       #self.update_property(TRACKLIST_IFACE,'TrackListReplaced')
 
       # If the media player implements the TrackList interface, then the opened 
@@ -764,7 +770,7 @@ class Player:
 
     return False
 
-  def addtrack(self,uri, aftertrack, setascurrent):
+  def addtrack(self,uri, aftertrack=None, setascurrent=False):
 
     if aftertrack == "/org/mpris/MediaPlayer2/TrackList/NoTrack":
       aftertrack=None

@@ -9,6 +9,10 @@
 # mpDris from: Erik Karlsson <pilo@ayeon.org>
 # Some bits taken from quodlibet mpris plugin by <christoph.reiter@gmx.at>
 
+#TODO
+# manage signal better
+# manage update propertyes
+
 import sys, time, thread
 import gobject
 import pygst
@@ -371,6 +375,18 @@ class AutoPlayer(dbus.service.Object):
     def attach_player(self,player):
         self.player=player
 
+
+    @dbus.service.signal(PLAYER_IFACE,signature='x')
+    def Seeked(self, position):
+      logger.debug("Seeked to %i" % position)
+      return float(position)
+
+    # TrackAdded 	(a{sv}: Metadata, o: AfterTrack) 	
+    @dbus.service.signal(TRACKLIST_IFACE,signature='a{sv}o')
+    def TrackAdded(self, metadata,aftertrack):
+      logger.debug("TrackAdded to %s" % aftertrack)
+
+
     @dbus.service.method(IFACE)
     def Raise(self):
         pass
@@ -411,12 +427,13 @@ class AutoPlayer(dbus.service.Object):
     @dbus.service.method(PLAYER_IFACE,in_signature='x')
     def Seek(self,offset):
       self.player.seek(offset)
-      self.update_property(PLAYER_IFACE,'Seeked')
+      self.seeked(offset)
 
 
     @dbus.service.method(PLAYER_IFACE,in_signature='sx')
     def SetPosition(self,trackid,position):
       self.player.setposition(trackid,position)
+      self.seeked(position)
 
     @dbus.service.method(PLAYER_IFACE,in_signature='s')
     def OpenUri(self,uri):
@@ -425,9 +442,8 @@ class AutoPlayer(dbus.service.Object):
       self.player.loaduri()
       self.player.play()
 
-      #todo
-      # those are signal not propoertyes
-      #self.update_property(TRACKLIST_IFACE,'TrackAdded')
+      #TODO
+      #self.TrackAdded()
       #self.update_property(TRACKLIST_IFACE,'TrackListReplaced')
 
       # If the media player implements the TrackList interface, then the opened 

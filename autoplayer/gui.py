@@ -14,7 +14,7 @@ import pygtk, gtk
 
 class Main(object):
   def __init__(self):
-    self.multimedia_file=""
+    self.multimedia_file=None
     # Create the GUI
     self.win = gtk.Window()
     self.win.set_title("Play Video Example")
@@ -52,7 +52,11 @@ class Main(object):
   def on_file_selected(self, widget):
     self.multimedia_file = self.load_file.get_filename()
   def on_play_clicked(self, widget):
-    self.play.OpenUri("file://" + self.multimedia_file)
+    if self.multimedia_file is None:
+      self.play.Play()
+    else:
+      self.play.OpenUri("file://" + self.multimedia_file)
+      self.multimedia_file=None
   def on_pause_clicked(self, widget):
     self.play.PlayPause()
   def on_stop_clicked(self, widget):

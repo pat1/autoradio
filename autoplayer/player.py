@@ -246,7 +246,7 @@ class AutoPlayer(dbus.service.Object):
                 pid = self._dbus_obj.GetConnectionUnixProcessID(new_owner)
             except:
                 pid = None
-            logger.info("Replaced by %s (PID %s)" % (new_owner, pid or "unknown"))
+            #logger.info("Replaced by %s (PID %s)" % (new_owner, pid or "unknown"))
             loop.quit()
 
     def acquire_name(self):
@@ -267,7 +267,7 @@ class AutoPlayer(dbus.service.Object):
         return {"mpris:trackid":self.player.playlist.current,}
 
     def __Position(self):
-        return self.player.position()
+        return dbus.Int64(self.player.position())
 
     def __CanPlay(self):
         if self.player.playlist.current is None :
@@ -357,17 +357,17 @@ class AutoPlayer(dbus.service.Object):
         props = self.__prop_mapping[interface]
         for key, (getter, setter) in props.iteritems():
             if callable(getter):
-                getter = getter()
+                getter = getter(self)
             read_props[key] = getter
         return read_props
 
     def update_property(self, interface, prop):
         getter, setter = self.__prop_mapping[interface][prop]
         if callable(getter):
-            value = getter()
+            value = getter(self)
         else:
             value = getter
-        logger.debug('Updated property: %s = %s' % (prop, value))
+        #logger.debug('Updated property: %s = %s' % (prop, value))
         self.PropertiesChanged(interface, {prop: value}, [])
         return value
 
@@ -378,25 +378,33 @@ class AutoPlayer(dbus.service.Object):
 
     @dbus.service.signal(PLAYER_IFACE,signature='x')
     def Seeked(self, position):
-      logger.debug("Seeked to %i" % position)
+      #logger.debug("Seeked to %i" % position)
       return float(position)
 
     # TrackAdded 	(a{sv}: Metadata, o: AfterTrack) 	
     @dbus.service.signal(TRACKLIST_IFACE,signature='a{sv}o')
     def TrackAdded(self, metadata,aftertrack):
-      logger.debug("TrackAdded to %s" % aftertrack)
+      #logger.debug("TrackAdded to %s" % aftertrack)
+      pass
 
+    # TrackRemoved 	(o: TrackId) 	
+    @dbus.service.signal(TRACKLIST_IFACE,signature='o')
+    def TrackRemoved(self,trackid):
+      #logger.debug("TrackRemoved %s" % trackid)
+      pass
 
     @dbus.service.method(IFACE)
     def Raise(self):
-        pass
+      pass
 
     @dbus.service.method(IFACE)
     def Quit(self):
-        logging.info("save playlist: %s" % STATUS_PLAYLIST )
-        self.player.save_playlist(STATUS_PLAYLIST)
-        self.release_name()
-        loop.quit()
+      #logging.info("save playlist: %s" % STATUS_PLAYLIST )
+      self.player.save_playlist(STATUS_PLAYLIST)
+      self.player.stop()
+      self.update_property(PLAYER_IFACE,"PlaybackStatus")
+      self.release_name()
+      loop.quit()
 
 
     @dbus.service.method(PLAYER_IFACE)
@@ -410,19 +418,23 @@ class AutoPlayer(dbus.service.Object):
     @dbus.service.method(PLAYER_IFACE)
     def Pause(self):
       self.player.pause()
+      self.update_property(PLAYER_IFACE,"PlaybackStatus")
 
     @dbus.service.method(PLAYER_IFACE)
     def PlayPause(self):
       self.player.playpause()
+      self.update_property(PLAYER_IFACE,"PlaybackStatus")
 
     @dbus.service.method(PLAYER_IFACE)
     def Stop(self):
       self.player.stop()
+      self.update_property(PLAYER_IFACE,"PlaybackStatus")
 
     @dbus.service.method(PLAYER_IFACE)
     def Play(self):
       self.player.loaduri()
       self.player.play()
+      self.update_property(PLAYER_IFACE,"PlaybackStatus")
 
     @dbus.service.method(PLAYER_IFACE,in_signature='x')
     def Seek(self,offset):
@@ -441,6 +453,7 @@ class AutoPlayer(dbus.service.Object):
       self.player.stop()
       self.player.loaduri()
       self.player.play()
+      self.update_property(PLAYER_IFACE,"PlaybackStatus")
 
       #TODO
       #self.TrackAdded()
@@ -465,7 +478,7 @@ class AutoPlayer(dbus.service.Object):
     @dbus.service.method(TRACKLIST_IFACE,in_signature='s', out_signature='')
     def RemoveTrack(self, trackid):
         self.player.removetrack(trackid)
-        self.update_property(TRACKLIST_IFACE,'TrackRemoved')
+        self.TrackRemoved(trackid)
 
     @dbus.service.method(TRACKLIST_IFACE,in_signature='s', out_signature='')
     def GoTo(self, trackid):
@@ -486,6 +499,11 @@ class AutoPlayer(dbus.service.Object):
             metadata.append(meta)
 
         return metadata
+
+
+    def updateinfo(self):
+      self.update_property(PLAYER_IFACE,"Position")
+      return True
 
 
 class Player:
@@ -749,6 +767,7 @@ class Player:
 
     return True
 
+
   def save_playlist(self,path):
 
     position=self.position()
@@ -807,6 +826,8 @@ class Player:
 def handle_sigint(signum, frame):
     logger.debug('Caught SIGINT, exiting.')
     #ap.release_name()
+    ap.player.stop()
+    ap.update_property(PLAYER_IFACE,"PlaybackStatus")
     loop.quit()
 
 
@@ -859,6 +880,7 @@ if __name__ == '__main__':
     gobject.timeout_add(  100,ap.player.initialize)
     gobject.timeout_add(  200,ap.player.recoverstatus)
     gobject.timeout_add( 1000,ap.player.printinfo)
+    gobject.timeout_add( 1000,ap.updateinfo)
 
     gobject.timeout_add(60000,ap.player.save_playlist,"autoplayer.xspf")
 
@@ -880,6 +902,8 @@ if __name__ == '__main__':
 
   except KeyboardInterrupt :
     logging.info("save playlist: %s" % STATUS_PLAYLIST )
+    ap.player.stop()
+    ap.update_property(PLAYER_IFACE,"PlaybackStatus")
     ap.player.save_playlist(STATUS_PLAYLIST)
     ap.release_name()
     loop.quit()

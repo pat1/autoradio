@@ -38,6 +38,20 @@ class Main(object):
       if playbackstatus is not None:
           print "PlaybackStatus",playbackstatus
 
+      if playbackstatus == "Stopped":
+          self.play_button.set_sensitive(True)
+          self.pause_button.set_sensitive(False)
+          self.stop_button.set_sensitive(False)
+      elif playbackstatus == "Playing":
+          self.play_button.set_sensitive(True)
+          self.pause_button.set_sensitive(True)
+          self.stop_button.set_sensitive(True)
+      elif playbackstatus == "Paused":
+          self.play_button.set_sensitive(True)
+          self.pause_button.set_sensitive(True)
+          self.stop_button.set_sensitive(True)
+
+
       if position is not None:
           length=self.tl.GetTracksMetadata((self.play.Metadata.get(u'mpris:trackid',None),))[0].get(u'mpris:length',None)
           #print "Position", position,length
@@ -81,9 +95,9 @@ class Main(object):
     vbox = gtk.VBox(False, 0)
     hbox = gtk.HBox(False, 0)
     self.load_file = gtk.FileChooserButton("Choose Audio File")
-    self.play_button = gtk.Button("Play", gtk.STOCK_MEDIA_PLAY)
-    self.pause_button = gtk.Button("Pause", gtk.STOCK_MEDIA_PAUSE)
-    self.stop_button = gtk.Button("Stop", gtk.STOCK_MEDIA_STOP)
+    self.play_button = gtk.ToolButton( gtk.STOCK_MEDIA_PLAY)
+    self.pause_button = gtk.ToolButton( gtk.STOCK_MEDIA_PAUSE)
+    self.stop_button = gtk.ToolButton( gtk.STOCK_MEDIA_STOP)
     self.load_file.connect("selection-changed",self.on_file_selected)
     self.play_button.connect("clicked", self.on_play_clicked)
     self.pause_button.connect("clicked", self.on_pause_clicked)

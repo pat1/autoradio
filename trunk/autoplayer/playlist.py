@@ -322,8 +322,8 @@ class Playlist(list):
         location = track['path']
 
         url=urlparse.urlsplit(location)
-        location=urlparse.urljoin("file://",urllib.quote(url.path))
-        #location=urlparse.urljoin("file://",urllib.quote(url.path.encode("UTF-8")))
+        #location=urlparse.urljoin("file://",urllib.quote(url.path))
+        location=urlparse.urljoin("file://",urllib.quote(url.path.encode("UTF-8")))
 
         ##location = location.encode("utf-8")
         #if    not 'http://' in location.lower() and \
@@ -452,7 +452,7 @@ class Playlist_mpris2(collections.OrderedDict):
     keys=self.keys()
 
     if aftertrack is None:
-      ind =0
+      ind =len(keys)-1
     else:
       ind = keys.index(aftertrack)
 

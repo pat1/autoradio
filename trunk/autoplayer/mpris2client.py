@@ -12,10 +12,17 @@ from mpris2.utils import get_players_uri
 from dbus.mainloop.glib import DBusGMainLoop
 from mpris2.utils import get_session
 
-def playhandler(self, *args, **kw): 
-    print args, kw
+def playhandler( *args, **kw): 
+    #print args, kw
+    playbackstatus = args[2].get("PlaybackStatus",None)
+    position = args[2].get("Position",None)
+    if playbackstatus is not None:
+        print "PlaybackStatus",playbackstatus
+    if position is not None:
+        print "Position", position
 
-def trackhandler(self, *args, **kw): 
+
+def trackhandler( *args, **kw): 
     print args, kw
 
 
@@ -50,11 +57,10 @@ if len(uris) >0 :
             tl = TrackList(dbus_interface_info={'dbus_uri': uri})
         # attributes and methods together
             for track in  tl.GetTracksMetadata( tl.Tracks):
-                print  track[u'mpris:trackid'],track[u'mpris:length'],track[u'xesam:artist'], track[u'xesam:title']
+                print  track.get(u'mpris:trackid',None),track.get(u'mpris:length',None),track.get(u'xesam:artist',None), track.get(u'xesam:title',None)
                 tl.PropertiesChanged = trackhandler
     except:
         print "mmm audacious mpris2 interface is buggy"
-
 
     mloop.run()
 

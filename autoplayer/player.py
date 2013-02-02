@@ -235,7 +235,11 @@ class AutoPlayer(dbus.service.Object):
         return self.player.playmode
 
     def __Metadata(self):
-        return {"mpris:trackid":self.player.playlist.current,}
+
+      meta=self.GetTracksMetadata((self.player.playlist.current,))[0]
+      return dbus.Dictionary(meta, signature='sv') 
+
+      #return {"mpris:trackid":self.player.playlist.current,}
 
     def __Position(self):
       position = self.player.position()
@@ -460,7 +464,7 @@ class AutoPlayer(dbus.service.Object):
                     myattr=long(round(myattr/1000.))
                   meta[key]=myattr
                     
-            metadata.append(meta)
+            metadata.append(dbus.Dictionary(meta, signature='sv'))
 
         return metadata
 

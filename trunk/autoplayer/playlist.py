@@ -272,6 +272,7 @@ class Playlist(list):
 
         if s.position is not None:
           k="position"
+          t="int"
           v = doc.createTextNode(str(s.position)).toxml()
           f.write(u"\t\t<%s type='%s'>%s</%s>\n"	% (k, t, v, k))
 

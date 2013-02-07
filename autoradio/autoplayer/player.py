@@ -21,7 +21,7 @@
 # TrackAdded 	(a{sv}: Metadata, o: AfterTrack) 	
 # TrackRemoved 	(o: TrackId) 	
 # TrackMetadataChanged 	(o: TrackId, a{sv}: Metadata) 	
-                                               
+
 import sys, time, thread
 import gobject
 import pygst
@@ -34,9 +34,10 @@ import dbus.mainloop.glib
 import logging
 import signal
 
-
 IDENTITY = "Auto Player"
 STATUS_PLAYLIST="autoplayer.xspf"
+busaddress='tcp:host=localhost,port=1234'
+
 
 # python dbus bindings don't include annotations and properties
 MPRIS2_INTROSPECTION = """<node name="/org/mpris/MediaPlayer2">
@@ -197,11 +198,17 @@ class AutoPlayer(dbus.service.Object):
     __introspect_interface = "org.freedesktop.DBus.Introspectable"
     __prop_interface = dbus.PROPERTIES_IFACE
 
-    def __init__(self):
-        dbus.service.Object.__init__(self, dbus.SessionBus(),
+    def __init__(self,busaddress=None):
+
+        if busaddress is None:
+          self._bus = dbus.SessionBus()
+        else:
+          self._bus =dbus.bus.BusConnection(busaddress)
+
+        dbus.service.Object.__init__(self, self._bus,
                                      AutoPlayer.__path)
 
-        self._bus = dbus.SessionBus()
+
         self._uname = self._bus.get_unique_name()
         self._dbus_obj = self._bus.get_object("org.freedesktop.DBus",
                                               "/org/freedesktop/DBus")
@@ -225,7 +232,6 @@ class AutoPlayer(dbus.service.Object):
                                               bus=self._bus,
                                               allow_replacement=True,
                                               replace_existing=True)
-
     def release_name(self):
         if hasattr(self, "_bus_name"):
             del self._bus_name
@@ -236,8 +242,11 @@ class AutoPlayer(dbus.service.Object):
 
     def __Metadata(self):
 
-      meta=self.GetTracksMetadata((self.player.playlist.current,))[0]
-      return dbus.Dictionary(meta, signature='sv') 
+      meta=self.GetTracksMetadata((self.player.playlist.current,))
+      if len(meta) > 0:
+        return dbus.Dictionary(meta[0], signature='sv') 
+      else:
+        return dbus.Dictionary({}, signature='sv') 
 
       #return {"mpris:trackid":self.player.playlist.current,}
 
@@ -408,13 +417,13 @@ class AutoPlayer(dbus.service.Object):
 
     @dbus.service.method(PLAYER_IFACE,in_signature='x')
     def Seek(self,offset):
-      self.player.seek(offset)
-      self.seeked(offset)
+      position=self.player.seek(offset)
+      if position is not None: self.Seeked(position)
 
     @dbus.service.method(PLAYER_IFACE,in_signature='sx')
     def SetPosition(self,trackid,position):
       self.player.setposition(trackid,position)
-      self.seeked(position)
+      self.Seeked(position)
 
     @dbus.service.method(PLAYER_IFACE,in_signature='s')
     def OpenUri(self,uri):
@@ -456,6 +465,7 @@ class AutoPlayer(dbus.service.Object):
     def GetTracksMetadata(self,trackids):
         metadata=[]
         for id in trackids:
+          if id is not None:
             meta={}
             for key,attr in ("mpris:trackid","id"),("mpris:length","time"),("xesam:title","title"),("xesam:artist","artist"),("xesam:url","path"):
                 myattr= getattr(self.player.playlist[id],attr,None)
@@ -608,12 +618,13 @@ class Player:
     logging.info("seek")
     try:
       pos_int = self.player.query_position(gst.FORMAT_TIME, None)[0]
-      pos_int +=t
+      pos_int =pos_int/1000 + t
       logging.info("seek %s" % str(pos_int))
       self.setposition(self.playlist.current,pos_int)
-
+      return pos_int
     except:
       logging.error( "in seek")
+      return None
 
   def setposition(self,trackid,t):
     """
@@ -794,18 +805,24 @@ def main():
 
   # Use logging for ouput at different *levels*.
   #
-  logging.getLogger().setLevel(logging.INFO)
+  logging.getLogger().setLevel(logging.DEBUG)
   log = logging.getLogger("autoplayer")
   handler = logging.StreamHandler(sys.stderr)
   log.addHandler(handler)
  
 #  logging.basicConfig(level=logging.INFO,)
 
+#  try:
+#    os.chdir(cwd)
+#  except:
+#    pass
+
+
   pl=playlist.Playlist()
   pl.read("autoplayer.xspf")
   plmpris=playlist.Playlist_mpris2(pl,pl.current,pl.position)
 
-  for media in sys.argv[1:]:
+  for media in sys.argv[2:]:
     logging.info( "add media: %s" %media)
     plmpris=plmpris.addtrack(media,setascurrent=True)
 
@@ -821,7 +838,7 @@ def main():
     # Add our service to the session bus
     #  dbus_service.acquire_name()
 
-    ap = AutoPlayer()
+    ap = AutoPlayer(busaddress=busaddress)
     ap.attach_player(mp)
       
     gobject.timeout_add(  100,ap.player.initialize)
@@ -853,3 +870,4 @@ def main():
 if __name__ == '__main__':
 
   main()# (this code was run as script)
+

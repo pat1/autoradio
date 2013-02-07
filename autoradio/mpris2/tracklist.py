@@ -3,12 +3,12 @@ This is python mprisV2.1 documentation
 
 http://www.mpris.org/2.1/spec/TrackList_Node.html
 """
-from pydbusdecorator.dbus_attr import DbusAttr
-from pydbusdecorator.dbus_interface import DbusInterface
-from pydbusdecorator.dbus_method import DbusMethod
-from pydbusdecorator.dbus_signal import DbusSignal
-from mpris2.interfaces import Interfaces
-from mpris2.types import Metadata_Map
+from autoradio.pydbusdecorator.dbus_attr import DbusAttr
+from autoradio.pydbusdecorator.dbus_interface import DbusInterface
+from autoradio.pydbusdecorator.dbus_method import DbusMethod
+from autoradio.pydbusdecorator.dbus_signal import DbusSignal
+from interfaces import Interfaces
+from types import Metadata_Map
 
 
 class TrackList(Interfaces):

@@ -6,8 +6,8 @@ Created on Nov 6, 2011
 '''
 
 import dbus, re
-from mpris2.some_players import Some_Players as SomePlayers
-from mpris2.interfaces import Interfaces
+from some_players import Some_Players as SomePlayers
+from interfaces import Interfaces
 
 def _match_players_uri(name, pattern='.+'):
     '''
@@ -20,20 +20,26 @@ def _match_players_uri(name, pattern='.+'):
         re.match('org.mpris.MediaPlayer2', name)\
             and re.match(pattern, name)
 
-def get_session():
+def get_session(busaddress=None):
     '''
         @return: dbus.SessionBus.get_session()
     '''
-    return dbus.SessionBus.get_session()
 
-def get_players_uri(pattern='.'):
+    if busaddress is None:
+        return dbus.SessionBus.get_session()
+    else:
+        return dbus.bus.BusConnection(busaddress)
+
+
+
+def get_players_uri(pattern='.',busaddress=None):
     """
         Return string of player bus name
         @param pattern=None: string regex that filter response
         @return: array string of players bus name
     """
     return [item
-        for item in get_session().list_names()
+        for item in get_session(busaddress).list_names()
             if _match_players_uri(item, pattern)]
 
 def get_player_id_from_uri(uri):

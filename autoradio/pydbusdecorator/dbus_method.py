@@ -4,8 +4,8 @@ Created on Nov 5, 2011
 @author: hugosenari
 '''
 
-from pydbusdecorator.dbus_decorator import DbusDecorator
-from pydbusdecorator.dbus_interface import DbusInterface
+from dbus_decorator import DbusDecorator
+from dbus_interface import DbusInterface
 
 from functools import wraps
 

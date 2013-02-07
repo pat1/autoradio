@@ -3,9 +3,9 @@ Created on Nov 5, 2011
 
 @author: hugosenari
 '''
-from pydbusdecorator.dbus_decorator import DbusDecorator
-from pydbusdecorator.undefined_param import UNDEFINED_PARAM
-from pydbusdecorator.dbus_interface import DbusInterface
+from dbus_decorator import DbusDecorator
+from undefined_param import UNDEFINED_PARAM
+from dbus_interface import DbusInterface
 
 
 class DbusAttr(DbusDecorator):

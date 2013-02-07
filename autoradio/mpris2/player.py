@@ -4,13 +4,13 @@ This is python mprisV2.1 documentation
 http://www.mpris.org/2.1/spec/Player_Node.html
 '''
 
-from pydbusdecorator.dbus_attr import DbusAttr
-from pydbusdecorator.dbus_interface import DbusInterface
-from pydbusdecorator.dbus_method import DbusMethod
-from pydbusdecorator.dbus_signal import DbusSignal
+from autoradio.pydbusdecorator.dbus_attr import DbusAttr
+from autoradio.pydbusdecorator.dbus_interface import DbusInterface
+from autoradio.pydbusdecorator.dbus_method import DbusMethod
+from autoradio.pydbusdecorator.dbus_signal import DbusSignal
 
-from mpris2.interfaces import Interfaces
-from mpris2.types import Time_In_Us, Loop_Status, Playback_Status, \
+from interfaces import Interfaces
+from types import Time_In_Us, Loop_Status, Playback_Status, \
 Playback_Rate, Metadata_Map, Volume
 
 

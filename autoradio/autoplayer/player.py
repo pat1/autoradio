@@ -264,7 +264,8 @@ class AutoPlayer(dbus.service.Object):
             return True
 
     def __Tracks(self):
-        tracks=[]
+
+        tracks=dbus.Array([], signature='s')
         for track in self.player.playlist:
             tracks.append(track)
         return tracks
@@ -463,7 +464,8 @@ class AutoPlayer(dbus.service.Object):
 
     @dbus.service.method(TRACKLIST_IFACE,in_signature='as', out_signature='aa{sv}')
     def GetTracksMetadata(self,trackids):
-        metadata=[]
+        metadata=dbus.Array([], signature='aa{sv}')
+
         for id in trackids:
           if id is not None:
             meta={}

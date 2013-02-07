@@ -203,9 +203,10 @@ class Main(object):
     listmodel = gtk.ListStore(object)
 
     if self.tl is not None:
-      # attributes and methods together
-      for track in  self.tl.GetTracksMetadata( self.tl.Tracks):
-        listmodel.append([track.get(u'mpris:trackid',"")])
+        if  len(self.tl.Tracks) > 0:
+            # attributes and methods together
+            for track in  self.tl.GetTracksMetadata( self.tl.Tracks):
+                listmodel.append([track.get(u'mpris:trackid',"")])
     return listmodel
 
   def id(self, column, cell, model, iter):

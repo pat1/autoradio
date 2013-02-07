@@ -126,16 +126,14 @@ class mediaplayer:
                 mtimelength=metadata["mtimelength"]
                 mtimeposition=metadata["mtimeposition"]
 
-                timed=datetime.timedelta(seconds=datetime.timedelta(milliseconds=mtimelength).seconds)
-                toend=timed-datetime.timedelta(seconds=datetime.timedelta(milliseconds=mtimeposition).seconds)
+                timed=datetime.timedelta(seconds=datetime.timedelta(microseconds=mtimelength).seconds)
+                toend=timed-datetime.timedelta(seconds=datetime.timedelta(microseconds=mtimeposition).seconds)
 
                 newpos=self.get_playlist_pos()
 
-                print toend
-
                 if (pos != newpos):
                     #inconsistenza: retry
-                    print "retry"
+                    #print "retry"
                     toend=datetime.timedelta(seconds=0)
                 if ( toend < mintimed ):
                     volte +=1
@@ -197,7 +195,7 @@ class mediaplayer:
 
                 op=self.get_playlist()
 
-                print length,pos+atlast
+                #print length,pos+atlast
                 for prm in xrange(length-1,pos+atlast,-1): 
                     self.tracklist.RemoveTrack( op[prm] )
 
@@ -341,8 +339,8 @@ class mediaplayer:
             "file": file,
             "title": title,
             "artist": artist,
-            "mtimelength": mtimelength/1000,
-            "mtimeposition": mtimeposition/1000
+            "mtimelength": long(round(mtimelength/1000.)),
+            "mtimeposition": long(round(mtimeposition/1000.))
             }
 
         return mymeta
@@ -353,7 +351,7 @@ class mediaplayer:
 
         if pos is not None:
             pos=0
-            print self.get_playlist()[pos]
+            #print self.get_playlist()[pos]
 
             self.tracklist.AddTrack(media,self.get_playlist()[pos],False)
         else:
@@ -374,7 +372,6 @@ class mediaplayer:
         self.tracklist.connect_to_signal('TrackRemoved', self.trackremoved_callback)
         self.tracklist.connect_to_signal('TrackAdded', self.trackadded_callback)
 
-
     def loop(self):
         '''start the main loop'''
         mainloop = gobject.MainLoop()
@@ -385,7 +382,7 @@ def main():
 #    must be done before connecting to DBus
 #    DBusGMainLoop(set_as_default=True,
 
-    mp=mediaplayer(player="vlc")
+    mp=mediaplayer(player="AutoPlayer")
     print mp
 #    mp.play_ifnot()
 #    print mp
@@ -402,6 +399,7 @@ def main():
     print mp.playlist_clear_down(atlast=5)
     print mp.get_playlist()
     posauto=mp.get_playlist_posauto(autopath="/casa")
+    print "posauto",posauto
     print mp.playlist_add_atpos("file:///home",posauto)
 
 if __name__ == '__main__':

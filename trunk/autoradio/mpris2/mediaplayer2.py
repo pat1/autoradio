@@ -5,12 +5,12 @@ http://www.mpris.org/2.1/spec/Root_Node.html
 """
 
 
-from pydbusdecorator.dbus_attr import DbusAttr
-from pydbusdecorator.dbus_interface import DbusInterface
-from pydbusdecorator.dbus_method import DbusMethod
-from pydbusdecorator.dbus_signal import DbusSignal
+from autoradio.pydbusdecorator.dbus_attr import DbusAttr
+from autoradio.pydbusdecorator.dbus_interface import DbusInterface
+from autoradio.pydbusdecorator.dbus_method import DbusMethod
+from autoradio.pydbusdecorator.dbus_signal import DbusSignal
 
-from mpris2.interfaces import Interfaces
+from interfaces import Interfaces
 
 
 class MediaPlayer2(Interfaces):

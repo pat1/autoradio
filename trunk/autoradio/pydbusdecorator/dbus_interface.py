@@ -4,8 +4,8 @@ Created on Nov 5, 2011
 @author: hugosenari
 '''
 
-from pydbusdecorator.dbus_decorator import DbusDecorator
-from pydbusdecorator.undefined_param import UNDEFINED_PARAM
+from dbus_decorator import DbusDecorator
+from undefined_param import UNDEFINED_PARAM
 from functools import wraps
 
 

@@ -2,17 +2,20 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2013 Paolo Patruno.
 
-from mpris2.mediaplayer2 import MediaPlayer2
-from mpris2.player import Player
-from mpris2.tracklist import TrackList
-from mpris2.interfaces import Interfaces
-from mpris2.some_players import Some_Players
-from mpris2.utils import get_players_uri
+from autoradio.mpris2.mediaplayer2 import MediaPlayer2
+from autoradio.mpris2.player import Player
+from autoradio.mpris2.tracklist import TrackList
+from autoradio.mpris2.interfaces import Interfaces
+from autoradio.mpris2.some_players import Some_Players
+from autoradio.mpris2.utils import get_players_uri
+from autoradio.mpris2.utils import get_session
 from dbus.mainloop.glib import DBusGMainLoop
-from mpris2.utils import get_session
 import pygtk, gtk
 import os,stat,time,urlparse,urllib
 import gobject
+import dbus
+
+busaddress='tcp:host=localhost,port=1234'
 
 def convert_ns(t):
     s,ns = divmod(t, 1000000)
@@ -53,9 +56,12 @@ class Main(object):
 
 
       if position is not None:
-          length=self.tl.GetTracksMetadata((self.play.Metadata.get(u'mpris:trackid',None),))[0].get(u'mpris:length',None)
-          #print "Position", position,length
-          frac = float(position)/float(length)
+          id = self.play.Metadata.get(u'mpris:trackid',None)
+          if id is not None:
+              length=self.tl.GetTracksMetadata((id,))[0].get(u'mpris:length',None)
+              frac = float(position)/float(length)
+          else:
+              frac = 0
           self.pbar.set_fraction(frac)
       else:
           self.pbar.pulse()
@@ -67,18 +73,24 @@ class Main(object):
 
     #Connect to player
     DBusGMainLoop(set_as_default=True)
-    uris = get_players_uri(pattern=".")
+    uris = get_players_uri(pattern=".",busaddress=busaddress)
 
     if len(uris) >0 :
         uri=uris[0]
-        self.mp2 = MediaPlayer2(dbus_interface_info={'dbus_uri': uri})
-        self.play = Player(dbus_interface_info={'dbus_uri': uri})
+
+        if busaddress is None:
+            self._bus = dbus.SessionBus()
+        else:
+            bus =dbus.bus.BusConnection(busaddress)
+
+        self.mp2 = MediaPlayer2(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
+        self.play = Player(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
     else:
         print "No players availables"
         return
     
     if self.mp2.HasTrackList:
-      self.tl = TrackList(dbus_interface_info={'dbus_uri': uri})
+      self.tl = TrackList(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
       #tl.PropertiesChanged = trackhandler
 
     else:

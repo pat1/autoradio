@@ -108,7 +108,7 @@ class HomePage:
 
 
         try:
-            if  self.player == "vlc":
+            if  self.player == "vlc" or self.player == "AutoPlayer":
                 mp= autompris2.mediaplayer(player=self.player,session=0)
             else:
                 mp= autompris.mediaplayer(player=self.player,session=0)
@@ -121,8 +121,9 @@ class HomePage:
             cpos=int(mp.get_playlist_pos())
 
         except:
-            return "error get_playlist_pos()"
-
+		raise
+            #return "error get_playlist_pos()"
+	
         try:
             isplaying= mp.isplaying()
 
@@ -165,7 +166,6 @@ class HomePage:
 
         except:
             htmlresponse+='error get player information'
-            raise
 
         htmlresponse+='</table>'
         if len > maxplele :
@@ -226,7 +226,8 @@ if __name__ == '__main__':
 
     # Start the CherryPy server.
     try:
-        start_http_server(iht=True,player=autoradio_config.player,session=0)
+#        start_http_server(iht=True,player=autoradio_config.player,session=0)
+        start_http_server(iht=True,player="AutoPlayer",session=0)
 #        start_http_server(iht=True,player="vlc",session=0)
     except:
         print "Error"

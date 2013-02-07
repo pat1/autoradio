@@ -11,6 +11,7 @@ from mpris2.some_players import Some_Players
 from mpris2.utils import get_players_uri
 from dbus.mainloop.glib import DBusGMainLoop
 from mpris2.utils import get_session
+import dbus
 
 def playhandler( *args, **kw): 
     #print args, kw
@@ -28,9 +29,11 @@ def trackhandler( *args, **kw):
 
 DBusGMainLoop(set_as_default=True)
 import gobject    
+busaddress='tcp:host=localhost,port=1234'
+
 mloop = gobject.MainLoop()
 
-uris = get_players_uri(pattern=".")
+uris = get_players_uri(pattern=".",busaddress=busaddress)
 
 if len(uris) >0 :
     uri=uris[0]
@@ -40,8 +43,13 @@ if len(uris) >0 :
 
     print uri
 
-    mp2 = MediaPlayer2(dbus_interface_info={'dbus_uri': uri})
-    play = Player(dbus_interface_info={'dbus_uri': uri})
+    if busaddress is None:
+        self._bus = dbus.SessionBus()
+    else:
+        bus =dbus.bus.BusConnection(busaddress)
+
+    mp2 = MediaPlayer2(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
+    play = Player(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
 
     #Call methods
     #play.Next() # play next media

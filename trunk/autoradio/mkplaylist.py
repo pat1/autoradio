@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #-----------------------------------------------------------------------------
 # Name:          mkplaylist.py
 # Purpose:       ReCreate playlists from directory scans or m3u playlist.
@@ -13,13 +14,6 @@
 """Make a playlist file.
 
 :var factory: instance of a `PlaylistEntryFactory`.
-:var HAVE: dictionary of module names that maps to booleans that tell
-    if the module was imported successfully.
-:var MODULES: names of modules to read meta data from various media
-    file types.
-:var TYPES: tuples with information about recognized types.  Each tuple
-    consists of the file name extension(s), a descriptive name, and
-    a function to read meta data from that file type.
 :var WRITERS: dictionary that maps playlist format names to functions
     that write a sequence of `PlaylistEntry` objects in that format
     to a file.
@@ -44,9 +38,8 @@ import mutagen
 import urllib2
 
 __author__ = "Marc 'BlackJack' Rintsch <marc(at)rintsch(dot)de>"
-__version__ = '0.5.0'
-__date__ = '$Date: 2006-05-20 15:30:16 +0200 (Sat, 20 May 2006) $'
-__revision__ = '$Rev: 855 $'
+__version__ = '0.6.0'
+__date__ = '$Date: 2012-11-26 $'
 
 __docformat__ = 'reStructuredText'
 
@@ -67,13 +60,7 @@ log.addHandler(handler)
 #-----------------------------------------------------------------------------
 # Functions to read meta data from media files.
 #
-# Every format should have a name for function to read the meta data
-# consisting of the prefix "read_" and the file name extension.
-# This name should be initialized with `None`.
-#
-# Then one or more real functions are defined and finally one of them
-# should be bound to the name mentioned above, depending on the
-# availibility of modules used in the functions.
+# now use mutagen
 #
 # The functions return a dictionary with the meta data.  The minimal
 # postcondition is an empty dictionary if no information could be

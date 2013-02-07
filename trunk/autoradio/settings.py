@@ -27,7 +27,7 @@ configspec['django']['MEDIA_SITE_ROOT']="string(default='%s/media/')" % os.getcw
 configspec['django']['TEMPLATE_DIRS']="list(default=list('templates',))"
 configspec['django']['BASE_URL']="string(default='/django/')"
 configspec['django']['ADMIN_MEDIA_PREFIX']="string(default='/django/media/admin/')"
-configspec['django']['STATIC_URL']="string(default='/django/media/admin/')"
+configspec['django']['STATIC_URL']="string(default='/django/media/')"
 configspec['django']['STATIC_ROOT'] = "string(default='/usr/lib/python2.7/site-packages/django/contrib/admin/static/admin/')"
 configspec['django']['MEDIA_PREFIX']="string(default='/media/')"
 configspec['django']['MEDIA_SITE_PREFIX']="string(default='/media/sito/')"
@@ -103,7 +103,7 @@ TEMPLATE_DIRS           = config['django']['TEMPLATE_DIRS']
 BASE_URL                = config['django']['BASE_URL']
 ADMIN_MEDIA_PREFIX      = config['django']['ADMIN_MEDIA_PREFIX']
 STATIC_URL              = config['django']['STATIC_URL']
-STATIC_URL              = config['django']['STATIC_URL']
+STATIC_ROOT             = config['django']['STATIC_ROOT']
 MEDIA_PREFIX            = config['django']['MEDIA_PREFIX']
 MEDIA_SITE_PREFIX       = config['django']['MEDIA_SITE_PREFIX']
 SERVE_STATIC            = config['django']['SERVE_STATIC']

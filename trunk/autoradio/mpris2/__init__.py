@@ -92,14 +92,14 @@ Interfaces
 
 '''
 
-from mpris2.interfaces import Interfaces
-from mpris2.mediaplayer2 import MediaPlayer2
-from mpris2.player import Player
-from mpris2.playlists import Playlists
-from mpris2.tracklist import TrackList
+from interfaces import Interfaces
+from mediaplayer2 import MediaPlayer2
+from player import Player
+from playlists import Playlists
+from tracklist import TrackList
 
-import mpris2.types as types
-import mpris2.utils as utils
+import types as types
+import utils as utils
 
 if __name__ == '__main__':
     print Interfaces

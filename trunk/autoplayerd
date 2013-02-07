@@ -1,0 +1,88 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# GPL. (C) 2013 Paolo Patruno.
+
+# Authors: Paolo Patruno <p.patruno@iperbole.bologna.it> 
+# Based on :
+# mpDris2 from Jean-Philippe Braun <eon@patapon.info>,
+#              Mantas Mikulėnas <grawity@gmail.com>
+# mpDris from: Erik Karlsson <pilo@ayeon.org>
+# Some bits taken from quodlibet mpris plugin by <christoph.reiter@gmx.at>
+
+#TODO
+# manage signal
+# Interface MediaPlayer2.Player
+# Signals
+# Seeked 	(x: Position)
+#
+# Interface MediaPlayer2.TrackList
+# Signals
+# TrackListReplaced 	(ao: Tracks, o: CurrentTrack) 	
+# TrackAdded 	(a{sv}: Metadata, o: AfterTrack) 	
+# TrackRemoved 	(o: TrackId) 	
+# TrackMetadataChanged 	(o: TrackId, a{sv}: Metadata) 	
+
+logfile="/tmp/player.log"
+errfile="/tmp/player.err"
+lockfile="/tmp/player.lock"
+user=None
+group=None
+env={"HOME":"/home/pat1"}
+busaddress='tcp:host=localhost,port=1234'
+
+
+import os,autoradio.daemon as daemon
+from autoradio import _version_
+from autoradio.autoplayer import player
+
+playerd = daemon.Daemon(
+        stdin="/dev/null",
+        stdout=logfile,
+        stderr=errfile,
+        pidfile=lockfile,
+        user=user,
+        group=group,
+        env=env
+)
+
+
+def main (cwd):
+
+    try:
+        os.chdir(cwd)
+    except:
+        pass
+
+    player.main()
+
+
+if __name__ == '__main__':
+
+#  main()# (this code was run as script)
+
+    import sys, os
+    cwd=os.getcwd()
+
+    # this is a triky for ubuntu and debian that remove /var/run every boot
+    # ATTENTION, this should be a security problem
+    path=os.path.dirname(lockfile)
+    if (not os.path.lexists(path) and path == "/var/run/autoradio" ):
+        os.mkdir(path)
+        if (os.getuid() == 0):
+            from pwd import getpwnam
+            from grp import getgrnam
+            uid = getpwnam(user)[2]
+            gid = getgrnam(group)[2]
+            os.chown(path,uid,gid)
+
+    if playerd.service():
+
+        sys.stdout.write("Playerd version "+_version_+"\n")
+        sys.stdout.write("Daemon started with pid %d\n" % os.getpid())
+        sys.stdout.write("Daemon stdout output\n")
+        sys.stderr.write("Daemon stderr output\n")
+
+        sys.exit(main(cwd))  # (this code was run as script)
+
+
+

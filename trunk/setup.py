@@ -172,9 +172,12 @@ setup(name='autoradio',
       cmdclass={'build': build,'compilemessages':compilemessages,'createmanpages':createmanpages,"distclean":distclean},
       packages=['autoradio', 'autoradio.playlists','autoradio.spots', 
                 'autoradio.jingles', 'autoradio.programs',
-                'autoradio.player', 'autoradio.doc'],
+                'autoradio.player', 'autoradio.doc',
+                'autoradio.autoplayer', 'autoradio.mpris2',
+                'autoradio.pydbusdecorator',],
       package_data={'autoradio.programs': ['fixtures/*.json']},
-      scripts=['autoradiod','autoradioweb','autoradioctrl','autoradio.wsgi'],
+      scripts=['autoradiod','autoradioweb','autoradioctrl','autoradio.wsgi',
+               'autoplayerd','autoplayergui','autoradiodbusd'],
       data_files = data_files,
       license = "GNU GPL v2",
       requires= [ "mutagen","django","reportlab"],
@@ -183,8 +186,8 @@ Radio automation software. Simple to use, starting from digital audio
 files, manage on-air broadcasting over a radio-station or
 web-radio. The main components are:
 
-    * Player (Xmms/Audacious): plays all your media files and send digital sound
-      to an audio device or audio server
+    * Player (integrated or external Xmms/Audacious): plays all your media
+      files and send digital sound to an audio device or audio server
  
     * Scheduler: real time manager for emission of special audio files
       like jingles, spots, playlist and programs; interact with player

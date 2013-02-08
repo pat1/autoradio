@@ -45,7 +45,7 @@ def main (cwd):
     except:
         pass
 
-    player.main(autoradio.settings.busaddressplayer)
+    player.main(autoradio.settings.busaddressplayer,autoradio.settings.audiosinkplayer)
 
 
 if __name__ == '__main__':

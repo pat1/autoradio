@@ -487,7 +487,7 @@ class AutoPlayer(dbus.service.Object):
 
 class Player:
 	
-  def __init__(self,myplaylist=None,loop=None,starttoplay=False):
+  def __init__(self,myplaylist=None,loop=None,starttoplay=False,myaudiosink=None):
     self.playlist=myplaylist
     self.player = gst.element_factory_make("playbin2", "playbin2")
     self.playmode = "Stopped"
@@ -500,6 +500,56 @@ class Player:
 
     fakesink = gst.element_factory_make("fakesink", "fakesink")
     self.player.set_property("video-sink", fakesink)
+
+    ##icecast
+    #print "Icecast selected"
+    #bin = gst.Bin("my-bin")
+
+    #audioconvert = gst.element_factory_make("audioconvert")
+    #bin.add(audioconvert)
+    #pad = audioconvert.get_pad("sink")
+    #ghostpad = gst.GhostPad("sink", pad)
+    #bin.add_pad(ghostpad)
+
+    #audioresample = gst.element_factory_make("audioresample")
+    #audioresample.set_property("quality", 0)
+    #bin.add(audioresample)
+    #capsfilter = gst.element_factory_make('capsfilter')
+    #capsfilter.set_property('caps', gst.caps_from_string('audio/x-raw,rate=44100,channels=2'))
+    ##bin.add(capsfilter)
+    #vorbisenc = gst.element_factory_make("vorbisenc")
+    #vorbisenc.set_property("quality", 0)
+    #bin.add(vorbisenc)
+    #oggmux = gst.element_factory_make("oggmux")
+    #bin.add(oggmux)
+
+    #streamsink = gst.element_factory_make("shout2send", "streamsink")
+    #streamsink.set_property("ip", "localhost")
+    ##streamsink.set_property("username", "source")
+    #streamsink.set_property("password", "ackme")
+    #streamsink.set_property("port", 8000)
+    #streamsink.set_property("mount", "/myradio.ogg")
+    #bin.add(streamsink)
+
+    ### Link the elements
+    #queue = gst.element_factory_make("queue", "queue")
+    ##queue.link(audioresample, capsfilter)
+    #bin.add(queue)
+
+    #gst.element_link_many(audioconvert,audioresample,queue,vorbisenc,oggmux,streamsink)
+    #self.player.set_property("audio-sink", bin)
+
+
+    #audiosink = gst.element_factory_make("autoaudiosink")
+    #audiosink = gst.element_factory_make("jackaudiosink")
+
+    if myaudiosink is None: myaudiosink = "autoaudiosink"
+    audiosink = gst.element_factory_make(myaudiosink)
+    self.player.set_property("audio-sink", audiosink)
+
+#
+#    self.player.set_property("audio-sink", streamsink)
+
     bus = self.player.get_bus()
     bus.add_signal_watch()
 #    bus.connect("message",                self.on_message)
@@ -801,7 +851,7 @@ def handle_sigint(signum, frame):
     logging.debug('Caught SIGINT, exiting.')
     ap.Quit()
 
-def main(busaddress=None):  
+def main(busaddress=None,myaudiosink=None):  
 
   # Use logging for ouput at different *levels*.
   #
@@ -829,7 +879,7 @@ def main(busaddress=None):
   try:  
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
     loop = gobject.MainLoop()
-    mp = Player(plmpris,loop=loop,starttoplay=True)
+    mp = Player(plmpris,loop=loop,starttoplay=True,myaudiosink=myaudiosink)
 
     # Export our DBUS service
     #if not dbus_service:

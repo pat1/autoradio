@@ -22,27 +22,19 @@
 # TrackRemoved 	(o: TrackId) 	
 # TrackMetadataChanged 	(o: TrackId, a{sv}: Metadata) 	
 
-logfile="/tmp/player.log"
-errfile="/tmp/player.err"
-lockfile="/tmp/player.lock"
-user=None
-group=None
-env={"HOME":"/home/pat1"}
-busaddress='tcp:host=localhost,port=1234'
-
 
 import os,autoradio.daemon as daemon
 from autoradio import _version_
 from autoradio.autoplayer import player
+import autoradio.settings
 
 playerd = daemon.Daemon(
         stdin="/dev/null",
-        stdout=logfile,
-        stderr=errfile,
-        pidfile=lockfile,
-        user=user,
-        group=group,
-        env=env
+        stdout=autoradio.settings.logfileplayer,
+        stderr=autoradio.settings.errfileplayer,
+        pidfile=autoradio.settings.lockfileplayer,
+        user=autoradio.settings.userplayer,
+        group=autoradio.settings.groupplayer
 )
 
 
@@ -53,7 +45,7 @@ def main (cwd):
     except:
         pass
 
-    player.main()
+    player.main(autoradio.settings.busaddressplayer)
 
 
 if __name__ == '__main__':
@@ -65,7 +57,7 @@ if __name__ == '__main__':
 
     # this is a triky for ubuntu and debian that remove /var/run every boot
     # ATTENTION, this should be a security problem
-    path=os.path.dirname(lockfile)
+    path=os.path.dirname(autoradio.settings.lockfileplayer)
     if (not os.path.lexists(path) and path == "/var/run/autoradio" ):
         os.mkdir(path)
         if (os.getuid() == 0):

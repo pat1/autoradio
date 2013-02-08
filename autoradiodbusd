@@ -17,22 +17,30 @@
 # 
 
 from autoradio import daemon
+import autoradio.settings
 
 dbusd = daemon.Daemon(
         stdin="/dev/null",
-        stdout="/tmp/dbusd.log",
-        stderr="/tmp/dbusd.err",
-        pidfile="/tmp/dbusd.lock",
-#        user=autoradio.settings.user,
-#        group=autoradio.settings.group
+        stdout=autoradio.settings.logfileplayer,
+        stderr=autoradio.settings.errfileplayer,
+        pidfile=autoradio.settings.lockfileplayer,
+        user=autoradio.settings.userplayer,
+        group=autoradio.settings.groupplayer
 )
 
 def main(self):
 
     import subprocess
-    self.procs=[subprocess.Popen(["dbus-daemon",  "--session",
-    '--address=tcp:host=localhost,port=1234', "--nofork"],cwd=self.cwd)]
 
+    busaddress = autoradio.settings.busaddressplayer
+
+
+    if busaddress is not None:
+
+        self.procs=[subprocess.Popen(["dbus-daemon",  "--session",
+            '--address='+busaddress, "--nofork"],cwd=self.cwd)]
+    else:
+        print "busaddress is not defined in config file: dbus-daemon not started"
 
 if __name__ == '__main__':
 

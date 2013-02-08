@@ -56,6 +56,15 @@ configspec['database']['DATABASE_ENGINE']="string(default='sqlite3')"
 configspec['database']['DATABASE_NAME']="string(default='%s/autoradio.sqlite3')" % os.getcwd()
 
 
+configspec['autoplayer']={}
+
+configspec['autoplayer']['logfile']  = "string(default='/tmp/autoradioweb.log')"
+configspec['autoplayer']['errfile']  = "string(default='/tmp/autoradioweb.err')"
+configspec['autoplayer']['lockfile'] = "string(default='/tmp/autoradioweb.lock')"
+configspec['autoplayer']['user']     = "string(default=None)"
+configspec['autoplayer']['group']    = "string(default=None)"
+configspec['autoplayer']['busaddress']    = "string(default=None)"
+
 config    = ConfigObj ('/etc/autoradio/autoradio-site.cfg',file_error=False,configspec=configspec)
 
 usrconfig = ConfigObj (os.path.expanduser('~/.autoradio.cfg'),file_error=False)
@@ -129,6 +138,14 @@ DATABASE_HOST     = config['database']['DATABASE_HOST']
 DATABASE_PORT     = config['database']['DATABASE_PORT']        
 DATABASE_ENGINE   = config['database']['DATABASE_ENGINE']      
 DATABASE_NAME     = config['database']['DATABASE_NAME']        
+
+# section autoplayer
+logfileplayer              = config['autoplayer']['logfile']
+errfileplayer              = config['autoplayer']['errfile']
+lockfileplayer             = config['autoplayer']['lockfile']
+userplayer                 = config['autoplayer']['user']
+groupplayer                = config['autoplayer']['group']
+busaddressplayer           = config['autoplayer']['busaddress']
 
 
 if DATABASE_ENGINE == "mysql":

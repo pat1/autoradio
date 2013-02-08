@@ -64,6 +64,7 @@ configspec['autoplayer']['lockfile'] = "string(default='/tmp/autoradioweb.lock')
 configspec['autoplayer']['user']     = "string(default=None)"
 configspec['autoplayer']['group']    = "string(default=None)"
 configspec['autoplayer']['busaddress']    = "string(default=None)"
+configspec['autoplayer']['audiosink']    = "string(default=None)"
 
 config    = ConfigObj ('/etc/autoradio/autoradio-site.cfg',file_error=False,configspec=configspec)
 
@@ -146,6 +147,7 @@ lockfileplayer             = config['autoplayer']['lockfile']
 userplayer                 = config['autoplayer']['user']
 groupplayer                = config['autoplayer']['group']
 busaddressplayer           = config['autoplayer']['busaddress']
+audiosinkplayer            = config['autoplayer']['audiosink']
 
 
 if DATABASE_ENGINE == "mysql":

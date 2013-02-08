@@ -14,8 +14,9 @@ import pygtk, gtk
 import os,stat,time,urlparse,urllib
 import gobject
 import dbus
+import autoradio.settings
 
-busaddress='tcp:host=localhost,port=1234'
+busaddress=autoradio.settings.busaddressplayer
 
 def convert_ns(t):
     s,ns = divmod(t, 1000000)
@@ -79,9 +80,9 @@ class Main(object):
         uri=uris[0]
 
         if busaddress is None:
-            self._bus = dbus.SessionBus()
+            bus = dbus.SessionBus()
         else:
-            bus =dbus.bus.BusConnection(busaddress)
+            bus = dbus.bus.BusConnection(busaddress)
 
         self.mp2 = MediaPlayer2(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
         self.play = Player(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})

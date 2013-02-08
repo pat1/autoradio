@@ -36,8 +36,6 @@ import signal
 
 IDENTITY = "Auto Player"
 STATUS_PLAYLIST="autoplayer.xspf"
-busaddress='tcp:host=localhost,port=1234'
-
 
 # python dbus bindings don't include annotations and properties
 MPRIS2_INTROSPECTION = """<node name="/org/mpris/MediaPlayer2">
@@ -803,7 +801,7 @@ def handle_sigint(signum, frame):
     logging.debug('Caught SIGINT, exiting.')
     ap.Quit()
 
-def main():  
+def main(busaddress=None):  
 
   # Use logging for ouput at different *levels*.
   #

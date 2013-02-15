@@ -59,7 +59,11 @@ def main(cwd):
         import autoradio.managexmms as manageplayer
         import autoradio.xmmsweb as playerweb
 
-    elif (autoradio.autoradio_config.player == "audacious" or autoradio.autoradio_config.player == "amarok" or player == "vlc"):
+    elif (autoradio.autoradio_config.player == "audacious" 
+          or autoradio.autoradio_config.player == "amarok" 
+          or autoradio.autoradio_config.player == "vlc"
+          or autoradio.autoradio_config.player == "AutoPlayer"):
+
 #        import autoradio.manageaudacious as manageplayer
 #        import autoradio.audaciousweb as playerweb
         import autoradio.managempris as manageplayer
@@ -129,7 +133,11 @@ def main(cwd):
               ok=manageplayer.amarok_watchdog(kapp)
           elif (autoradio.autoradio_config.player == "xmms"):
               ok=manageplayeer.xmms_watchdog(session)
-          elif (autoradio.autoradio_config.player == "audacious"):
+          elif (autoradio.autoradio_config.player == "audacious" 
+                or autoradio.autoradio_config.player == "amarok" 
+                or autoradio.autoradio_config.player == "vlc"
+                or autoradio.autoradio_config.player == "AutoPlayer"):
+
               ok=manageplayer.player_watchdog(autoradio.autoradio_config.player,session)
 
       while ( True):
@@ -226,7 +234,11 @@ def main(cwd):
               ok=manageplayer.amarok_watchdog(kapp)
           elif (autoradio.autoradio_config.player == "xmms"):
               ok=manageplayer.xmms_watchdog(session)
-          elif (autoradio.autoradio_config.player == "audacious"):
+          elif (autoradio.autoradio_config.player == "audacious" 
+                or autoradio.autoradio_config.player == "amarok" 
+                or autoradio.autoradio_config.player == "vlc"
+                or autoradio.autoradio_config.player == "AutoPlayer"):
+
               ok=manageplayer.player_watchdog(autoradio.autoradio_config.player,session)
 
 

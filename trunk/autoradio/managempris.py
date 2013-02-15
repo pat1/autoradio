@@ -4,6 +4,7 @@
 import logging
 import dbus
 import autompris
+import autompris2
 from datetime import *
 from threading import *
 import os
@@ -99,7 +100,10 @@ def ManagePlayer (player,session,schedule):
       else:
          media=schedule.filename
 
-      aud=autompris.mediaplayer(player=player,session=session)
+      if  player == "vlc" or player == "AutoPlayer":
+         aud = autompris2.mediaplayer(player=player,session=session)
+      else:
+         aud = autompris.mediaplayer(player=player,session=session)
 
       # Regione critica
       lock.acquire()
@@ -121,7 +125,7 @@ def ManagePlayer (player,session,schedule):
          # recheck for consistency
          newpos=aud.get_playlist_pos()
          if curpos != newpos:
-            raise PlayerError("Managempris: strange ERROR: consinstency problem; pos: %d , newpos: %d"% (curpos,newpos))
+            raise PlayerError("Managempris: strange ERROR: consinstency problem; pos: %s , newpos: %s"% (str(curpos),str(newpos)))
 
          if not aud.playlist_clear_down(atlast=500):
             raise PlayerError("Managempris: ERROR in playlist_clear_down")
@@ -172,7 +176,11 @@ def player_watchdog(player,session):
    logging.debug( "player_watchdog: test if player is running" )
 
    try:
-      aud=autompris.mediaplayer(player=player,session=session)
+
+      if  player == "vlc" or player == "AutoPlayer":
+         aud = autompris2.mediaplayer(player=player,session=session)
+      else:
+         aud = autompris.mediaplayer(player=player,session=session)
 
    except:
       logging.error("player_watchdog: player do not communicate on d-bus")
@@ -193,7 +201,10 @@ def player_watchdog(player,session):
       logging.info("player_watchdog: player executed")
 
       try:
-         aud=autompris.mediaplayer(player=player,session=session)
+         if  player == "vlc" or player == "AutoPlayer":
+            aud = autompris2.mediaplayer(player=player,session=session)
+         else:
+            aud = autompris.mediaplayer(player=player,session=session)
 
       except:
          logging.error("player_watchdog serious problem: player do not comunicate on d-bus")
@@ -218,7 +229,7 @@ def main():
 
     import autoradio_core
 
-    player="audacious"
+    player="AutoPlayer"
     session=0
     logging.getLogger('').setLevel(logging.DEBUG)
 

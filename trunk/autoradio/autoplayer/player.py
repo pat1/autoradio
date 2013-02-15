@@ -378,6 +378,8 @@ class AutoPlayer(dbus.service.Object):
     @dbus.service.signal(TRACKLIST_IFACE,signature='o')
     def TrackRemoved(self,trackid):
       logging.debug("TrackRemoved %s" % trackid)
+      #return dbus.ObjectPath(trackid)
+      #return trackid
       pass
 
     @dbus.service.method(IFACE)
@@ -485,12 +487,20 @@ class AutoPlayer(dbus.service.Object):
       self.update_property(PLAYER_IFACE,"Position")
       return True
 
+
+# Handle signals more gracefully
+    def handle_sigint(self,signum, frame):
+      logging.debug('Caught SIGINT, exiting.')
+      self.Quit()
+
+
 class Player:
 	
   def __init__(self,myplaylist=None,loop=None,starttoplay=False,myaudiosink=None):
     self.playlist=myplaylist
     self.player = gst.element_factory_make("playbin2", "playbin2")
     self.playmode = "Stopped"
+    self.recoverplaymode = "Stopped"
     self.statuschanged = False
     self.starttoplay=starttoplay
     self.loop=loop
@@ -582,12 +592,19 @@ class Player:
     logging.debug("Message type %s received; source %s" % (t,type(message.src))) 
 
     self.player.set_state(gst.STATE_NULL)
-    self.playmode = "Stopped"
-    self.statuschanged = True
     err, debug = message.parse_error()
     logging.error( " %s: %s " % (err, debug))
-    self.playmode = "Stopped"
-    self.statuschanged = True
+    
+    if err.domain == gst.RESOURCE_ERROR :
+      logging.warning("restart to play after an RESOURCE_ERROR")
+      self.playmode= self.recoverplaymode
+      self.next()
+    else:
+      logging.warning("stop to play after an ERROR")
+      self.stop()
+      self.playmode = "Stopped"
+      self.statuschanged = True
+
 
   def on_message_state_changed(self, bus, message):
 
@@ -725,6 +742,8 @@ class Player:
     ret = self.player.set_state(gst.STATE_PLAYING)
     if ret == gst.STATE_CHANGE_FAILURE:
         logging.error( "Unable to set the pipeline to the PLAYING state.")
+        self.recoverplaymode = "Playing"
+
     #else:
     #  print self.player.get_state(timeout=gst.CLOCK_TIME_NONE)
 
@@ -733,6 +752,7 @@ class Player:
     ret = self.player.set_state(gst.STATE_PAUSED)
     if ret == gst.STATE_CHANGE_FAILURE:
         logging.error( "Unable to set the pipeline to the PAUSED state.")
+        self.recoverplaymode = "Paused"
     #else:
     #  print self.player.get_state(timeout=gst.CLOCK_TIME_NONE)
 
@@ -754,6 +774,8 @@ class Player:
     ret = self.player.set_state(gst.STATE_READY)
     if ret == gst.STATE_CHANGE_FAILURE:
       logging.error( "Unable to set the pipeline to the READY state.")
+      self.recoverplaymode = "Stopped"
+
     #else:
     #  print self.player.get_state(timeout=gst.CLOCK_TIME_NONE)
 
@@ -831,9 +853,10 @@ class Player:
 
     self.playlist=self.playlist.addtrack(uri,aftertrack,setascurrent)
 
-  def removetrack(self,uri, trackid):
-    self.playlist.removetrack(self.playlist.keys().index(trackid))
-        
+  def removetrack(self,trackid):
+    self.playlist=self.playlist.removetrack(self.playlist.keys().index(trackid))
+    print self.playlist
+
   def goto(self,trackid):
     self.playlist.set_current(str(self.playlist.keys().index(trackid)))
     self.stop()
@@ -846,10 +869,6 @@ class Player:
     self.stop()
     self.loop.quit()
 
-# Handle signals more gracefully
-def handle_sigint(signum, frame):
-    logging.debug('Caught SIGINT, exiting.')
-    ap.Quit()
 
 def main(busaddress=None,myaudiosink=None):  
 
@@ -897,7 +916,7 @@ def main(busaddress=None,myaudiosink=None):
     gobject.timeout_add(60000,ap.player.save_playlist,"autoplayer.xspf")
     #gobject.timeout_add( 1000,ap.player.printinfo)
 
-    signal.signal(signal.SIGINT, handle_sigint)
+    signal.signal(signal.SIGINT, ap.handle_sigint)
 
     loop.run()
 

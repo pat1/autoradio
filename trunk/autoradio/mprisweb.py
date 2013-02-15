@@ -106,7 +106,6 @@ class HomePage:
         else:
             htmlresponse=""
 
-
         try:
             if  self.player == "vlc" or self.player == "AutoPlayer":
                 mp= autompris2.mediaplayer(player=self.player,session=0)
@@ -114,14 +113,15 @@ class HomePage:
                 mp= autompris.mediaplayer(player=self.player,session=0)
 
         except:
-
             return "error intializing dbus"
 
         try:
-            cpos=int(mp.get_playlist_pos())
+            cpos=mp.get_playlist_pos()
+	    if cpos is None: cpos=0
+	    cpos=int(cpos)
 
         except:
-		raise
+            raise
             #return "error get_playlist_pos()"
 	
         try:
@@ -179,7 +179,7 @@ class HomePage:
 
 
 
-def start_http_server(iht=False,player="audacious",session=0):
+def start_http_server(iht=False,player="AutoPlayer",session=0):
     """
     start web server to monitor player
     iht=False         # do not emit header e tail
@@ -226,9 +226,8 @@ if __name__ == '__main__':
 
     # Start the CherryPy server.
     try:
-#        start_http_server(iht=True,player=autoradio_config.player,session=0)
-        start_http_server(iht=True,player="AutoPlayer",session=0)
-#        start_http_server(iht=True,player="vlc",session=0)
+        start_http_server(iht=True,player=autoradio_config.player,session=0)
+
     except:
         print "Error"
         raise

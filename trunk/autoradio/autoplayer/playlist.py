@@ -15,18 +15,21 @@ class Track(collections.namedtuple('Track',("path","time","artist","album","titl
 
   def get_metadata(self):
 
-#    try:
+
+    metadata=collections.OrderedDict()
+    metadata["path"] =self.path
+    metadata["time"] = 0
+    metadata["artist"]=None
+    metadata["album"]=None
+    metadata["title"]=None
+    metadata["id"]=None
+
+    try:
 #      m=mutagen.File(self.path[7:].encode(sys.getfilesystemencoding()),easy=True)
       m=mutagen.File(self.path[7:],easy=True)
       # in seconds (type float).
 
-      metadata=collections.OrderedDict()
-      metadata["path"] =self.path
       metadata["time"] = int(m.info.length*1000000000)
-      metadata["artist"]=None
-      metadata["album"]=None
-      metadata["title"]=None
-      metadata["id"]=None
 
       value = m.get("artist")
       if value:
@@ -38,11 +41,11 @@ class Track(collections.namedtuple('Track',("path","time","artist","album","titl
       if value:
         metadata["title"]=value[0]#.encode("UTF-8")
 
-#    except:
-      #log.info("Could not read info from file: %s ",self.path)
+    except:
+      logging.error("Could not read info from file: %s ",self.path)
 #      print "errore"
 
-      return metadata
+    return metadata
 
 
 def parse_pls(lines):
@@ -181,7 +184,7 @@ class Playlist(list):
   def read(s, path):
 
     try:
-      with open(path, "r") as f:
+      with open(urlparse.urlsplit(path).path, "r") as f:
         data = f.read()
 
     except IOError :
@@ -490,7 +493,15 @@ class Playlist_mpris2(collections.OrderedDict):
 
 
   def removetrack(self,trackid):
-    self.pop(trackid,None)
+    print "tracklist removetrack: ",trackid
+
+    if trackid == self.current:
+      self.current=None
+
+    newself=Playlist_mpris2()
+    newself.pop(trackid,None)
+    #newself.redefine_id()
+    return newself
 
   def redefine_id(self):
     tracks=[]

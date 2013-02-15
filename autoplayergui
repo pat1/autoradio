@@ -60,7 +60,10 @@ class Main(object):
           id = self.play.Metadata.get(u'mpris:trackid',None)
           if id is not None:
               length=self.tl.GetTracksMetadata((id,))[0].get(u'mpris:length',None)
-              frac = float(position)/float(length)
+              if position <= length and length != 0:
+                  frac = float(position)/float(length)
+              else:
+                  frac = 0
           else:
               frac = 0
           self.pbar.set_fraction(frac)
@@ -71,6 +74,7 @@ class Main(object):
   def __init__(self):
 
     self.multimedia_file=None
+    self.connected=False
 
     #Connect to player
     DBusGMainLoop(set_as_default=True)
@@ -98,6 +102,8 @@ class Main(object):
       self.tl = None
 
     self.play.PropertiesChanged = self.playhandler
+
+    self.connected = True
 
     # Create the GUI
     self.win = gtk.Window(gtk.WINDOW_TOPLEVEL)
@@ -169,11 +175,15 @@ class Main(object):
 
     gobject.timeout_add(  1000,self.update)
 
-
   def update(self):
+    try:
       new_model = self.make_list()
       self.treeview.set_model(new_model)
       return True
+
+    except:
+      gtk.main_quit()
+      return False
 
   def on_file_selected(self, widget):
     self.multimedia_file = self.load_file.get_filename()
@@ -203,11 +213,16 @@ class Main(object):
   def make_list(self):
     listmodel = gtk.ListStore(object)
 
-    if self.tl is not None:
-        if  len(self.tl.Tracks) > 0:
-            # attributes and methods together
-            for track in  self.tl.GetTracksMetadata( self.tl.Tracks):
-                listmodel.append([track.get(u'mpris:trackid',"")])
+    try:
+        if self.tl is not None:
+            if  len(self.tl.Tracks) > 0:
+                # attributes and methods together
+                for track in  self.tl.GetTracksMetadata( self.tl.Tracks):
+                    listmodel.append([track.get(u'mpris:trackid',"")])
+    except:
+        print "Error getting player playlist"
+        gtk.main_quit()
+
     return listmodel
 
   def id(self, column, cell, model, iter):
@@ -234,5 +249,14 @@ class Main(object):
     return
       
 if __name__ == "__main__":
-    Main()
-    gtk.main()
+
+    try:
+        if Main().connected:
+            gtk.main()
+    except KeyboardInterrupt :
+        # Clean up
+        print 'Keyboard Exiting'
+        gtk.main_quit()
+
+
+    

@@ -3,14 +3,14 @@
 # GPL. (C) 2013 Paolo Patruno.
 
 #Connect to player
-from mpris2.mediaplayer2 import MediaPlayer2
-from mpris2.player import Player
-from mpris2.tracklist import TrackList
-from mpris2.interfaces import Interfaces
-from mpris2.some_players import Some_Players
-from mpris2.utils import get_players_uri
+from autoradio.mpris2.mediaplayer2 import MediaPlayer2
+from autoradio.mpris2.player import Player
+from autoradio.mpris2.tracklist import TrackList
+from autoradio.mpris2.interfaces import Interfaces
+from autoradio.mpris2.some_players import Some_Players
+from autoradio.mpris2.utils import get_players_uri
+from autoradio.mpris2.utils import get_session
 from dbus.mainloop.glib import DBusGMainLoop
-from mpris2.utils import get_session
 import dbus
 
 def playhandler( *args, **kw): 
@@ -29,7 +29,8 @@ def trackhandler( *args, **kw):
 
 DBusGMainLoop(set_as_default=True)
 import gobject    
-busaddress='tcp:host=localhost,port=1234'
+#busaddress='tcp:host=localhost,port=1234'
+busaddress=None
 
 mloop = gobject.MainLoop()
 
@@ -44,7 +45,7 @@ if len(uris) >0 :
     print uri
 
     if busaddress is None:
-        self._bus = dbus.SessionBus()
+        bus = dbus.SessionBus()
     else:
         bus =dbus.bus.BusConnection(busaddress)
 
@@ -55,7 +56,7 @@ if len(uris) >0 :
     #play.Next() # play next media
 
     #Get attributes
-    print play.Metadata #current media data
+    #print play.Metadata #current media data
     print play.PlaybackStatus
 
     play.PropertiesChanged = playhandler

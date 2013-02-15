@@ -55,7 +55,7 @@ import dbus
 
 class mediaplayer:
 
-    def __init__(self,player="vlc",session=0):
+    def __init__(self,player="AutoPlayer",session=0):
 
 #qdbus --literal org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get org.mpris.MediaPlayer2.TrackList Tracks
 #            import gobject
@@ -107,7 +107,7 @@ class mediaplayer:
     def get_playlist_securepos(self,securesec=10):
         '''
         Try to secure that there are some time (securesec) to complete all operations in time:
-        if audacious change song during operation will be a big problem
+        if the player change song during operation will be a big problem
         '''
         try:
  
@@ -126,8 +126,8 @@ class mediaplayer:
                 mtimelength=metadata["mtimelength"]
                 mtimeposition=metadata["mtimeposition"]
 
-                timed=datetime.timedelta(seconds=datetime.timedelta(microseconds=mtimelength).seconds)
-                toend=timed-datetime.timedelta(seconds=datetime.timedelta(microseconds=mtimeposition).seconds)
+                timed=datetime.timedelta(seconds=datetime.timedelta(milliseconds=mtimelength).seconds)
+                toend=timed-datetime.timedelta(seconds=datetime.timedelta(milliseconds=mtimeposition).seconds)
 
                 newpos=self.get_playlist_pos()
 
@@ -135,6 +135,7 @@ class mediaplayer:
                     #inconsistenza: retry
                     #print "retry"
                     toend=datetime.timedelta(seconds=0)
+
                 if ( toend < mintimed ):
                     volte +=1
                     if volte > 10 :
@@ -147,11 +148,11 @@ class mediaplayer:
 
 
     def playlist_clear_up(self,atlast=10):
-        '''
-        clear playlist starting from current position up.
-        "atlast" numer of song are retained
-        '''
-        try:
+        #'''
+        #clear playlist starting from current position up.
+        #"atlast" numer of song are retained
+        #'''
+        #try:
             self.play_ifnot()   #force to play
 
             # take the current position (if error set pos=0)
@@ -165,13 +166,14 @@ class mediaplayer:
                 op=self.get_playlist()
 
                 for prm in xrange(0,pos-atlast): 
-                    self.tracklist.RemoveTrack( op[prm]  )
+                    print "remove up: ",op[prm]
+                    self.tracklist.RemoveTrack( str(op[prm]))
 
             time.sleep(1)
             return True
 
-        except:
-            return False
+        #except:
+        #    return False
 
 
 
@@ -195,9 +197,10 @@ class mediaplayer:
 
                 op=self.get_playlist()
 
-                #print length,pos+atlast
+                print length-1,pos+atlast
                 for prm in xrange(length-1,pos+atlast,-1): 
-                    self.tracklist.RemoveTrack( op[prm] )
+                    print "remove down: ",op[prm]
+                    self.tracklist.RemoveTrack( str(op[prm]) )
 
             time.sleep(1)
             return True
@@ -383,7 +386,7 @@ def main():
 #    DBusGMainLoop(set_as_default=True,
 
     mp=mediaplayer(player="AutoPlayer")
-    print mp
+    print "status",mp
 #    mp.play_ifnot()
 #    print mp
 
@@ -393,14 +396,20 @@ def main():
     #mp.connect()
     #print "connected"
     #mp.loop()
-    print mp.get_playlist_pos()
+    print "pos",mp.get_playlist_pos()
+    print "securepos"
     print mp.get_playlist_securepos()
-    print mp.playlist_clear_up(atlast=2)
-    print mp.playlist_clear_down(atlast=5)
-    print mp.get_playlist()
-    posauto=mp.get_playlist_posauto(autopath="/casa")
-    print "posauto",posauto
-    print mp.playlist_add_atpos("file:///home",posauto)
+    #print "clear_up"
+    #print mp.playlist_clear_up(atlast=2)
+    #print "clear_down"
+    #print mp.playlist_clear_down(atlast=5)
+    #print "playlist"
+    #print mp.get_playlist()
+    #posauto=mp.get_playlist_posauto(autopath="/casa")
+    #print "posauto",posauto
+    print "add_atpos"
+    #mp.playlist_add_atpos("file:///home",posauto)
+    mp.playlist_add_atpos("file:///home",3)
 
 if __name__ == '__main__':
     main()  # (this code was run as script)

@@ -378,7 +378,7 @@ class AutoPlayer(dbus.service.Object):
     @dbus.service.signal(TRACKLIST_IFACE,signature='o')
     def TrackRemoved(self,trackid):
       logging.debug("TrackRemoved %s" % trackid)
-      return dbus.ObjectPath(trackid)
+      return dbus.ObjectPath("/org/mpris/MediaPlayer2/TrackList/"+trackid+"/")
       #return trackid
       #pass
 
@@ -458,7 +458,7 @@ class AutoPlayer(dbus.service.Object):
       if self.player.playlist.current == trackid:
         self.Next()
       self.player.removetrack(trackid)
-      #self.TrackRemoved(trackid)
+      self.TrackRemoved(trackid)
 
     @dbus.service.method(TRACKLIST_IFACE,in_signature='s', out_signature='')
     def GoTo(self, trackid):

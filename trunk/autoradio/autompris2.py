@@ -353,9 +353,6 @@ class mediaplayer:
         "add media at pos postion in the playlist"
 
         if pos is not None:
-            pos=0
-            #print self.get_playlist()[pos]
-
             self.tracklist.AddTrack(media,self.get_playlist()[pos],False)
         else:
             # the playlist is empty
@@ -399,17 +396,17 @@ def main():
     print "pos",mp.get_playlist_pos()
     print "securepos"
     print mp.get_playlist_securepos()
-    #print "clear_up"
-    #print mp.playlist_clear_up(atlast=2)
-    #print "clear_down"
-    #print mp.playlist_clear_down(atlast=5)
-    #print "playlist"
-    #print mp.get_playlist()
-    #posauto=mp.get_playlist_posauto(autopath="/casa")
-    #print "posauto",posauto
+    print "clear_up"
+    print mp.playlist_clear_up(atlast=2)
+    print "clear_down"
+    print mp.playlist_clear_down(atlast=3)
+    print "playlist"
+    print mp.get_playlist()
+    posauto=mp.get_playlist_posauto(autopath="/casa")
+    print "posauto",posauto
     print "add_atpos"
-    #mp.playlist_add_atpos("file:///home",posauto)
-    mp.playlist_add_atpos("file:///home",3)
+    mp.playlist_add_atpos("file:///home",posauto)
+    ##mp.playlist_add_atpos("file:///home",3)
 
 if __name__ == '__main__':
     main()  # (this code was run as script)

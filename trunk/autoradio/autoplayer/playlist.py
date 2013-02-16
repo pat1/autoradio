@@ -22,7 +22,7 @@ class Track(collections.namedtuple('Track',("path","time","artist","album","titl
     metadata["artist"]=None
     metadata["album"]=None
     metadata["title"]=None
-    metadata["id"]=None
+    metadata["id"]=self.id
 
     try:
 #      m=mutagen.File(self.path[7:].encode(sys.getfilesystemencoding()),easy=True)
@@ -227,7 +227,6 @@ class Playlist(list):
       logging.debug( "PLAYLIST: xspf parsed")
 
       for ele in p.tracks:
-
         track=Track._make(Track(ele.get('location',None),ele.get('time',None),ele.get('creator',None),
                     ele.get('album',None),ele.get('title',None),ele.get('id',None)).get_metadata().values())
         s.append(track)
@@ -384,24 +383,35 @@ class Playlist_mpris2(collections.OrderedDict):
 	
   def __init__(self,playlist=Playlist([]),current=None,position=None):
     super( Playlist_mpris2, self ).__init__(collections.OrderedDict())
-    for id,track in enumerate(playlist):
+
+    remakeid=False
+    for track in playlist:
       if (track.id is None):
-        self[str(id)]=track
+        remakeid=True
+        break
+
+    for id,track in enumerate(playlist):
+      if (remakeid):
+        self[str(id)]=Track._make((track.path,track.time,track.artist,track.album,track.title,str(id)))
       else:
         self[track.id]=track
 
-    if len (self) == 0 :
-      self.current = None
-    else:
-      #self.current = self.keys()[0]
-      if current is None:
-        self.current = self.keys()[0]
+
+    if current is None:
+
+      if playlist.current is None:
+        if len (self) == 0 :
+          self.current = None
+        else:
+          self.current = self.keys()[0]
       else:
-        self.current=current
+        self.current=playlist.current
+        
+    else:
+      self.current=current
 
     self.position=position
 
-    self.redefine_id()
 
   def get_current(self):
     if self.current is not None: 
@@ -459,55 +469,55 @@ class Playlist_mpris2(collections.OrderedDict):
     keys=self.keys()
 
     if aftertrack is None:
-      ind =len(keys)-1
+      ind = max(len(keys)-1,0)
     else:
-      ind = keys.index(aftertrack)
+      try:
+        ind = keys.index(aftertrack)
+      except:
+        logging.warning ("invalid aftertrack in addtrack")
+        ind = max(len(keys)-1,0)
 
-    newself=Playlist_mpris2()
+    # found id as index of position after we have to insert
 
     if  len(keys) > 0:
-      id = keys[ind]
-      startnewid=max([int(x) for x in keys]) + 1 
+      #id = keys[ind]
+      startnewid=max([int(x) for x in keys]) + 1
+      newself=Playlist_mpris2()
     else:
-      id="0"
-      startnewid=0
-      p=Playlist([uri])
-      for newid,track in enumerate(p,startnewid):
-        newself[str(newid)]=Track._make(track.get_metadata().values())
+      return Playlist_mpris2(Playlist([uri]))
 
-    for nid,ntrack in self.iteritems():
-      newself[nid]=ntrack
-      if nid == id:
+    # here we have empty new list were copy old and new
+
+    for id,track in self.iteritems():
+      newself[id]=track
+      if id == aftertrack:
         p=Playlist([uri])
-        for newid,track in enumerate(p,startnewid):
-          newself[str(newid)]=Track._make(track.get_metadata().values())
+        for id,track in enumerate(p,startnewid):
+          newself[str(id)]=Track._make((track.path,track.time,track.artist,track.album,track.title,str(id)))
+#          newself[str(newid)]=Track._make(track.get_metadata().values())
 
+
+    newself.current=self.current
     if setascurrent: 
       if len(newself) >=0:
         newself.current=str(startnewid)
-      else:
-        newself.current=self.current
-
-    newself.redefine_id()
+        
     return newself
 
 
   def removetrack(self,trackid):
+
     print "tracklist removetrack: ",trackid
 
-    if trackid == self.current:
-      self.current=None
+    newself=self
+    if trackid == newself.current:
+      #newself.previous()
+      newself.current=None
 
-    newself=Playlist_mpris2()
     newself.pop(trackid,None)
-    #newself.redefine_id()
+    print newself
     return newself
 
-  def redefine_id(self):
-    tracks=[]
-    for id,track in self.iteritems():
-      tr=Track._make((track.path,track.time,track.artist,track.album,track.title,str(id)))
-      self[id]=tr
     
   def write(self,path):
     Playlist(tracks=self.values(),current=self.current,position=self.position).write(path)
@@ -531,16 +541,15 @@ def main():
   print "--------- playlist ord dict -----------------------"
   op=Playlist_mpris2(p)
 
-  op=op.addtrack(uri,aftertrack="1",setascurrent=True)
-
   op.write("/tmp/tmp.xspf")
 
   print "--------- playlist from file -----------------------"
-
   p=Playlist(["/tmp/tmp.xspf"])
 
   print "--------- playlist from file ord dict -----------------------"
   op=Playlist_mpris2(p)
+
+  op=op.addtrack(uri,aftertrack="1")
 
   op=op.addtrack(uri,aftertrack="1",setascurrent=True)
   print op
@@ -550,6 +559,9 @@ def main():
   print "--------- reread playlist from file ord dict -----------------------"
   p=Playlist(["/tmp/tmpout.xspf"])
   op=Playlist_mpris2(p)
+
+  print "remove ",op.current
+  op=op.removetrack("0")
   print op
   op.write("/tmp/tmpout2.xspf")
   

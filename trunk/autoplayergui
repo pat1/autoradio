@@ -206,6 +206,7 @@ class Main(object):
   def open_file(self, treeview, path, column):
         model = treeview.get_model()
         iter = model.get_iter(path)
+        print "goto: ",model.get_value(iter, 0)
         self.tl.GoTo(model.get_value(iter, 0))
         new_model = self.make_list()
         self.treeview.set_model(new_model)

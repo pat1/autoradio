@@ -378,9 +378,9 @@ class AutoPlayer(dbus.service.Object):
     @dbus.service.signal(TRACKLIST_IFACE,signature='o')
     def TrackRemoved(self,trackid):
       logging.debug("TrackRemoved %s" % trackid)
-      #return dbus.ObjectPath(trackid)
+      return dbus.ObjectPath(trackid)
       #return trackid
-      pass
+      #pass
 
     @dbus.service.method(IFACE)
     def Raise(self):
@@ -455,8 +455,10 @@ class AutoPlayer(dbus.service.Object):
 
     @dbus.service.method(TRACKLIST_IFACE,in_signature='s', out_signature='')
     def RemoveTrack(self, trackid):
-        self.player.removetrack(trackid)
-        self.TrackRemoved(trackid)
+      if self.player.playlist.current == trackid:
+        self.Next()
+      self.player.removetrack(trackid)
+      #self.TrackRemoved(trackid)
 
     @dbus.service.method(TRACKLIST_IFACE,in_signature='s', out_signature='')
     def GoTo(self, trackid):
@@ -851,14 +853,27 @@ class Player:
     if aftertrack == "/org/mpris/MediaPlayer2/TrackList/NoTrack":
       aftertrack=None
 
+    current = self.playlist.current
     self.playlist=self.playlist.addtrack(uri,aftertrack,setascurrent)
 
+    if setascurrent:
+      playmode=self.playmode
+      if self.playlist.current != current:
+        self.stop()
+        self.loaduri()
+        if playmode == "Playing":
+          self.play()
+        elif playmode == "Paused":
+          self.pause()
+          
   def removetrack(self,trackid):
-    self.playlist=self.playlist.removetrack(self.playlist.keys().index(trackid))
-    print self.playlist
+    self.playlist=self.playlist.removetrack(trackid)
+    #print "indice: ",str(self.playlist.keys().index(trackid))
+    #for id,track in enumerate(self.playlist):
+    #  print id,track
 
   def goto(self,trackid):
-    self.playlist.set_current(str(self.playlist.keys().index(trackid)))
+    self.playlist.set_current(trackid)
     self.stop()
     self.loaduri()
     self.play()
@@ -889,7 +904,8 @@ def main(busaddress=None,myaudiosink=None):
 
   pl=playlist.Playlist()
   pl.read("autoplayer.xspf")
-  plmpris=playlist.Playlist_mpris2(pl,pl.current,pl.position)
+  #plmpris=playlist.Playlist_mpris2(pl,pl.current,pl.position)
+  plmpris=playlist.Playlist_mpris2(pl)
 
   for media in sys.argv[2:]:
     logging.info( "add media: %s" %media)

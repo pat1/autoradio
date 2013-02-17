@@ -5,6 +5,6 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('autoradio.programs.views',
     (r'^$', 'index'),
-    (r'^xmms/$', 'stato'),
+    (r'^xmms/$', 'dbusstato'),
     (r'^programsbook/$', 'programsbook'),
 )

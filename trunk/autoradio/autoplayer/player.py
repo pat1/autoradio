@@ -378,9 +378,22 @@ class AutoPlayer(dbus.service.Object):
     @dbus.service.signal(TRACKLIST_IFACE,signature='o')
     def TrackRemoved(self,trackid):
       logging.debug("TrackRemoved %s" % trackid)
-      return dbus.ObjectPath("/org/mpris/MediaPlayer2/TrackList/"+trackid+"/")
-      #return trackid
-      #pass
+
+# here seem pydbus bug 
+# disabled for now
+
+#process 22558: arguments to dbus_message_iter_append_basic() were incorrect, assertion "_dbus_check_is_valid_path (*string_p)" failed in file dbus-message.c line 2531.
+#This is normally a bug in some application using the D-Bus library.
+#  D-Bus not built with -rdynamic so unable to print a backtrace
+#Annullato (core dumped)
+
+      try:
+        obp=dbus.ObjectPath("/org/mpris/MediaPlayer2/TrackList/"+trackid)
+      except:
+        logging.error("building ObjectPath to return in TrackRemoved %s" % trackid)
+        obp=dbus.ObjectPath("/org/mpris/MediaPlayer2/TrackList/NoTrack")
+
+      return obp 
 
     @dbus.service.method(IFACE)
     def Raise(self):
@@ -458,7 +471,8 @@ class AutoPlayer(dbus.service.Object):
       if self.player.playlist.current == trackid:
         self.Next()
       self.player.removetrack(trackid)
-      self.TrackRemoved(trackid)
+      #disable for a bug in pydbus ??
+      #self.TrackRemoved(trackid)
 
     @dbus.service.method(TRACKLIST_IFACE,in_signature='s', out_signature='')
     def GoTo(self, trackid):
@@ -839,8 +853,9 @@ class Player:
       return True
 
     time.sleep(1)
-    logging.info ( "recover last status from disk")
+    logging.info ( "recover last status from disk: position %s" % self.playlist.position)
     if self.playlist.position is not None:
+      logging.info ( "set current %s and position %s " % (self.playlist.current,int(round(self.playlist.position/1000.))))
       self.setposition(self.playlist.current,int(round(self.playlist.position/1000.)))
     if self.starttoplay:
       time.sleep(1)

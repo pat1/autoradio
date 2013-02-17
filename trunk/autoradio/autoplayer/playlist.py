@@ -215,7 +215,9 @@ class Playlist(list):
       for location in lines:
 
         url=urlparse.urlsplit(location)
-        location=urlparse.urljoin("file://",urllib.unquote(url.path.encode("UTF-8")))
+        #                 mmmmmm encode / decode every time do not work ! 
+        #location=urlparse.urljoin("file://",urllib.unquote(url.path.encode("UTF-8")))
+        location=urlparse.urljoin("file://",urllib.unquote(url.path))
 
         track=Track._make(Track(location,None,None,None,None,None).get_metadata().values())
         s.append(track)
@@ -410,7 +412,11 @@ class Playlist_mpris2(collections.OrderedDict):
     else:
       self.current=current
 
-    self.position=position
+
+    if position is None:
+      self.position=playlist.position
+    else:
+      self.position=position
 
 
   def get_current(self):
@@ -507,15 +513,12 @@ class Playlist_mpris2(collections.OrderedDict):
 
   def removetrack(self,trackid):
 
-    print "tracklist removetrack: ",trackid
-
     newself=self
     if trackid == newself.current:
       #newself.previous()
       newself.current=None
 
     newself.pop(trackid,None)
-    print newself
     return newself
 
     

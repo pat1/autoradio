@@ -197,7 +197,6 @@ class mediaplayer:
 
                 op=self.get_playlist()
 
-                print length-1,pos+atlast
                 for prm in xrange(length-1,pos+atlast,-1): 
                     print "remove down: ",op[prm]
                     self.tracklist.RemoveTrack( str(op[prm]) )

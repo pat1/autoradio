@@ -612,16 +612,20 @@ class Player:
     self.player.set_state(gst.STATE_NULL)
     err, debug = message.parse_error()
     logging.error( " %s: %s " % (err, debug))
+
+    logging.warning("restart to play after an ERROR skipping current media")
+    self.playmode= self.recoverplaymode
+    self.next()
     
-    if err.domain == gst.RESOURCE_ERROR or err.domain == gst.PLUGIN_ERROR :
-      logging.warning("restart to play after an RESOURCE_ERROR")
-      self.playmode= self.recoverplaymode
-      self.next()
-    else:
-      logging.warning("stop to play after an ERROR")
-      self.stop()
-      self.playmode = "Stopped"
-      self.statuschanged = True
+#    if err.domain == gst.RESOURCE_ERROR :
+#      logging.warning("restart to play after an RESOURCE_ERROR")
+#      self.playmode= self.recoverplaymode
+#      self.next()
+#    else:
+#      logging.warning("stop to play after an ERROR")
+#      self.stop()
+#      self.playmode = "Stopped"
+#      self.statuschanged = True
 
 
   def on_message_state_changed(self, bus, message):

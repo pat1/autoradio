@@ -6,7 +6,15 @@ import time
 import datetime
 import os
 import gobject
+import autoradio.settings
 from dbus.mainloop.glib import DBusGMainLoop
+from autoradio.mpris2.mediaplayer2 import MediaPlayer2
+from autoradio.mpris2.player import Player
+from autoradio.mpris2.tracklist import TrackList
+from autoradio.mpris2.interfaces import Interfaces
+from autoradio.mpris2.some_players import Some_Players
+from autoradio.mpris2.utils import get_players_uri
+from autoradio.mpris2.utils import get_session
 
 # ------- dbus mpris2 interface ---------
 # http://specifications.freedesktop.org/mpris-spec/latest/index.html
@@ -51,7 +59,8 @@ from dbus.mainloop.glib import DBusGMainLoop
 #Those interfaces, if I am right, are not implemented in mpris2 plugin.
 #-----------------------------------------------------------------------
 
-import dbus
+busaddress=autoradio.settings.busaddressplayer
+
 
 class mediaplayer:
 
@@ -64,26 +73,49 @@ class mediaplayer:
 #            from dbus import glib
 #            glib.init_threads()
 
-        self.bus = dbus.SessionBus(mainloop=DBusGMainLoop())
+        DBusGMainLoop(set_as_default=True)
 
-        # -----------------------------------------------------------
-        mediaplayer_obj      = self.bus.get_object("org.mpris.MediaPlayer2."+player, '/org/mpris/MediaPlayer2')
+        uris = get_players_uri(pattern=".*"+player+"$",busaddress=busaddress)
 
-        self.root      = dbus.Interface(mediaplayer_obj, dbus_interface='org.mpris.MediaPlayer2')
-        self.player    = dbus.Interface(mediaplayer_obj, dbus_interface='org.mpris.MediaPlayer2.Player')
-        self.Properties=dbus.Interface(mediaplayer_obj, "org.freedesktop.DBus.Properties")
+        if len(uris) >0 :
+            uri=uris[0]
+            if busaddress is None:
+                self.bus = dbus.SessionBus()
+            else:
+                self.bus = dbus.bus.BusConnection(busaddress)
 
-        self.HasTrackList=self.Properties.Get("org.mpris.MediaPlayer2" ,"HasTrackList")
-        # mmmmm  VLC return 0 !!!
-        self.HasTrackList=1
-        ###
-        if self.HasTrackList == 1:
-            self.tracklist = dbus.Interface(mediaplayer_obj, dbus_interface='org.mpris.MediaPlayer2.TrackList')
-        #self.playlists = dbus.Interface(mediaplayer_obj, dbus_interface='org.mpris.MediaPlayer2.Playlists')
-        # -----------------------------------------------------------
+            self.mp2 = MediaPlayer2(dbus_interface_info={'dbus_uri': uri,'dbus_session':self.bus})
+            self.play = Player(dbus_interface_info={'dbus_uri': uri,'dbus_session':self.bus})
+        else:
+            print "No players availables"
+            return
+
+        if self.mp2.HasTrackList:
+            self.tl = TrackList(dbus_interface_info={'dbus_uri': uri,'dbus_session':self.bus})
+        else:
+            self.tl = None
+
+#        #self.bus = dbus.SessionBus(mainloop=DBusGMainLoop())
+#
+#        # -----------------------------------------------------------
+#        mediaplayer_obj      = self.bus.get_object("org.mpris.MediaPlayer2."+player, '/org/mpris/MediaPlayer2')
+#
+#        self.root      = dbus.Interface(mediaplayer_obj, dbus_interface='org.mpris.MediaPlayer2')
+#        self.player    = dbus.Interface(mediaplayer_obj, dbus_interface='org.mpris.MediaPlayer2.Player')
+#        self.Properties=dbus.Interface(mediaplayer_obj, "org.freedesktop.DBus.Properties")
+#
+#        self.HasTrackList=self.Properties.Get("org.mpris.MediaPlayer2" ,"HasTrackList")
+#        # mmmmm  VLC return 0 !!!
+#        self.HasTrackList=1
+#        ###
+#        if self.HasTrackList == 1:
+#            self.tracklist = dbus.Interface(mediaplayer_obj, dbus_interface='org.mpris.MediaPlayer2.TrackList')
+#        #self.playlists = dbus.Interface(mediaplayer_obj, dbus_interface='org.mpris.MediaPlayer2.Playlists')
+#        # -----------------------------------------------------------
 
     def __str__(self):
-        return self.Properties.Get("org.mpris.MediaPlayer2.Player" ,"PlaybackStatus")
+#        return self.Properties.Get("org.mpris.MediaPlayer2.Player" ,"PlaybackStatus")
+        return self.play.PlaybackStatus
     
 
     def play_ifnot(self):
@@ -93,14 +125,14 @@ class mediaplayer:
         # I check if mediaplayer is playing .... otherside I try to play
 
         if (not self.isplaying()):
-            self.player.Play()
+            self.play.Play()
 
     def isplaying(self):
         '''
         return true if is playing.
         '''
 
-        return self.Properties.Get("org.mpris.MediaPlayer2.Player" ,"PlaybackStatus") == "Playing"
+        return self.play.PlaybackStatus == "Playing"
 
 
 
@@ -167,7 +199,7 @@ class mediaplayer:
 
                 for prm in xrange(0,pos-atlast): 
                     print "remove up: ",op[prm]
-                    self.tracklist.RemoveTrack( str(op[prm]))
+                    self.tl.RemoveTrack( str(op[prm]))
 
             time.sleep(1)
             return True
@@ -199,7 +231,7 @@ class mediaplayer:
 
                 for prm in xrange(length-1,pos+atlast,-1): 
                     print "remove down: ",op[prm]
-                    self.tracklist.RemoveTrack( str(op[prm]) )
+                    self.tl.RemoveTrack( str(op[prm]) )
 
             time.sleep(1)
             return True
@@ -261,16 +293,16 @@ class mediaplayer:
     def get_playlist(self):
         "get playlist"
 
-        if self.HasTrackList == 1:
-            return self.Properties.Get("org.mpris.MediaPlayer2.TrackList" ,"Tracks")
+        if self.tl is not None:
+            return self.tl.Tracks
         else:
             raise Error
 
     def get_playlist_len(self):
         "get playlist lenght"
         
-        if self.HasTrackList == 1:
-            return len(self.Properties.Get("org.mpris.MediaPlayer2.TrackList" ,"Tracks"))
+        if self.tl is not None:
+            return len(self.tl.Tracks)
         else:
             return None
 
@@ -279,11 +311,11 @@ class mediaplayer:
         "get current position"
         
         try:
-            current=self.Properties.Get("org.mpris.MediaPlayer2.Player" ,"Metadata")["mpris:trackid"]
+            current=self.play.Metadata["mpris:trackid"]
         except:
             return None
 
-        metadatas=self.tracklist.GetTracksMetadata(self.get_playlist())
+        metadatas=self.tl.GetTracksMetadata(self.get_playlist())
         
         id=0
         for metadata in metadatas:
@@ -299,9 +331,8 @@ class mediaplayer:
         if pos is None:
             return None
 
-        metadatas=self.tracklist.GetTracksMetadata(self.get_playlist())
+        metadatas=self.tl.GetTracksMetadata(self.get_playlist())
         metadata=metadatas[pos]
-
 
         try:
             file=metadata["xesam:url"]
@@ -328,9 +359,9 @@ class mediaplayer:
 
         try:
             # get current truck
-            current=self.Properties.Get("org.mpris.MediaPlayer2.Player" ,"Metadata")["mpris:trackid"]
+            current=self.play.Metadata["mpris:trackid"]
             if metadata["mpris:trackid"] == current :
-                mtimeposition=self.Properties.Get("org.mpris.MediaPlayer2.Player" ,"Position")
+                mtimeposition=self.play.Position
             else:
                 mtimeposition=0
         except:
@@ -352,24 +383,24 @@ class mediaplayer:
         "add media at pos postion in the playlist"
 
         if pos is not None:
-            self.tracklist.AddTrack(media,self.get_playlist()[pos],False)
+            self.tl.AddTrack(media,self.get_playlist()[pos],False)
         else:
             # the playlist is empty
-            self.tracklist.AddTrack(media,"/org/mpris/MediaPlayer2/TrackList/NoTrack",False)
+            self.tl.AddTrack(media,"/org/mpris/MediaPlayer2/TrackList/NoTrack",False)
 
         time.sleep(1)
         return None
 
-    def trackremoved_callback(self,op):
-        print "removed:",op
-            
-    def trackadded_callback(self,diz,op):
-        print "added:",diz
-        print "added:",op
-            
-    def connect(self):
-        self.tracklist.connect_to_signal('TrackRemoved', self.trackremoved_callback)
-        self.tracklist.connect_to_signal('TrackAdded', self.trackadded_callback)
+#    def trackremoved_callback(self,op):
+#        print "removed:",op
+#            
+#    def trackadded_callback(self,diz,op):
+#        print "added:",diz
+#        print "added:",op
+#            
+#    def connect(self):
+#        self.tracklist.connect_to_signal('TrackRemoved', self.trackremoved_callback)
+#        self.tracklist.connect_to_signal('TrackAdded', self.trackadded_callback)
 
     def loop(self):
         '''start the main loop'''

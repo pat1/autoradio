@@ -251,7 +251,7 @@ class mediaplayer:
         try:
 
             pos=self.get_playlist_securepos(securesec=securesec)
-            if pos is None:
+            if pos is None or pos+1 == self.get_playlist_len():
                 return pos
 
             pos+=1
@@ -271,7 +271,9 @@ class mediaplayer:
 
             # ora controllo se ci sono gia dei file accodati nella playlist da autoradio
             # l'unica possibilita di saperlo e verificare il path del file
-            while ( os.path.commonprefix ((filepath,"file://"+autopath)) == "file://"+autopath ):
+            while ( os.path.commonprefix ((filepath,"file://"+autopath)) == "file://"+autopath 
+                    and
+                    pos+1 < self.get_playlist_len()):
                 pos+=1
 
                 metadata=self.get_metadata(pos)

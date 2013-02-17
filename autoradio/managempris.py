@@ -95,16 +95,19 @@ def ManagePlayer (player,session,schedule):
       else:
          raise PlayerError("Managempris: type not supported: %s"% schedule.type)
 
-      if operation == "loadPlaylist":
-         media=shuffle_playlist(schedule.filename,schedule.shuffle,relative_path=False,length=schedule.maxlength)
-      else:
-         media=schedule.filename
+      try:
+         if operation == "loadPlaylist":
+            media=shuffle_playlist(schedule.filename,schedule.shuffle,relative_path=False,length=schedule.maxlength)
+         else:
+            media=schedule.filename
 
-      if  player == "vlc" or player == "AutoPlayer":
-         aud = autompris2.mediaplayer(player=player,session=session)
-      else:
-         aud = autompris.mediaplayer(player=player,session=session)
-
+         if  player == "vlc" or player == "AutoPlayer":
+            aud = autompris2.mediaplayer(player=player,session=session)
+         else:
+            aud = autompris.mediaplayer(player=player,session=session)
+      except:
+         raise PlayerError("Managempris: error connecting to player dbus")
+         
       # Regione critica
       lock.acquire()
       try:
@@ -147,7 +150,13 @@ def ManagePlayer (player,session,schedule):
 
    except PlayerError, e:
       logging.error(e)
-      
+
+   except dbus.DBusException, e:
+      logging.error(e)
+
+   except:
+      logging.error("generic error in ManagePlayer")
+
    return
 
 
@@ -184,17 +193,20 @@ def player_watchdog(player,session):
 
    except:
       logging.error("player_watchdog: player do not communicate on d-bus")
-      import subprocess
-      try:
-         logging.info("player_watchdog: try launching player")
-         subprocess.Popen(player , shell=True)
-      except:
-         logging.error("player_watchdog: error launching "+player)
+
+      if player == "audacious" or player == "xmms":
+         import subprocess
          try:
-            logging.info("player_watchdog: try launching "+player+"2")
-            subprocess.Popen(player+"2" , shell=True)
+            logging.info("player_watchdog: try launching player")
+            subprocess.Popen(player , shell=True)
          except:
-            logging.error("player_watchdog: error launching "+player+"2")
+            logging.error("player_watchdog: error launching "+player)
+            if player == "xmms":
+               try:
+                  logging.info("player_watchdog: try launching "+player+"2")
+                  subprocess.Popen(player+"2" , shell=True)
+               except:
+                  logging.error("player_watchdog: error launching "+player+"2")
 
       import time
       time.sleep(5)
@@ -208,10 +220,13 @@ def player_watchdog(player,session):
 
       except:
          logging.error("player_watchdog serious problem: player do not comunicate on d-bus")
-         raise
 
-   aud.play_ifnot()
-   logging.debug("player_watchdog: start playing if not")
+   try:
+      aud.play_ifnot()
+      logging.debug("player_watchdog: start playing if not")
+
+   except:
+      logging.error("player_watchdog: cannot start playing if not")
 
    return True
 

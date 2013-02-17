@@ -121,14 +121,13 @@ class HomePage:
 	    cpos=int(cpos)
 
         except:
-            raise
-            #return "error get_playlist_pos()"
+            return "error get_playlist_pos()"
 	
         try:
             isplaying= mp.isplaying()
 
         except:
-            return "error org.Playing()"
+            return "error isplaying()"
 
         try:
             len=mp.get_playlist_len()
@@ -165,11 +164,15 @@ class HomePage:
                 htmlresponse+='</tr>'
 
         except:
-            htmlresponse+='error get player information'
+		htmlresponse+='error getting player information'
 
         htmlresponse+='</table>'
-        if len > maxplele :
-            htmlresponse+="<p>ATTENTION: there are more file than you can see here.</p>"
+
+	try:
+		if len > maxplele :
+			htmlresponse+="<p>ATTENTION: there are more file than you can see here.</p>"
+	except:
+		pass
 
         if (self.iht) :
             htmlresponse+=tail

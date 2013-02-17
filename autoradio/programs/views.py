@@ -66,49 +66,55 @@ def dbusstato(request):
         return stato(request)
         #htmlresponse += "Invalid player for dbus interface"
 
-    cpos=mp.get_playlist_pos()
-    if cpos is None: cpos=0
-    cpos=int(cpos)
-    isplaying= mp.isplaying()
+    try:
 
-    len=mp.get_playlist_len()
-    htmlresponse+='<p>player have %i songs in playlist // song number %i selected</p>' % (len,cpos+1)
-    htmlresponse+='<table border="1">'
-    htmlresponse+='<td>position</td><td>lenght // remain</td><td>media</td>'
+        cpos=mp.get_playlist_pos()
+        if cpos is None: cpos=0
+        cpos=int(cpos)
+        isplaying= mp.isplaying()
 
-    for pos in xrange(0,min(len,maxplele)):
-        htmlresponse+='<tr>'
-        metadata=mp.get_metadata(pos)
+        len=mp.get_playlist_len()
+        htmlresponse+='<p>player have %i songs in playlist // song number %i selected</p>' % (len,cpos+1)
+        htmlresponse+='<table border="1">'
+        htmlresponse+='<td>position</td><td>lenght // remain</td><td>media</td>'
 
-        timelength=timedelta(seconds=timedelta(milliseconds=metadata["mtimelength"]).seconds)
-        timeposition=timedelta(seconds=timedelta(milliseconds=metadata["mtimeposition"]).seconds)
+        for pos in xrange(0,min(len,maxplele)):
+            htmlresponse+='<tr>'
+            metadata=mp.get_metadata(pos)
 
-        if pos == cpos and isplaying:
-            col="#FF0000"
-            toend=timelength-timeposition
-        elif  pos < cpos :
-            col="#0000FF"
-            toend=""
-        else:
-            col="#00FF00"
-            toend=""
+            timelength=timedelta(seconds=timedelta(milliseconds=metadata["mtimelength"]).seconds)
+            timeposition=timedelta(seconds=timedelta(milliseconds=metadata["mtimeposition"]).seconds)
 
-        if (metadata["artist"] is not None) or (metadata["title"] is not None):
-            htmlresponse+='<td bgcolor="%s">%i</td><td> %s // %s </td><td><a href="%s">%s // %s</a></td>' % \
-                (col,pos+1,str(timelength),str(toend),metadata["file"],metadata["artist"],metadata["title"])
-        else:
-            purefilename=os.path.splitext(metadata["file"])[0]
-            htmlresponse+='<td bgcolor="%s">%i</td><td> %s // %s </td><td><a href="%s">%s</a></td>' % \
-                (col,pos+1,str(timelength),str(toend),metadata["file"],os.path.basename(purefilename))
+            if pos == cpos and isplaying:
+                col="#FF0000"
+                toend=timelength-timeposition
+            elif  pos < cpos :
+                col="#0000FF"
+                toend=""
+            else:
+                col="#00FF00"
+                toend=""
+
+            if (metadata["artist"] is not None) or (metadata["title"] is not None):
+                htmlresponse+='<td bgcolor="%s">%i</td><td> %s // %s </td><td><a href="%s">%s // %s</a></td>' % \
+                    (col,pos+1,str(timelength),str(toend),metadata["file"],metadata["artist"],metadata["title"])
+            else:
+                purefilename=os.path.splitext(metadata["file"])[0]
+                htmlresponse+='<td bgcolor="%s">%i</td><td> %s // %s </td><td><a href="%s">%s</a></td>' % \
+                    (col,pos+1,str(timelength),str(toend),metadata["file"],os.path.basename(purefilename))
 
 
-        htmlresponse+='</tr>'
+            htmlresponse+='</tr>'
 
-    htmlresponse+='</table>'
+        htmlresponse+='</table>'
 
-    if len > maxplele :
-        htmlresponse+="<p>ATTENTION: there are more file than you can see here.</p>"
+        if len > maxplele :
+            htmlresponse+="<p>ATTENTION: there are more file than you can see here.</p>"
 
+    except:
+        htmlresponse +="<p>Error getting player status !!</p>"
+        htmlresponse +=htmlresponse+"<p>Start autoradiod or verify settings</p>"
+        
     return render_to_response('xmms/index.html', {'xmmsweb': htmlresponse,'site_media_url':autoradio.settings.SITE_MEDIA_URL })
 
 

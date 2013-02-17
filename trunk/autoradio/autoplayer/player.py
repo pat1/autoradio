@@ -426,6 +426,9 @@ class AutoPlayer(dbus.service.Object):
 
     @dbus.service.method(PLAYER_IFACE)
     def Play(self):
+
+      logging.info( "Play")
+
       self.player.loaduri()
       self.player.play()
 
@@ -443,7 +446,6 @@ class AutoPlayer(dbus.service.Object):
     def OpenUri(self,uri):
       self.player.addtrack(uri,setascurrent=True)
       self.Stop()
-      self.player.loaduri()
       self.Play()
 
       #TODO
@@ -713,7 +715,6 @@ class Player:
     """
     t in microseconds
     """
-
     if trackid != self.playlist.current:
         logging.warning( "setposition trackid is not current trackid")
 
@@ -743,10 +744,13 @@ class Player:
   def loaduri(self):
     logging.info( "loaduri")
 
-    if self.playlist.get_current() is not None:
-        uri = self.playlist.get_current().path
-        if uri is not None:
-            self.player.set_property("uri", uri)
+    if self.playlist.current is None:
+      print "setto >>>>>>>>>>>>>>>>>>>>",self.playlist.keys()[0]
+      self.playlist.set_current(self.playlist.keys()[0])
+
+    uri = self.playlist.get_current().path
+    if uri is not None:
+      self.player.set_property("uri", uri)
 
     ret = self.player.set_state(gst.STATE_READY)
     if ret == gst.STATE_CHANGE_FAILURE:
@@ -764,7 +768,7 @@ class Player:
     #  print self.player.get_state(timeout=gst.CLOCK_TIME_NONE)
 
   def pause(self):
-
+    logging.info( "pause")
     ret = self.player.set_state(gst.STATE_PAUSED)
     if ret == gst.STATE_CHANGE_FAILURE:
         logging.error( "Unable to set the pipeline to the PAUSED state.")
@@ -778,6 +782,7 @@ class Player:
       self.pause()
 
     elif self.playmode == "Stopped":
+        self.loaduri()
         self.play()
 
     elif self.playmode == "Paused":
@@ -785,6 +790,7 @@ class Player:
 
 
   def stop(self):
+    logging.info( "stop")
 
     #self.loaduri()
     ret = self.player.set_state(gst.STATE_READY)
@@ -904,7 +910,7 @@ def main(busaddress=None,myaudiosink=None):
 
   # Use logging for ouput at different *levels*.
   #
-  logging.getLogger().setLevel(logging.DEBUG)
+  logging.getLogger().setLevel(logging.INFO)
   log = logging.getLogger("autoplayer")
   handler = logging.StreamHandler(sys.stderr)
   log.addHandler(handler)

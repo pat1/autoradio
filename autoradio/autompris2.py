@@ -180,11 +180,11 @@ class mediaplayer:
 
 
     def playlist_clear_up(self,atlast=10):
-        #'''
-        #clear playlist starting from current position up.
-        #"atlast" numer of song are retained
-        #'''
-        #try:
+        '''
+        clear playlist starting from current position up.
+        "atlast" numer of song are retained
+        '''
+        try:
             self.play_ifnot()   #force to play
 
             # take the current position (if error set pos=0)
@@ -204,8 +204,8 @@ class mediaplayer:
             time.sleep(1)
             return True
 
-        #except:
-        #    return False
+        except:
+            return False
 
 
 

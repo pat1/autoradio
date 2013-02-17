@@ -43,7 +43,6 @@ class Track(collections.namedtuple('Track',("path","time","artist","album","titl
 
     except:
       logging.error("Could not read info from file: %s ",self.path)
-#      print "errore"
 
     return metadata
 

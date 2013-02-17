@@ -156,7 +156,7 @@ def ManagePlayer (player,session,schedule):
 
    except:
       logging.error("generic error in ManagePlayer")
-
+      raise
    return
 
 

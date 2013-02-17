@@ -613,9 +613,7 @@ class Player:
     err, debug = message.parse_error()
     logging.error( " %s: %s " % (err, debug))
     
-    if err.domain == gst.RESOURCE_ERROR 
-     or 
-       err.domain == gst.PLUGIN_ERROR :
+    if err.domain == gst.RESOURCE_ERROR or err.domain == gst.PLUGIN_ERROR :
       logging.warning("restart to play after an RESOURCE_ERROR")
       self.playmode= self.recoverplaymode
       self.next()

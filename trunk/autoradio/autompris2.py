@@ -95,26 +95,7 @@ class mediaplayer:
         else:
             self.tl = None
 
-#        #self.bus = dbus.SessionBus(mainloop=DBusGMainLoop())
-#
-#        # -----------------------------------------------------------
-#        mediaplayer_obj      = self.bus.get_object("org.mpris.MediaPlayer2."+player, '/org/mpris/MediaPlayer2')
-#
-#        self.root      = dbus.Interface(mediaplayer_obj, dbus_interface='org.mpris.MediaPlayer2')
-#        self.player    = dbus.Interface(mediaplayer_obj, dbus_interface='org.mpris.MediaPlayer2.Player')
-#        self.Properties=dbus.Interface(mediaplayer_obj, "org.freedesktop.DBus.Properties")
-#
-#        self.HasTrackList=self.Properties.Get("org.mpris.MediaPlayer2" ,"HasTrackList")
-#        # mmmmm  VLC return 0 !!!
-#        self.HasTrackList=1
-#        ###
-#        if self.HasTrackList == 1:
-#            self.tracklist = dbus.Interface(mediaplayer_obj, dbus_interface='org.mpris.MediaPlayer2.TrackList')
-#        #self.playlists = dbus.Interface(mediaplayer_obj, dbus_interface='org.mpris.MediaPlayer2.Playlists')
-#        # -----------------------------------------------------------
-
     def __str__(self):
-#        return self.Properties.Get("org.mpris.MediaPlayer2.Player" ,"PlaybackStatus")
         return self.play.PlaybackStatus
     
 
@@ -393,6 +374,8 @@ class mediaplayer:
         time.sleep(1)
         return None
 
+# old style syntax:
+#
 #    def trackremoved_callback(self,op):
 #        print "removed:",op
 #            

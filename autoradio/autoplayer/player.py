@@ -749,8 +749,8 @@ class Player:
     logging.info( "loaduri")
 
     if self.playlist.current is None:
-      print "setto >>>>>>>>>>>>>>>>>>>>",self.playlist.keys()[0]
-      self.playlist.set_current(self.playlist.keys()[0])
+      if len(self.playlist.keys()) > 0:
+        self.playlist.set_current(self.playlist.keys()[0])
 
     uri = self.playlist.get_current().path
     if uri is not None:
@@ -932,7 +932,7 @@ def main(busaddress=None,myaudiosink=None):
   #plmpris=playlist.Playlist_mpris2(pl,pl.current,pl.position)
   plmpris=playlist.Playlist_mpris2(pl)
 
-  for media in sys.argv[2:]:
+  for media in sys.argv[1:]:
     logging.info( "add media: %s" %media)
     plmpris=plmpris.addtrack(media,setascurrent=True)
 

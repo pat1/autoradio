@@ -1,4 +1,4 @@
-= AutoRadio version 2.3 =
+= AutoRadio version 2.7.0 =
 http://autoradiobc.sourceforge.net/
 
 OVERVIEW
@@ -8,8 +8,8 @@ Radio automation software. Simple to use, starting from digital audio
 files, manage on-air broadcasting over a radio-station or
 web-radio. The main components are:
 
-    * Player (Xmms/Audacious): plays all your media files and send digital sound
-      to an audio device or audio server
+    * Player (integrated or external Xmms/Audacious): plays all your media
+      files and send digital sound to an audio device or audio server
  
     * Scheduler: real time manager for emission of special audio files
       like jingles, spots, playlist and programs; interact with player
@@ -27,7 +27,7 @@ Developed with Python, Django, Dbus it works in an production enviroment
 FEATURES
 --------
 
- * manage ogg, mp3, wav and other media file format
+ * manage ogg, mp3, and other media file format managed by player
  * it's designed as client server
  * manage playlists, inserting on it jingles, spots and programs
  * programmable rules for schedule and period schedule
@@ -65,7 +65,7 @@ You can get also some tar, rpm and deb from autoradio project home page
 
 django
 http://www.djangoproject.com/
-I suggest Django 1.3
+I suggest Django >= 1.3
 
 cherrypy
 Summary     : A pythonic, object-oriented web development framework

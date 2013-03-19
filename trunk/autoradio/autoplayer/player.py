@@ -932,9 +932,12 @@ def main(busaddress=None,myaudiosink=None):
   #plmpris=playlist.Playlist_mpris2(pl,pl.current,pl.position)
   plmpris=playlist.Playlist_mpris2(pl)
 
-  for media in sys.argv[1:]:
-    logging.info( "add media: %s" %media)
-    plmpris=plmpris.addtrack(media,setascurrent=True)
+  if len(sys.argv) >= 2:
+    #if you come from autoplayerd argv[1] is run/start/stop ...
+    for media in sys.argv[2:]:
+      logging.info( "add media: %s" %media)
+      # mmm here seems not work ... the new plmpris is not good !!!
+      plmpris=plmpris.addtrack(media,setascurrent=True)
 
   try:  
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)

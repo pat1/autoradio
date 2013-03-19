@@ -377,7 +377,7 @@ class Daemon(object):
 
 		from . import  _version_
 
-		p = optparse.OptionParser(usage="usage: %prog [options] (start|stop|restart|run|version)",
+		p = optparse.OptionParser(usage="usage: %prog <action> [options] (action=start|stop|restart|run|version)",
 					  description="%prog daemon for autoradio suite",version="%prog "+_version_)
 		p.add_option("--pidfile", dest="pidfile", help="PID filename (default %default)", default=self.options.pidfile)
 		p.add_option("--stdin", dest="stdin", help="stdin filename (default %default)", default=self.options.stdin)
@@ -387,13 +387,15 @@ class Daemon(object):
 		p.add_option("--group", dest="group", help="group name or id (default %default)", default=self.options.group)
 		return p
 
-	def service(self, args=None):
+	def service(self, args=None,noptions=0):
 		"""
 		Handle command line arguments and start or stop the daemon accordingly.
 
 		:var:`args` must be a list of command line arguments (including the
 		program name in ``args[0]``). If :var:`args` is :const`None` or
 		unspecified ``sys.argv`` is used.
+
+		:var:`noptions` max number of options in command line or args
 
 		The return value is true when a starting option has been specified as the
 		command line argument, i.e. if the daemon should be started.
@@ -405,7 +407,7 @@ class Daemon(object):
 		if args is None:
 			args = sys.argv
 		(self.options, self.args) = p.parse_args(args)
-		if len(self.args) != 2:
+		if len(self.args) == 1 or len(self.args) > noptions+2:
 			p.error("incorrect number of arguments")
 			sys.exit(1)
 		if self.args[1] == "run":

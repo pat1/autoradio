@@ -485,9 +485,9 @@ class Playlist_mpris2(collections.OrderedDict):
     # found id as index of position after we have to insert
 
     if  len(keys) > 0:
-      #id = keys[ind]
       startnewid=max([int(x) for x in keys]) + 1
       newself=Playlist_mpris2()
+      aftertrack=keys[ind]
     else:
       return Playlist_mpris2(Playlist([uri]))
 

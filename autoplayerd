@@ -9,20 +9,6 @@
 # mpDris from: Erik Karlsson <pilo@ayeon.org>
 # Some bits taken from quodlibet mpris plugin by <christoph.reiter@gmx.at>
 
-#TODO
-# manage signal
-# Interface MediaPlayer2.Player
-# Signals
-# Seeked 	(x: Position)
-#
-# Interface MediaPlayer2.TrackList
-# Signals
-# TrackListReplaced 	(ao: Tracks, o: CurrentTrack) 	
-# TrackAdded 	(a{sv}: Metadata, o: AfterTrack) 	
-# TrackRemoved 	(o: TrackId) 	
-# TrackMetadataChanged 	(o: TrackId, a{sv}: Metadata) 	
-
-
 import os,autoradio.daemon as daemon
 from autoradio import _version_
 from autoradio.autoplayer import player
@@ -67,7 +53,7 @@ if __name__ == '__main__':
             gid = getgrnam(group)[2]
             os.chown(path,uid,gid)
 
-    if playerd.service():
+    if playerd.service(noptions=1000):
 
         sys.stdout.write("Playerd version "+_version_+"\n")
         sys.stdout.write("Daemon started with pid %d\n" % os.getpid())

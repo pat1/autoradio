@@ -41,7 +41,7 @@ autoradiod = daemon.Daemon(
 )
 
 
-def main(cwd):
+def main():
 
     import logging,os,sys,errno,signal,logging.handlers
     import subprocess
@@ -72,11 +72,6 @@ def main(cwd):
     else:
         logging.error('wrong player %s' % autoradio.autoradio_config.player)
         raise Exception()
-
-    try:
-        os.chdir(cwd)
-    except:
-        pass
 
     #def signalhandler(signum, frame):
     #    logging.info( 'Signal handler called with signal %d', signum)
@@ -272,7 +267,6 @@ def main(cwd):
 if __name__ == '__main__':
 
     import sys, os
-    cwd=os.getcwd()
 
     # this is a triky for ubuntu and debian that remove /var/run every boot
     # ATTENTION, this should be a security problem
@@ -293,4 +287,4 @@ if __name__ == '__main__':
         sys.stdout.write("Daemon stdout output\n")
         sys.stderr.write("Daemon stderr output\n")
 
-        sys.exit(main(cwd))  # (this code was run as script)
+        sys.exit(main())  # (this code was run as script)

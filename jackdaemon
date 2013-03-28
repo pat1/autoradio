@@ -19,45 +19,36 @@
 from autoradio import daemon
 import autoradio.settings
 
-dbusd = daemon.Daemon(
+jackd = daemon.Daemon(
         stdin="/dev/null",
-        stdout=autoradio.settings.logfiledbus,
-        stderr=autoradio.settings.errfiledbus,
-        pidfile=autoradio.settings.lockfiledbus,
-        user=autoradio.settings.userdbus,
-        group=autoradio.settings.groupdbus
+        stdout=autoradio.settings.logfilejack,
+        stderr=autoradio.settings.errfilejack,
+        pidfile=autoradio.settings.lockfilejack,
+        user=autoradio.settings.userjack,
+        group=autoradio.settings.groupjack,
+        env={"DBUS_SESSION_BUS_ADDRESS":autoradio.settings.busaddressplayer}
 )
 
 def main(self):
 
     import subprocess
+    self.procs=[subprocess.Popen(["/usr/bin/jackd", "-R", "-dalsa", "-dhw:0", "-r48000", "-p1024", "-n3", "-i2", "-o2", "-M"],cwd=self.cwd)]
 
-    busaddress = autoradio.settings.busaddressplayer
-
-
-    if busaddress is not None:
-
-        self.procs=[subprocess.Popen(["dbus-daemon", "--config-file="+autoradio.settings.conffiledbus,
-            '--address='+busaddress, "--nofork"],cwd=self.cwd)]
-    else:
-        print "busaddress is not defined in config file: dbus-daemon not started"
 
 if __name__ == '__main__':
 
     import sys, os
-    dbusd.cwd=os.getcwd()
+    jackd.cwd=os.getcwd()
 
-    if dbusd.service():
+    if jackd.service():
 
         sys.stdout.write("Daemon started with pid %d\n" % os.getpid())
         sys.stdout.write("Daemon stdout output\n")
         sys.stderr.write("Daemon stderr output\n")
 
-        main(dbusd)  # (this code was run as script)
+        main(jackd)  # (this code was run as script)
 
-        for proc in dbusd.procs:
+        for proc in jackd.procs:
             proc.wait()
 
         sys.exit(0)
-
-

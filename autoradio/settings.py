@@ -58,13 +58,32 @@ configspec['database']['DATABASE_NAME']="string(default='%s/autoradio.sqlite3')"
 
 configspec['autoplayer']={}
 
-configspec['autoplayer']['logfile']  = "string(default='/tmp/autoradioweb.log')"
-configspec['autoplayer']['errfile']  = "string(default='/tmp/autoradioweb.err')"
-configspec['autoplayer']['lockfile'] = "string(default='/tmp/autoradioweb.lock')"
+configspec['autoplayer']['logfile']  = "string(default='/tmp/autoplayer.log')"
+configspec['autoplayer']['errfile']  = "string(default='/tmp/autoplayer.err')"
+configspec['autoplayer']['lockfile'] = "string(default='/tmp/autoplayer.lock')"
 configspec['autoplayer']['user']     = "string(default=None)"
 configspec['autoplayer']['group']    = "string(default=None)"
 configspec['autoplayer']['busaddress']    = "string(default=None)"
 configspec['autoplayer']['audiosink']    = "string(default=None)"
+
+configspec['autoradiodbus']={}
+
+configspec['autoradiodbus']['logfile']  = "string(default='/tmp/autoradiodbus.log')"
+configspec['autoradiodbus']['errfile']  = "string(default='/tmp/autoradiodbus.err')"
+configspec['autoradiodbus']['lockfile'] = "string(default='/tmp/autoradiodbus.lock')"
+configspec['autoradiodbus']['conffile'] = "string(default='dbus-autoradio.conf')"
+configspec['autoradiodbus']['user']     = "string(default=None)"
+configspec['autoradiodbus']['group']    = "string(default=None)"
+
+
+configspec['jackdaemon']={}
+
+configspec['jackdaemon']['logfile']  = "string(default='/tmp/jackdaemon.log')"
+configspec['jackdaemon']['errfile']  = "string(default='/tmp/jackdaemon.err')"
+configspec['jackdaemon']['lockfile'] = "string(default='/tmp/jackdaemon.lock')"
+configspec['jackdaemon']['user']     = "string(default=None)"
+configspec['jackdaemon']['group']    = "string(default=None)"
+
 
 config    = ConfigObj ('/etc/autoradio/autoradio-site.cfg',file_error=False,configspec=configspec)
 
@@ -148,6 +167,21 @@ userplayer                 = config['autoplayer']['user']
 groupplayer                = config['autoplayer']['group']
 busaddressplayer           = config['autoplayer']['busaddress']
 audiosinkplayer            = config['autoplayer']['audiosink']
+
+# section autoradiodbus
+logfiledbus              = config['autoradiodbus']['logfile']
+errfiledbus              = config['autoradiodbus']['errfile']
+lockfiledbus             = config['autoradiodbus']['lockfile']
+conffiledbus             = config['autoradiodbus']['conffile']
+userdbus                 = config['autoradiodbus']['user']
+groupdbus                = config['autoradiodbus']['group']
+
+# section jackdaemon
+logfilejack              = config['jackdaemon']['logfile']
+errfilejack              = config['jackdaemon']['errfile']
+lockfilejack             = config['jackdaemon']['lockfile']
+userjack                 = config['jackdaemon']['user']
+groupjack                = config['jackdaemon']['group']
 
 
 if DATABASE_ENGINE == "mysql":

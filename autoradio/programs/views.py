@@ -115,6 +115,7 @@ def dbusstato(request):
         htmlresponse +="<p>Error getting player status !!</p>"
         htmlresponse +=htmlresponse+"<p>Start autoradiod or verify settings</p>"
         
+    del mp
     return render_to_response('xmms/index.html', {'xmmsweb': htmlresponse,'site_media_url':autoradio.settings.SITE_MEDIA_URL })
 
 
@@ -201,9 +202,9 @@ def programsbook(request):
             styles = getSampleStyleSheet()
 
             MezzoTrasmissione=Paragraph("Mezzo di diffusione: "+mezzo+
-                                        "  //   Tipo di trasmissione: "+trasmissione, styles["Normal"])
-            EmittenteCanale=Paragraph("Denominazione dell'emittente: "+emittente+
-                                      "  //   Denominazione del canale: "+canale, styles["Normal"])
+                                        "  //   Tipo di trasmissione: "+str(trasmissione), styles["Normal"])
+            EmittenteCanale=Paragraph("Denominazione dell'emittente: "+str(emittente)+
+                                      "  //   Denominazione del canale: "+str(canale), styles["Normal"])
             Space=Spacer(inch, 0.25 * inch)
 
             # First the top row, with all the text centered and in Times-Bold,

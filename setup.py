@@ -140,6 +140,7 @@ for dirpath, dirnames, filenames in os.walk('templates'):
         data_files.append(['share/autoradio/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
 
 data_files.append(('/etc/autoradio',['autoradio-site.cfg']))
+data_files.append(('/etc/autoradio',['dbus-autoradio.conf']))
 
 
 #for dirpath, dirnames, filenames in os.walk('autoradio/templates'):
@@ -177,7 +178,7 @@ setup(name='autoradio',
                 'autoradio.pydbusdecorator',],
       package_data={'autoradio.programs': ['fixtures/*.json']},
       scripts=['autoradiod','autoradioweb','autoradioctrl','autoradio.wsgi',
-               'autoplayerd','autoplayergui','autoradiodbusd'],
+               'autoplayerd','autoplayergui','autoradiodbusd','jackdaemon'],
       data_files = data_files,
       license = "GNU GPL v2",
       requires= [ "mutagen","django","reportlab"],

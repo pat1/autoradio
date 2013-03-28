@@ -59,12 +59,10 @@ from autoradio.mpris2.utils import get_session
 #Those interfaces, if I am right, are not implemented in mpris2 plugin.
 #-----------------------------------------------------------------------
 
-busaddress=autoradio.settings.busaddressplayer
-
 
 class mediaplayer:
 
-    def __init__(self,player="AutoPlayer",session=0):
+    def __init__(self,player="AutoPlayer",session=0, busaddress=autoradio.settings.busaddressplayer):
 
 #qdbus --literal org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get org.mpris.MediaPlayer2.TrackList Tracks
 #            import gobject

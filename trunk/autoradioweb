@@ -51,14 +51,9 @@ autoradioweb = daemon.Daemon(
 #        return op 	  				 
 
 
-def main(cwd):
+def main():
 
     import os,logging,logging.handlers
-    try:
-        os.chdir(cwd)
-    except:
-        pass
-
 
     handler = logging.handlers.RotatingFileHandler(autoradio.settings.logfileweb, maxBytes=5000000, backupCount=10)
     formatter=logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -79,7 +74,6 @@ def main(cwd):
 if __name__ == '__main__':
 
     import sys, os
-    cwd=os.getcwd()
 
     # this is a triky for ubuntu and debian that remove /var/run every boot
     # ATTENTION, this should be a security problem
@@ -96,4 +90,4 @@ if __name__ == '__main__':
         sys.stdout.write("Daemon stdout output\n")
         sys.stderr.write("Daemon stderr output\n")
 
-        sys.exit(main(cwd))  # (this code was run as script)
+        sys.exit(main())  # (this code was run as script)

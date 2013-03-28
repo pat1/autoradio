@@ -211,6 +211,8 @@ class Daemon(object):
 		self.env=env
 		self.options = optparse.Values(options)
 		self.procs=()
+		self.cwd=os.getcwd()
+
 
 	def openstreams(self):
 		"""
@@ -293,15 +295,22 @@ class Daemon(object):
 				user = pwd.getpwnam(user).pw_uid
 			os.setuid(user)
 			os.seteuid(user)
-			if "HOME" in os.environ:
-				os.environ["HOME"] = pwd.getpwuid(user).pw_dir
+
+			# todo: check why home is set here
+			#if not "HOME" in os.environ:
+			os.environ["HOME"] = pwd.getpwuid(user).pw_dir
 
 		if env is not None:
 			for variable in env:
 				os.environ[variable] = env[variable]
 
 		if "HOME" in os.environ:
-			os.chdir(os.environ["HOME"])
+			self.cwd=os.environ["HOME"]
+
+		try:
+			os.chdir(self.cwd)
+		except:
+			pass
 
 	def start(self):
 		"""

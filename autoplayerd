@@ -13,6 +13,7 @@ import os,autoradio.daemon as daemon
 from autoradio import _version_
 from autoradio.autoplayer import player
 import autoradio.settings
+from autoradio import _version_
 
 playerd = daemon.Daemon(
         stdin="/dev/null",
@@ -25,6 +26,26 @@ playerd = daemon.Daemon(
 
 
 def main ():
+
+    import logging,logging.handlers
+
+    handler = logging.handlers.RotatingFileHandler(autoradio.autoradio_config.logfile, maxBytes=5000000, backupCount=10)
+    formatter=logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    handler.setFormatter(formatter)
+    
+    # Add the log message handler to the root logger
+    logging.getLogger('autoplayerd').addHandler(handler)
+#    logging.getLogger('').setLevel(logging.DEBUG)
+    
+    logging.info('Starting up autoplayerd version '+_version_)
+
+
+#   # Use logging for ouput at different *levels*.
+#   #
+#   logging.getLogger().setLevel(logging.INFO)
+#   log = logging.getLogger("autoplayer")
+#   handler = logging.StreamHandler(sys.stderr)
+#   log.addHandler(handler)
 
     player.main(autoradio.settings.busaddressplayer,autoradio.settings.audiosinkplayer)
 
@@ -41,11 +62,14 @@ if __name__ == '__main__':
     if (not os.path.lexists(path) and path == "/var/run/autoradio" ):
         os.mkdir(path)
         if (os.getuid() == 0):
-            from pwd import getpwnam
-            from grp import getgrnam
-            uid = getpwnam(user)[2]
-            gid = getgrnam(group)[2]
-            os.chown(path,uid,gid)
+            user=autoradio.settings.userplayer
+            group=autoradio.settings.groupplayer
+            if user is not None and group is not None:
+                from pwd import getpwnam
+                from grp import getgrnam
+                uid = getpwnam<(user)[2]
+                gid = getgrnam(group)[2]
+                os.chown(path,uid,gid)
 
     if playerd.service(noptions=1000):
 

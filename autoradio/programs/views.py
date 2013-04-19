@@ -201,7 +201,7 @@ def programsbook(request):
             PAGE_HEIGHT=defaultPageSize[1]
             styles = getSampleStyleSheet()
 
-            MezzoTrasmissione=Paragraph("Mezzo di diffusione: "+mezzo+
+            MezzoTrasmissione=Paragraph("Mezzo di diffusione: "+str(mezzo)+
                                         "  //   Tipo di trasmissione: "+str(trasmissione), styles["Normal"])
             EmittenteCanale=Paragraph("Denominazione dell'emittente: "+str(emittente)+
                                       "  //   Denominazione del canale: "+str(canale), styles["Normal"])

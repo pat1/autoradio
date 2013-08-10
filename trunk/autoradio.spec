@@ -4,7 +4,7 @@
 1)")}
 
 %define name autoradio
-%define version 2.6.1
+%define version 2.7.2
 %define release 1%{?dist}
 
 Summary: radio automation software
@@ -27,7 +27,8 @@ Requires: initscripts
 %if 0%{?fedora} < 10
 Requires: pyxmms, xmms
 %else
-Requires: dbus-python, audacious >= 1.5
+## Requires: dbus-python, audacious >= 1.5
+Requires: dbus-python, gstreamer, gstreamer-plugins-base, gstreamer-plugins-good, gstreamer-plugins-bad, gstreamer-plugins-bad-free, gstreamer-plugins-bad-free-extras, gstreamer-python
 %endif
 
 # Compile options:
@@ -84,6 +85,9 @@ mkdir -p %{buildroot}%{_sysconfdir}/tmpfiles.d
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon Feb 18 2013 Paolo Patruno <pat1@iperbole.bologna.it> - 2.7.0-1%{?dist}
+- autoradio 2.7 with pygst
+
 * Sat Apr 14 2012 Paolo Patruno <p.patruno@iperbole.bologna.it> - 2.3-2%{?dist}
 - tmpfiles.d is a service provided by both systemd and upstart in Fedora 15 and later for managing temporary files and directories for daemons https://fedoraproject.org/wiki/Packaging:Tmpfiles.d
 
@@ -99,6 +103,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %doc COPYING README doc/*
 %config(noreplace) %{_sysconfdir}/%{name}/autoradio-site.cfg
+%config(noreplace) %{_sysconfdir}/%{name}/dbus-autoradio.conf
 %dir %{python_sitelib}/%{name}
 %{python_sitelib}/%{name}/*
 %{python_sitelib}/%{name}-*
@@ -111,6 +116,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/autoradioweb
 %{_bindir}/autoradioctrl
 %{_bindir}/autoradio.wsgi
+%{_bindir}/autoplayerd
+%{_bindir}/autoplayergui
+%{_bindir}/autoradiodbusd
+%{_bindir}/jackdaemon
 
 %attr(-,autoradio,autoradio) %dir %{_datadir}/autoradio
 %attr(-,autoradio,autoradio) %{_datadir}/%{name}/*

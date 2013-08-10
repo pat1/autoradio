@@ -4,7 +4,7 @@ include README
 include TODO
 include *.txt
 include autoradio.spec
-global-include  *.txt *.py *.sh *.in *.cfg *.json
+global-include  *.txt *.py *.sh *.in *.cfg *.json *.conf
 recursive-include doc *
 recursive-include locale *.po
 recursive-include templates *

@@ -254,7 +254,7 @@ def programsbook(request):
             Elements = [MezzoTrasmissione,EmittenteCanale,Space,Tabella]
 
             # Create the PDF object, using the response object as its "file."
-            p = SimpleDocTemplate(response,title="Libro programmi: "+emittente,author=author)
+            p = SimpleDocTemplate(response,title="Libro programmi: "+str(emittente),author=author)
             p.build(Elements, onFirstPage=myPages, onLaterPages=myPages)
 
 
@@ -271,14 +271,15 @@ def programsbook(request):
 
 #----------------------------------------------------
 # section for podcast
-
-from django.views.generic.list_detail import object_list
-from django.views.generic.list_detail import object_detail
+from django.views.generic.list  import ListView
+from django.views.generic.detail import DetailView
+#from django.views.generic.list_detail import object_list
 from autoradio.programs.models import Episode, Show, Enclosure
 from django.core.urlresolvers import reverse
 
 
-def episode_detail(request, show_slug, episode_slug):
+class episode_detail(DetailView):
+#class episode_detail(ListView):
     """
     Episode detail
 
@@ -287,17 +288,31 @@ def episode_detail(request, show_slug, episode_slug):
         object_detail
             Detail of episode.
     """
-    return object_detail(
-        request,
-        queryset=Episode.objects.published().filter(show__slug__exact=show_slug),
-        slug=episode_slug,
-        slug_field='slug',
+
+    template_name='podcast/episode_detail.html'
+    date_field = "date"
+
+    def get_context_data(self, **kwargs):
+        context = super(episode_detail, self).get_context_data(**kwargs)
         extra_context={
-            'enclosure_list': Enclosure.objects.filter(episode__show__slug__exact=show_slug).filter(episode__slug__exact=episode_slug).order_by('-episode__date'),'site_media_url':autoradio.settings.SITE_MEDIA_URL},
-        template_name='podcast/episode_detail.html')
+        'enclosure_list': Enclosure.objects.filter
+        (episode__show__slug__exact=self.show_slug).filter(episode__slug__exact=self.episode_slug).order_by('-episode__date'),
+        'site_media_url':autoradio.settings.SITE_MEDIA_URL}
+        context.update(extra_context)
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.show_slug = kwargs.get('show_slug')
+        self.episode_slug = kwargs.get('slug')
+        self.queryset=Episode.objects.published().filter(show__slug__exact=self.show_slug)
+        return super(episode_detail, self).get(request, *args, **kwargs)
 
 
-def episode_list(request, slug):
+
+class episode_list(ListView):
+
+# Qui slug e' passato ma non si sa come !!!!!
+#, slug):
     """
     Episode list
 
@@ -314,20 +329,29 @@ def episode_list(request, slug):
 
 # from: http://code.google.com/p/django-podcast/issues/detail?id=12
 
-    try:
-        show = Show.objects.get(slug=slug)
-    except:
-        return HttpResponseRedirect(reverse('podcast_shows'))
+    template_name='podcast/episode_list.html'
 
-    context = {'show':show, 'site_media_url':autoradio.settings.SITE_MEDIA_URL}
-    return object_list(
-        request,
-        queryset=Episode.objects.published().filter(show__slug__exact=slug),
-        template_name='podcast/episode_list.html',
-        extra_context = context)
+    def get_context_data(self, **kwargs):
+        context = super(episode_list, self).get_context_data(**kwargs)
+
+# todo da implementare questo try nel passaggio a django 1.5
+#        try:
+        show = Show.objects.get(slug=self.slug)
+#        except:
+#           return HttpResponseRedirect(reverse('podcast_shows'))
+
+        extra_context = {'show':show, 'site_media_url':autoradio.settings.SITE_MEDIA_URL}
+        context.update(extra_context)
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.slug = kwargs.get('slug')
+
+        self.queryset=Episode.objects.published().filter(show__slug__exact=self.slug)
+        return super(episode_list, self).get(request, *args, **kwargs)
 
 
-def episode_sitemap(request, slug):
+class episode_sitemap(ListView):
     """
     Episode sitemap
 
@@ -336,16 +360,31 @@ def episode_sitemap(request, slug):
         object_list
             List of episodes.
     """
-    return object_list(
-        request,
-        mimetype='application/xml',
-        queryset=Episode.objects.published().filter(show__slug__exact=slug).order_by('-date'),
+
+    template_name='podcast/episode_sitemap.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(episode_sitemap, self).get_context_data(**kwargs)
         extra_context={
-            'enclosure_list': Enclosure.objects.filter(episode__show__slug__exact=slug).order_by('-episode__date'),'site_media_url':autoradio.settings.SITE_MEDIA_URL},
-        template_name='podcast/episode_sitemap.html')
+            'enclosure_list': Enclosure.objects.filter
+            (episode__show__slug__exact=self.slug).order_by('-episode__date'),
+            'site_media_url':autoradio.settings.SITE_MEDIA_URL},
+        context.update(extra_context)
+        return context
 
 
-def show_list(request):
+    def get(self, request, *args, **kwargs):
+        self.slug = kwargs.get('slug')
+        self.queryset=Episode.objects.published().filter(show__slug__exact=self.slug).order_by('-date')
+        return super(episode_sitemap, self).get(request, *args, **kwargs)
+
+    def render_to_response(self, context, **kwargs):
+        return super(episode_sitemap, self).render_to_response(context,
+                        content_type='application/xml', **kwargs)
+
+
+class show_list(ListView):
+#def show_list(request):
     """
     Episode list
 
@@ -354,14 +393,18 @@ def show_list(request):
         object_list
             List of shows.
     """
-    return object_list(
-        request,
-        queryset=Show.objects.all().order_by('title'),
-        extra_context={'site_media_url':autoradio.settings.SITE_MEDIA_URL},
-        template_name='podcast/show_list.html')
+
+    queryset=Show.objects.all().order_by('title')
+    template_name='podcast/show_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(show_list, self).get_context_data(**kwargs)
+        extra_context={'site_media_url':autoradio.settings.SITE_MEDIA_URL}
+        context.update(extra_context)
+        return context
 
 
-def show_list_feed(request, slug):
+class show_list_feed(ListView):
     """
     Episode feed by show
 
@@ -370,15 +413,27 @@ def show_list_feed(request, slug):
         object_list
             List of episodes by show.
     """
-    return object_list(
-        request,
-        mimetype='application/rss+xml',
-        queryset=Episode.objects.filter(show__slug__exact=slug).order_by('-date')[0:21],
-        extra_context={'site_media_url':autoradio.settings.SITE_MEDIA_URL},
-        template_name='podcast/show_feed.html')
+
+    template_name='podcast/show_feed.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(show_list_feed, self).get_context_data(**kwargs)
+        extra_context={'site_media_url':autoradio.settings.SITE_MEDIA_URL}
+        context.update(extra_context)
+        return context
+
+    def get(self, request, *args, **kwargs):
+        slug = kwargs.get('slug')
+        self.queryset=Episode.objects.filter(show__slug__exact=slug).order_by('-date')[0:21]
+        return super(show_list_feed, self).get(request, *args, **kwargs)
+
+    def render_to_response(self, context, **kwargs):
+        return super(show_list_feed, self).render_to_response(context,
+                        content_type='application/xml', **kwargs)
 
 
-def show_list_media(request, slug):
+
+class show_list_media(ListView):
     """
     Episode feed by show
 
@@ -387,16 +442,29 @@ def show_list_media(request, slug):
         object_list
             List of episodes by show.
     """
-    return object_list(
-        request,
-        mimetype='application/rss+xml',
-        queryset=Episode.objects.filter(show__slug__exact=slug).order_by('-date')[0:21],
+
+    template_name='podcast/show_feed_media.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(show_list_media, self).get_context_data(**kwargs)
         extra_context={
-            'enclosure_list': Enclosure.objects.filter(episode__show__slug__exact=slug).order_by('-episode__date'),'site_media_url':autoradio.settings.SITE_MEDIA_URL},
-        template_name='podcast/show_feed_media.html')
+            'enclosure_list': Enclosure.objects.filter
+            (episode__show__slug__exact=self.slug).order_by('-episode__date'),
+            'site_media_url':autoradio.settings.SITE_MEDIA_URL}
+        context.update(extra_context)
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.slug = kwargs.get('slug')
+        self.queryset=Episode.objects.filter(show__slug__exact=self.slug).order_by('-date')[0:21]
+        return super(show_list_media, self).get(request, *args, **kwargs)
+
+    def render_to_response(self, context, **kwargs):
+        return super(show_list_media, self).render_to_response(context,
+                        content_type='application/xml', **kwargs)
 
 
-def show_list_atom(request, slug):
+class show_list_atom(ListView):
     """
     Episode feed by show
 
@@ -405,13 +473,23 @@ def show_list_atom(request, slug):
         object_list
             List of episodes by show.
     """
-    return object_list(
-        request,
-        mimetype='application/rss+xml',
-        queryset=Episode.objects.filter(show__slug__exact=slug).order_by('-date')[0:21],
+
+    template_name='podcast/show_feed_atom.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(show_list_atom, self).get_context_data(**kwargs)
         extra_context={
-            'enclosure_list': Enclosure.objects.filter(episode__show__slug__exact=slug).order_by('-episode__date'),'site_media_url':autoradio.settings.SITE_MEDIA_URL},
-        template_name='podcast/show_feed_atom.html')
+            'enclosure_list': Enclosure.objects.filter
+            (episode__show__slug__exact=self.slug).order_by('-episode__date'),
+            'site_media_url':autoradio.settings.SITE_MEDIA_URL}
+        context.update(extra_context)
+        return context
 
+    def get(self, request, *args, **kwargs):
+        self.slug = kwargs.get('slug')
+        self.queryset=Episode.objects.filter(show__slug__exact=self.slug).order_by('-date')[0:21]
+        return super(show_list_atom, self).get(request, *args, **kwargs)
 
-
+    def render_to_response(self, context, **kwargs):
+        return super(show_list_atom, self).render_to_response(context,
+                        content_type='application/xml', **kwargs)

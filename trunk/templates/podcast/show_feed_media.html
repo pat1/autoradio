@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:gm="http://www.google.com/schemas/gm/1.1" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:creativeCommons="http://backend.userland.com/creativeCommonsRssModule">
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:gm="http://www.google.com/schemas/gm/1.1" xmlns:creativeCommons="http://backend.userland.com/creativeCommonsRssModule">
 
 {% regroup object_list by show as show_list %}{% for show in show_list %}<channel>
     <title>{{ show.grouper.title }}</title>

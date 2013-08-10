@@ -13,7 +13,7 @@
 <div id="content">
 {% block content %}
 
-<p class="back"><a href="{% url podcast_episodes object.show.slug %}">{% trans "Return to episodes" %}</a></p>
+<p class="back"><a href="{% url "podcast_episodes" object.show.slug %}">{% trans "Return to episodes" %}</a></p>
 
 <h2>{{ object.title }}</h2>
 
@@ -25,13 +25,13 @@
   <dt>{% trans "Date" %}</dt>
     <dd>{{ object.date|date:"F g, Y, g:m a" }}</dd>
   <dt>{% trans "Show" %}</dt>
-    <dd><a href="{% url podcast_episodes object.show.slug %}">{{ object.show.title }}</a></dd>
+    <dd><a href="{% url "podcast_episodes" object.show.slug %}">{{ object.show.title }}</a></dd>
   <dt>{% trans "Author" %}</dt>{% for author in object.author.all %}
     <dd>{% if author.email %}<a href="mailto:{{ author.email }}">{% endif %}{% if author.first_name or author.last_name %}{% if author.first_name and author.last_name %}{{ author.first_name }} {{ author.last_name }}{% endif %}{% if author.first_name and not author.last_name %}{{ author.first_name }}{% endif %}{% if author.last_name and not author.first_name %}{{ author.last_name }}{% endif %}{% else %}{{ author.username }}{% endif %}{% if author.email %}</a>{% endif %}</dd>{% endfor %}
   <dt>feed web/RSS</dt>
-    <dd><a href="{% url podcast_feed object.show.slug %}">{% trans "Subscribe Feed RSS 2.0 and iTunes" %}</a></dd>
-    <dd><a href="{% url podcast_atom object.show.slug %}">{% trans "Subscribe Atom" %}</a></dd>
-    <dd><a href="{% url podcast_media object.show.slug %}">{% trans "Subscribe Media RSS" %}</a></dd>
+    <dd><a href="{% url "podcast_feed" object.show.slug %}">{% trans "Subscribe Feed RSS 2.0 and iTunes" %}</a></dd>
+    <dd><a href="{% url "podcast_atom" object.show.slug %}">{% trans "Subscribe Atom" %}</a></dd>
+    <dd><a href="{% url "podcast_media" object.show.slug %}">{% trans "Subscribe Media RSS" %}</a></dd>
   {% if object.show.feedburner %}<dt>FeedBurner</dt>
     <dd><a href="{{ object.show.feedburner }}">{% trans "Subscribe" %}</a></dd>{% endif %}
   {% if object.show.itunes %}<dt>iTunes</dt>
@@ -68,6 +68,6 @@
 {% endblock %}
 
 {% block footer %}
-<p>&#169; {% now "Y" %} {{ object.show.organization }}. <a href="{% url podcast_feed object.show.slug %}">{% trans "Subscribe" %}</a>.</p>
+<p>&#169; {% now "Y" %} {{ object.show.organization }}. <a href="{% url "podcast_feed" object.show.slug %}">{% trans "Subscribe" %}</a>.</p>
 
 {% endblock %}

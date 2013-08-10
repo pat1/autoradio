@@ -364,9 +364,13 @@ class Show(models.Model):
     def __unicode__(self):
         return u'%s' % (self.title)
 
-    @models.permalink
+    #@models.permalink
+    #def get_absolute_url(self):
+    #    return ('podcast_episodes', (), { 'slug': self.slug })
+
     def get_absolute_url(self):
-        return ('podcast_episodes', (), { 'slug': self.slug })
+        from django.core.urlresolvers import reverse
+        return reverse('podcast_episodes', args=[str(self.slug)])
 
 
 class Episode(models.Model):
@@ -603,9 +607,13 @@ class Episode(models.Model):
     def __unicode__(self):
         return u'%s' % (self.title)
 
-    @models.permalink
+    #@models.permalink
+    #def get_absolute_url(self):
+    #    return ('podcast_episode', (), { 'show_slug': self.show.slug, 'episode_slug': self.slug })
+
     def get_absolute_url(self):
-        return ('podcast_episode', (), { 'show_slug': self.show.slug, 'episode_slug': self.slug })
+        from django.core.urlresolvers import reverse
+        return reverse('podcast_episode', args=[str(self.show.slug),str(self.slug)])
 
     def seconds_total(self):
         try:

@@ -4,7 +4,7 @@
 1)")}
 
 %define name autoradio
-%define version 2.7.2
+%define version 2.8.0
 %define release 1%{?dist}
 
 Summary: radio automation software
@@ -21,8 +21,8 @@ Prefix: %{_prefix}
 BuildArch: noarch
 Vendor: Paolo Patruno <p.patruno@iperbole.bologna.it>
 Url: http://autoradiobc.sf.net
-BuildRequires: python-configobj , python-django >= 1.0.3 , help2man, python-setuptools
-Requires:python-mutagen >= 1.17 , python-django >= 1.0.3,  python-configobj, python-cherrypy, python-reportlab >= 2.0,  python-docutils, sqlite >= 3.6.22, speex-tools, python-magic, python-pillow, python-django-extensions, python-six 
+BuildRequires: python-configobj , python-django >= 1.4.0 , help2man, python-setuptools
+Requires:python-mutagen >= 1.17 , python-django >= 1.4.0,  python-configobj, python-cherrypy, python-reportlab >= 2.0,  python-docutils, sqlite >= 3.6.22, speex-tools, python-magic, python-pillow, python-django-extensions, python-six 
 Requires: initscripts
 %if 0%{?fedora} < 10
 Requires: pyxmms, xmms
@@ -84,19 +84,6 @@ mkdir -p %{buildroot}%{_sysconfdir}/tmpfiles.d
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%changelog
-* Mon Feb 18 2013 Paolo Patruno <pat1@iperbole.bologna.it> - 2.7.0-1%{?dist}
-- autoradio 2.7 with pygst
-
-* Sat Apr 14 2012 Paolo Patruno <p.patruno@iperbole.bologna.it> - 2.3-2%{?dist}
-- tmpfiles.d is a service provided by both systemd and upstart in Fedora 15 and later for managing temporary files and directories for daemons https://fedoraproject.org/wiki/Packaging:Tmpfiles.d
-
-* Sat Apr 14 2012 Paolo Patruno <p.patruno@iperbole.bologna.it> - 2.3-1%{?dist}
-- updated to 2.3
-
-
-* Fri Aug 12 2011 Paolo Patruno <p.patruno@iperbole.bologna.it> - 2.1beta-1%{?dist}
-- upstream version 2.1beta
 
 %files
 %defattr(-,root,root)
@@ -201,3 +188,20 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/log/autoradio/
 #$CHOWN -R $AUTORADIO:$AUTORADIO /etc/autoradio/
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
+
+%changelog
+* Sat Aug 10 2013 Paolo Patruno <pat1@localhost.localdomain> - 2.8.0-1%{?dist}
+- bumped to version 2.8
+
+* Mon Feb 18 2013 Paolo Patruno <pat1@iperbole.bologna.it> - 2.7.0-1%{?dist}
+- autoradio 2.7 with pygst
+
+* Sat Apr 14 2012 Paolo Patruno <p.patruno@iperbole.bologna.it> - 2.3-2%{?dist}
+- tmpfiles.d is a service provided by both systemd and upstart in Fedora 15 and later for managing temporary files and directories for daemons https://fedoraproject.org/wiki/Packaging:Tmpfiles.d
+
+* Sat Apr 14 2012 Paolo Patruno <p.patruno@iperbole.bologna.it> - 2.3-1%{?dist}
+- updated to 2.3
+
+
+* Fri Aug 12 2011 Paolo Patruno <p.patruno@iperbole.bologna.it> - 2.1beta-1%{?dist}
+- upstream version 2.1beta

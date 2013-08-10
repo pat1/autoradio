@@ -12,6 +12,7 @@
 import os,autoradio.daemon as daemon
 from autoradio import _version_
 from autoradio.autoplayer import player
+import autoradio.autoradio_config
 import autoradio.settings
 from autoradio import _version_
 

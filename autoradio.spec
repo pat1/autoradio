@@ -21,8 +21,8 @@ Prefix: %{_prefix}
 BuildArch: noarch
 Vendor: Paolo Patruno <p.patruno@iperbole.bologna.it>
 Url: http://autoradiobc.sf.net
-BuildRequires: python-configobj , Django >= 1.0.3 , help2man, python-setuptools
-Requires:python-mutagen >= 1.17 , Django >= 1.0.3,  python-configobj, python-cherrypy, python-reportlab >= 2.0,  python-docutils, sqlite >= 3.6.22, speex-tools, python-magic
+BuildRequires: python-configobj , python-django >= 1.0.3 , help2man, python-setuptools
+Requires:python-mutagen >= 1.17 , python-django >= 1.0.3,  python-configobj, python-cherrypy, python-reportlab >= 2.0,  python-docutils, sqlite >= 3.6.22, speex-tools, python-magic, python-pillow, python-django-extensions, python-six 
 Requires: initscripts
 %if 0%{?fedora} < 10
 Requires: pyxmms, xmms

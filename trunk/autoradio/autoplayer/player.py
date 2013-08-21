@@ -735,19 +735,21 @@ class Player:
 
     try:
       logging.info("set position")
-      pos_int = self.player.query_duration(Gst.Format.TIME, None)[0]
+      pos_int = self.player.query_duration(Gst.Format.TIME)[1]
       tnano=t*1000
 
       if tnano >= 0 and tnano <= pos_int : 
         logging.debug("set position to: %s; len: %s" % (str(t),str(pos_int)))
 
+
         #if wait: self.playbin.get_state(timeout=50*gst.MSECOND)
-        event = Gst.event_new_seek(1.0, Gst.Format.TIME,
+        event = Gst.Event.new_seek(1.0, Gst.Format.TIME,
                 Gst.SeekFlags.FLUSH|Gst.SeekFlags.ACCURATE,
-                Gst.SEEK_TYPE_SET, tnano, Gst.SEEK_TYPE_NONE, 0)
+                Gst.SeekType.SET, tnano, Gst.SeekType.NONE, 0)
         res = self.player.send_event(event)
         if res:
-          self.player.set_new_stream_time(0L)
+          #self.player.set_new_stream_time(0L)
+          self.player.set_start_time(0L)
         #if wait: self.playbin.get_state(timeout=50*gst.MSECOND)
 
         # this cause a doble seek with playbin2

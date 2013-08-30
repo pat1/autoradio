@@ -11,7 +11,6 @@
 
 import os,autoradio.daemon as daemon
 from autoradio import _version_
-from autoradio.autoplayer import player
 import autoradio.autoradio_config
 import autoradio.settings
 from autoradio import _version_
@@ -36,10 +35,9 @@ def main ():
     
     # Add the log message handler to the root logger
     logging.getLogger('autoplayerd').addHandler(handler)
-#    logging.getLogger('').setLevel(logging.DEBUG)
+    logging.getLogger('').setLevel(logging.INFO)
     
     logging.info('Starting up autoplayerd version '+_version_)
-
 
 #   # Use logging for ouput at different *levels*.
 #   #
@@ -47,6 +45,13 @@ def main ():
 #   log = logging.getLogger("autoplayer")
 #   handler = logging.StreamHandler(sys.stderr)
 #   log.addHandler(handler)
+
+    try:
+        from autoradio.autoplayer import player
+    except:
+        logging.info('gstreamer1 import error')
+        logging.info('try to use old gstreamer0')
+        from autoradio.autoplayer import player_gstreamer0 as player
 
     player.main(autoradio.settings.busaddressplayer,autoradio.settings.audiosinkplayer)
 

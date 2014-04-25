@@ -1,0 +1,628 @@
+Index: AnOggPlayer.hx
+===================================================================
+--- AnOggPlayer.hx	(revisione 15)
++++ AnOggPlayer.hx	(copia locale)
+@@ -93,8 +93,8 @@
+     var playTimer: haxe.Timer;
+     
+     function DoProgress(event:ProgressEvent):Void {
+-    	bytesLoaded = event.bytesLoaded;
+-    	bytesTotal = event.bytesTotal;
++    	bytesLoaded = cast(event.bytesLoaded,Int);
++    	bytesTotal = cast(event.bytesTotal,Int);
+     	doOnProgress(Math.ceil(bytesLoaded*100/bytesTotal),bytesPlayed);
+     	if(mp3Sound.isBuffering)doBuffer(50)
+         else {
+@@ -350,7 +350,7 @@
+                     };
+                     comment = System.fromBytes(ptr[j], 0, ptr[j].length - 1).split("=");
+                     comments = comments+comment[0];
+-                    comments = comments +"=\""+StringTools.replace(comment[1],"\"","\"\"")+"\";";
++		    comments = comments +"=\""+StringTools.htmlEscape(StringTools.replace(comment[1],"\"","\"\""))+"\";";
+                     trace(System.fromBytes(ptr[j], 0, ptr[j].length - 1));
+                     j++;
+                 };
+@@ -468,7 +468,7 @@
+     	target_pos=Math.ceil(bytesTotal*seek_pos);
+     	target_step=Math.ceil(Math.max(Math.ceil(target_pos/16384),3));
+     	target_pos=target_step*16384;
+-    	if(playBuffer.length>target_pos){
++    	if(playBuffer.length > cast(target_pos,UInt)){
+     		bytesPlayed=target_pos;
+     		playBuffer.position=target_pos;
+     		return 1;
+@@ -661,7 +661,7 @@
+     
+     function _on_progress(e : flash.events.ProgressEvent) : Void {
+         //trace("on_progress: " + ul.bytesAvailable);
+-        bytesLoaded = e.bytesLoaded;
++        bytesLoaded = cast(e.bytesLoaded,Int);
+         if(oldBytesTotal==0){
+         	_bootstrap_pending=false;
+         	read_started=false;
+@@ -669,7 +669,7 @@
+         	if(adjustCount>3)adjustCount=0;
+         	if(!streamDetected)trace("adjust "+adjustCount+": size "+bytesTotal);
+         }
+-        bytesTotal = e.bytesTotal;
++        bytesTotal = cast(e.bytesTotal,Int);
+         if((bytesTotal==0)&&(!streamDetected))
+         {
+         	adjustCount++;
+@@ -773,11 +773,11 @@
+             init_statics();
+ 	    
+             var fvs : Dynamic<String> = flash.Lib.current.loaderInfo.parameters;
+-            var url = fvs.playUrl == null ? "http://anoma.ch:3210/low.ogg" : fvs.playUrl;
++            var url = fvs.playUrl == null ? "http://comodino.org:8001/null.ogg" : fvs.playUrl;
+ 
+             var foe = new AnOggPlayer(url);
+             foe.volume=100;
+-            flash.system.Security.allowDomain("anoma.ch");
++            flash.system.Security.allowDomain("*");
+             flash.external.ExternalInterface.addCallback("playURL",foe._playURL);
+             flash.external.ExternalInterface.addCallback("stopPlaying",foe._stopPlay);
+             flash.external.ExternalInterface.addCallback("setVolume",foe._setVolume);
+Index: Makefile
+===================================================================
+--- Makefile	(revisione 15)
++++ Makefile	(copia locale)
+@@ -39,7 +39,7 @@
+ 	VectorTools.hx
+ 
+ AnOgg.swf: build.hxml AnOggPlayer.hx $(HX_FILES)
+-	$(HAXE) -cp . build.hxml
++	$(HAXE) -cp . -swf-version 10 -swf-header 200:200:30:000000 build.hxml
+ 
+ clean:
+ 	rm -f AnOgg.swf
+Index: VectorTools.hx
+===================================================================
+--- VectorTools.hx	(revisione 15)
++++ VectorTools.hx	(copia locale)
+@@ -97,7 +97,7 @@
+             b = src.slice(src_pos, src_end);
+         }
+ 
+-        if (dst_pos + length < dst.length) {
++        if (cast(dst_pos + length,Int) < dst.length) {
+             b = b.concat(dst.slice(dst_pos + length));
+         }
+ 
+@@ -118,7 +118,7 @@
+             b = src.slice(src_pos, src_end);
+         }
+ 
+-        if (dst_pos + length < dst.length) {
++        if (cast(dst_pos + length,Int) < dst.length) {
+             b = b.concat(dst.slice(dst_pos + length));
+         }
+ 
+Index: build.hxml
+===================================================================
+--- build.hxml	(revisione 15)
++++ build.hxml	(copia locale)
+@@ -1,4 +1,4 @@
+ -main AnOggPlayer
+ -swf-version 10
+ -swf-header 400:800:12:ffffff
+--swf9 AnOgg.swf
++-swf AnOgg.swf
+Index: org/xiph/fogg/Buffer.hx
+===================================================================
+--- org/xiph/fogg/Buffer.hx	(revisione 15)
++++ org/xiph/fogg/Buffer.hx	(copia locale)
+@@ -9,16 +9,18 @@
+      * generated source for Buffer
+      */
+     inline static private var BUFFER_INCREMENT : Int = 256;
+-    inline static private var _mask : Array<Int> =
+-        [0x00000000, 0x00000001, 0x00000003, 0x00000007,
+-         0x0000000f, 0x0000001f, 0x0000003f, 0x0000007f,
+-         0x000000ff, 0x000001ff, 0x000003ff, 0x000007ff,
+-         0x00000fff, 0x00001fff, 0x00003fff, 0x00007fff,
+-         0x0000ffff, 0x0001ffff, 0x0003ffff, 0x0007ffff,
+-         0x000fffff, 0x001fffff, 0x003fffff, 0x007fffff,
+-         0x00ffffff, 0x01ffffff, 0x03ffffff, 0x07ffffff,
+-         0x0fffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff,
+-         0xffffffff];
++    inline static private function _mask(): Array<Int>{
++    	return  [0x00000000, 0x00000001, 0x00000003, 0x00000007,
++		         0x0000000f, 0x0000001f, 0x0000003f, 0x0000007f,
++		         0x000000ff, 0x000001ff, 0x000003ff, 0x000007ff,
++		         0x00000fff, 0x00001fff, 0x00003fff, 0x00007fff,
++		         0x0000ffff, 0x0001ffff, 0x0003ffff, 0x0007ffff,
++		         0x000fffff, 0x001fffff, 0x003fffff, 0x007fffff,
++		         0x00ffffff, 0x01ffffff, 0x03ffffff, 0x07ffffff,
++		         0x0fffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff,
++		         0xffffffff];
++       	}
++
+     static private var _vmask : Vector<Int> = null;
+     private var mask : Vector<Int>;
+ 
+@@ -44,7 +46,7 @@
+     // modifiers: public
+     public function writeBytes(s : Bytes) : Void {
+         // for-while;
+-        var i : Int = 0;
++        var i : UInt = 0;
+         while (i < s.length) {
+             if (s[i] == 0) {
+                 break;
+@@ -343,10 +345,10 @@
+ 
+     private static function __static_init__() : Void {
+         var i : Int = 0;
+-        var n : Int = Buffer._mask.length;
++        var n : Int = Buffer._mask().length;
+         Buffer._vmask = new Vector(n, true);
+         while (i < n) {
+-            Buffer._vmask[i] = Buffer._mask[i];
++            Buffer._vmask[i] = Buffer._mask()[i];
+             i++;
+         }
+     }
+Index: org/xiph/fogg/StreamState.hx
+===================================================================
+--- org/xiph/fogg/StreamState.hx	(revisione 15)
++++ org/xiph/fogg/StreamState.hx	(copia locale)
+@@ -56,7 +56,7 @@
+         }
+         else {
+             // for-while;
+-            var i : Int = 0;
++            var i : UInt = 0;
+             while (i < body_data.length) {
+                 body_data[i] = 0;
+                 i++;
+Index: org/xiph/foggy/Demuxer.hx
+===================================================================
+--- org/xiph/foggy/Demuxer.hx	(revisione 15)
++++ org/xiph/foggy/Demuxer.hx	(copia locale)
+@@ -22,16 +22,16 @@
+     var og : Page;
+     var op : Packet;
+ 
+-    var streams : IntHash<StreamState>;
++    var streams : Map<Int,StreamState>;
+     var bos_done : Bool;
+ 
+-    var page_cbs : IntHash<Page -> Int -> DemuxerStatus>;
+-    var packet_cbs : IntHash<Packet -> Int -> DemuxerStatus>;
++    var page_cbs : Map<Int,Page -> Int -> DemuxerStatus>;
++    var packet_cbs : Map<Int,Packet -> Int -> DemuxerStatus>;
+ 
+     public function new() {
+-        page_cbs = new IntHash();
+-        packet_cbs = new IntHash();
+-        streams = new IntHash();
++        page_cbs = new Map<Int,Page -> Int -> DemuxerStatus>();
++        packet_cbs = new Map<Int,Packet -> Int -> DemuxerStatus>();
++        streams = new Map<Int,StreamState>();
+ 
+         bos_done = false;
+ 
+@@ -122,11 +122,12 @@
+ 
+         var os : StreamState = streams.get(sn);
+         if (os == null) {
+-            if (bos_done) {
++            /*if (bos_done) {
+                 // unexpected new stream
+                 trace("unexpected end of stream");
+                 return -1;
+-            }
++            }*/
++			bos_done = false;
+             os = new StreamState();
+             os.init(sn);
+             streams.set(sn, os);
+Index: org/xiph/fvorbis/Block.hx
+===================================================================
+--- org/xiph/fvorbis/Block.hx	(revisione 15)
++++ org/xiph/fvorbis/Block.hx	(copia locale)
+@@ -92,7 +92,7 @@
+         // for-while;
+         var i : Int = 0;
+         while (i < vi.channels) {
+-            if ((pcm[i] == null) || (pcm[i].length < pcmend)) {
++            if ((pcm[i] == null) || (cast(pcm[i].length,UInt) < cast(pcmend,UInt))) {
+                 //pcm[i] = new float[pcmend];
+                 pcm[i] = new Vector(pcmend, true);
+             }
+Index: org/xiph/fvorbis/Floor0.hx
+===================================================================
+--- org/xiph/fvorbis/Floor0.hx	(revisione 15)
++++ org/xiph/fvorbis/Floor0.hx	(copia locale)
+@@ -38,14 +38,14 @@
+         info.ampdB = opb.read(8);
+         info.numbooks = (opb.read(4) + 1);
+         if ((((info.order < 1) || (info.rate < 1)) || (info.barkmap < 1)) || (info.numbooks < 1)) {
+-            return;
++            return null;
+         };
+         // for-while;
+         var j : Int = 0;
+         while (j < info.numbooks) {
+             info.books[j] = opb.read(8);
+             if ((info.books[j] < 0) || (info.books[j] >= vi.books)) {
+-                return;
++                return null;
+             };
+             j++;
+         };
+@@ -202,7 +202,7 @@
+             if ((booknum != -1) && (booknum < info.numbooks)) {
+                 var b : CodeBook = vb.vd.fullbooks[info.books[booknum]];
+                 var last : Float = 0.;
+-                if ((lsp == null) || (lsp.length < (look.m + 1))) {
++                if ((lsp == null) || (lsp.length < look.m + 1)) {
+                     //lsp = new float[look.m + 1];
+                     lsp = new Vector(look.m + 1, true);
+                 }
+@@ -218,7 +218,7 @@
+                 var j : Int = 0;
+                 while (j < look.m) {
+                     if (b.decodev_set(lsp, j, vb.opb, b.dim) == -1) {
+-                        return;
++                        return null;
+                     };
+                     j += b.dim;
+                 };
+@@ -237,7 +237,7 @@
+                 return lsp;
+             };
+         };
+-        return;
++        return null;
+     }
+ 
+     // modifiers: 
+Index: org/xiph/fvorbis/Floor1.hx
+===================================================================
+--- org/xiph/fvorbis/Floor1.hx	(revisione 15)
++++ org/xiph/fvorbis/Floor1.hx	(copia locale)
+@@ -86,14 +86,14 @@
+             info.class_subs[j] = opb.read(2);
+             if (info.class_subs[j] < 0) {
+                 info.free();
+-                return;
++                return null;
+             };
+             if (info.class_subs[j] != 0) {
+                 info.class_book[j] = opb.read(8);
+             };
+             if ((info.class_book[j] < 0) || (info.class_book[j] >= vi.books)) {
+                 info.free();
+-                return;
++                return null;
+             };
+             // for-while;
+             var k : Int = 0;
+@@ -101,7 +101,7 @@
+                 info.class_subbook[j][k] = (opb.read(8) - 1);
+                 if ((info.class_subbook[j][k] < -1) || (info.class_subbook[j][k] >= vi.books)) {
+                     info.free();
+-                    return;
++                    return null;
+                 };
+                 k++;
+             };
+@@ -119,7 +119,7 @@
+                 var t : Int = info.postlist[k + 2] = opb.read(rangebits);
+                 if ((t < 0) || (t >= (1 << rangebits))) {
+                     info.free();
+-                    return;
++                    return null;
+                 };
+                 k++;
+             };
+@@ -287,7 +287,7 @@
+                 if (csubbits != 0) {
+                     cval = books[info.class_book[clss]].decode(vb.opb);
+                     if (cval == -1) {
+-                        return;
++                        return null;
+                     };
+                 };
+                 // for-while;
+@@ -297,7 +297,7 @@
+                     cval >>>= csubbits;
+                     if (book >= 0) {
+                         if ((fit_value[j + k] = books[book].decode(vb.opb)) == -1) {
+-                            return;
++                            return null;
+                         };
+                     }
+                     else {
+@@ -344,7 +344,7 @@
+             };
+             return fit_value;
+         };
+-        return;
++        return null;
+     }
+ 
+     // modifiers: static, private
+Index: org/xiph/fvorbis/FuncFloor.hx
+===================================================================
+--- org/xiph/fvorbis/FuncFloor.hx	(revisione 15)
++++ org/xiph/fvorbis/FuncFloor.hx	(copia locale)
+@@ -22,11 +22,13 @@
+     // modifiers: abstract
+     public function unpack(vi : Info, opb : Buffer) : Dynamic {
+         throw "UnimplementedAbstractMethod";
++        return null;
+     }
+ 
+     // modifiers: abstract
+     public function look(vd : DspState, mi : InfoMode, i : Dynamic) : Dynamic {
+         throw "UnimplementedAbstractMethod";
++        return null;
+     }
+ 
+     // modifiers: abstract
+@@ -53,6 +55,7 @@
+     // modifiers: abstract
+     public function inverse1(vb : Block, i : Dynamic, memo : Dynamic) : Dynamic {
+         throw "UnimplementedAbstractMethod";
++        return null;
+     }
+ 
+     // modifiers: abstract
+Index: org/xiph/fvorbis/FuncMapping.hx
+===================================================================
+--- org/xiph/fvorbis/FuncMapping.hx	(revisione 15)
++++ org/xiph/fvorbis/FuncMapping.hx	(copia locale)
+@@ -21,11 +21,13 @@
+     // modifiers: abstract
+     public function unpack(info : Info, buffer : Buffer) : Dynamic {
+         throw "UnimplementedAbstractMethod";
++        return null;
+     }
+ 
+     // modifiers: abstract
+     public function look(vd : DspState, vm : InfoMode, m : Dynamic) : Dynamic {
+         throw "UnimplementedAbstractMethod";
++        return null;
+     }
+ 
+     // modifiers: abstract
+Index: org/xiph/fvorbis/FuncResidue.hx
+===================================================================
+--- org/xiph/fvorbis/FuncResidue.hx	(revisione 15)
++++ org/xiph/fvorbis/FuncResidue.hx	(copia locale)
+@@ -21,11 +21,13 @@
+     // modifiers: abstract
+     public function unpack(vi : Info, opb : Buffer) : Dynamic {
+         throw "UnimplementedAbstractMethod";
++        return null;
+     }
+ 
+     // modifiers: abstract
+     public function look(vd : DspState, vm : InfoMode, vr : Dynamic) : Dynamic {
+         throw "UnimplementedAbstractMethod";
++        return null;
+     }
+ 
+     // modifiers: abstract
+Index: org/xiph/fvorbis/FuncTime.hx
+===================================================================
+--- org/xiph/fvorbis/FuncTime.hx	(revisione 15)
++++ org/xiph/fvorbis/FuncTime.hx	(copia locale)
+@@ -21,11 +21,13 @@
+     // modifiers: abstract
+     public function unpack(vi : Info, opb : Buffer) : Dynamic {
+         throw "UnimplementedAbstractMethod";
++        return null;
+     }
+ 
+     // modifiers: abstract
+     public function look(vd : DspState, vm : InfoMode, i : Dynamic) : Dynamic {
+         throw "UnimplementedAbstractMethod";
++        return null;
+     }
+ 
+     // modifiers: abstract
+Index: org/xiph/fvorbis/Lookup.hx
+===================================================================
+--- org/xiph/fvorbis/Lookup.hx	(revisione 15)
++++ org/xiph/fvorbis/Lookup.hx	(copia locale)
+@@ -7,32 +7,36 @@
+      * generated source for Lookup
+      */
+     inline static var COS_LOOKUP_SZ : Int = 128;
+-    inline static var COS_LOOKUP : Array<Float> = [1.0000000000000, 0.9996988186962, 0.9987954562052, 0.9972904566787, 0.9951847266722, 0.9924795345987, 0.9891765099648, 0.9852776423889, 0.9807852804032, 0.9757021300385, 0.9700312531945, 0.9637760657954, 0.9569403357322, 0.9495281805930, 0.9415440651830, 0.9329927988347, 0.9238795325113, 0.9142097557035, 0.9039892931234, 0.8932243011955, 0.8819212643484, 0.8700869911087, 0.8577286100003, 0.8448535652497, 0.8314696123025, 0.8175848131516, 0.8032075314806, 0.7883464276266, 0.7730104533627, 0.7572088465065, 0.7409511253550, 0.7242470829515, 0.7071067811865, 0.6895405447371, 0.6715589548470, 0.6531728429538, 0.6343932841636, 0.6152315905806, 0.5956993044924, 0.5758081914178, 0.5555702330196, 0.5349976198871, 0.5141027441932, 0.4928981922298, 0.4713967368260, 0.4496113296546, 0.4275550934303, 0.4052413140050, 0.3826834323651, 0.3598950365350, 0.3368898533922, 0.3136817403989, 0.2902846772545, 0.2667127574749, 0.2429801799033, 0.2191012401569, 0.1950903220161, 0.1709618887603, 0.1467304744554, 0.1224106751992, 0.0980171403296, 0.0735645635997, 0.0490676743274, 0.0245412285229, 0.0000000000000, -0.0245412285229, -0.0490676743274, -0.0735645635997, -0.0980171403296, -0.1224106751992, -0.1467304744554, -0.1709618887603, -0.1950903220161, -0.2191012401569, -0.2429801799033, -0.2667127574749, -0.2902846772545, -0.3136817403989, -0.3368898533922, -0.3598950365350, -0.3826834323651, -0.4052413140050, -0.4275550934303, -0.4496113296546, -0.4713967368260, -0.4928981922298, -0.5141027441932, -0.5349976198871, -0.5555702330196, -0.5758081914178, -0.5956993044924, -0.6152315905806, -0.6343932841636, -0.6531728429538, -0.6715589548470, -0.6895405447371, -0.7071067811865, -0.7242470829515, -0.7409511253550, -0.7572088465065, -0.7730104533627, -0.7883464276266, -0.8032075314806, -0.8175848131516, -0.8314696123025, -0.8448535652497, -0.8577286100003, -0.8700869911087, -0.8819212643484, -0.8932243011955, -0.9039892931234, -0.9142097557035, -0.9238795325113, -0.9329927988347, -0.9415440651830, -0.9495281805930, -0.9569403357322, -0.9637760657954, -0.9700312531945, -0.9757021300385, -0.9807852804032, -0.9852776423889, -0.9891765099648, -0.9924795345987, -0.9951847266722, -0.9972904566787, -0.9987954562052, -0.9996988186962, -1.0000000000000];
++    inline static function COS_LOOKUP() : Array<Float>{
++    	return [1.0000000000000, 0.9996988186962, 0.9987954562052, 0.9972904566787, 0.9951847266722, 0.9924795345987, 0.9891765099648, 0.9852776423889, 0.9807852804032, 0.9757021300385, 0.9700312531945, 0.9637760657954, 0.9569403357322, 0.9495281805930, 0.9415440651830, 0.9329927988347, 0.9238795325113, 0.9142097557035, 0.9039892931234, 0.8932243011955, 0.8819212643484, 0.8700869911087, 0.8577286100003, 0.8448535652497, 0.8314696123025, 0.8175848131516, 0.8032075314806, 0.7883464276266, 0.7730104533627, 0.7572088465065, 0.7409511253550, 0.7242470829515, 0.7071067811865, 0.6895405447371, 0.6715589548470, 0.6531728429538, 0.6343932841636, 0.6152315905806, 0.5956993044924, 0.5758081914178, 0.5555702330196, 0.5349976198871, 0.5141027441932, 0.4928981922298, 0.4713967368260, 0.4496113296546, 0.4275550934303, 0.4052413140050, 0.3826834323651, 0.3598950365350, 0.3368898533922, 0.3136817403989, 0.2902846772545, 0.2667127574749, 0.2429801799033, 0.2191012401569, 0.1950903220161, 0.1709618887603, 0.1467304744554, 0.1224106751992, 0.0980171403296, 0.0735645635997, 0.0490676743274, 0.0245412285229, 0.0000000000000, -0.0245412285229, -0.0490676743274, -0.0735645635997, -0.0980171403296, -0.1224106751992, -0.1467304744554, -0.1709618887603, -0.1950903220161, -0.2191012401569, -0.2429801799033, -0.2667127574749, -0.2902846772545, -0.3136817403989, -0.3368898533922, -0.3598950365350, -0.3826834323651, -0.4052413140050, -0.4275550934303, -0.4496113296546, -0.4713967368260, -0.4928981922298, -0.5141027441932, -0.5349976198871, -0.5555702330196, -0.5758081914178, -0.5956993044924, -0.6152315905806, -0.6343932841636, -0.6531728429538, -0.6715589548470, -0.6895405447371, -0.7071067811865, -0.7242470829515, -0.7409511253550, -0.7572088465065, -0.7730104533627, -0.7883464276266, -0.8032075314806, -0.8175848131516, -0.8314696123025, -0.8448535652497, -0.8577286100003, -0.8700869911087, -0.8819212643484, -0.8932243011955, -0.9039892931234, -0.9142097557035, -0.9238795325113, -0.9329927988347, -0.9415440651830, -0.9495281805930, -0.9569403357322, -0.9637760657954, -0.9700312531945, -0.9757021300385, -0.9807852804032, -0.9852776423889, -0.9891765099648, -0.9924795345987, -0.9951847266722, -0.9972904566787, -0.9987954562052, -0.9996988186962, -1.0000000000000];
++    }
+ 
+     // modifiers: static
+     static public function coslook(a : Float) : Float {
+         var d : Float = a * (0.31830989 * Lookup.COS_LOOKUP_SZ);
+         var i : Int = Std.int(d);
+-        return Lookup.COS_LOOKUP[i] + (d - i * (Lookup.COS_LOOKUP[i + 1] - Lookup.COS_LOOKUP[i]));
++        return Lookup.COS_LOOKUP()[i] + (d - i * (Lookup.COS_LOOKUP()[i + 1] - Lookup.COS_LOOKUP()[i]));
+     }
+ 
+     inline static var INVSQ_LOOKUP_SZ : Int = 32;
+-    inline static var INVSQ_LOOKUP : Array<Float> = [1.414213562373, 1.392621247646, 1.371988681140, 1.352246807566, 1.333333333333, 1.315191898443, 1.297771369046, 1.281025230441, 1.264911064067, 1.249390095109, 1.234426799697, 1.219988562661, 1.206045378311, 1.192569588000, 1.179535649239, 1.166919931983, 1.154700538379, 1.142857142857, 1.131370849898, 1.120224067222, 1.109400392450, 1.098884511590, 1.088662107904, 1.078719779941, 1.069044967650, 1.059625885652, 1.050451462878, 1.041511287847, 1.032795558989, 1.024295039463, 1.016001016002, 1.007905261358, 1.000000000000];
++    inline static function INVSQ_LOOKUP() : Array<Float>{
++    	return [1.414213562373, 1.392621247646, 1.371988681140, 1.352246807566, 1.333333333333, 1.315191898443, 1.297771369046, 1.281025230441, 1.264911064067, 1.249390095109, 1.234426799697, 1.219988562661, 1.206045378311, 1.192569588000, 1.179535649239, 1.166919931983, 1.154700538379, 1.142857142857, 1.131370849898, 1.120224067222, 1.109400392450, 1.098884511590, 1.088662107904, 1.078719779941, 1.069044967650, 1.059625885652, 1.050451462878, 1.041511287847, 1.032795558989, 1.024295039463, 1.016001016002, 1.007905261358, 1.000000000000];
++    }
+ 
+     // modifiers: static
+     static public function invsqlook(a : Float) : Float {
+         var d : Float = (a * (2. * Lookup.INVSQ_LOOKUP_SZ)) - Lookup.INVSQ_LOOKUP_SZ;
+         var i : Int = Std.int(d);
+-        return Lookup.INVSQ_LOOKUP[i] + (d - i * (Lookup.INVSQ_LOOKUP[i + 1] - Lookup.INVSQ_LOOKUP[i]));
++        return Lookup.INVSQ_LOOKUP()[i] + (d - i * (Lookup.INVSQ_LOOKUP()[i + 1] - Lookup.INVSQ_LOOKUP()[i]));
+     }
+ 
+     inline static var INVSQ2EXP_LOOKUP_MIN : Int = -32;
+     inline static var INVSQ2EXP_LOOKUP_MAX : Int = 32;
+-    inline static var INVSQ2EXP_LOOKUP : Array<Float> = [65536., 46340.95001, 32768., 23170.47501, 16384., 11585.2375, 8192., 5792.618751, 4096., 2896.309376, 2048., 1448.154688, 1024., 724.0773439, 512., 362.038672, 256., 181.019336, 128., 90.50966799, 64., 45.254834, 32., 22.627417, 16., 11.3137085, 8., 5.656854249, 4., 2.828427125, 2., 1.414213562, 1., 0.7071067812, 0.5, 0.3535533906, 0.25, 0.1767766953, 0.125, 0.08838834765, 0.0625, 0.04419417382, 0.03125, 0.02209708691, 0.015625, 0.01104854346, 0.0078125, 0.005524271728, 0.00390625, 0.002762135864, 0.001953125, 0.001381067932, 0.0009765625, 0.000690533966, 0.00048828125, 0.000345266983, 0.000244140625, 0.0001726334915, 0.0001220703125, 8.631674575e-05, 6.103515625e-05, 4.315837288e-05, 3.051757812e-05, 2.157918644e-05, 1.525878906e-05];
++    inline static function INVSQ2EXP_LOOKUP() : Array<Float> { return [65536., 46340.95001, 32768., 23170.47501, 16384., 11585.2375, 8192., 5792.618751, 4096., 2896.309376, 2048., 1448.154688, 1024., 724.0773439, 512., 362.038672, 256., 181.019336, 128., 90.50966799, 64., 45.254834, 32., 22.627417, 16., 11.3137085, 8., 5.656854249, 4., 2.828427125, 2., 1.414213562, 1., 0.7071067812, 0.5, 0.3535533906, 0.25, 0.1767766953, 0.125, 0.08838834765, 0.0625, 0.04419417382, 0.03125, 0.02209708691, 0.015625, 0.01104854346, 0.0078125, 0.005524271728, 0.00390625, 0.002762135864, 0.001953125, 0.001381067932, 0.0009765625, 0.000690533966, 0.00048828125, 0.000345266983, 0.000244140625, 0.0001726334915, 0.0001220703125, 8.631674575e-05, 6.103515625e-05, 4.315837288e-05, 3.051757812e-05, 2.157918644e-05, 1.525878906e-05];}
+ 
+     // modifiers: static
+     static public function invsq2explook(a : Int) : Float {
+-        return Lookup.INVSQ2EXP_LOOKUP[a - Lookup.INVSQ2EXP_LOOKUP_MIN];
++        return Lookup.INVSQ2EXP_LOOKUP()[a - Lookup.INVSQ2EXP_LOOKUP_MIN];
+     }
+ 
+     inline static var FROMdB_LOOKUP_SZ : Int = 35;
+@@ -40,13 +44,13 @@
+     inline static var FROMdB_SHIFT : Int = 5;
+     inline static var FROMdB2_SHIFT : Int = 3;
+     inline static var FROMdB2_MASK : Int = 31;
+-    inline static var FROMdB_LOOKUP : Array<Float> = [1., 0.6309573445, 0.3981071706, 0.2511886432, 0.1584893192, 0.1, 0.06309573445, 0.03981071706, 0.02511886432, 0.01584893192, 0.01, 0.006309573445, 0.003981071706, 0.002511886432, 0.001584893192, 0.001, 0.0006309573445, 0.0003981071706, 0.0002511886432, 0.0001584893192, 0.0001, 6.309573445e-05, 3.981071706e-05, 2.511886432e-05, 1.584893192e-05, 1e-05, 6.309573445e-06, 3.981071706e-06, 2.511886432e-06, 1.584893192e-06, 1e-06, 6.309573445e-07, 3.981071706e-07, 2.511886432e-07, 1.584893192e-07];
+-    inline static var FROMdB2_LOOKUP : Array<Float> = [0.9928302478, 0.9786445908, 0.9646616199, 0.9508784391, 0.9372921937, 0.92390007, 0.9106992942, 0.8976871324, 0.8848608897, 0.8722179097, 0.8597555737, 0.8474713009, 0.835362547, 0.8234268041, 0.8116616003, 0.8000644989, 0.7886330981, 0.7773650302, 0.7662579617, 0.755309592, 0.7445176537, 0.7338799116, 0.7233941627, 0.7130582353, 0.7028699885, 0.6928273125, 0.6829281272, 0.6731703824, 0.6635520573, 0.6540711597, 0.6447257262, 0.6355138211];
++    inline static function FROMdB_LOOKUP() : Array<Float> { return [1., 0.6309573445, 0.3981071706, 0.2511886432, 0.1584893192, 0.1, 0.06309573445, 0.03981071706, 0.02511886432, 0.01584893192, 0.01, 0.006309573445, 0.003981071706, 0.002511886432, 0.001584893192, 0.001, 0.0006309573445, 0.0003981071706, 0.0002511886432, 0.0001584893192, 0.0001, 6.309573445e-05, 3.981071706e-05, 2.511886432e-05, 1.584893192e-05, 1e-05, 6.309573445e-06, 3.981071706e-06, 2.511886432e-06, 1.584893192e-06, 1e-06, 6.309573445e-07, 3.981071706e-07, 2.511886432e-07, 1.584893192e-07];}
++    inline static function FROMdB2_LOOKUP() : Array<Float> { return [0.9928302478, 0.9786445908, 0.9646616199, 0.9508784391, 0.9372921937, 0.92390007, 0.9106992942, 0.8976871324, 0.8848608897, 0.8722179097, 0.8597555737, 0.8474713009, 0.835362547, 0.8234268041, 0.8116616003, 0.8000644989, 0.7886330981, 0.7773650302, 0.7662579617, 0.755309592, 0.7445176537, 0.7338799116, 0.7233941627, 0.7130582353, 0.7028699885, 0.6928273125, 0.6829281272, 0.6731703824, 0.6635520573, 0.6540711597, 0.6447257262, 0.6355138211];}
+ 
+     // modifiers: static
+     static public function fromdBlook(a : Float) : Float {
+         var i : Int = Std.int(a * -(1 << Lookup.FROMdB2_SHIFT));
+-        return (i < 0 ? 1. : (i >= (Lookup.FROMdB_LOOKUP_SZ << Lookup.FROMdB_SHIFT) ? 0. : Lookup.FROMdB_LOOKUP[i >>> Lookup.FROMdB_SHIFT] * Lookup.FROMdB2_LOOKUP[i & Lookup.FROMdB2_MASK]));
++        return (i < 0 ? 1. : (i >= (Lookup.FROMdB_LOOKUP_SZ << Lookup.FROMdB_SHIFT) ? 0. : Lookup.FROMdB_LOOKUP()[i >>> Lookup.FROMdB_SHIFT] * Lookup.FROMdB2_LOOKUP()[i & Lookup.FROMdB2_MASK]));
+     }
+ 
+ }
+Index: org/xiph/fvorbis/Mapping0.hx
+===================================================================
+--- org/xiph/fvorbis/Mapping0.hx	(revisione 15)
++++ org/xiph/fvorbis/Mapping0.hx	(copia locale)
+@@ -119,14 +119,14 @@
+                 var testA : Int = info.coupling_ang[i] = opb.read(ilog2(vi.channels));
+                 if (((((testM < 0) || (testA < 0)) || (testM == testA)) || (testM >= vi.channels)) || (testA >= vi.channels)) {
+                     info.free();
+-                    return;
++                    return null;
+                 };
+                 i++;
+             };
+         };
+         if (opb.read(2) > 0) {
+             info.free();
+-            return;
++            return null;
+         };
+         if (info.submaps > 1) {
+             // for-while;
+@@ -135,7 +135,7 @@
+                 info.chmuxlist[i] = opb.read(4);
+                 if (info.chmuxlist[i] >= info.submaps) {
+                     info.free();
+-                    return;
++                    return null;
+                 };
+                 i++;
+             };
+@@ -146,17 +146,17 @@
+             info.timesubmap[i] = opb.read(8);
+             if (info.timesubmap[i] >= vi.times) {
+                 info.free();
+-                return;
++                return null;
+             };
+             info.floorsubmap[i] = opb.read(8);
+             if (info.floorsubmap[i] >= vi.floors) {
+                 info.free();
+-                return;
++                return null;
+             };
+             info.residuesubmap[i] = opb.read(8);
+             if (info.residuesubmap[i] >= vi.residues) {
+                 info.free();
+-                return;
++                return null;
+             };
+             i++;
+         };
+Index: org/xiph/fvorbis/Residue0.hx
+===================================================================
+--- org/xiph/fvorbis/Residue0.hx	(revisione 15)
++++ org/xiph/fvorbis/Residue0.hx	(copia locale)
+@@ -70,14 +70,14 @@
+         };
+         if (info.groupbook >= vi.books) {
+             free_info(info);
+-            return;
++            return null;
+         };
+         // for-while;
+         var j : Int = 0;
+         while (j < acc) {
+             if (info.booklist[j] >= vi.books) {
+                 free_info(info);
+-                return;
++                return null;
+             };
+             j++;
+         };
+@@ -136,7 +136,7 @@
+             while (k < dim) {
+                 var deco : Int = Std.int(val / mult);
+                 val -= (deco * mult);
+-                mult /= look.parts;
++                mult=Math.round(mult / look.parts);
+                 look.decodemap[j][k] = deco;
+                 k++;
+             };
+Index: org/xiph/system/AudioSink.hx
+===================================================================
+--- org/xiph/system/AudioSink.hx	(revisione 15)
++++ org/xiph/system/AudioSink.hx	(copia locale)
+@@ -58,20 +58,20 @@
+         //strans.volume = (vol+0.0001)/100;
+     	volume = vol;
+     	if (sch != null) {
+-    	   trace("Volume change:"+vol);
++    	   //trace("Volume change:"+vol);
+     	   strans = sch.soundTransform;
+     	   strans.volume = (volume+0.0001)/100;
+     	   sch.soundTransform = strans;
+     	}
+     }
+     public function play() : Void {
+-        trace("adding callback");
++        //trace("adding callback");
+         s.addEventListener("sampleData", _data_cb);
+-        trace("playing");
++        //trace("playing");
+         doStatus("playing");
+         sch = s.play(0,0,strans);
+         setVolume(volume);
+-        trace(sch);
++        //trace(sch);
+     }
+ 
+     public function stop() : Void {
+@@ -92,7 +92,7 @@
+         }
+         i = 0;
+         if (missing > 0 && missing != size && fill) {
+-            trace("samples data underrun: " + missing);
++            //trace("samples data underrun: " + missing);
+             doStatus("error=underflow");
+             while (i < missing) {
+                 untyped {
+@@ -102,7 +102,7 @@
+                 i++;
+             }
+         } else if (missing > 0) {
+-            trace("not enough data, stopping");
++            //trace("not enough data, stopping");
+             doStatus("streamstop");
+             //stop();
+         }
+@@ -151,7 +151,7 @@
+         available += samples;
+         if (!triggered && trigger > 0 && available > trigger) {
+             triggered = true;
+-            trace("triggered");
++            //trace("triggered");
+             doBuffer(100);
+             play();
+         }

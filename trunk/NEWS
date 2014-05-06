@@ -1,6 +1,10 @@
 NEWS
 ----
 
+version 2.8.2
+-------------
+ * ported to django 1.6
+
 version 2.8.1
 -------------
  * ported to django 1.5, gstreamer1, haxe 3.0

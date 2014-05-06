@@ -80,17 +80,17 @@ class createmanpages(Command):
         try:
             import subprocess
             subprocess.check_call(["mkdir","-p", "man/man1"])
-            subprocess.check_call(["help2man","-N","-o","man/man1/autoradiod.1","./autoradiod"])
+            subprocess.check_call(["help2man","-n","autoradiod daemon for autoradio suite","-N","-o","man/man1/autoradiod.1","./autoradiod"])
             subprocess.check_call(["gzip","-f", "man/man1/autoradiod.1"])
-            subprocess.check_call(["help2man","-N","-o","man/man1/autoradioweb.1","./autoradioweb"])
+            subprocess.check_call(["help2man","-n","autoradioweb daemon for autoradio suite","-N","-o","man/man1/autoradioweb.1","./autoradioweb"])
             subprocess.check_call(["gzip", "-f","man/man1/autoradioweb.1"])
-            subprocess.check_call(["help2man","-N","-o","man/man1/autoradioctrl.1","./autoradioctrl"])
+            subprocess.check_call(["help2man","-n","autoradio controller tool","-N","-o","man/man1/autoradioctrl.1","./autoradioctrl"])
             subprocess.check_call(["gzip", "-f","man/man1/autoradioctrl.1"])
-            subprocess.check_call(["help2man","-N","-o","man/man1/autoradiodbusd.1","./autoradiodbusd"])
+            subprocess.check_call(["help2man","-n","autoradio dbus daemon","-N","-o","man/man1/autoradiodbusd.1","./autoradiodbusd"])
             subprocess.check_call(["gzip", "-f","man/man1/autoradiodbusd.1"])
-            subprocess.check_call(["help2man","-N","-o","man/man1/jackdaemon.1","./jackdaemon"])
+            subprocess.check_call(["help2man","-n","autoradio jack daemon","-N","-o","man/man1/jackdaemon.1","./jackdaemon"])
             subprocess.check_call(["gzip", "-f","man/man1/jackdaemon.1"])
-            subprocess.check_call(["help2man","-N","-o","man/man1/autoplayerd.1","./autoplayerd"])
+            subprocess.check_call(["help2man","-n","autoradio player daemon","-N","-o","man/man1/autoplayerd.1","./autoplayerd"])
             subprocess.check_call(["gzip", "-f","man/man1/autoplayerd.1"])
 
         except:

@@ -86,6 +86,13 @@ class createmanpages(Command):
             subprocess.check_call(["gzip", "-f","man/man1/autoradioweb.1"])
             subprocess.check_call(["help2man","-N","-o","man/man1/autoradioctrl.1","./autoradioctrl"])
             subprocess.check_call(["gzip", "-f","man/man1/autoradioctrl.1"])
+            subprocess.check_call(["help2man","-N","-o","man/man1/autoradiodbusd.1","./autoradiodbusd"])
+            subprocess.check_call(["gzip", "-f","man/man1/autoradiodbusd.1"])
+            subprocess.check_call(["help2man","-N","-o","man/man1/jackdaemon.1","./jackdaemon"])
+            subprocess.check_call(["gzip", "-f","man/man1/jackdaemon.1"])
+            subprocess.check_call(["help2man","-N","-o","man/man1/autoplayerd.1","./autoplayerd"])
+            subprocess.check_call(["gzip", "-f","man/man1/autoplayerd.1"])
+
         except:
             pass
 

@@ -11,7 +11,7 @@ from autoradio.mpris2.utils import get_players_uri
 from autoradio.mpris2.utils import get_session
 from dbus.mainloop.glib import DBusGMainLoop
 import pygtk, gtk
-import os,stat,time,urlparse,urllib
+import os,stat,time,urlparse,urllib,optparse,sys
 import gobject
 import dbus
 import autoradio.settings
@@ -250,6 +250,17 @@ class Main(object):
     return
       
 if __name__ == "__main__":
+
+
+    from autoradio import  _version_
+
+    p = optparse.OptionParser(usage="usage: %prog",
+                              description="%prog graphic user interface for autoradio player",version="%prog "+_version_)
+    args = sys.argv
+    if args is not None:
+        p.parse_args(args)
+        if len(args) > 1:
+            sys.exit(1)
 
     try:
         if Main().connected:

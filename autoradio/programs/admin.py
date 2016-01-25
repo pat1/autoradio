@@ -120,6 +120,7 @@ class MyEnclosureAdminForm(forms.ModelForm):
     """
     class Meta:
         model = Enclosure
+        fields = '__all__'
 
     def clean_file(self):
 

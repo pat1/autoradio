@@ -68,6 +68,9 @@ def main():
     logging.info('Starting up autoradioweb version '+_version_)
 
 
+    import django
+    django.setup()
+
     management.call_command("runserver",autoradio.settings.port,use_reloader=False)
 
 

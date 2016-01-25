@@ -194,7 +194,7 @@ def programsbook(request):
             author = "Autoradio Radio Automation Free Software"
 
             # Create the HttpResponse object with the appropriate PDF headers.
-            response = HttpResponse(mimetype='application/pdf')
+            response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = 'attachment; filename=somefilename.pdf'
 
 

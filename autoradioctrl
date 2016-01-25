@@ -33,6 +33,10 @@ def initdb(cwd):
     p.add_option("--changeuser", action="store_true",dest="changeuser", help="change user to the user in config file (default %default)", default=False)
     (options, args) = p.parse_args()
 
+
+    import django
+    django.setup()
+
     if (not options.syncdb):
         p.print_help()
 
@@ -43,7 +47,7 @@ def initdb(cwd):
         #os.chdir(cwd)
 
     if (options.syncdb):
-        management.call_command("syncdb")
+        management.call_command("migrate",no_initial_data=True )
 
 
 if __name__ == '__main__':

@@ -49,6 +49,10 @@ def main():
     import datetime
     import time as timesleep
     #from threading import *
+
+    import django
+    django.setup()
+
     import autoradio.autoradio_core
 
     if (autoradio.autoradio_config.player == "amarok1") :

@@ -92,7 +92,7 @@ class Jingle(models.Model):
                  help_text=ugettext_lazy("The jingle will be scheduled starting from this date"))
 	end_time = models.TimeField(ugettext_lazy('Emission end time'),null=True,blank=True,\
                  help_text=ugettext_lazy("The jingle will be scheduled ending this date"))
-	giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Scheduled days'),null=True,blank=True,\
+	giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Scheduled days'),blank=True,\
                  help_text=ugettext_lazy("The jingle will be scheduled those weekdays"))
 	priorita = models.IntegerField(ugettext_lazy("Priority"),default=50,\
                  help_text=ugettext_lazy("When there are more jingle that wait for emission from the same time, the emission will be ordered by this numer"))

@@ -782,7 +782,7 @@ class PeriodicSchedule(models.Model):
                              help_text=ugettext_lazy("The program will be in palimpsest ending this date"))
     time = models.TimeField(ugettext_lazy('Programmed time'),null=True,blank=True,\
                                 help_text=ugettext_lazy("This is the time when the program is planned in palimpsest"))
-    giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Programmed days'),null=True,blank=True,\
+    giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Programmed days'),blank=True,\
                                         help_text=ugettext_lazy("The program will be in palimpsest those weekdays"))
 
 

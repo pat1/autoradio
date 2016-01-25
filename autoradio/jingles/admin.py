@@ -15,6 +15,7 @@ class MyJingleAdminForm(forms.ModelForm):
     """
     class Meta:
         model = Jingle
+        fields = '__all__'
 
     def clean_file(self):
 

@@ -15,6 +15,7 @@ class MySpotAdminForm(forms.ModelForm):
     """
     class Meta:
         model = Spot
+        fields = '__all__'
 
     def clean_file(self):
 

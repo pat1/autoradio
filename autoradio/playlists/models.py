@@ -152,7 +152,7 @@ class PeriodicSchedule(models.Model):
                                       help_text=ugettext_lazy("The playlist will be scheduled ending this date"))
     time = models.TimeField(ugettext_lazy('Programmed time'),null=True,blank=True,\
                                              help_text=ugettext_lazy("This is the time when the playlist will be on air"))
-    giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Programmed days'),null=True,blank=True,\
+    giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Programmed days'),blank=True,\
                                         help_text=ugettext_lazy("The playlist will be scheduled those weekdays"))
     emission_done = models.DateTimeField(ugettext_lazy('Emission done')\
 			        ,null=True,editable=False )

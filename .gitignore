@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+*\#
+django.mo
+autoradio.sqlite3
+autoplayer.xspf
+*~
+build
+dist
+rmap.egg-info

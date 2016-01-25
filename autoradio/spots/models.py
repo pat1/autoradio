@@ -170,9 +170,9 @@ class Spot(models.Model):
 
 	# giorni = models.PositiveIntegerField( choices=DAY_CHOICES)
 #	giorni = models.ForeignKey(Giorno,verbose_name='Giorni programmati',editable=False)
-	giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Programmed days'),null=True,blank=True,\
+	giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Programmed days'),blank=True,\
                        help_text=ugettext_lazy("The spot will be scheduled those weekdays"))
-	fasce = models.ManyToManyField(Fascia,null=True,blank=True,\
+	fasce = models.ManyToManyField(Fascia,blank=True,\
                        help_text=ugettext_lazy("The spot will be included in those commercial break"))
 
 	priorita = models.IntegerField(ugettext_lazy("Priority"),default=50,\

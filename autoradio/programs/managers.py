@@ -8,4 +8,4 @@ class EpisodeManager(Manager):
         super(EpisodeManager, self).__init__(*args, **kwargs)
 
     def published(self):
-        return self.get_query_set().filter(status__exact=2, date__lte=datetime.datetime.now())
+        return self.get_queryset().filter(status__exact=2, date__lte=datetime.datetime.now())

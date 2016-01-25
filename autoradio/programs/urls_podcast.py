@@ -6,8 +6,7 @@ from django.conf.urls import *
 from views import show_list, episode_list, show_list_feed, show_list_atom, show_list_media, episode_sitemap, episode_detail
 
 
-urlpatterns = patterns('autoradio.programs.views',
-
+urlpatterns = [
     # Show list of all shows
     url(r'^$', view=show_list.as_view(), name='podcast_shows'),
 
@@ -29,4 +28,4 @@ urlpatterns = patterns('autoradio.programs.views',
     # Episode detail of one show
     url(r'^(?P<show_slug>[-\w]+)/(?P<slug>[-\w]+)/$', view=episode_detail.as_view(), name='podcast_episode'),
 
-)
+]

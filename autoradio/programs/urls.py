@@ -2,9 +2,10 @@ from django.conf.urls import *
 #from django.contrib import admin
 
 #from models import Program, Schedule
+import views
 
-urlpatterns = patterns('autoradio.programs.views',
-    (r'^$', 'index'),
-    (r'^xmms/$', 'dbusstato'),
-    (r'^programsbook/$', 'programsbook'),
-)
+urlpatterns = [
+    url(r'^$', views.index),
+    url(r'^xmms/$', views.dbusstato),
+    url(r'^programsbook/$', views.programsbook),
+]

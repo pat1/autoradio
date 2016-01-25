@@ -109,7 +109,6 @@ for entry in flatten_errors(config, test):
 
 # section django
 DEBUG                   = config['django']['DEBUG']                     
-TEMPLATE_DEBUG          = config['django']['TEMPLATE_DEBUG']            
 FILE_UPLOAD_PERMISSIONS = config['django']['FILE_UPLOAD_PERMISSIONS']   
 SECRET_KEY              = config['django']['SECRET_KEY']                
 SESSION_COOKIE_DOMAIN   = config['django']['SESSION_COOKIE_DOMAIN']     
@@ -128,7 +127,6 @@ if "%s" in MEDIA_ROOT:
 MEDIA_SITE_ROOT         = config['django']['MEDIA_SITE_ROOT']
 if "%s" in MEDIA_SITE_ROOT:
     MEDIA_SITE_ROOT = MEDIA_SITE_ROOT  % os.getcwd()
-TEMPLATE_DIRS           = config['django']['TEMPLATE_DIRS']
 BASE_URL                = config['django']['BASE_URL']
 ADMIN_MEDIA_PREFIX      = config['django']['ADMIN_MEDIA_PREFIX']
 STATIC_URL              = config['django']['STATIC_URL']
@@ -214,23 +212,46 @@ else:
     
 
 # List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
+TEMPLATE_LOADERS = [
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 #     'django.template.loaders.eggs.load_template_source',
-)
+]
 
-MIDDLEWARE_CLASSES = (
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': config['django']['TEMPLATE_DIRS'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            # List of callables that know how to import templates from various sources.
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+            'debug' : config['django']['TEMPLATE_DEBUG']
+        }
+    },
+]
+
+
+
+MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.admindocs.middleware.XViewMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware')
+    'django.contrib.messages.middleware.MessageMiddleware']
 
 ROOT_URLCONF = 'autoradio.urls'
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -242,7 +263,7 @@ INSTALLED_APPS = (
     'autoradio.spots',
     'autoradio.playlists',
     'autoradio.doc',
-)
+]
 
 # django save the files on memory, but large files are saved in a path.
 # The size of "large file" can be defined in settings using 
@@ -251,8 +272,8 @@ INSTALLED_APPS = (
 # "django.core.files.uploadhandler.TemporaryFileUploadHandler",)
 
 # remove MemoryFileUploadHandler
-FILE_UPLOAD_HANDLERS = (
-"django.core.files.uploadhandler.TemporaryFileUploadHandler",)
+FILE_UPLOAD_HANDLERS = [
+"django.core.files.uploadhandler.TemporaryFileUploadHandler",]
 
 try:
     import django_extensions

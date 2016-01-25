@@ -1,10 +1,9 @@
 from django.conf.urls import *
+import views
 
-
-urlpatterns = patterns('autoradio.player.views',
-
+urlpatterns = [
     # Episode detail of one show
-    url(r'^nohtml5/(?P<media>(.*))', view='playernohtml5cmd'),
-    url(r'^(?P<media>(.*))', view='playercmd'),
+    url(r'^nohtml5/(?P<media>(.*))', views.playernohtml5cmd),
+    url(r'^(?P<media>(.*))', views.playercmd),
 
-)
+]

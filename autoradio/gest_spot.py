@@ -188,7 +188,8 @@ class gest_spot:
             if genfile :
                 # this work if LANG is set
                 #f.write(os.path.basename(filename.encode(sys.getfilesystemencoding())))
-                f.write(os.path.basename(filename.encode("UTF-8")))
+                #f.write(os.path.basename(filename.encode("UTF-8")))
+                f.write(filename.encode("UTF-8"))
                 f.write("\n")
 
             # calcolo la lunghezza della fascia

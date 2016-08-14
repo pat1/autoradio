@@ -177,7 +177,7 @@ class mediaplayer:
                 op=self.get_playlist()
 
                 for prm in xrange(0,pos-atlast): 
-                    print "remove up: ",op[prm]
+                    #print "remove up: ",op[prm]
                     self.tl.RemoveTrack( str(op[prm]))
 
             time.sleep(1)
@@ -209,7 +209,7 @@ class mediaplayer:
                 op=self.get_playlist()
 
                 for prm in xrange(length-1,pos+atlast,-1): 
-                    print "remove down: ",op[prm]
+                    #print "remove down: ",op[prm]
                     self.tl.RemoveTrack( str(op[prm]) )
 
             time.sleep(1)

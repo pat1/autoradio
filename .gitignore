@@ -7,4 +7,5 @@ autoplayer.xspf
 *~
 build
 dist
-rmap.egg-info
+autoradio.egg-info
+man

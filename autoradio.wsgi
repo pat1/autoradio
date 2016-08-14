@@ -1,3 +1,7 @@
+# remenber to set those in envvars in debian or /etc/sysconfig/httpd in centos
+#LANG='en_US.UTF-8'
+#LC_ALL='en_US.UTF-8'
+
 import os
 import autoradio.settings
 import autoradio.autoradio_config

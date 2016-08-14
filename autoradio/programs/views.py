@@ -201,10 +201,10 @@ def programsbook(request):
             PAGE_HEIGHT=defaultPageSize[1]
             styles = getSampleStyleSheet()
 
-            MezzoTrasmissione=Paragraph("Mezzo di diffusione: "+str(mezzo)+
-                                        "  //   Tipo di trasmissione: "+str(trasmissione), styles["Normal"])
-            EmittenteCanale=Paragraph("Denominazione dell'emittente: "+str(emittente)+
-                                      "  //   Denominazione del canale: "+str(canale), styles["Normal"])
+            MezzoTrasmissione=Paragraph("Mezzo di diffusione: "+unicode(mezzo)+
+                                        "  //   Tipo di trasmissione: "+unicode(trasmissione), styles["Normal"])
+            EmittenteCanale=Paragraph("Denominazione dell'emittente: "+unicode(emittente)+
+                                      "  //   Denominazione del canale: "+unicode(canale), styles["Normal"])
             Space=Spacer(inch, 0.25 * inch)
 
             # First the top row, with all the text centered and in Times-Bold,
@@ -254,7 +254,7 @@ def programsbook(request):
             Elements = [MezzoTrasmissione,EmittenteCanale,Space,Tabella]
 
             # Create the PDF object, using the response object as its "file."
-            p = SimpleDocTemplate(response,title="Libro programmi: "+str(emittente),author=author)
+            p = SimpleDocTemplate(response,title="Libro programmi: "+unicode(emittente),author=author)
             p.build(Elements, onFirstPage=myPages, onLaterPages=myPages)
 
 

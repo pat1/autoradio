@@ -983,9 +983,12 @@ def main(busaddress=None,myaudiosink=None):
 
 
   pl=playlist.Playlist()
-  pl.read("autoplayer.xspf")
+  pl.read(STATUS_PLAYLIST)
   #plmpris=playlist.Playlist_mpris2(pl,pl.current,pl.position)
   plmpris=playlist.Playlist_mpris2(pl)
+
+  #save to update playlist to make monit happy
+  pl.write(STATUS_PLAYLIST)
 
   if len(sys.argv) >= 2:
     #if you come from autoplayerd argv[1] is run/start/stop ...
@@ -1019,7 +1022,7 @@ def main(busaddress=None,myaudiosink=None):
     GObject.timeout_add(  100,ap.player.initialize)
     GObject.timeout_add(  200,ap.player.recoverstatus)
     GObject.timeout_add(  500,ap.updateinfo)
-    GObject.timeout_add(60000,ap.player.save_playlist,"autoplayer.xspf")
+    GObject.timeout_add(60000,ap.player.save_playlist,STATUS_PLAYLIST)
     #GObject.timeout_add( 1000,ap.player.printinfo)
 
     signal.signal(signal.SIGINT, ap.handle_sigint)

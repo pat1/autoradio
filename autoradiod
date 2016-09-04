@@ -284,7 +284,7 @@ if __name__ == '__main__':
             if user is not None and group is not None:
                 from pwd import getpwnam
                 from grp import getgrnam
-                uid = getpwnam<(user)[2]
+                uid = getpwnam(user)[2]
                 gid = getgrnam(group)[2]
                 os.chown(path,uid,gid)
 

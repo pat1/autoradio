@@ -75,8 +75,20 @@ class ScheduleProgram:
 
     def start (self):
         "start of programmed schedule"
-        
+
+        # A thread can be flagged as a "daemon thread".
+        # The significance of this flag is that the entire Python program
+        # exits when only daemon threads are left.
+        # The initial value is inherited from the creating thread.
+        # The flag can be set through the daemon property.
+        self.timer.daemon=True
+
         self.timer.start()
+
+    def cancel (self):
+        "cancel programmed schedule"
+        
+        self.timer.cancel()
 
 
 def ManagePlayer (player,session,schedule):

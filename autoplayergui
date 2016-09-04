@@ -94,10 +94,12 @@ class Main(object):
         print "No players availables"
         return
     
-    if self.mp2.HasTrackList:
-      self.tl = TrackList(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
-      #tl.PropertiesChanged = trackhandler
-
+    if hasattr (self.mp2, 'HasTrackList'):
+        if self.mp2.HasTrackList:
+            self.tl = TrackList(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
+            #tl.PropertiesChanged = trackhandler
+        else:
+            self.tl = None
     else:
       self.tl = None
 

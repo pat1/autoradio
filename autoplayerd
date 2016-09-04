@@ -29,14 +29,14 @@ def main ():
 
     import logging,logging.handlers
 
-    handler = logging.handlers.RotatingFileHandler(autoradio.autoradio_config.logfile, maxBytes=5000000, backupCount=10)
-    formatter=logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    formatter=logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s",datefmt="%Y-%m-%d %H:%M:%S")
+    handler = logging.handlers.RotatingFileHandler(autoradio.settings.logfileplayer, maxBytes=5000000, backupCount=10)
     handler.setFormatter(formatter)
     
     # Add the log message handler to the root logger
-    logging.getLogger('autoplayerd').addHandler(handler)
-    logging.getLogger('').setLevel(logging.INFO)
-    
+    logging.getLogger().addHandler(handler)
+    logging.getLogger().setLevel(logging.INFO)
+
     logging.info('Starting up autoplayerd version '+_version_)
 
 #   # Use logging for ouput at different *levels*.

@@ -581,6 +581,39 @@ class Player:
     #audiosink = gst.element_factory_make("autoaudiosink")
     #audiosink = gst.element_factory_make("jackaudiosink")
 
+#    TODO replaygain
+#+++++++
+#
+#Example 40
+#
+#From project rhythmbox-multiple-libraries, under directory plugins/replaygain/replaygain, in source file player.py.
+#
+#def setup_playbin2_mode(self):
+#		print "using output filter for rgvolume and rglimiter"
+#		self.rgvolume = gst.element_factory_make("rgvolume")
+#		self.rgvolume.connect("notify::target-gain", self.playbin2_target_gain_cb)
+#		self.rglimiter = gst.element_factory_make("rglimiter")
+#
+#		# on track changes, we need to reset the rgvolume state, otherwise it
+#		# carries over the tags from the previous track
+#		self.pec_id = self.shell_player.connect('playing-song-changed', self.playing_entry_changed)
+#
+#		# watch playbin2's uri property to see when a new track is opened
+#		playbin = self.player.props.playbin
+#		if playbin is None:
+#			self.player.connect("notify::playbin", self.playbin2_notify_cb)
+#		else:
+#			playbin.connect("notify::uri", self.playbin2_uri_notify_cb)
+#
+#		self.rgfilter = gst.Bin()
+#		self.rgfilter.add(self.rgvolume, self.rglimiter)
+#		self.rgvolume.link(self.rglimiter)
+#		self.rgfilter.add_pad(gst.GhostPad("sink", self.rgvolume.get_static_pad("sink")))
+#		self.rgfilter.add_pad(gst.GhostPad("src", self.rglimiter.get_static_pad("src")))
+#		self.player.add_filter(self.rgfilter)
+#
+#+++++++++
+
     if myaudiosink is None: myaudiosink = "autoaudiosink"
     audiosink = Gst.ElementFactory.make(myaudiosink,None)
     self.player.set_property("audio-sink", audiosink)

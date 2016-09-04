@@ -55,15 +55,14 @@ def main():
 
     import os,logging,logging.handlers
 
+
+    formatter=logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s",datefmt="%Y-%m-%d %H:%M:%S")
     handler = logging.handlers.RotatingFileHandler(autoradio.settings.logfileweb, maxBytes=5000000, backupCount=10)
-    formatter=logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-
     handler.setFormatter(formatter)
-    #handler.setLevel(logging.DEBUG)
-
+    
     # Add the log message handler to the root logger
-    logging.getLogger('').addHandler(handler)
-    logging.getLogger('').setLevel(logging.DEBUG)
+    logging.getLogger().addHandler(handler)
+    logging.getLogger().setLevel(logging.INFO)
 
     logging.info('Starting up autoradioweb version '+_version_)
 

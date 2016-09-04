@@ -32,7 +32,7 @@ jackd = daemon.Daemon(
 def main(self):
 
     import subprocess
-    self.procs=[subprocess.Popen(["/usr/bin/jackd", "-R", "-dalsa", "-dhw:0", "-r48000", "-p1024", "-n3", "-i2", "-o2", "-M"],cwd=self.cwd)]
+    self.procs=[subprocess.Popen(["/usr/bin/jackd", "-R", "-dalsa", "-dhw:0", "-r44100", "-p1024", "-n4", "-i2", "-o2", "-H", "-M", "-I300", "-O300"],cwd=self.cwd)]
 
 
 if __name__ == '__main__':

@@ -657,6 +657,9 @@ class Player:
     logging.error( " %s: %s " % (err, debug))
 
     logging.warning("restart to play after an ERROR skipping current media")
+    currenturi = self.playlist.get_current().path
+    logging.warning("current media: %s" % currenturi)
+
     self.playmode= self.recoverplaymode
     self.next()
     

@@ -85,10 +85,7 @@ class gest_spot:
 
             # count the spots
             self.ar_spots_in_fascia=self.count_spots()
-            self.ar_filename=self.get_fascia_playlist_media(genfile)
-
-            # TODO: add the real http to the file path
-            self.ar_url=self.ar_filename
+            self.ar_filename,self.ar_url=self.get_fascia_playlist_media(genfile)
 
             self.ar_scheduledatetime=datetime.combine(self.oggi, fascia.emission_time)
 
@@ -167,7 +164,9 @@ class gest_spot:
 
     def get_fascia_playlist_media(self,genfile=True):
 
-        playlistname =self.playlistpath+"/"+self.fascia.name+".m3u"
+        name=self.fascia.name+".m3u"
+        url=os.path.join(os.path.join(settings.MEDIA_URL, playlistdir),name)
+        playlistname =os.path.join(self.playlistpath,name)
 
         if genfile :
             #        os.umask(002)
@@ -212,7 +211,7 @@ class gest_spot:
             shutil.move(tmpfile,playlistname)
             logging.debug("SPOT: move the playlist %s in %s",tmpfile,playlistname) 
 
-        return playlistname
+        return playlistname,url
 
 
 def main():

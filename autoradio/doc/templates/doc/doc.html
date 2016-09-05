@@ -7,7 +7,7 @@
 
 <div id="content-main">
 
-{% if params.docitem == "overview" %}
+{% if docitem == "overview" %}
 {% blocktrans %}
 Radio automation software. Simple to use, starting from digital audio
 files, manage on-air broadcasting over a radio-station or
@@ -32,7 +32,7 @@ Developed with Python, Django, Dbus it works in an production enviroment
 {% endblocktrans %}
 {% endif %}
 
-{% if params.docitem == "feature" %}
+{% if docitem == "feature" %}
 {% blocktrans %}
 <ul>
  <li> manage ogg, mp3, wav and other media file format</li>
@@ -55,7 +55,7 @@ Developed with Python, Django, Dbus it works in an production enviroment
 {% endblocktrans %}
 {% endif %}
 
-{% if params.docitem == "player" %}
+{% if docitem == "player" %}
 
 <p>
 {% blocktrans %}
@@ -118,7 +118,7 @@ Questi sono i meccanismi di funzionamento principale:
 
 {% endif %}
 
-{% if params.docitem == "scheduler" %}
+{% if docitem == "scheduler" %}
 
 <p>
 {% blocktrans %}
@@ -159,7 +159,7 @@ specificata nel file di configurazione (playlistdir).
 
 {% endif %}
 
-{% if params.docitem == "playlist" %}
+{% if docitem == "playlist" %}
 
 <p>
 {% blocktrans %}
@@ -187,7 +187,7 @@ del player.
 
 {% endif %}
 
-{% if params.docitem == "jingle" %}
+{% if docitem == "jingle" %}
 
 <p>
 {% blocktrans %}
@@ -210,7 +210,7 @@ della priorità.
 
 {% endif %}
 
-{% if params.docitem == "spot" %}
+{% if docitem == "spot" %}
 
 <p>
 {% blocktrans %}
@@ -235,7 +235,7 @@ priorità che determina l'oridine di emissione.
 
 {% endif %}
 
-{% if params.docitem == "program" %}
+{% if docitem == "program" %}
 
 <p>{% blocktrans %}
 La gestione dei programmi è la sezione più articolata di Autoradio.
@@ -394,7 +394,7 @@ Core or the DC extension.</a>
 
 {% endif %}
 
-{% if params.docitem == "podcast" %}
+{% if docitem == "podcast" %}
 <h2>Podcast</h2>
 
 <h3>{% trans 'Che cosa è il podcasting/mediacast?' %}</h3>
@@ -431,7 +431,7 @@ propria programmazione radiofonica.
 {% endif %}
 
 
-{% if params.docitem == "programbook" %}
+{% if docitem == "programbook" %}
 
 <p>{% blocktrans %}
 Autoradio permette la stampa del Libro Programmi secondo la

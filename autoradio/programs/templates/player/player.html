@@ -1,22 +1,22 @@
 {% extends "player/base.html" %}
 {% load i18n %}
-
+{% load static %}
 
 {% block head %}
 
 <head>
   <title>Universal Ogg player</title>
-  <script type="text/javascript" src="{{site_media_url}}sito/playogg/swfobject/swfobject.js"></script>
-  <script type="text/javascript" src="{{site_media_url}}sito/playogg/js/jquery.min.js"></script>
+  <script type="text/javascript" src="{% static "programs/playogg/swfobject/swfobject.js" %}"></script>
+  <script type="text/javascript" src="{% static "programs/playogg/js/jquery.min.js" %}"></script>
   <script type="text/javascript">
-    var baseURL="{{ site_media_url }}sito/playogg/";
-    var imgURL="{{ site_media_url }}sito/playogg/";
-    var media_url="{{ site_media_url }}";
+    var baseURL="{% static "programs/playogg/" %}";
+    var imgURL="{% static "programs/playogg/" %}";
+    var media_url="{% static "/" %}";
     var media="{{ media }}";
   </script>
-  <script type="text/javascript" src="{{site_media_url}}sito/playogg/js/player.js"></script>
+  <script type="text/javascript" src="{% static "programs/playogg/js/player.js" %}"></script>
 
-  <link href="{{site_media_url}}sito/css/player.css" rel="stylesheet" type="text/css" media="screen" />
+  <link href="{% static "programs/css/player.css" %}" rel="stylesheet" type="text/css" media="screen" />
 </head>
 {% endblock %}
 
@@ -33,9 +33,9 @@
 
     <div id="flashplayer">
 
-      <applet id="javaplayer" code="com.fluendo.player.Cortado.class" archive="{{site_media_url}}sito/playogg/java/cortado.jar" width="352" height="288" style="visibility:hidden">
+      <applet id="javaplayer" code="com.fluendo.player.Cortado.class" archive="{% static "programs/playogg/java/cortado.jar" %}" width="352" height="288" style="visibility:hidden">
         <param name="url" value="{{ media  }}"/>
-	<param name="archive" value="{{site_media_url}}sito/playogg/java/cortado.jar" />
+	<param name="archive" value="{% static "programs/playogg/java/cortado.jar" %}" />
 	<param name="autoPlay" value="false"/>
 	<param name="showStatus" value="hide"/>
 	<param name="keepaspect" value="true" />
@@ -64,7 +64,7 @@
     </audio>
 -->
 
-<a id="pluginnojs" href="{{ media  }}" type="audio/ogg"> <img src="{{site_media_url}}sito/playogg/player.png" style='visibility:show ; position:fixed; left:100px; top:200px; border: 2px solid red; ' /> </a>
+<a id="pluginnojs" href="{{ media  }}" type="audio/ogg"> <img src="{% static "programs/playogg/player.png" %}" style='visibility:show ; position:fixed; left:100px; top:200px; border: 2px solid red; ' /> </a>
 
 </noscript>
 

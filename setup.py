@@ -110,15 +110,6 @@ for dirpath, dirnames, filenames in os.walk('man'):
     if filenames:
         data_files.append(['share/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
 
-
-for dirpath, dirnames, filenames in os.walk('media/sito'):
-    # Ignore dirnames that start with '.'
-    for i, dirname in enumerate(dirnames):
-        if dirname.startswith('.'): del dirnames[i]
-    if filenames:
-        data_files.append(['share/autoradio/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
-
-
 for dirpath, dirnames, filenames in os.walk('doc'):
     # Ignore dirnames that start with '.'
     for i, dirname in enumerate(dirnames):
@@ -148,6 +139,15 @@ for dirpath, dirnames, filenames in os.walk('templates'):
     if filenames:
         data_files.append(['share/autoradio/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
 
+for dirpath, dirnames, filenames in os.walk('static'):
+    # Ignore dirnames that start with '.'
+    for i, dirname in enumerate(dirnames):
+        if dirname.startswith('.'): del dirnames[i]
+    if filenames:
+        data_files.append(['share/autoradio/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
+
+data_files.append(('share/autoradio/media',[]))
+data_files.append(('share/autoradio/static',[]))
 data_files.append(('/etc/autoradio',['autoradio-site.cfg']))
 data_files.append(('/etc/autoradio',['dbus-autoradio.conf']))
 
@@ -187,7 +187,24 @@ setup(name='autoradio',
                 'autoradio.player', 'autoradio.doc',
                 'autoradio.autoplayer', 'autoradio.mpris2',
                 'autoradio.pydbusdecorator',],
-      package_data={'autoradio.programs': ['fixtures/*.json']},
+      package_data={
+          'autoradio.doc': ['templates/doc/*'],
+          'autoradio.programs': ['fixtures/*.json',
+                                 'static/programs/css/*',
+                                 'static/programs/css/*',
+                                 'static/programs/playogg/*.png',
+                                 'static/programs/playogg/flash/*',
+                                 'static/programs/playogg/java/*',
+                                 'static/programs/playogg/js/*',
+                                 'static/programs/playogg/swfobject/*',
+                                 'templates/*.html',
+                                 'templates/palimpsest/*.html',
+                                 'templates/player/*.html',
+                                 'templates/podcast/*.html',
+                                 'templates/schedule/*.html',
+                                 'templates/xmms/*.html'
+                             ]
+      },
       scripts=['autoradiod','autoradioweb','autoradioctrl','autoradio.wsgi',
                'autoplayerd','autoplayergui','autoradiodbusd','jackdaemon'],
       data_files = data_files,

@@ -9,3 +9,4 @@ urlpatterns = [
     url(r'^xmms/$', views.dbusstato),
     url(r'^programsbook/$', views.programsbook),
 ]
+

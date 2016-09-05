@@ -31,7 +31,7 @@ def index(request):
 
     scheds=autoradio.autoradio_core.schedules([])
 
-    return render_to_response('schedule/index.html', {'schedule': scheds.get_all_refine(genfile=False),'site_media_url':autoradio.settings.SITE_MEDIA_URL})
+    return render_to_response('schedule/index.html', {'schedule': scheds.get_all_refine(genfile=False)})
 
 
 def stato(request):
@@ -46,7 +46,7 @@ def stato(request):
         xmmsweb="<p>Error getting player status !!</p>"
         xmmsweb=xmmsweb+"<p>Start autoradiod or verify settings</p>"
 
-    return render_to_response('xmms/index.html', {'xmmsweb': xmmsweb,'site_media_url':autoradio.settings.SITE_MEDIA_URL })
+    return render_to_response('xmms/index.html', {'xmmsweb': xmmsweb,})
 
 
 def dbusstato(request):
@@ -61,7 +61,7 @@ def dbusstato(request):
         except:
             htmlresponse +="<p>Error getting player status !!</p>"
             htmlresponse +=htmlresponse+"<p>Start autoradiod or verify settings</p>"
-            return render_to_response('xmms/index.html', {'xmmsweb': htmlresponse,'site_media_url':autoradio.settings.SITE_MEDIA_URL })
+            return render_to_response('xmms/index.html', {'xmmsweb': htmlresponse,})
     else:
         return stato(request)
         #htmlresponse += "Invalid player for dbus interface"
@@ -116,7 +116,7 @@ def dbusstato(request):
         htmlresponse +=htmlresponse+"<p>Start autoradiod or verify settings</p>"
         
     del mp
-    return render_to_response('xmms/index.html', {'xmmsweb': htmlresponse,'site_media_url':autoradio.settings.SITE_MEDIA_URL })
+    return render_to_response('xmms/index.html', {'xmmsweb': htmlresponse,})
 
 
 
@@ -265,8 +265,7 @@ def programsbook(request):
         form = ExtremeForm() # An unbound form
 
     return render_to_response('palimpsest/extreme.html', {
-        'form': form,'site_media_url':autoradio.settings.SITE_MEDIA_URL
-    })
+        'form': form,})
 
 
 #----------------------------------------------------
@@ -296,8 +295,7 @@ class episode_detail(DetailView):
         context = super(episode_detail, self).get_context_data(**kwargs)
         extra_context={
         'enclosure_list': Enclosure.objects.filter
-        (episode__show__slug__exact=self.show_slug).filter(episode__slug__exact=self.episode_slug).order_by('-episode__date'),
-        'site_media_url':autoradio.settings.SITE_MEDIA_URL}
+        (episode__show__slug__exact=self.show_slug).filter(episode__slug__exact=self.episode_slug).order_by('-episode__date'),}
         context.update(extra_context)
         return context
 
@@ -340,7 +338,7 @@ class episode_list(ListView):
 #        except:
 #           return HttpResponseRedirect(reverse('podcast_shows'))
 
-        extra_context = {'show':show, 'site_media_url':autoradio.settings.SITE_MEDIA_URL}
+        extra_context = {'show':show,}
         context.update(extra_context)
         return context
 
@@ -367,8 +365,7 @@ class episode_sitemap(ListView):
         context = super(episode_sitemap, self).get_context_data(**kwargs)
         extra_context={
             'enclosure_list': Enclosure.objects.filter
-            (episode__show__slug__exact=self.slug).order_by('-episode__date'),
-            'site_media_url':autoradio.settings.SITE_MEDIA_URL},
+            (episode__show__slug__exact=self.slug).order_by('-episode__date'),},
         context.update(extra_context)
         return context
 
@@ -399,8 +396,7 @@ class show_list(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(show_list, self).get_context_data(**kwargs)
-        extra_context={'site_media_url':autoradio.settings.SITE_MEDIA_URL}
-        context.update(extra_context)
+        context.update()
         return context
 
 
@@ -418,7 +414,6 @@ class show_list_feed(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(show_list_feed, self).get_context_data(**kwargs)
-        extra_context={'site_media_url':autoradio.settings.SITE_MEDIA_URL}
         context.update(extra_context)
         return context
 
@@ -449,8 +444,7 @@ class show_list_media(ListView):
         context = super(show_list_media, self).get_context_data(**kwargs)
         extra_context={
             'enclosure_list': Enclosure.objects.filter
-            (episode__show__slug__exact=self.slug).order_by('-episode__date'),
-            'site_media_url':autoradio.settings.SITE_MEDIA_URL}
+            (episode__show__slug__exact=self.slug).order_by('-episode__date')}
         context.update(extra_context)
         return context
 
@@ -480,8 +474,7 @@ class show_list_atom(ListView):
         context = super(show_list_atom, self).get_context_data(**kwargs)
         extra_context={
             'enclosure_list': Enclosure.objects.filter
-            (episode__show__slug__exact=self.slug).order_by('-episode__date'),
-            'site_media_url':autoradio.settings.SITE_MEDIA_URL}
+            (episode__show__slug__exact=self.slug).order_by('-episode__date')}
         context.update(extra_context)
         return context
 

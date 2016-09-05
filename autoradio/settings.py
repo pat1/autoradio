@@ -23,14 +23,10 @@ configspec['django']['LOCALE_PATHS']="list(default=list('locale',))"
 configspec['django']['ADMINS']="list(default=list('',))"
 configspec['django']['MANAGERS']="list(default=list('',))"                  
 configspec['django']['MEDIA_ROOT']="string(default='%s/media/')" % os.getcwd()
-configspec['django']['MEDIA_SITE_ROOT']="string(default='%s/media/')" % os.getcwd()
-configspec['django']['TEMPLATE_DIRS']="list(default=list('templates',))"
-configspec['django']['BASE_URL']="string(default='/django/')"
-configspec['django']['ADMIN_MEDIA_PREFIX']="string(default='/django/media/admin/')"
-configspec['django']['STATIC_URL']="string(default='/django/media/')"
-configspec['django']['STATIC_ROOT'] = "string(default='/usr/lib/python2.7/site-packages/django/contrib/admin/static/admin/')"
-configspec['django']['MEDIA_PREFIX']="string(default='/media/')"
-configspec['django']['MEDIA_SITE_PREFIX']="string(default='/media/sito/')"
+configspec['django']['MEDIA_URL']="string(default='/media/')"
+configspec['django']['TEMPLATE_DIRS']="list(default=list('%s/templates',))" % os.getcwd()
+configspec['django']['STATIC_ROOT'] = "string(default='%s/static/')" % os.getcwd()
+configspec['django']['STATIC_URL']="string(default='/static/')"
 configspec['django']['SERVE_STATIC']="boolean(default=True)"
 
 
@@ -124,18 +120,12 @@ MANAGERS                = config['django']['MANAGERS']
 MEDIA_ROOT              = config['django']['MEDIA_ROOT']
 if "%s" in MEDIA_ROOT:
     MEDIA_ROOT = MEDIA_ROOT  % os.getcwd()
-MEDIA_SITE_ROOT         = config['django']['MEDIA_SITE_ROOT']
-if "%s" in MEDIA_SITE_ROOT:
-    MEDIA_SITE_ROOT = MEDIA_SITE_ROOT  % os.getcwd()
-BASE_URL                = config['django']['BASE_URL']
-ADMIN_MEDIA_PREFIX      = config['django']['ADMIN_MEDIA_PREFIX']
+MEDIA_URL         = config['django']['MEDIA_URL']
 STATIC_URL              = config['django']['STATIC_URL']
 STATIC_ROOT             = config['django']['STATIC_ROOT']
-MEDIA_PREFIX            = config['django']['MEDIA_PREFIX']
-MEDIA_SITE_PREFIX       = config['django']['MEDIA_SITE_PREFIX']
+if "%s" in STATIC_ROOT:
+    STATIC_ROOT = STATIC_ROOT  % os.getcwd()
 SERVE_STATIC            = config['django']['SERVE_STATIC']
-MEDIA_URL               = BASE_URL+MEDIA_PREFIX
-SITE_MEDIA_URL          = BASE_URL+MEDIA_SITE_PREFIX
 
 
 
@@ -218,10 +208,14 @@ TEMPLATE_LOADERS = [
 #     'django.template.loaders.eggs.load_template_source',
 ]
 
+templatedirs=[]
+for templatedir in config['django']['TEMPLATE_DIRS'] :
+    templatedirs.append(templatedir % os.getcwd())
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': config['django']['TEMPLATE_DIRS'],
+        'DIRS': templatedirs ,
         'APP_DIRS': True,
         'OPTIONS': {
             # List of callables that know how to import templates from various sources.
@@ -274,6 +268,12 @@ INSTALLED_APPS = [
 # remove MemoryFileUploadHandler
 FILE_UPLOAD_HANDLERS = [
 "django.core.files.uploadhandler.TemporaryFileUploadHandler",]
+
+
+STATICFILES_DIRS = [
+    "global_static",
+]
+
 
 try:
     import django_extensions

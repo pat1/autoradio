@@ -11,7 +11,7 @@ def playercmd(request, media):
 
     """
 
-    return render_to_response('player/player.html', {'media': media, 'site_media_url': autoradio.settings.SITE_MEDIA_URL })
+    return render_to_response('player/player.html', {'media': media})
 
 def playernohtml5cmd(request, media):
     """
@@ -22,4 +22,4 @@ def playernohtml5cmd(request, media):
 
     """
 
-    return render_to_response('player/playernohtml5.html', {'media': media, 'site_media_url': autoradio.settings.SITE_MEDIA_URL })
+    return render_to_response('player/playernohtml5.html', {'media': media})

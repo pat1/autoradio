@@ -8,6 +8,5 @@ global-include  *.txt *.py *.sh *.in *.cfg *.json *.conf
 recursive-include doc *
 recursive-include locale *.po
 recursive-include templates *
-recursive-include media/sito *
 recursive-include debian *
-prune amarok
+prune amarok media

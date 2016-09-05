@@ -1,5 +1,7 @@
 from django.conf.urls import *
 import settings
+from django.conf.urls.static import static
+
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -29,8 +31,5 @@ urlpatterns = [
 ]
 
 if ( settings.SERVE_STATIC ):
-#serve local static files
-    urlpatterns += [
-        url(r'^'+settings.MEDIA_PREFIX[1:]+'(.*)', views.serve, {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
-        url(r'^'+settings.MEDIA_SITE_PREFIX[1:]+'(.*)', views.serve, {'document_root': settings.MEDIA_SITE_ROOT, 'show_indexes': True}),
-    ]
+    #serve media files
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

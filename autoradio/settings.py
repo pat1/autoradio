@@ -210,7 +210,10 @@ TEMPLATE_LOADERS = [
 
 templatedirs=[]
 for templatedir in config['django']['TEMPLATE_DIRS'] :
-    templatedirs.append(templatedir % os.getcwd())
+    if "%s" in templatedir:
+        templatedirs.append(templatedir % os.getcwd())
+    else:
+        templatedirs.append(templatedir)
 
 TEMPLATES = [
     {

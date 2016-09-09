@@ -190,6 +190,7 @@ setup(name='autoradio',
       package_data={
           'autoradio.doc': ['templates/doc/*'],
           'autoradio.programs': ['fixtures/*.json',
+                                 'static/programs/*.png',
                                  'static/programs/css/*',
                                  'static/programs/css/*',
                                  'static/programs/playogg/*.png',

@@ -414,7 +414,6 @@ class show_list_feed(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(show_list_feed, self).get_context_data(**kwargs)
-        context.update(extra_context)
         return context
 
     def get(self, request, *args, **kwargs):

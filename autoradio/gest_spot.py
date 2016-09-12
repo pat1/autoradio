@@ -14,6 +14,7 @@ from spots.models import Configure
 from spots.models import Spot
 from spots.models import Fascia
 from spots.models import Giorno
+import time
 
 #used to get metadata from audio files
 import mutagen
@@ -208,8 +209,33 @@ class gest_spot:
         if genfile :
             f.close()
             os.chmod(tmpfile,0644)
-            shutil.move(tmpfile,playlistname)
-            logging.debug("SPOT: move the playlist %s in %s",tmpfile,playlistname) 
+
+
+            #sometime I get:
+            #shutil.move(tmpfile,playlistname)
+            #File "/usr/lib64/python2.7/shutil.py", line 301, in move
+            #copy2(src, real_dst)
+            #File "/usr/lib64/python2.7/shutil.py", line 130, in copy2
+            #copyfile(src, dst)
+            #File "/usr/lib64/python2.7/shutil.py", line 83, in copyfile
+            #with open(dst, 'wb') as fdst:
+            #    IOError: [Errno 11] Risorsa temporaneamente non disponibile: u'/home/autoradio/media/pubblicita/ore 13.30.m3u'
+
+            # so I try to do it in a delayed loop
+
+            ntry=0
+            while True:
+                try:
+                    shutil.move(tmpfile,playlistname)
+                    logging.debug("SPOT: moved the playlist %s in %s",tmpfile,playlistname) 
+                    break
+                except:
+                    logging.warning("SPOT: error moving the playlist %s in %s",tmpfile,playlistname) 
+                    ntry +=1
+                    if ntry > 5:
+                        logging.error("SPOT: cannot move the playlist %s in %s",tmpfile,playlistname)
+                        break
+                        time.sleep(1)
 
         return playlistname,url
 

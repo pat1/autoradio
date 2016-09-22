@@ -15,6 +15,7 @@ import os,stat,time,urlparse,urllib,optparse,sys
 import gobject
 import dbus
 import autoradio.settings
+import urlparse
 
 busaddress=autoradio.settings.busaddressplayer
 
@@ -243,12 +244,14 @@ class Main(object):
 
   def Artist(self, column, cell, model, iter):
     track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
-    cell.set_property('text', track[0].get(u'xesam:artist',""))
+    dir=os.path.dirname(urlparse.urlparse(track[0].get(u'xesam:url',"")).path).split('/')[-1]
+    cell.set_property('text', track[0].get(u'xesam:artist', dir))
     return
 
   def Title(self, column, cell, model, iter):
     track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
-    cell.set_property('text', track[0].get(u'xesam:title',""))
+    file=os.path.basename(urlparse.urlparse(track[0].get(u'xesam:url',"")).path)
+    cell.set_property('text', track[0].get(u'xesam:title',file))
     return
       
 if __name__ == "__main__":

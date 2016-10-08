@@ -138,7 +138,10 @@ class XSPFParser2(handler.ContentHandler):
       #s.track['location'] = urllib.unquote(s.content.encode("UTF-8"))
 
       url=urlparse.urlsplit(s.content)
-      s.track['location']=urlparse.urljoin("file://",urllib.unquote(url.path.encode("UTF-8")))
+      if (url.scheme == "http"):
+        s.track['location']=url.geturl()
+      else:
+        s.track['location']=urlparse.urljoin("file://",urllib.unquote(url.path.encode("UTF-8")))
 
     elif s.path == "/playlist/trackList/track/title":
       s.track['title'] = s.content
@@ -216,7 +219,11 @@ class Playlist(list):
         url=urlparse.urlsplit(location)
         #                 mmmmmm encode / decode every time do not work ! 
         #location=urlparse.urljoin("file://",urllib.unquote(url.path.encode("UTF-8")))
-        location=urlparse.urljoin("file://",urllib.unquote(url.path))
+
+        if (url.scheme == "http"):
+          location=url.geturl()
+        else:
+          location=urlparse.urljoin("file://",urllib.unquote(url.path))
 
         track=Track._make(Track(location,None,None,None,None,None).get_metadata().values())
         s.append(track)
@@ -326,11 +333,15 @@ class Playlist(list):
         location = track['path']
 
         url=urlparse.urlsplit(location)
-        #here problem when file name come fron gtk or command line
-        try:
-          location=urlparse.urljoin("file://",urllib.quote(url.path))
-        except:
-          location=urlparse.urljoin("file://",urllib.quote(url.path.encode("UTF-8")))
+
+        if (url.scheme == "http"):
+          location=url.geturl()
+        else:
+          #here problem when file name come fron gtk or command line
+          try:
+            location=urlparse.urljoin("file://",urllib.quote(url.path))
+          except:
+            location=urlparse.urljoin("file://",urllib.quote(url.path.encode("UTF-8")))
 
         ##location = location.encode("utf-8")
         #if    not 'http://' in location.lower() and \

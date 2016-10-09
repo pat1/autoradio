@@ -7,7 +7,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
 from django.conf import settings
 
 import logging
-from datetime import *
+import datetime
 from autoradio_config import *
 from django.db.models import Q
 from spots.models import Configure
@@ -47,8 +47,8 @@ class gest_spot:
         self.oggi=self.now.date()
         self.giorno=calendar.day_name[self.now.weekday()]
 
-        datesched_min=self.now - timedelta( seconds=60*self.minelab)
-        datesched_max=self.now + timedelta( milliseconds=60000*self.minelab-1) # 1 millisec tollerance
+        datesched_min=self.now - datetime.timedelta( seconds=60*self.minelab)
+        datesched_max=self.now + datetime.timedelta( milliseconds=60000*self.minelab-1) # 1 millisec tollerance
         logging.debug( "SPOT: elaborate from %s to %s",datesched_min, datesched_max)
         timesched_min=datesched_min.time()
         timesched_max=datesched_max.time()
@@ -88,16 +88,16 @@ class gest_spot:
             self.ar_spots_in_fascia=self.count_spots()
             self.ar_filename,self.ar_url=self.get_fascia_playlist_media(genfile)
 
-            self.ar_scheduledatetime=datetime.combine(self.oggi, fascia.emission_time)
+            self.ar_scheduledatetime=datetime.datetime.combine(self.oggi, fascia.emission_time)
 
             # if we are around midnight we have to check the correct date (today, iesterday, tomorrow)
-            datesched_min=self.now - timedelta( seconds=60*self.minelab)
-            datesched_max=self.now + timedelta( seconds=60*self.minelab)
+            datesched_min=self.now - datetime.timedelta( seconds=60*self.minelab)
+            datesched_max=self.now + datetime.timedelta( seconds=60*self.minelab)
             if not (datesched_min <= self.ar_scheduledatetime and  self.ar_scheduledatetime <= datesched_max  ):
-                if self.now.time() < time(12):
-                    self.ar_scheduledatetime=datetime.combine(datesched_min.date(), fascia.emission_time)
+                if self.now.time() < datetime.time(12):
+                    self.ar_scheduledatetime=datetime.datetime.combine(datesched_min.date(), fascia.emission_time)
                 else:
-                    self.ar_scheduledatetime=datetime.combine(datesched_max.date(), fascia.emission_time)
+                    self.ar_scheduledatetime=datetime.datetime.combine(datesched_max.date(), fascia.emission_time)
 
             self.ar_emission_done=fascia.emission_done
             yield fascia
@@ -243,7 +243,7 @@ class gest_spot:
 def main():
 
     logging.basicConfig(level=logging.DEBUG,)
-    now=datetime.now()
+    now=datetime.datetime.now()
 
     spots=gest_spot(now,minelab,"/tmp/")
 

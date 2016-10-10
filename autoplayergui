@@ -70,11 +70,10 @@ class Main(object):
           self.pbar.set_fraction(frac)
       else:
           self.pbar.pulse()
-          
+
 
   def __init__(self):
 
-    self.multimedia_file=None
     self.connected=False
 
     #Connect to player
@@ -98,7 +97,13 @@ class Main(object):
     if hasattr (self.mp2, 'HasTrackList'):
         if self.mp2.HasTrackList:
             self.tl = TrackList(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
-            #tl.PropertiesChanged = trackhandler
+
+            #self.tl.PropertiesChanged = self.update
+            self.tl.TrackListReplaced = self.update
+            self.tl.TrackAdded = self.update
+            self.tl.TrackRemoved = self.update
+            self.tl.TrackMetadataChanged = self.update
+
         else:
             self.tl = None
     else:
@@ -111,7 +116,7 @@ class Main(object):
     # Create the GUI
     self.win = gtk.Window(gtk.WINDOW_TOPLEVEL)
 
-    self.win.set_size_request(400, 300)
+    self.win.set_size_request(400, 600)
     self.win.set_title("AutoPlayer gui")
     self.win.connect("delete_event", self.delete_event)
     vbox = gtk.VBox(False, 0)
@@ -120,6 +125,8 @@ class Main(object):
     self.play_button = gtk.ToolButton( gtk.STOCK_MEDIA_PLAY)
     self.pause_button = gtk.ToolButton( gtk.STOCK_MEDIA_PAUSE)
     self.stop_button = gtk.ToolButton( gtk.STOCK_MEDIA_STOP)
+    self.delete_button = gtk.Button('Delete')
+    self.delete_button.connect('clicked', self.on_delete_button_clicked) 
     self.load_file.connect("selection-changed",self.on_file_selected)
     self.play_button.connect("clicked", self.on_play_clicked)
     self.pause_button.connect("clicked", self.on_pause_clicked)
@@ -127,7 +134,7 @@ class Main(object):
     hbox.pack_start(self.play_button, False, True, 0)
     hbox.pack_start(self.pause_button, False, True, 0)
     hbox.pack_start(self.stop_button, False, True, 0)
-
+    hbox.pack_start(self.delete_button, False, False, 1)
 #        # Create a centering alignment object
 #    align = gtk.Alignment(0.5, 0.5, 0, 0)
 #    vbox.pack_start(align, False, False, 5)
@@ -173,12 +180,14 @@ class Main(object):
     self.scrolledwindow.add(self.treeview)
     vbox.pack_start(self.scrolledwindow, True, True, 0)
     self.treeview.set_model(listmodel)
+    self.treeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
     self.win.add(vbox)
     self.win.show_all()
 
-    gobject.timeout_add(  1000,self.update)
+    #gobject.timeout_add(6000,self.update)
 
-  def update(self):
+  def update(self, *args, **kw):
+    print "update gtktree"
     try:
       new_model = self.make_list()
       self.treeview.set_model(new_model)
@@ -188,19 +197,36 @@ class Main(object):
       gtk.main_quit()
       return False
 
-  def on_file_selected(self, widget):
-    self.multimedia_file = self.load_file.get_filename()
-  def on_play_clicked(self, widget):
-    if self.multimedia_file is None:
-        self.play.Play()
-    else:
-        url=urlparse.urlsplit(self.multimedia_file)
-        uri=urlparse.urljoin("file://",urllib.unquote(url.path))
-        self.play.OpenUri(uri)
-        self.multimedia_file=None
-        new_model = self.make_list()
-        self.treeview.set_model(new_model)
+  def on_delete_button_clicked(self, button):
+     
+      # Get the TreeView selected row(s)
+      selection = self.treeview.get_selection()
 
+      # get_selected_rows() returns a tuple
+      # The first element is a ListStore
+      # The second element is a list of tree paths
+      # of all selected rows
+      model, paths = selection.get_selected_rows()
+        
+      # Get the TreeIter instance for each path
+      for path in paths:
+          iter = model.get_iter(path)
+          # Remove the ListStore row referenced by iter
+          print "remove: ",model.get_value(iter, 0)
+          self.tl.RemoveTrack(model.get_value(iter, 0))
+          #model.remove(iter)
+
+
+  def on_file_selected(self, widget):
+    multimedia_file = self.load_file.get_filename()
+    url=urlparse.urlsplit(multimedia_file)
+    uri=urlparse.urljoin("file://",urllib.unquote(url.path))
+    new_model = self.make_list()
+    self.treeview.set_model(new_model)
+    self.tl.AddTrack(uri, self.play.Metadata.get(u'mpris:trackid',""), False)
+
+  def on_play_clicked(self, widget):
+      self.play.Play()
   def on_pause_clicked(self, widget):
     self.play.PlayPause()
   def on_stop_clicked(self, widget):
@@ -274,6 +300,3 @@ if __name__ == "__main__":
         # Clean up
         print 'Keyboard Exiting'
         gtk.main_quit()
-
-
-    

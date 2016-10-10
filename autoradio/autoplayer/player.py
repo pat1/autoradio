@@ -22,6 +22,11 @@
 # TrackRemoved 	(o: TrackId) 	
 # TrackMetadataChanged 	(o: TrackId, a{sv}: Metadata) 	
 
+# attentions!
+# for now we use TrackListReplaced with a empty and wrong signature
+# everywhere we change the tracklist
+# we use this in autoplayergui to update the tracklist
+
 import sys, time, thread
 
 #import pygst
@@ -169,8 +174,6 @@ MPRIS2_INTROSPECTION = """<node name="/org/mpris/MediaPlayer2">
       <arg direction="in"  type="s" name="trackid" />
     </method>
     <signal name="TrackListReplaced">
-      <arg type="ao" />
-      <arg type="o" />
     </signal>
     <signal name="TrackAdded">
       <arg type="a{sv}" />
@@ -374,16 +377,19 @@ class AutoPlayer(dbus.service.Object):
       logging.debug("Seeked to %i" % position)
       return float(position)
 
+    # TrackListReplaced 	(ao: Tracks, o: CurrentTrack)
+    @dbus.service.signal(TRACKLIST_IFACE,signature='')
+    def TrackListReplaced(self):
+      logging.debug("TrackListReplaced")
+
     # TrackAdded 	(a{sv}: Metadata, o: AfterTrack) 	
     @dbus.service.signal(TRACKLIST_IFACE,signature='a{sv}o')
-    def TrackAdded(self, metadata,aftertrack):
+    def TrackAdded(self, metadata=[],aftertrack=""):
       logging.debug("TrackAdded to %s" % aftertrack)
-      pass
 
     # TrackRemoved 	(o: TrackId) 	
     @dbus.service.signal(TRACKLIST_IFACE,signature='o')
     def TrackRemoved(self,trackid):
-      logging.debug("TrackRemoved %s" % trackid)
 
 # here seem pydbus bug 
 # disabled for now
@@ -454,8 +460,10 @@ class AutoPlayer(dbus.service.Object):
       self.Stop()
       self.Play()
 
+      self.TrackListReplaced()
+
       #TODO
-      #self.TrackAdded()
+      #self.TrackAdded(uri,"0")
       #self.update_property(TRACKLIST_IFACE,'TrackListReplaced')
 
       # If the media player implements the TrackList interface, then the opened 
@@ -473,6 +481,7 @@ class AutoPlayer(dbus.service.Object):
     @dbus.service.method(TRACKLIST_IFACE,in_signature='ssb', out_signature='')
     def AddTrack(self,uri, aftertrack, setascurrent):
         self.player.addtrack(uri, aftertrack, setascurrent)
+        self.TrackListReplaced()
 
     @dbus.service.method(TRACKLIST_IFACE,in_signature='s', out_signature='')
     def RemoveTrack(self, trackid):
@@ -480,11 +489,15 @@ class AutoPlayer(dbus.service.Object):
         self.Next()
       self.player.removetrack(trackid)
       #disable for a bug in pydbus ??
+      logging.debug("TrackRemoved %s" % trackid)
+      #TODO
       #self.TrackRemoved(trackid)
+      self.TrackListReplaced()
 
     @dbus.service.method(TRACKLIST_IFACE,in_signature='s', out_signature='')
     def GoTo(self, trackid):
         self.player.goto(trackid)
+        self.TrackListReplaced()
 
     @dbus.service.method(TRACKLIST_IFACE,in_signature='as', out_signature='aa{sv}')
     def GetTracksMetadata(self,trackids):
@@ -494,12 +507,12 @@ class AutoPlayer(dbus.service.Object):
           if id is not None:
             meta={}
             for key,attr in ("mpris:trackid","id"),("mpris:length","time"),("xesam:title","title"),("xesam:artist","artist"),("xesam:url","path"):
-                myattr= getattr(self.player.playlist[id],attr,None)
-                if myattr is not None:
-                  if key == "mpris:length":
-                    myattr=long(round(myattr/1000.))
-                  meta[key]=myattr
-                    
+              myattr= getattr(self.player.playlist[id],attr,None)
+              if myattr is not None:
+                if key == "mpris:length":
+                  myattr=long(round(myattr/1000.))
+                meta[key]=myattr
+      
             metadata.append(dbus.Dictionary(meta, signature='sv'))
 
         return metadata

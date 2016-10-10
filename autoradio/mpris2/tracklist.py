@@ -119,7 +119,8 @@ class TrackList(Interfaces):
         '''
     
     @DbusSignal
-    def TrackListReplaced(self, Tracks, CurrentTrack):
+    def TrackListReplaced(self):
+    #def TrackListReplaced(self, Tracks, CurrentTrack):
         '''
         **Parameters:**
         

@@ -581,6 +581,38 @@ class Player:
     #audiosink = gst.element_factory_make("autoaudiosink")
     #audiosink = gst.element_factory_make("jackaudiosink")
 
+
+    # ReplayGain
+    if (Gst.ElementFactory.find('rgvolume') and
+        Gst.ElementFactory.find('rglimiter')):
+      self.audioconvert = Gst.ElementFactory.make('audioconvert',None)
+
+      self.rgvolume = Gst.ElementFactory.make('rgvolume',None)
+      self.rgvolume.set_property('album-mode', False)
+      self.rgvolume.set_property('pre-amp', 0)
+      self.rgvolume.set_property('fallback-gain', 0)
+
+      self.rgvolume.set_property('headroom',0)
+      self.rgvolume.set_property('pre-amp',0)
+
+      self.rglimiter = Gst.ElementFactory.make('rglimiter',None)
+      self.rglimiter.set_property('enabled', True)
+
+      self.rgfilter = Gst.Bin()
+      self.rgfilter.add(self.rgvolume)
+      self.rgfilter.add(self.rglimiter)
+      self.rgvolume.link(self.rglimiter)
+      self.rgfilter.add_pad(Gst.GhostPad.new('sink',
+                self.rgvolume.get_static_pad('sink')))
+      self.rgfilter.add_pad(Gst.GhostPad.new('src',
+                self.rglimiter.get_static_pad('src')))
+      try:
+        self.player.set_property('audio-filter', self.rgfilter)
+      except:
+        logging.error( "setting replaygain player")
+        #raise Exception("cannot manage replaygain!")
+        
+
 #    TODO replaygain
 #+++++++
 #

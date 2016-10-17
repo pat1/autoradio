@@ -1,6 +1,7 @@
 autoradio (2.8.4-1) unstable; urgency=high
 
-  * New upstream release
+  * New upstream release (Closes: #755583)
+  * Standard version bumped to 3.9.8
 
  -- Andrea Capriotti <capriott@debian.org>  Sun, 16 Oct 2016 13:58:57 +0200
 

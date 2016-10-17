@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>Testing Ogg player</title>
+<link rel="stylesheet" type="text/css" href="player-style.css" />
+<script type="text/javascript" src="player-intf.js"></script>
+
+
+</head>
+<body bgcolor="#dddddd" >
+
+<div id='flplayer'></div>
+<script>
+initEvents();
+injectPlayerObject(document.getElementById("flplayer"));
+</script>
+
+
+<span style="white-space:nowrap;">Headers: <span id="hdr" style="color:red;">--</span></span><br>
+Status: <span id="stt" style="color:green">--</span>
+<br>
+
+<div id='player1' class='intf_div'>
+</div>
+<br>
+<div id='player2' class='intf_div'>
+</div>
+<br>
+<div id='player3' class='intf_div'>
+</div>
+<br>
+
+
+<script>
+
+
+injectPlayerInterface(document.getElementById("player1"),"og1","test002.ogg");
+injectPlayerInterface(document.getElementById("player2"),"og2","test0010.ogg");
+injectPlayerInterface(document.getElementById("player3"),"mp1","Peace.mp3");
+
+
+</script>
+
+
+
+
+</body>
+</html>

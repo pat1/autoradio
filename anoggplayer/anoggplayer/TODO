@@ -1,0 +1,5 @@
+TODO
+----
+
+ * ogg's granulepos type is a 64 bit integer - don't use 32 int type
+   to store granulepos in fogg!

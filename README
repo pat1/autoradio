@@ -56,7 +56,7 @@ http://code.google.com/p/mutagen/
 
 django
 http://www.djangoproject.com/
-Suggested Django >= 1.9
+Suggested Django >= 1.7
 
 configobj
 Summary     : Config file reading, writing, and validation
@@ -197,9 +197,9 @@ For a pubblic web server do not use django internal web server:
 autoradioweb stop
 
 but use apache instead:
-http://docs.djangoproject.com/en/dev/howto/deployment/modpython/#howto-deployment-modpython
+https://docs.djangoproject.com/en/dev/howto/deployment/wsgi/
 you can find an example configuration file in doc directory:
-doc/apache_mod_python_example.conf
+doc/apache_modwsgi_example.conf
 
 set
 SERVE_STATIC=False
@@ -207,7 +207,7 @@ in /etc/autoradio-site.cfg
 
 >>>> Pachaged way:
 
-for Fedora and Debian/Ubuntu you have the possibility to install from
+for Fedora Centos and Debian/Ubuntu you have the possibility to install from
 pachages in a easy way.
 
 The pachage create the autoradio user for you and set everything in a

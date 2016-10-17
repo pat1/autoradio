@@ -21,8 +21,8 @@ Prefix: %{_prefix}
 BuildArch: noarch
 Vendor: Paolo Patruno <p.patruno@iperbole.bologna.it>
 Url: http://autoradiobc.sf.net
-BuildRequires: python-configobj , python-django >= 1.4.0 , help2man, python-setuptools
-Requires:python-mutagen >= 1.17 , python-django >= 1.4.0,  python-configobj, python-cherrypy, python-reportlab >= 2.0,  python-docutils, sqlite >= 3.6.22, speex-tools, python-magic, python-pillow, python-six 
+BuildRequires: python-configobj , python-django >= 1.7.0 , help2man, python-setuptools
+Requires:python-mutagen >= 1.17 , python-django >= 1.7.0,  python-configobj, python-cherrypy, python-reportlab >= 2.0,  python-docutils, sqlite >= 3.6.22, speex-tools, python-magic, python-pillow, python-six 
 #, python-django-extensions
 Requires: initscripts
 %if 0%{?fedora} < 10
@@ -48,9 +48,10 @@ Radio automation software. Simple to use, starting from digital audio
 files, manage on-air broadcasting over a radio-station or
 web-radio. The main components are:
 
-    * Player (Xmms/Audacious): plays all your media files and send digital sound
-      to an audio device or audio server
- 
+    * Player integrated (gstreamer) or external (Xmms/Audacious):
+      plays all your media files and send digital sound to an audio
+      device or audio server
+
     * Scheduler: real time manager for emission of special audio files
       like jingles, spots, playlist and programs; interact with player
       like supervisor User

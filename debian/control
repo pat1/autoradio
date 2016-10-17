@@ -11,13 +11,13 @@ Vcs-Browser: http://anonscm.debian.org/gitweb?p=collab-maint/autoradio.git;a=sum
 
 Package: autoradio
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, python, python-reportlab (>=2.0) , python-configobj, python-django (>=1.0.3) , python-django-extensions , audacious, python-mutagen (>=1.17) ,python-cherrypy3 , python-dbus, python-magic, libjs-jquery, libjs-swfobject, libcortado-java
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, python, python-reportlab (>=2.0) , python-configobj, python-django (>=1.7.0) , python-django-extensions ,  python-mutagen (>=1.17)  , python-dbus, python-magic, libjs-jquery, libjs-swfobject, libcortado-java
 Description: radio automation software
  Simple to use, starting from digital audio
  files, manage on-air broadcasting over a radio-station or
  web-radio. The main components are:
  .
-    * Player (Xmms/Audacious): plays all your media files and send
+    * Player (gstreamer): plays all your media files and send
       digital sound to an audio device or audio server
  .
     * Scheduler: real time manager for emission of special audio files

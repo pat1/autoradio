@@ -280,13 +280,13 @@ setup(name='autoradio',
                'autoplayerd','autoplayergui','autoradiodbusd','jackdaemon'],
       data_files = data_files,
       license = "GNU GPL v2",
-      requires= [ "mutagen","django","reportlab"],
+      requires= [ "mutagen","django","reportlab","configobj"],
       long_description="""\ 
 Radio automation software. Simple to use, starting from digital audio
 files, manage on-air broadcasting over a radio-station or
 web-radio. The main components are:
 
-    * Player (integrated or external Xmms/Audacious): plays all your media
+    * Player (integrated gstreamer or external Xmms/Audacious): plays all your media
       files and send digital sound to an audio device or audio server
  
     * Scheduler: real time manager for emission of special audio files

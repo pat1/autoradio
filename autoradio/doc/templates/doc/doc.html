@@ -13,7 +13,7 @@ Radio automation software. Simple to use, starting from digital audio
 files, manage on-air broadcasting over a radio-station or
 web-radio. The main components are:
 <ul>
-  <li>Player (Xmms/Audacious): plays all your media files and send digital sound
+  <li>Player (gstreamer): plays all your media files and send digital sound
       to an audio device or audio server</li>
  
   <li>Scheduler: real time manager for emission of special audio files
@@ -36,7 +36,7 @@ Developed with Python, Django, Dbus it works in an production enviroment
 {% blocktrans %}
 <ul>
  <li> manage ogg, mp3, wav and other media file format</li>
- <li> it's designed as client server</li>
+ <li> it's designed as client - server</li>
  <li> manage playlists, inserting on it jingles, spots and programs</li>
  <li> programmable rules for schedule and period schedule</li>
  <li> do not overlap schedules: anticipate, postone or delete</li>
@@ -68,10 +68,25 @@ server audio.
 {% blocktrans %}
 Esistono varie possibilità:
 <ul>
+  <li>Autoplayerd: Questo player è basato su gstreamer e quindi
+  disponibile su tutte le nuove distribuzioni.  Il formato dei file
+  audio è determinato dai plugin di gstreamer installati.  Questo
+  player non ha bisogno di un terminale per l'interazione umana.
+  Espone una interfaccia a standard mpris2 su dbus e quindi qualsiasi
+  applicazione che interagisca con questa interfaccia può impartire
+  comandi al player. Autoradio fornisce autoplayergui che ha una
+  interfaccia grafica tramite la quale è possibile eseguire tutte le
+  funzioni elementari quali play, pause, stop etc.  Il vantaggio è che
+  un computer senza terminale quale un server può funzionare e avere
+  questo player in modalità daemon, ossia sempre attiva.  Il player
+  permette l'invio diretto a un server per lo streaming per la
+  realizzazione di web radio.  Questo è il player preferito per
+  l'utilizzo con AutoRadio.</li>
+
   <li>Audacious2:
   Questo player è disponibile su tutte le nuove distribuzioni.
   Permette l'invio diretto a un server per lo streaming per la realizzazione di web radio.
-  Questo è il player preferito pe l'utilizzo con AutoRadio.</li>
+  </li>
   <li>Xmms:
   E' un player “antico” ma molto robusto.
   Consigliato solo su vecchie distribuzioni</li>

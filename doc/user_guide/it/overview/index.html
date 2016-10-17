@@ -1,18 +1,18 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it" >
+<!DOCTYPE html>
+
+<html lang="it" >
 <head>
-<title> | Amministrazione</title>
-<link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/django/media/admin/css/base.css" />
+<title> | Amministrazione sito Django</title>
+<link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/static/admin/css/base.css" />
 
-<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/django/media/admin/css/ie.css" /><![endif]-->
 
-<script type="text/javascript">window.__admin_media_prefix__ = "/django/media/admin/";</script>
 
 <meta name="robots" content="NONE,NOARCHIVE" />
 </head>
 
 
-<body class="">
+<body class=""
+  data-admin-utc-offset="7200">
 
 <!-- Container -->
 <div id="container">
@@ -22,17 +22,29 @@
     <div id="header">
         <div id="branding">
         
-<h1 id="site-name"><a href="http://127.0.0.1:8080/">AutoRadio Home</a> / <a href="http://127.0.0.1:8080/doc">AutoRadio Documentazione</a></h1>
+
+<a href="http://127.0.0.1:8080/">AutoRadio Home</a> / <a href="http://127.0.0.1:8080/doc">AutoRadio Documentazione</a>
+
+<h1 id="site-name"><a href="http://127.0.0.1:8080/admin/">Amministrazione Django</a></h1>
 
         </div>
         
         
+        
+        
     </div>
     <!-- END Header -->
-    <div class="breadcrumbs"><a href="http://127.0.0.1:8080/">Pagina iniziale</a></div>
+    
+    <div class="breadcrumbs">
+    <a href="http://127.0.0.1:8080/admin/">Pagina iniziale</a>
+    
+    </div>
+    
     
 
+    
         
+    
 
     <!-- Content -->
     <div id="content" class="colM">
@@ -40,38 +52,32 @@
         
         
 
-<h1><a href="../index.html">Indice documentazione</a></h1>
+<h1><a href="../index.html">Documentation Home</a></h1>
 
 <div id="content-main">
 
 
 
-Software per l'automazione di una radio. Semplice da usare, facendo
-uso di file audio digitali, gestisce la mess ain onda di una emittente
-radiofonica o di una web-radio. Le componenti principali sono:
+Radio automation software. Simple to use, starting from digital audio
+files, manage on-air broadcasting over a radio-station or
+web-radio. The main components are:
+<ul>
+  <li>Player (gstreamer): plays all your media files and send digital sound
+      to an audio device or audio server</li>
+ 
+  <li>Scheduler: real time manager for emission of special audio files
+      like jingles, spots, playlist and programs; interact with player
+      like supervisor User</li>
 
-<ul> 
-
-  <li>Player (Xmms/Audacious): suona tutti i media file e invia il
-  suono digitale a un dispositivo audio o a un server audio</li>
-
-  <li>Scheduler: gestore in tempo reale di particolari file audio
-  quali jingle, spot, playlist e programmi; interagisce con il player
-  come se fosse un utente supervisore mandando in onda le
-  programmazioni al momento giusto.
-
-  <li>Interfaccia: interfaccia WEB per monitore il player e lo
-  scheduler e per amministare la programmazione per il pieno controllo
-  delle emissione della tua emittente radiofonica.L'intefaccia web
-  permette anche con facilità di di pubblicare facilmente il podcast
-  dei programmi coerentemente con gli standard RSS 2.0 e iTunes
-  RSS. L'interfaccia web fornisce un player ogg integrato pienamente
-  compatibile.</ul>
-
-Sviluppato con Python, Django, Dbus, funziona operativamente in
-ambiente produttivo.
+  <li>inteface: WEB interface to monitor the player and scheduler and
+      admin the schedules for the complete control over your station
+      format. The web interface allows you to easily publish podcasts
+      that conform to the RSS 2.0 and iTunes RSS podcast specifications
+      The web interface provide a "full compatible" ogg player.</li>
 
 </ul>
+Developed with Python, Django, Dbus it works in an production enviroment
+
 
 
 

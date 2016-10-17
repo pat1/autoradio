@@ -1,18 +1,18 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it" >
+<!DOCTYPE html>
+
+<html lang="it" >
 <head>
-<title> | Amministrazione</title>
-<link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/django/media/admin/css/base.css" />
+<title> | Amministrazione sito Django</title>
+<link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/static/admin/css/base.css" />
 
-<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="/django/media/admin/css/ie.css" /><![endif]-->
 
-<script type="text/javascript">window.__admin_media_prefix__ = "/django/media/admin/";</script>
 
 <meta name="robots" content="NONE,NOARCHIVE" />
 </head>
 
 
-<body class="">
+<body class=""
+  data-admin-utc-offset="7200">
 
 <!-- Container -->
 <div id="container">
@@ -22,17 +22,29 @@
     <div id="header">
         <div id="branding">
         
-<h1 id="site-name"><a href="http://127.0.0.1:8080/">AutoRadio Home</a> / <a href="http://127.0.0.1:8080/doc">AutoRadio Documentazione</a></h1>
+
+<a href="http://127.0.0.1:8080/">AutoRadio Home</a> / <a href="http://127.0.0.1:8080/doc">AutoRadio Documentazione</a>
+
+<h1 id="site-name"><a href="http://127.0.0.1:8080/admin/">Amministrazione Django</a></h1>
 
         </div>
         
         
+        
+        
     </div>
     <!-- END Header -->
-    <div class="breadcrumbs"><a href="http://127.0.0.1:8080/">Pagina iniziale</a></div>
+    
+    <div class="breadcrumbs">
+    <a href="http://127.0.0.1:8080/admin/">Pagina iniziale</a>
+    
+    </div>
+    
     
 
+    
         
+    
 
     <!-- Content -->
     <div id="content" class="colM">
@@ -40,7 +52,7 @@
         
         
 
-<h1><a href="../index.html">Indice documentazione</a></h1>
+<h1><a href="../index.html">Documentation Home</a></h1>
 
 <div id="content-main">
 
@@ -49,21 +61,23 @@
 
 
 <ul>
-<li> gestisce ogg, mp3, wav e altri formati audio digitale</li>
-<li> è disegnato con funzionalità client, server</li>
-<li> gestisce playlists, inserendo in esse jingle, spot e programmi</li>
-<li> regole programmabili for calendarizzazione anche periodica</li>
-<li> non sovrapposizione degli eventi programmati: anticipa, ritarda o cancella seguendo regole evolute</li>
-<li> il player è monitorato tramite l'interfaccia web</li>
-<li> spots sono raggruppati e orditati secondo le proprie preferenze</li>
-<li> i programmi sono disponibili pe ril podcasting in una completa interfaccia web con rss feed in vari standard</li>
- <li> un player per ogg vorbis integrato che è molto compatibile con la maggioranza dei sistemi disponibili agli utenti</li>
- <li> può produrre un palinsesto in una versione stampabile che segue lo standard stabilito dalla legislazione italiana</li>
- <li> sistema integrato di esecuzione in background completo di messagistica</li>
- <li> fornisce una versione evoluta di dir2ogg.py e mkplaylist.py per la gestione di file musicali (conversione a ogg e creazione di playlist)</li>
- <li> non utilizza Data Base per gestire la musica; puoi usare la tua applicazione preferita per produrre le playlist musicali</li>
- <li>documentazione disponibile in linea su web</li>
+ <li> manage ogg, mp3, wav and other media file format</li>
+ <li> it's designed as client - server</li>
+ <li> manage playlists, inserting on it jingles, spots and programs</li>
+ <li> programmable rules for schedule and period schedule</li>
+ <li> do not overlap schedules: anticipate, postone or delete</li>
+ <li> player is monitored by web interface</li>
+ <li> spots are grouped and ordered by your preference</li>
+ <li> programs are available for podcasting in a very complete rss feed web interface</li>
+ <li> integrated web player for ogg vorbis that is very compatible with most user's systems</li>
+ <li> can produce a palimpsest and a printable version is available following the the italian law standard</li>
+ <li> integrated daemon system with logging</li>
+ <li> provide enhanced version of dir2ogg.py and mkplaylist.py to manage
+   files with music (convert to ogg and make playlist)</li>
+ <li> do not use DataBases to manage music; you can use your preferred application to produce playlists  </li>
+ <li> on line web documentation</li>
 </ul>
+
 
 
 

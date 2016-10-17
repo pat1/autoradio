@@ -73,6 +73,10 @@ class distclean(Command):
             os.remove("autoradio/programs/static/programs/playogg/swfobject/expressInstall.swf")
         except:
             print "autoradio/programs/static/programs/playogg/swfobject/expressInstall.swf not removed"
+        try:
+            os.remove("autoradio/programs/static/programs/playogg/swfobject/swfobject.js")
+        except:
+            print "autoradio/programs/static/programs/playogg/swfobject/swfobject.js not removed"
 
 
 class build(build_):
@@ -185,6 +189,8 @@ class installbin(Command):
         os.link("cortado/cortado.jar","autoradio/programs/static/programs/playogg/java/cortado.jar")
         os.link("cortado/cortado-ovt-stripped-0.6.0.jar","autoradio/programs/static/programs/playogg/java/cortado-ovt-stripped-0.6.0.jar")
         os.link("expressinstall/expressInstall.swf", "autoradio/programs/static/programs/playogg/swfobject/expressInstall.swf")
+        os.link("expressinstall/swfobject.js", "autoradio/programs/static/programs/playogg/swfobject/swfobject.js")
+
 
 # Compile the list of files available, because distutils doesn't have
 # an easy way to do this.

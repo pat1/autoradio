@@ -6,10 +6,9 @@ override_dh_auto_clean:
 		python setup.py distclean
 		rm -rf autoradio.egg-info
 override_dh_auto_build:
-		chmod +x autoplayergui
 		dh_auto_build
 override_dh_link:
-		dh_link usr/share/cortado usr/share/autoradio/media/sito/playogg/java
-		dh_link usr/share/javascript/jquery usr/share/autoradio/media/sito/playogg/js
-		dh_link usr/share/javascript/swfobject usr/share/autoradio/media/sito/playogg/swfobject
+		dh_link usr/share/cortado               DIRECTORYDIPYTHON/autoradio/programs/static/programs/playogg/java/
+		dh_link usr/share/javascript/jquery     DIRECTORYDIPYTHON/autoradio/programs/static/programs/playogg/js/
+		dh_link usr/share/javascript/swfobject  DIRECTORYDIPYTHON/autoradio/programs/static/programs/playogg/swfobject/
 		dh_link

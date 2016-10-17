@@ -43,7 +43,16 @@ class distclean(Command):
                 if name.endswith('.pyc') and os.path.isfile(os.path.join(root, name)):
                     print 'removing: %s' % os.path.join(root, name)
                     if not(self.dry_run): os.remove(os.path.join(root, name))
-                    
+
+
+        try:
+            os.remove("autoradio/programs/static/programs/playogg/js/jquery-1.12.4.min.js")
+        except:
+            print "autoradio/programs/static/programs/playogg/js/jquery-1.12.4.min.js not removed"
+        try:
+            os.remove("autoradio/programs/static/programs/playogg/js/jquery.min.js")
+        except:
+            print "autoradio/programs/static/programs/playogg/js/jquery.min.js not removed"
         try:
             os.remove("autoradio/programs/static/programs/playogg/flash/AnOgg.swf")
         except:
@@ -163,7 +172,9 @@ class installbin(Command):
         import os
         #if (not os.path.exists("../../autoradio/programs/static/programs/playogg/flash")):
         #    os.mkdir("../../autoradio/programs/static/programs/playogg/flash")
-        os.link("./anoggplayer/anoggplayer/AnOgg.swf","autoradio/programs/static/programs/playogg/flash/AnOgg.swf")
+        os.link("jquery/jquery-1.12.4.min.js","autoradio/programs/static/programs/playogg/js/jquery-1.12.4.min.js")
+        os.link("jquery/jquery.min.js","autoradio/programs/static/programs/playogg/js/jquery.min.js")
+        os.link("anoggplayer/anoggplayer/AnOgg.swf","autoradio/programs/static/programs/playogg/flash/AnOgg.swf")
         os.link("cortado/cortado.jar","autoradio/programs/static/programs/playogg/java/cortado.jar")
         os.link("cortado/cortado-ovt-stripped-0.6.0.jar","autoradio/programs/static/programs/playogg/java/cortado-ovt-stripped-0.6.0.jar")
         os.link("expressinstall/expressInstall.swf", "autoradio/programs/static/programs/playogg/swfobject/expressInstall.swf")

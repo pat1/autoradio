@@ -160,7 +160,7 @@ you need access to root administrator user and after:
 
 python setup.py install
 
-choose a normal user to run the daemons, create it and login,
+choose a normal user to run the daemons and create it and login,
 make and go in your preferred user working writable directory
 
 modify /etc/autoradio/autoradio-site.cfg or from the normal user
@@ -174,11 +174,13 @@ after from root:
 autoradioctrl --syncdb --changeuser
 autoradioweb restart
 
-You can run autoradiod and xmms/audacious in one host and autoradioweb
-in other if you use server Data Base like mysql and specify it and where
+You can run autoradiod and autoplayerd in one host and autoradioweb in
+other if you use server Data Base like mysql and specify it and where
 autoradiod is running in the autoradio configuration (.cfg) files.
-The /usr/share/autoradio of the machine where run autoradioweb will be 
-accessible read (and write) from machine where run autoradiod.
+The /usr/share/autoradio of the machine where run autoradioweb will be
+accessible read (and write) from machine where run autoradiod.  In
+addition to do this you have to have a tcp enabled version of dbus
+running autoradiodbusd somewhere.
 
 On machine where you want run autoradiod (the player side), after autoradio
 installation, from root user create a new user and set password and activate
@@ -217,14 +219,14 @@ to start everythings from root user (prepend sudo command for Ubuntu):
 autoradioctrl --syncdb --changeuser
 autoradioweb restart
 
-You can run autoradiod and xmms/audacious in one host and autoradioweb
+You can run autoradiod and autoplayerd in one host and autoradioweb
 in other if you use server Data Base like mysql and specify it and where
 autoradiod is running in the autoradio configuration (.cfg) files.
 The /usr/share/autoradio of the machine where run autoradioweb will be 
 accessible read (and write) from machine where run autoradiod.
 
-On machine where you want run autoradiod (the player side), after autoradio
-installation, from root user create a new user and set password and activate
+On machine where you want run autoplayerd (the player side), after autoradio
+installation, from root user create a new user and if you want activate
 interactive login like this:
 useradd autoradio
 passwd autoradio
@@ -266,18 +268,26 @@ HOT TO USE IT
 -------------
 
 autoradioctrl provide some administration commands like --sincdb to
-inizialite the data base.  aotoradioweb or other web serber like
-apache provide a web interface to program every thinks you cannot find
-in configuration files; you have to run it like a permanent daemon;
-use a browser pointing it at the machine and port of the web server
-(http://localhost:8080 is the default for autoradioweb).  Where you
-have an X server you can run autoradiod to start the player
-(xmms/audacious); autoradiod start the player after few time and
-manage it with the programmed schedules. You can run autoradiod from
-the same machine where run auroradioweb; it use sqlite local file. If
-you use a database client/server like mysql you can access the DB from
-an other machine but you have to read the media files from all
-machines involved (with nfs services).
+inizialite the data base.
+
+autoradioweb or other web serber like apache provide a web interface
+to program every thinks you cannot find in configuration files; you
+have to run it like a permanent daemon; use a browser pointing it at
+the machine and port of the web server (http://localhost:8080 is the
+default for autoradioweb).
+
+Run autoplayerd to start to play music. You need an audio card.
+
+You can run autoradiod to start the automation of the player;
+autoradiod manage the player with the programmed schedules.  You can
+run autoplayerd/autoradiod from the same machine where run
+auroradioweb; it use sqlite local file. If you use a database
+client/server like mysql you can access the DB from an other machine
+but you have to read the media files from all machines involved (with
+nfs services).
+
+Where you have an X server you can run autoplayergui to interact with
+graphical interface with the player.
 
 Read doc/user_guide.txt or the documentation in the web admin
 interface for the features enabled in the autoradio suite.

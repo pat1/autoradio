@@ -3,9 +3,9 @@ Section: sound
 Priority: extra
 Maintainer: Andrea Capriotti <capriott@debian.org>
 Build-Depends: debhelper (>= 9)
-Build-Depends-Indep: python, python-setuptools, python-django (>=1.0.3) , python-configobj, gettext
+Build-Depends-Indep: python, python-setuptools, python-django (>=1.7.0) , python-configobj, gettext
 Standards-Version: 3.9.6
-Homepage: http://autoradiobc.sf.net
+Homepage: https://github.com/pat1/autoradio
 Vcs-Git: git://anonscm.debian.org/collab-maint/autoradio.git
 Vcs-Browser: http://anonscm.debian.org/gitweb?p=collab-maint/autoradio.git;a=summary
 

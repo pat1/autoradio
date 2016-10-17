@@ -1,4 +1,4 @@
-= AutoRadio version 2.8.2 =
+= AutoRadio version 2.8.5 =
 http://autoradiobc.sourceforge.net/
 
 OVERVIEW
@@ -28,7 +28,7 @@ FEATURES
 --------
 
  * manage ogg, mp3, and other media file format managed by player
- * it's designed as client server
+ * it's designed as client - server
  * manage playlists, inserting on it jingles, spots and programs
  * programmable rules for schedule and period schedule
  * do not overlap schedules: anticipate, postone or delete
@@ -46,37 +46,37 @@ FEATURES
 REQUIRES
 --------
 
-Autoradio try to work on old distribution like fedora 8 with xmms and 
-cherrypy2 
-On more recent ditrubution I suggest audacious version >= 1.5 and cherypy3
-
 autoradio requires:
 
-python >= 2.5
+python >= 2.7
 
 mutagen
 muatgen version >= 1.17
 http://code.google.com/p/mutagen/
 
-you can obtain it:
-http://code.google.com/p/mutagen/downloads/list
-svn checkout http://mutagen.googlecode.com/svn/trunk/ mutagen
-You can get also some tar, rpm and deb from autoradio project home page 
-
 django
 http://www.djangoproject.com/
-I suggest Django >= 1.3
+Suggested Django >= 1.9
+
+configobj
+Summary     : Config file reading, writing, and validation
+URL         : http://www.voidspace.org.uk/python/configobj.html
+
+gstreamer
+Autoradio can use gstreamer 0.10 but is better to use gstreamer 1.0; the installed plugins establish the usable audio formats.
+
+OLD DISTRIBUTIONS
+-----------------
+Autoradio try to work on very old distribution like fedora 8 with xmms and 
+cherrypy2
+On not so old distribution try to use audacious version >= 1.5 and cherypy3
+python >= 2.5
 
 cherrypy
 Summary     : A pythonic, object-oriented web development framework
 URL         : http://www.cherrypy.org/
 Thera are incompatibility from cherrypy version 2 and 3
 but autoradio works well with any version :)
-
-configobj
-Summary     : Config file reading, writing, and validation
-URL         : http://www.voidspace.org.uk/python/configobj.html
-
 
 Player (xmms or audacious in alternative):
 
@@ -94,6 +94,7 @@ Player (xmms or audacious in alternative):
     audacious
     http://audacious-media-player.org/
 
+the player web server respond on port 8888
 
 In debian/ubuntu distribution you need those packeges: python
 python-setuptools, python-django, python-django-extensions, python-configobj, gettext
@@ -107,6 +108,7 @@ python-magic and
 pyxmms, xmms
 or
 dbus-python, audacious >= 1.5
+
 
 HOW TO INSTALL
 --------------
@@ -124,23 +126,32 @@ change your preferred language and other preference in autoradio.cfg
 You have to answer to some question to setup database.
 
 ./autoradioweb run
-This start autoradio webserver on port 8080
+This start autoradio webserver on localhost port 8080
 
 control+c to stop it
 if all works well you can detach it with
 ./autoradioweb restart
 
+./autoplayerd run
+This start the player daemon and you can listen it if you have a sound card and loaded audio files
+
+control+c to stop it
+if all works well you can detach it with
+./autoplayerd restart
+
 
 ./autoradiod run
-This start daemon autoradiod (that launch xmms/audacious ) 
-the player web server respond on port 8888
+This start daemon autoradiod (that in old distribution can launch xmms/audacious ) 
 
 control+c to stop it
 if all works well you can detach it with
 ./autoradiod restart
 
+./autoplayergui
+This start the player GUI; with it you can load audio file/playlists and manage audio player
 
-You have to use a browser (on the same machine) pointing to localhost:8080
+
+You have to use a browser (on the same machine) pointing to http://localhost:8080
 
 
 >>>>> Installed way:

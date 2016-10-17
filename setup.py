@@ -43,6 +43,27 @@ class distclean(Command):
                 if name.endswith('.pyc') and os.path.isfile(os.path.join(root, name)):
                     print 'removing: %s' % os.path.join(root, name)
                     if not(self.dry_run): os.remove(os.path.join(root, name))
+                    
+        try:
+            os.remove("autoradio/programs/static/programs/playogg/flash/AnOgg.swf")
+        except:
+            print "autoradio/programs/static/programs/playogg/flash/AnOgg.swf not removed"
+        try:
+            os.remove("anoggplayer/anoggplayer/AnOgg.swf")
+        except:
+            print "anoggplayer/anoggplayer/AnOgg.swf not removed"
+        try:
+            os.remove("autoradio/programs/static/programs/playogg/java/cortado.jar")
+        except:
+            print "autoradio/programs/static/programs/playogg/java/cortado.jar not removed"
+        try:
+            os.remove("autoradio/programs/static/programs/playogg/java/cortado-ovt-stripped-0.6.0.jar")
+        except:
+            print "autoradio/programs/static/programs/playogg/java/cortado-ovt-stripped-0.6.0.jar not removed"
+        try:
+            os.remove("autoradio/programs/static/programs/playogg/swfobject/expressInstall.swf")
+        except:
+            print "autoradio/programs/static/programs/playogg/swfobject/expressInstall.swf not removed"
 
 
 class build(build_):
@@ -50,6 +71,8 @@ class build(build_):
     sub_commands = build_.sub_commands[:]
     sub_commands.append(('compilemessages', None))
     sub_commands.append(('createmanpages', None))
+    sub_commands.append(('haxecompileanoggplayer', None))
+    sub_commands.append(('installbin', None))
 
 class compilemessages(Command):
     description = "generate .mo files from .po"
@@ -97,6 +120,53 @@ class createmanpages(Command):
 
         except:
             pass
+
+
+class haxecompileanoggplayer(Command):
+    description = "generate anoggplayer executable with haxe"
+    user_options = []   
+    boolean_options = []
+
+    def initialize_options(self):
+        pass
+    
+    def finalize_options(self):
+        pass
+
+    def run(self):
+
+        try:
+            import subprocess
+            import os
+            os.chdir("anoggplayer/anoggplayer")
+            subprocess.check_call(["make"])
+            os.chdir("../..")
+        except:
+            print "WARNING !!!!!  anoggplayer not created"
+
+
+
+
+class installbin(Command):
+    description = "install flash and java binary for full distribution not debian compliant"
+    user_options = []   
+    boolean_options = []
+
+    def initialize_options(self):
+        pass
+    
+    def finalize_options(self):
+        pass
+
+    def run(self):
+
+        import os
+        #if (not os.path.exists("../../autoradio/programs/static/programs/playogg/flash")):
+        #    os.mkdir("../../autoradio/programs/static/programs/playogg/flash")
+        os.link("./anoggplayer/anoggplayer/AnOgg.swf","autoradio/programs/static/programs/playogg/flash/AnOgg.swf")
+        os.link("cortado/cortado.jar","autoradio/programs/static/programs/playogg/java/cortado.jar")
+        os.link("cortado/cortado-ovt-stripped-0.6.0.jar","autoradio/programs/static/programs/playogg/java/cortado-ovt-stripped-0.6.0.jar")
+        os.link("expressinstall/expressInstall.swf", "autoradio/programs/static/programs/playogg/swfobject/expressInstall.swf")
 
 # Compile the list of files available, because distutils doesn't have
 # an easy way to do this.
@@ -179,7 +249,7 @@ setup(name='autoradio',
       author_email='p.patruno@iperbole.bologna.it',
       platforms = ["any"],
       url='http://autoradiobc.sf.net',
-      cmdclass={'build': build,'compilemessages':compilemessages,'createmanpages':createmanpages,"distclean":distclean},
+      cmdclass={'build': build,'compilemessages':compilemessages,'createmanpages':createmanpages,"distclean":distclean,"haxecompileanoggplayer":haxecompileanoggplayer,"installbin":installbin},
       packages=['autoradio', 'autoradio.playlists','autoradio.spots', 
                 'autoradio.jingles', 'autoradio.programs',
                 'autoradio.playlists.migrations','autoradio.spots.migrations', 

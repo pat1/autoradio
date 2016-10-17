@@ -1,0 +1,41 @@
+@media screen
+{
+body { margin: 0; padding: 8px; margin-bottom: auto; }
+/* player engine */
+.player_obj {position:absolute; left:200px;top:0px; }
+
+/* player interface structure */
+.intf_div {height:29px}
+.player_outside {background:#dddddd} /*set c9 to it, also this style is not used */
+.player_inside {background:#eeeeee} /*also set c0 to it */
+.player_controls { border: none; width:110px; font-family:"Times New Roman",monospace;float:left;}
+.player_tbl { border:none; width:100%;}
+.player_row { height:25px } /* intf_div - 4 px */
+.pl_1px {height:1px}
+.pl_sep {width:5px}
+.vol_sep {width:6px}
+.pl_btn {height:16px} /* all buttons + volume must fit inside the player_controls table */
+.pl_btnrow {height:16px} /* button row, change if making bigger buttons */
+.pl_pr_env {height:8px} /* progress bar - envelope, player_row-17px (that's button row+ 1px below) */
+.pl_pr_tab{margin-top:1px;border:1px solid black; width:100%} /* progress bar - table */
+.pl_pr_progress{height:6px;} /*progress bar height, envelope-2px */
+.pl_pr_pl {width:0%; background:yellow; } /*progress bar - played */
+.pl_pr_ld {width:0%; background:blue; } /*progress bar - loaded */
+.pl_pr_em {width:100%} /*progress bar - empty */
+
+/* drawing colors */
+.c0 {width:1px; height:1px; background:#eeeeee } /* background / transparent parts of player */
+.c1 {width:1px; height:1px; background:#000000 } /* button glyph color */
+.c2 {width:1px; height:1px; background:#707070 } /* button frame */
+.c3 {width:1px; height:1px; background:#0000A0 } /* player frame */
+.c5 {width:1px; height:1px; background:#F0F0f0 } /* volume empty color */
+.c6 {width:1px; height:1px; background:#F07000 } /* volume fill color */
+.c7 {width:1px; height:1px; background:#303030 } /* volume triangle color */
+.c9 {width:1px; height:1px; background:#dddddd } /* outside of player frame */
+
+/* cursors */
+.tbtn {cursor:pointer;float:left;} /* button table style */
+.tprb {cursor:crosshair;}
+
+
+}

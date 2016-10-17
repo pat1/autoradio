@@ -1,4 +1,4 @@
 -main AnOggPlayer
 -swf-version 10
 -swf-header 400:800:12:ffffff
--swf AnOgg.swf
+-swf ../../autoradio/programs/static/programs/playogg/flash/AnOgg.swf

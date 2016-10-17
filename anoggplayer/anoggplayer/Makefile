@@ -42,5 +42,5 @@ AnOgg.swf: build.hxml AnOggPlayer.hx $(HX_FILES)
 	$(HAXE) -cp . -swf-version 10 -swf-header 200:200:30:000000 build.hxml
 
 clean:
-	rm -f AnOgg.swf
+	rm -f ../../autoradio/programs/static/programs/playogg/flash/AnOgg.swf
 

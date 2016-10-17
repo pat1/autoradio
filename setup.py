@@ -80,8 +80,15 @@ class build(build_):
     sub_commands = build_.sub_commands[:]
     sub_commands.append(('compilemessages', None))
     sub_commands.append(('createmanpages', None))
+
+class buildall(build_):
+    description = "compile and install binary"
+    user_options = []   
+    boolean_options = []
+    sub_commands = Command.sub_commands[:]
     sub_commands.append(('haxecompileanoggplayer', None))
     sub_commands.append(('installbin', None))
+
 
 class compilemessages(Command):
     description = "generate .mo files from .po"
@@ -260,7 +267,7 @@ setup(name='autoradio',
       author_email='p.patruno@iperbole.bologna.it',
       platforms = ["any"],
       url='http://autoradiobc.sf.net',
-      cmdclass={'build': build,'compilemessages':compilemessages,'createmanpages':createmanpages,"distclean":distclean,"haxecompileanoggplayer":haxecompileanoggplayer,"installbin":installbin},
+      cmdclass={'build': build,'compilemessages':compilemessages,'createmanpages':createmanpages,"distclean":distclean,"haxecompileanoggplayer":haxecompileanoggplayer,"installbin":installbin,"buildall":buildall},
       packages=['autoradio', 'autoradio.playlists','autoradio.spots', 
                 'autoradio.jingles', 'autoradio.programs',
                 'autoradio.playlists.migrations','autoradio.spots.migrations', 

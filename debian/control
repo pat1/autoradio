@@ -2,14 +2,16 @@ Source: autoradio
 Section: sound
 Priority: extra
 Maintainer: Andrea Capriotti <capriott@debian.org>
-Build-Depends: debhelper (>= 7.0.50)
-Build-Depends-Indep: python, python-support, python-setuptools, python-django (>=1.0.3) , python-configobj, gettext
-Standards-Version: 3.8.1
+Build-Depends: debhelper (>= 9)
+Build-Depends-Indep: python, python-setuptools, python-django (>=1.0.3) , python-configobj, gettext
+Standards-Version: 3.9.6
 Homepage: http://autoradiobc.sf.net
+Vcs-Git: git://anonscm.debian.org/collab-maint/autoradio.git
+Vcs-Browser: http://anonscm.debian.org/gitweb?p=collab-maint/autoradio.git;a=summary
 
 Package: autoradio
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}, python, python-reportlab (>=2.0) , python-configobj, python-django (>=1.0.3) , python-django-extensions , audacious, python-mutagen (>=1.17) ,python-cherrypy3 , python-dbus
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, python, python-reportlab (>=2.0) , python-configobj, python-django (>=1.0.3) , python-django-extensions , audacious, python-mutagen (>=1.17) ,python-cherrypy3 , python-dbus, python-magic, libjs-jquery, libjs-swfobject, libcortado-java
 Description: radio automation software
  Simple to use, starting from digital audio
  files, manage on-air broadcasting over a radio-station or
@@ -28,4 +30,4 @@ Description: radio automation software
       that conform to the RSS 2.0 and iTunes RSS podcast specifications
       The web interface provide a "full compatible" ogg player.
  .
- Developed with Python, Django, Dbus it works in an production enviroment
+ Developed with Python, Django, Dbus it works in an production environment

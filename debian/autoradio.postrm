@@ -20,7 +20,13 @@ set -e
 
 
 case "$1" in
-    purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+    purge)
+        if [ -d /var/log/autoradio/ ]; then
+          rm -rf /var/log/autoradio || :
+        fi
+    ;;
+    
+    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
     ;;
 
     *)

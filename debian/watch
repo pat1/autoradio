@@ -1,0 +1,3 @@
+version=3
+opts=filenamemangle=s/.+\/v?(\d\S+)\.tar\.gz/autoradio-$1\.tar\.gz/ \
+  https://github.com/pat1/autoradio/tags .*/v?(\d\S+)\.tar\.gz

@@ -233,6 +233,8 @@ for dirpath, dirnames, filenames in os.walk('templates'):
     if filenames:
         data_files.append(['share/autoradio/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
 
+data_files.append(['share/autoradio/server/',['autoradio.wsgi']])
+
 for dirpath, dirnames, filenames in os.walk('static'):
     # Ignore dirnames that start with '.'
     for i, dirname in enumerate(dirnames):
@@ -300,7 +302,7 @@ setup(name='autoradio',
                                  'templates/xmms/*.html'
                              ]
       },
-      scripts=['autoradiod','autoradioweb','autoradioctrl','autoradio.wsgi',
+      scripts=['autoradiod','autoradioweb','autoradioctrl',
                'autoplayerd','autoplayergui','autoradiodbusd','jackdaemon'],
       data_files = data_files,
       license = "GNU GPL v2",

@@ -11,7 +11,7 @@ Vcs-Browser: http://anonscm.debian.org/gitweb?p=collab-maint/autoradio.git;a=sum
 
 Package: autoradio
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, sqlite3, speex, python, python-reportlab (>=2.0) , python-configobj, python-django (>=1.7.0) , python-django-extensions ,  python-mutagen (>=1.17)  , python-dbus, python-magic, python-cherrypy, python-docutils, python-pil, python-six, python-gst-1.0, libjs-jquery, libjs-swfobject, libcortado-java, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good, gstreamer1.0-plugins-bad
+Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, sqlite3, speex, python, python-reportlab (>=2.0) , python-configobj, python-django (>=1.7.0) , python-django-extensions ,  python-mutagen (>=1.17)  , python-dbus, python-magic, python-cherrypy, python-docutils, python-pil, python-six, python-gst-1.0, libjs-jquery, libjs-swfobject, libcortado-java, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good
 Description: radio automation software
  Simple to use, starting from digital audio
  files, manage on-air broadcasting over a radio-station or
@@ -24,7 +24,7 @@ Description: radio automation software
       like jingles, spots, playlist and programs; interact with player
       like supervisor User
  .
-    * inteface: WEB interface to monitor the player and scheduler and
+    * Interface: WEB interface to monitor the player and scheduler and
       admin the schedules for the complete control over your station
       format. The web interface allows you to easily publish podcasts
       that conform to the RSS 2.0 and iTunes RSS podcast specifications

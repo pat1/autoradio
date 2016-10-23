@@ -1,6 +1,6 @@
 from django.conf.urls import *
 #from django.views.generic.simple import direct_to_template
-from django.conf.urls import patterns
+#from django.conf.urls import patterns
 from django.views.generic import TemplateView
 
 urlpatterns = [

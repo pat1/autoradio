@@ -6,8 +6,8 @@ Build-Depends: debhelper (>= 9)
 Build-Depends-Indep: python, python-setuptools, python-django (>=1.7.0) , python-configobj, help2man, gettext
 Standards-Version: 3.9.8
 Homepage: https://github.com/pat1/autoradio
-Vcs-Git: git://anonscm.debian.org/collab-maint/autoradio.git
-Vcs-Browser: http://anonscm.debian.org/gitweb?p=collab-maint/autoradio.git;a=summary
+Vcs-Git: https://anonscm.debian.org/cgit/collab-maint/autoradio.git
+Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/autoradio.git
 
 Package: autoradio
 Architecture: all

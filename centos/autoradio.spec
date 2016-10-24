@@ -4,7 +4,7 @@
 1)")}
 
 %define name autoradio
-%define version 2.8.5
+%define version 2.8.6
 %define release 1%{?dist}
 
 Summary: radio automation software
@@ -49,8 +49,9 @@ Radio automation software. Simple to use, starting from digital audio
 files, manage on-air broadcasting over a radio-station or
 web-radio. The main components are:
 
-    * Player (Xmms/Audacious): plays all your media files and send digital sound
-      to an audio device or audio server
+    * Player integrated (gstreamer) or external (Xmms/Audacious):
+      plays all your media files and send digital sound to an audio
+      device or audio server
  
     * Scheduler: real time manager for emission of special audio files
       like jingles, spots, playlist and programs; interact with player
@@ -100,11 +101,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/%{name}.conf
 
-#%{_datadir}/autoradio/locale/*
+#%{_datadir}/autoradio/*
 %{_bindir}/autoradiod
 %{_bindir}/autoradioweb
 %{_bindir}/autoradioctrl
-%{_bindir}/autoradio.wsgi
 %{_bindir}/autoplayerd
 %{_bindir}/autoplayergui
 %{_bindir}/autoradiodbusd

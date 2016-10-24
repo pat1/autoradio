@@ -4,7 +4,7 @@
 1)")}
 
 %define name autoradio
-%define version 2.8.5
+%define version 2.8.6
 %define release 1%{?dist}
 
 Summary: radio automation software
@@ -71,7 +71,7 @@ Developed with Python, Django, Dbus it works in an production enviroment
 %{__python} setup.py build
 
 %install
-%{__python} setup.py install --single-version-externally-managed --root=$RPM_BUILD_ROOT
+%{__python} setup.py install --root=$RPM_BUILD_ROOT
 
 ##%{__install} -d -m 0710 %{buildroot}%{_var}/{run/autoradio,log/autoradio}
 
@@ -100,11 +100,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/%{name}.conf
 
-#%{_datadir}/autoradio/locale/*
+#%{_datadir}/autoradio/*
 %{_bindir}/autoradiod
 %{_bindir}/autoradioweb
 %{_bindir}/autoradioctrl
-%{_bindir}/autoradio.wsgi
 %{_bindir}/autoplayerd
 %{_bindir}/autoplayergui
 %{_bindir}/autoradiodbusd

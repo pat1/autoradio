@@ -858,22 +858,22 @@ class Player:
 
   def play(self):
     logging.info( "play")
+    self.recoverplaymode = "Playing"
     ret = self.player.set_state(Gst.State.PLAYING)
     #if ret == Gst.State.CHANGE_FAILURE:
     if ret == Gst.StateChangeReturn.FAILURE:
         logging.error( "Unable to set the pipeline to the PLAYING state.")
-        self.recoverplaymode = "Playing"
 
     #else:
     #  print self.player.get_state(timeout=gst.CLOCK_TIME_NONE)
 
   def pause(self):
     logging.info( "pause")
+    self.recoverplaymode = "Paused"
     ret = self.player.set_state(Gst.State.PAUSED)
     #if ret == Gst.State.CHANGE_FAILURE:
     if ret == Gst.StateChangeReturn.FAILURE:
         logging.error( "Unable to set the pipeline to the PAUSED state.")
-        self.recoverplaymode = "Paused"
     #else:
     #  print self.player.get_state(timeout=gst.CLOCK_TIME_NONE)
 
@@ -892,13 +892,12 @@ class Player:
 
   def stop(self):
     logging.info( "stop")
-
+    self.recoverplaymode = "Stopped"
     #self.loaduri()
     ret = self.player.set_state(Gst.State.READY)
     #if ret == Gst.State.CHANGE_FAILURE:
     if ret == Gst.StateChangeReturn.FAILURE:
       logging.error( "Unable to set the pipeline to the READY state.")
-      self.recoverplaymode = "Stopped"
 
     #else:
     #  print self.player.get_state(timeout=gst.CLOCK_TIME_NONE)

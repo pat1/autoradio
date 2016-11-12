@@ -1,3 +1,11 @@
+autoradio (2.8.6-1) unstable; urgency=high
+
+  * New upstream release
+  * Removed python-cherrypy dependency
+  * Fixed Vcs-Git and Vcs-Browser fields in debian/control
+
+ -- Andrea Capriotti <capriott@debian.org>  Mon, 24 Oct 2016 21:19:09 +0200
+
 autoradio (2.8.5-1) unstable; urgency=high
 
   * New upstream release (Closes: #755583)

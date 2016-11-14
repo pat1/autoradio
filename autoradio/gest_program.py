@@ -23,7 +23,7 @@ class gest_program:
 
     def __init__ (self,now,minelab):
         """init of program application:
-        now : currenti datetime
+        now : current datetime
         minelab: minutes to elaborate 
         execute the right data retrival to get the schedued programs"""
         
@@ -101,8 +101,8 @@ class gest_program:
                     firth=False
 
                 else:
+                    ar_scheduledatetime+=timedelta(seconds=lengthold)
                     lengthold=ar_length
-                    ar_scheduledatetime=ar_scheduledatetime+timedelta(seconds=lengthold)
 
                 programma=scheduledone
                 programma.ar_filename=ar_filename

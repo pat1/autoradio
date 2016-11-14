@@ -16,6 +16,7 @@ import gobject
 import dbus
 import autoradio.settings
 import urlparse
+import traceback
 
 busaddress=autoradio.settings.busaddressplayer
 
@@ -250,6 +251,7 @@ class Main(object):
                 for track in  self.tl.GetTracksMetadata( self.tl.Tracks):
                     listmodel.append([track.get(u'mpris:trackid',"")])
     except:
+        print traceback.format_exc()
         print "Error getting player playlist"
         gtk.main_quit()
 

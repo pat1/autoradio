@@ -279,12 +279,12 @@ class Configure(models.Model):
         def __unicode__(self):
 
             if self.emission_starttime is None:
-                emission_starttime = "- infinite"
+                emission_starttime = "-"
             else:
                 emission_starttime = self.emission_starttime.isoformat()
 
             if self.emission_endtime is None:
-                emission_endtime = "+ infinite"
+                emission_endtime = "-"
             else:
                 emission_endtime = self.emission_endtime.isoformat()
 

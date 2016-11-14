@@ -70,9 +70,17 @@ class Configure(models.Model):
 
 
         def __unicode__(self):
-            return self.sezione+" "+self.active.__str__()+" "\
-		+self.emission_starttime.isoformat()+" "\
-		+self.emission_endtime.isoformat()
+            if self.emission_starttime is None:
+                start="-"
+            else:
+                start=self.emission_starttime.isoformat()
+
+            if self.emission_endtime is None:
+                end="-"
+            else:
+                end=self.emission_endtime.isoformat()
+
+            return self.sezione+" "+self.active.__str__()+" "+start+" "+end
 
 
 class Playlist(models.Model):

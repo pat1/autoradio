@@ -192,6 +192,8 @@ class Main(object):
     try:
       new_model = self.make_list()
       self.treeview.set_model(new_model)
+      while gtk.events_pending():
+          gtk.main_iteration_do(True)
       return True
 
     except:

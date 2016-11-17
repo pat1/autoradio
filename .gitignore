@@ -9,3 +9,9 @@ build
 dist
 autoradio.egg-info
 man
+MANIFEST
+*.swf
+*.jar
+autoradio/programs/static/programs/playogg/js/*.js
+autoradio/programs/static/programs/playogg/swfobject/*.js
+media

@@ -28,6 +28,7 @@
 # we use this in autoplayergui to update the tracklist
 
 import sys, time, thread
+import tempfile,os
 
 #import pygst
 #pygst.require("0.10")
@@ -945,10 +946,22 @@ class Player:
       self.playlist.position=self.position()*1000
 
     try:
-      self.playlist.write(path)
+
+      fd,tmpfile=tempfile.mkstemp(dir=os.path.dirname(os.path.abspath(path)))
+      self.playlist.write(tmpfile)
+      os.close(fd)   #see at https://www.logilab.org/blogentry/17873
+      #if os.path.exists(path):
+      #  os.unlink(path)
+      os.rename(tmpfile, path)
+
     except:
       logging.error( "error saving playlist")
       raise
+
+    finally:
+      if os.path.exists(tmpfile):
+        os.unlink(tmpfile)
+
     logging.info ( "playlist saved %s" % path)
     return True
 
@@ -1008,6 +1021,7 @@ class Player:
 
   def exit(self):
     logging.info("save playlist: %s" % STATUS_PLAYLIST )
+
     self.save_playlist(STATUS_PLAYLIST)
     self.stop()
     self.loop.quit()

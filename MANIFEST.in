@@ -8,9 +8,10 @@ global-include  *.txt *.py *.sh *.in *.cfg *.json *.conf
 recursive-include doc *
 recursive-include locale *.po
 recursive-include templates *
-recursive-include autoradio/global_static *
+recursive-include global_static *
 recursive-include centos *
 recursive-include fedora *
+prune static
 prune amarok 
 prune media 
 prune debian

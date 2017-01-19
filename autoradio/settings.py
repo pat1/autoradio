@@ -274,7 +274,7 @@ FILE_UPLOAD_HANDLERS = [
 
 
 STATICFILES_DIRS = [
-    "autoradio/global_static",
+    "global_static",
 ]
 
 

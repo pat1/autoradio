@@ -15,7 +15,7 @@ from django.conf import settings
 
 
 class distclean(Command):
-    description = "remove man pages and *.mo files"
+    description = "remove man pages static files and *.mo files"
     user_options = []   
     boolean_options = []
 
@@ -30,6 +30,10 @@ class distclean(Command):
         from os.path import join
         try:
             shutil.rmtree("man")
+        except:
+            pass
+        try:
+            shutil.rmtree("static")
         except:
             pass
         for root, dirs, files in os.walk('locale'):
@@ -82,6 +86,7 @@ class distclean(Command):
 class build(build_):
 
     sub_commands = build_.sub_commands[:]
+    sub_commands.append(('djangocollectstatic', None))
     sub_commands.append(('compilemessages', None))
     sub_commands.append(('createmanpages', None))
 
@@ -164,7 +169,23 @@ class haxecompileanoggplayer(Command):
         except:
             print "WARNING !!!!!  anoggplayer not created"
 
+class djangocollectstatic(Command):
+    description = "collect static files for web server to serve it"
+    user_options = []   
+    boolean_options = []
 
+    def initialize_options(self):
+        pass
+    
+    def finalize_options(self):
+        pass
+
+    def run(self):
+
+        print "execute django collectstatic files"
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "autoradio.settings")
+        from django.core.management import execute_from_command_line
+        execute_from_command_line([ "execname",'collectstatic',"--noinput"])
 
 
 class installbin(Command):
@@ -243,7 +264,7 @@ for dirpath, dirnames, filenames in os.walk('static'):
         data_files.append(['share/autoradio/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
 
 data_files.append(('share/autoradio/media',[]))
-data_files.append(('share/autoradio/static',[]))
+#data_files.append(('share/autoradio/static',[]))
 data_files.append(('/etc/autoradio',['autoradio-site.cfg']))
 data_files.append(('/etc/autoradio',['dbus-autoradio.conf']))
 
@@ -275,7 +296,7 @@ setup(name='autoradio',
       author_email='p.patruno@iperbole.bologna.it',
       platforms = ["any"],
       url='http://autoradiobc.sf.net',
-      cmdclass={'build': build,'compilemessages':compilemessages,'createmanpages':createmanpages,"distclean":distclean,"haxecompileanoggplayer":haxecompileanoggplayer,"installbin":installbin,"buildall":buildall},
+      cmdclass={'build': build,'compilemessages':compilemessages,'createmanpages':createmanpages,"distclean":distclean,"haxecompileanoggplayer":haxecompileanoggplayer,"installbin":installbin,"buildall":buildall,"djangocollectstatic":djangocollectstatic},
       packages=['autoradio', 'autoradio.playlists','autoradio.spots', 
                 'autoradio.jingles', 'autoradio.programs',
                 'autoradio.playlists.migrations','autoradio.spots.migrations', 

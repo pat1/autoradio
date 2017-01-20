@@ -12,6 +12,8 @@ from autoradio import _version_
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
 from django.conf import settings
+import django
+django.setup()
 
 
 class distclean(Command):
@@ -182,10 +184,13 @@ class djangocollectstatic(Command):
 
     def run(self):
 
-        print "execute django collectstatic files"
-        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "autoradio.settings")
-        from django.core.management import execute_from_command_line
-        execute_from_command_line([ "execname",'collectstatic',"--noinput"])
+        from django.core import management
+        management.call_command("collectstatic", verbosity=0, interactive=False)
+
+        #print "execute django collectstatic files"
+        #os.environ.setdefault("DJANGO_SETTINGS_MODULE", "autoradio.settings")
+        #from django.core.management import execute_from_command_line
+        #execute_from_command_line([ "execname",'collectstatic',"--noinput"])
 
 
 class installbin(Command):

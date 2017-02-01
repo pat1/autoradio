@@ -195,6 +195,9 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it> 2.8.7-8
+- new package built with tito
+
 * Sat Aug 10 2013 Paolo Patruno <pat1@localhost.localdomain> - 2.8.0-1%{?dist}
 - bumped to version 2.8
 

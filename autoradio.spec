@@ -6,7 +6,7 @@
 
 Summary: radio automation software
 Name: autoradio
-Version: 2.8.8
+Version: 2.8.9
 Release: 1%{?dist}
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
@@ -191,6 +191,9 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it> 2.8.9-1
+- 
+
 * Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it> 2.8.8-1
 - standard spec file (ppatruno@arpa.emr.it)
 - bug in spec (ppatruno@arpa.emr.it)

@@ -6,8 +6,8 @@
 
 Summary: radio automation software
 Name: autoradio
-Version: 2.8.7
-Release: 8%{?dist}
+Version: 2.8.8
+Release: 1%{?dist}
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %{name}-tmpfiles.conf
@@ -191,6 +191,14 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it> 2.8.8-1
+- standard spec file (ppatruno@arpa.emr.it)
+- bug in spec (ppatruno@arpa.emr.it)
+- removed SOURCE1 fron spec file (ppatruno@arpa.emr.it)
+- better monit example (ppatruno@arpa.emr.it)
+- new package built with tito (ppatruno@arpa.emr.it)
+- lost autoradio-tmpfiles.conf (ppatruno@arpa.emr.it)
+
 * Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it>
 - bug in spec (ppatruno@arpa.emr.it)
 - removed SOURCE1 fron spec file (ppatruno@arpa.emr.it)

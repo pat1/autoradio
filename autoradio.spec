@@ -14,7 +14,7 @@ Version: %{version}
 Release: %{release}
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
-Source1:  %{name}-tmpfiles.conf
+#Source1:  %{name}-tmpfiles.conf
 License: GNU GPL v2
 Group: Development/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -84,7 +84,7 @@ mkdir -p %{buildroot}%{_localstatedir}/log/
 %{__install} -d -m 0710 %{buildroot}%{_localstatedir}/{run/autoradio,log/autoradio}
 
 mkdir -p %{buildroot}%{_sysconfdir}/tmpfiles.d
-%{__install} -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/tmpfiles.d/%{name}.conf
+%{__install} -m 0644 %{name}-tmpfiles.conf %{buildroot}%{_sysconfdir}/tmpfiles.d/%{name}.conf
 
 
 %clean

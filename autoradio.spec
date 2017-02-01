@@ -4,14 +4,10 @@
 %{!?python2_sitearch: %define python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python2_lib; print get_python2_lib(
 1)")}
 
-%define name autoradio
-%define version 2.8.7
-%define release 8%{?dist}
-
 Summary: radio automation software
-Name: %{name}
-Version: %{version}
-Release: %{release}
+Name: autoradio
+Version: 2.8.7
+Release: 8%{?dist}
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %{name}-tmpfiles.conf
@@ -195,6 +191,13 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it>
+- bug in spec (ppatruno@arpa.emr.it)
+- removed SOURCE1 fron spec file (ppatruno@arpa.emr.it)
+- better monit example (ppatruno@arpa.emr.it)
+- new package built with tito (ppatruno@arpa.emr.it)
+- lost autoradio-tmpfiles.conf (ppatruno@arpa.emr.it)
+
 * Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it>
 - removed SOURCE1 fron spec file (ppatruno@arpa.emr.it)
 - better monit example (ppatruno@arpa.emr.it)

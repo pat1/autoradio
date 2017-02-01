@@ -195,6 +195,15 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it>
+- lost autoradio-tmpfiles.conf (ppatruno@arpa.emr.it)
+
+* Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it>
+- lost autoradio-tmpfiles.conf (ppatruno@arpa.emr.it)
+
+* Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it>
+- lost autoradio-tmpfiles.conf (ppatruno@arpa.emr.it)
+
 * Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it> 2.8.7-8
 - new package built with tito
 

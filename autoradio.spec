@@ -1,11 +1,12 @@
-%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()"
+%{!?__python2: %define __python2 python2}
+%{!?python2_sitelib: %define python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python2_lib; print get_python2_lib()"
 )}
-%{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(
+%{!?python2_sitearch: %define python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python2_lib; print get_python2_lib(
 1)")}
 
 %define name autoradio
-%define version 2.8.6
-%define release 1%{?dist}
+%define version 2.8.7
+%define release 8%{?dist}
 
 Summary: radio automation software
 Name: %{name}
@@ -20,17 +21,18 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Prefix: %{_prefix}
 BuildArch: noarch
 Vendor: Paolo Patruno <p.patruno@iperbole.bologna.it>
-Url: http://autoradiobc.sf.net
-BuildRequires: python-configobj , python-django >= 1.7.0 , help2man, python-setuptools
+Url: https://github.com/pat1/autoradio
+BuildRequires: python2-devel, python-setuptools, gettext, python-configobj, python-magic, python-django >= 1.7.0 , help2man, python-setuptools
 Requires:python-mutagen >= 1.17 , python-django >= 1.7.0,  python-configobj, python-cherrypy, python-reportlab >= 2.0,  python-docutils, sqlite >= 3.6.22, speex-tools, python-magic, python-pillow, python-six 
 #, python-django-extensions
 Requires: initscripts
-%if 0%{?fedora} < 10
-Requires: pyxmms, xmms
-%else
+#%if 0%{?fedora} < 10
+#Requires: pyxmms, xmms
+#%else
 ## Requires: dbus-python, audacious >= 1.5
-Requires: dbus-python, gstreamer, gstreamer-plugins-base, gstreamer-plugins-good, gstreamer-plugins-bad, gstreamer-plugins-bad-free, gstreamer-plugins-bad-free-extras, gstreamer-python
-%endif
+Requires: dbus-python, gstreamer, gstreamer-plugins-base, gstreamer-plugins-good, gstreamer-python
+#, gstreamer-plugins-bad, gstreamer-plugins-bad-free, gstreamer-plugins-bad-free-extras
+#%endif
 
 # Compile options:
 # --with cherrypy          : do not need cherrypy2
@@ -68,10 +70,12 @@ Developed with Python, Django, Dbus it works in an production enviroment
 %setup -n %{name}-%{version} -n %{name}-%{version}
 
 %build
-%{__python} setup.py build
+##%{__python2} setup.py build
+%py2_build
 
 %install
-%{__python} setup.py install --root=$RPM_BUILD_ROOT
+##%{__python2} setup.py install --root=$RPM_BUILD_ROOT
+%py2_install
 
 ##%{__install} -d -m 0710 %{buildroot}%{_var}/{run/autoradio,log/autoradio}
 
@@ -93,9 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING README doc/*
 %config(noreplace) %{_sysconfdir}/%{name}/autoradio-site.cfg
 %config(noreplace) %{_sysconfdir}/%{name}/dbus-autoradio.conf
-%dir %{python_sitelib}/%{name}
-%{python_sitelib}/%{name}/*
-%{python_sitelib}/%{name}-*
+%dir %{python2_sitelib}/%{name}
+%{python2_sitelib}/%{name}/*
+%{python2_sitelib}/%{name}-*
 %{_mandir}/man1/*
 
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/%{name}.conf

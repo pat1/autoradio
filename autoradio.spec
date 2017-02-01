@@ -196,6 +196,42 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it>
+- removed SOURCE1 fron spec file (ppatruno@arpa.emr.it)
+- better monit example (ppatruno@arpa.emr.it)
+- new package built with tito (ppatruno@arpa.emr.it)
+- lost autoradio-tmpfiles.conf (ppatruno@arpa.emr.it)
+
+* Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it>
+- removed SOURCE1 fron spec file (ppatruno@arpa.emr.it)
+- better monit example (ppatruno@arpa.emr.it)
+- new package built with tito (ppatruno@arpa.emr.it)
+- lost autoradio-tmpfiles.conf (ppatruno@arpa.emr.it)
+
+* Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it>
+- removed SOURCE1 fron spec file (ppatruno@arpa.emr.it)
+- better monit example (ppatruno@arpa.emr.it)
+- new package built with tito (ppatruno@arpa.emr.it)
+- lost autoradio-tmpfiles.conf (ppatruno@arpa.emr.it)
+
+* Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it>
+- removed SOURCE1 fron spec file (ppatruno@arpa.emr.it)
+- better monit example (ppatruno@arpa.emr.it)
+- new package built with tito (ppatruno@arpa.emr.it)
+- lost autoradio-tmpfiles.conf (ppatruno@arpa.emr.it)
+
+* Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it>
+- removed SOURCE1 fron spec file (ppatruno@arpa.emr.it)
+- better monit example (ppatruno@arpa.emr.it)
+- new package built with tito (ppatruno@arpa.emr.it)
+- lost autoradio-tmpfiles.conf (ppatruno@arpa.emr.it)
+
+* Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it>
+- removed SOURCE1 fron spec file (ppatruno@arpa.emr.it)
+- better monit example (ppatruno@arpa.emr.it)
+- new package built with tito (ppatruno@arpa.emr.it)
+- lost autoradio-tmpfiles.conf (ppatruno@arpa.emr.it)
+
+* Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it>
 - lost autoradio-tmpfiles.conf (ppatruno@arpa.emr.it)
 
 * Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it>

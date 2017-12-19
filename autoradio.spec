@@ -6,7 +6,7 @@
 
 Summary: radio automation software
 Name: autoradio
-Version: 2.8.9
+Version: 2.8.10
 Release: 1%{?dist}
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory

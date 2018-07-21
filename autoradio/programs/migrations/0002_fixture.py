@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from __future__ import print_function
 
 from django.db import models, migrations
 from django.core import serializers
@@ -25,7 +26,7 @@ def load_fixture(apps, schema_editor):
         if fixture_filename[-5:] == ".json":
             
             fixture_file = os.path.join(fixture_dir, fixture_filename)
-            print "load fixture from file: ",fixture_file
+            print("load fixture from file: ",fixture_file)
 
             fixture = open(fixture_file, 'rb')
             objects = serializers.deserialize('json', fixture, ignorenonexistent=True)

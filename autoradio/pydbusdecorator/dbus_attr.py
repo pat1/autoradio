@@ -3,9 +3,10 @@ Created on Nov 5, 2011
 
 @author: hugosenari
 '''
-from dbus_decorator import DbusDecorator
-from undefined_param import UNDEFINED_PARAM
-from dbus_interface import DbusInterface
+from __future__ import absolute_import
+from .dbus_decorator import DbusDecorator
+from .undefined_param import UNDEFINED_PARAM
+from .dbus_interface import DbusInterface
 
 
 class DbusAttr(DbusDecorator):
@@ -81,7 +82,7 @@ class DbusAttr(DbusDecorator):
             self.attr = value
 
     def __delete__(self, obj):
-        raise AttributeError, "can't delete attribute"
+        raise AttributeError("can't delete attribute")
 
     @property
     def attr(self):

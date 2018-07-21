@@ -3,6 +3,8 @@
     from http://djangosnippets.org/snippets/1834/
 
 """
+from builtins import range
+from past.builtins import basestring
 import datetime
 import re
 
@@ -34,7 +36,7 @@ class MySelectDateWidget(Widget):
             self.years = years
         else:
             this_year = datetime.date.today().year-9
-            self.years = range(this_year, this_year+10)
+            self.years = list(range(this_year, this_year+10))
 
     def render(self, name, value, attrs=None):
 
@@ -63,7 +65,7 @@ class MySelectDateWidget(Widget):
         select_html = s.render(self.day_field % name, day_val, local_attrs)
         output.append(select_html)
             
-        month_choices = MONTHS.items()
+        month_choices = list(MONTHS.items())
         if not (self.required and value):
             month_choices.append(self.none_value)
         month_choices.sort()

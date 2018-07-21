@@ -3,9 +3,11 @@ Created on Nov 5, 2011
 
 @author: hugosenari
 '''
+from __future__ import absolute_import
 
-from dbus_decorator import DbusDecorator
-from undefined_param import UNDEFINED_PARAM
+from builtins import object
+from .dbus_decorator import DbusDecorator
+from .undefined_param import UNDEFINED_PARAM
 from functools import wraps
 
 

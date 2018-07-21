@@ -3,9 +3,10 @@ Created on Nov 5, 2011
 
 @author: hugosenari
 '''
+from __future__ import absolute_import
 
-from dbus_decorator import DbusDecorator
-from dbus_interface import DbusInterface
+from .dbus_decorator import DbusDecorator
+from .dbus_interface import DbusInterface
 
 from functools import wraps
 

@@ -4,6 +4,8 @@
 """
 Show mediaplayer playlist on a simple web server.
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 #try:
 #    import sys,glob
@@ -12,12 +14,15 @@ Show mediaplayer playlist on a simple web server.
 #    sys.path.insert(0, compatCherryPyPath)
 #finally:
 
-import autoradio_config
+from builtins import str
+from builtins import range
+from builtins import object
+from . import autoradio_config
 import cherrypy
 import os
 import datetime
-import autompris
-import autompris2
+from . import autompris
+from . import autompris2
 
 cpversion3=cherrypy.__version__.startswith("3")
 maxplele=100      # max number of elements in playlist
@@ -54,7 +59,7 @@ tail='''
 </html>
 '''
 
-class HomePage:
+class HomePage(object):
     
 #    def Main(self):
 #        # Let's link to another method here.
@@ -135,7 +140,7 @@ class HomePage:
             htmlresponse+='<table border="1">'
             htmlresponse+='<td>position</td><td>lenght // remain</td><td>media</td>'
 
-            for pos in xrange(0,min(len,maxplele)):
+            for pos in range(0,min(len,maxplele)):
                 htmlresponse+='<tr>'
                 metadata=mp.get_metadata(pos)
 
@@ -232,8 +237,8 @@ if __name__ == '__main__':
         start_http_server(iht=True,player=autoradio_config.player,session=0)
 
     except:
-        print "Error"
+        print("Error")
         raise
     finally:
-        print "Terminated"
+        print("Terminated")
 

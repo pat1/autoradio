@@ -2,18 +2,21 @@
 # This Python file uses the following encoding: utf-8
 # GPL. (C) 2007-2009 Paolo Patruno.
 
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import object
 import os, sys
 os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
 from django.conf import settings
 
 import logging
 import datetime
-from autoradio_config import *
+from .autoradio_config import *
 from django.db.models import Q
-from spots.models import Configure
-from spots.models import Spot
-from spots.models import Fascia
-from spots.models import Giorno
+from .spots.models import Configure
+from .spots.models import Spot
+from .spots.models import Fascia
+from .spots.models import Giorno
 import time
 
 #used to get metadata from audio files
@@ -21,7 +24,7 @@ import mutagen
 import tempfile,shutil
 
 
-class gest_spot:
+class gest_spot(object):
 
     def __init__ (self,now,minelab,playlistdir):
         """init of spot application:
@@ -193,22 +196,22 @@ class gest_spot:
                 f.write("\n")
 
             # calcolo la lunghezza della fascia
-	    try:
+            try:
                 filename=filename.encode("utf8")
                 onelength=mutagen.File(filename).info.length
                 logging.debug("SPOT: computed the partial time length: %d",onelength)
-            	length=length+onelength
-	    except:
+                length=length+onelength
+            except:
 
                 logging.error( "SPOT: error establish time length; use an estimation %s", filename)
-		length=length+30
+       	length=length+30
 
         self.ar_length=length
         logging.debug("SPOT: computed total time length: %d",self.ar_length)
 
         if genfile :
             f.close()
-            os.chmod(tmpfile,0644)
+            os.chmod(tmpfile,0o644)
 
 
             #sometime I get:
@@ -254,10 +257,10 @@ def main():
             pass
             #print "fascia and spot ->",spots.fascia,spot
 
-        print spots.ar_filename
-        print spots.ar_scheduledatetime
-        print spots.ar_length
-        print spots.ar_spots_in_fascia
+        print(spots.ar_filename)
+        print(spots.ar_scheduledatetime)
+        print(spots.ar_length)
+        print(spots.ar_spots_in_fascia)
 
 
 if __name__ == '__main__':

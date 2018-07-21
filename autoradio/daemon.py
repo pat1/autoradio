@@ -26,7 +26,7 @@
 ## THE SOFTWARE.
 ##
 
-ur"""
+"""
 This module can be used on UNIX to fork a daemon process. It is based on
 `Jürgen Hermann's Cookbook recipe`__.
 
@@ -77,6 +77,9 @@ if __name__ == '__main__':
 """
 
 
+from builtins import str
+from past.builtins import basestring
+from builtins import object
 import sys, os, signal, pwd, grp, optparse
 
 
@@ -238,7 +241,7 @@ class Daemon(object):
 			pid = os.fork()
 			if pid > 0:
 				sys.exit(0) # Exit first parent
-		except OSError, exc:
+		except OSError as exc:
 			sys.exit("%s: fork #1 failed: (%d) %s\n" % (sys.argv[0], exc.errno, exc.strerror))
 	
 		# Decouple from parent environment
@@ -251,7 +254,7 @@ class Daemon(object):
 			pid = os.fork()
 			if pid > 0:
 				sys.exit(0) # Exit second parent
-		except OSError, exc:
+		except OSError as exc:
 			sys.exit("%s: fork #2 failed: (%d) %s\n" % (sys.argv[0], exc.errno, exc.strerror))
 	
 		# Now I am a daemon!
@@ -281,7 +284,7 @@ class Daemon(object):
 			sys.exit("no pidfile specified")
 		try:
 			pidfile = open(self.options.pidfile, "rb")
-		except IOError, exc:
+		except IOError as exc:
 			sys.exit("can't open pidfile %s: %s" % (self.options.pidfile, str(exc)))
 		data = pidfile.read()
 		try:

@@ -4,12 +4,14 @@ This is python mprisV2.1 documentation
 http://www.mpris.org/2.1/spec/Playlists.html
 
 '''
+from __future__ import print_function
+from __future__ import absolute_import
 from autoradio.pydbusdecorator.dbus_attr import DbusAttr
 from autoradio.pydbusdecorator.dbus_interface import DbusInterface
 from autoradio.pydbusdecorator.dbus_method import DbusMethod
 from autoradio.pydbusdecorator.dbus_signal import DbusSignal
-from interfaces import Interfaces
-from types import Playlist, Maybe_Playlist
+from .interfaces import Interfaces
+from .types import Playlist, Maybe_Playlist
 from dbus import UInt32
 
 
@@ -126,13 +128,13 @@ if __name__ == '__main__':
     from mpris2.utils import SomePlayers
     uri = Interfaces.MEDIA_PLAYER + '.' + SomePlayers.RHYTHMBOX
     mp2 = Playlists(dbus_interface_info={'dbus_uri': uri})
-    print mp2.ActivePlaylist
-    print 'Active is valid playlist: ', bool(mp2.ActivePlaylist)
+    print(mp2.ActivePlaylist)
+    print('Active is valid playlist: ', bool(mp2.ActivePlaylist))
     if mp2.ActivePlaylist:
-        print 'Active playlist name:', mp2.ActivePlaylist.Playlist.Name
+        print('Active playlist name:', mp2.ActivePlaylist.Playlist.Name)
     from mpris2.types import Playlist_Ordering
-    print hasattr('anystring', 'eusequenaotem')
-    print 'bla', mp2.GetPlaylists(0, 20, Playlist_Ordering.ALPHABETICAL, False)
+    print(hasattr('anystring', 'eusequenaotem'))
+    print('bla', mp2.GetPlaylists(0, 20, Playlist_Ordering.ALPHABETICAL, False))
     
     
     

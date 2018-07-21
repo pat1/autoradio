@@ -5,6 +5,7 @@ This is mprisV2.1 documentation
 http://www.mpris.org/2.1/spec/index.html
 """
 
+from builtins import object
 class Interfaces(object):
     """
     This class contains the constants defined at index of MPRIS2 definition:

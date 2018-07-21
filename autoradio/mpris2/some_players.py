@@ -1,3 +1,4 @@
+from builtins import object
 class Some_Players(object):
     '''
     Not defined in documentation

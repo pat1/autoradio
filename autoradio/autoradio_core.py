@@ -2,16 +2,24 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2007-2009 Paolo Patruno.
 
-from autoradio_config import *
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import zip
+from builtins import str
+from builtins import range
+from past.utils import old_div
+from builtins import object
+from .autoradio_config import *
 
-from gest_program import *
-from gest_spot import *
-from gest_jingle import *
-from gest_playlist import *
-from gest_palimpsest import *
+from .gest_program import *
+from .gest_spot import *
+from .gest_jingle import *
+from .gest_playlist import *
+from .gest_palimpsest import *
 
 
-class schedule:
+class schedule(object):
     """
     Single schedule object
     attributes:
@@ -142,7 +150,7 @@ class schedules(list):
                     length=schedule.length
                     type=schedule.type
                     endscheduledatetime=scheduledatetime+timedelta(seconds=length)
-                    halfscheduledatetime=scheduledatetime+timedelta(seconds=length/2)
+                    halfscheduledatetime=scheduledatetime+timedelta(seconds=old_div(length,2))
 
                     if (type == "spot" or type == "playlist" or type == "jingle" ): continue
 
@@ -222,7 +230,7 @@ class schedules(list):
                     length=schedule.adjustedlength
                     type=schedule.type
                     endscheduledatetime=scheduledatetime+timedelta(seconds=length)
-                    halfscheduledatetime=scheduledatetime+timedelta(seconds=length/2)
+                    halfscheduledatetime=scheduledatetime+timedelta(seconds=old_div(length,2))
 
                     if (type == "spot" or type == "playlist" or type == "jingle" ): continue
 
@@ -308,8 +316,8 @@ class schedules(list):
 
     def purge(self):
 
-        from itertools import izip
-        reverse_enumerate = lambda l: izip(xrange(len(l)-1, -1, -1), reversed(l))
+        
+        reverse_enumerate = lambda l: zip(range(len(l)-1, -1, -1), reversed(l))
 
         for ind,schedula in reverse_enumerate(self):
             if not schedula.filter():
@@ -334,7 +342,7 @@ class schedules(list):
             emission_done=spots.ar_emission_done
             number=spots.ar_spots_in_fascia
             #print scheduledatetime,media,length,number,emission_done
-            if (number <> 0 ):
+            if (number != 0 ):
                 self.append(schedule(fascia,scheduledatetime,media,filename,length,"spot",emission_done,title=str(fascia)))
 
 
@@ -401,7 +409,7 @@ class schedules(list):
 
 
 
-class palimpsest:
+class palimpsest(object):
 
 
     def __init__ (self,title=None,datetime_start=None,datetime_end=None,
@@ -484,7 +492,7 @@ class palimpsest:
 
 
 
-class dates:
+class dates(object):
 
     def __init__(self,datetime_start, datetime_end,step):
 
@@ -498,7 +506,7 @@ class dates:
         return self
 
 
-    def next(self):
+    def __next__(self):
 
         self.datetime_start=self.datetime_start+self.step
         if self.datetime_start <= self.datetime_end:
@@ -574,7 +582,7 @@ class palimpsests(list):
 
             if self[i].datetime_end != self[i+1].datetime_start:
 
-                dtmean=self[i].datetime_end+((self[i+1].datetime_start-self[i].datetime_end)/2)
+                dtmean=self[i].datetime_end+(old_div((self[i+1].datetime_start-self[i].datetime_end),2))
 
                 self[i].datetime_end=dtmean
                 self[i+1].datetime_start=dtmean
@@ -624,7 +632,7 @@ class palimpsests(list):
                 note="%d Spot" % number
 
                 #if (number <> 0 and pdatetime_start.date() == dateelab):
-                if number <> 0 and  pdatetime_start >= datetime_start and pdatetime_end < datetime_end :
+                if number != 0 and  pdatetime_start >= datetime_start and pdatetime_end < datetime_end :
                     self.append(palimpsest(title,pdatetime_start,pdatetime_end,
                                            type,subtype,production,note))
 
@@ -654,20 +662,20 @@ def main():
 
     # get the schedule of my insterest
     # I do a list
-    print "------- schedules --------"
+    print("------- schedules --------")
     for sched in scheds.get_all_refine():
     
 
-        print "------- schedule --------"
+        print("------- schedule --------")
 
         for elemento in sched:
-            print elemento
+            print(elemento)
 
-        print sched.type
-        print sched.media
-        print sched.scheduledatetime
-        print sched.shuffle
-        print sched.length
+        print(sched.type)
+        print(sched.media)
+        print(sched.scheduledatetime)
+        print(sched.shuffle)
+        print(sched.length)
 
 
 

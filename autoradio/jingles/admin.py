@@ -1,4 +1,6 @@
-from models import Giorno, Configure, Jingle
+from __future__ import absolute_import
+from builtins import object
+from .models import Giorno, Configure, Jingle
 from django.contrib import admin
 from django import forms
 from django.utils.translation import ugettext_lazy
@@ -13,7 +15,7 @@ class MyJingleAdminForm(forms.ModelForm):
     """
     Check file if it is a known media file.
     """
-    class Meta:
+    class Meta(object):
         model = Jingle
         fields = '__all__'
 

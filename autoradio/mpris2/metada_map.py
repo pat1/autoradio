@@ -1,3 +1,4 @@
+from __future__ import print_function
 class Metadata_Map(dict):
     '''
     A mapping from metadata attribute names to values.
@@ -48,4 +49,4 @@ class Metadata_Map(dict):
 
 if __name__ == "__main__":
     mdm = Metadata_Map({Metadata_Map.ALBUM : "Marcelo Nova Ao Vivo"})
-    print mdm[Metadata_Map.ALBUM]
+    print(mdm[Metadata_Map.ALBUM])

@@ -4,6 +4,7 @@ Created on Nov 5, 2011
 @author: hugosenari
 '''
 
+from builtins import object
 import dbus
 
 class DbusDecorator(object):

@@ -1,6 +1,10 @@
 '''
 Audio Volume
 '''
+from __future__ import division
+from __future__ import print_function
+from builtins import range
+from past.utils import old_div
 class Volume(float):
     '''
     Audio volume level
@@ -13,7 +17,7 @@ class Volume(float):
 
     MIN = 0.0
     MAX = 1.0
-    RANGE = set([n/10.0 for n in range(11)])
+    RANGE = set([old_div(n,10.0) for n in range(11)])
     
     def __init__(self, volume=1.0, *args, **kw):
         super(Volume, self).__init__(volume, *args, **kw)
@@ -25,4 +29,4 @@ class Volume(float):
         return self._volume
     
 if __name__ == "__main__":
-    print Volume(1)
+    print(Volume(1))

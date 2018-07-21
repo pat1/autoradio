@@ -1,9 +1,10 @@
+from __future__ import absolute_import
 from django.conf.urls import *
 #from django.contrib import admin
 
 #from models import Program, Schedule
 
-from views import show_list, episode_list, show_list_feed, show_list_atom, show_list_media, episode_sitemap, episode_detail
+from .views import show_list, episode_list, show_list_feed, show_list_atom, show_list_media, episode_sitemap, episode_detail
 
 
 urlpatterns = [

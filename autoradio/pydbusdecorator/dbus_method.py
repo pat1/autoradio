@@ -3,9 +3,11 @@ Created on Nov 5, 2011
 
 @author: hugosenari
 '''
+from __future__ import absolute_import
 
-from dbus_decorator import DbusDecorator
-from dbus_interface import DbusInterface
+from builtins import range
+from .dbus_decorator import DbusDecorator
+from .dbus_interface import DbusInterface
 
 from functools import wraps
 
@@ -119,8 +121,8 @@ class DbusMethod(DbusDecorator):
             return kw_to_dbus(**kw)
         
         if hasattr(self.kw_to_dbus, 'keys'):
-            to_dbus_keys = kw_to_dbus.keys()
-            for key in kw.keys():
+            to_dbus_keys = list(kw_to_dbus.keys())
+            for key in list(kw.keys()):
                 if key in to_dbus_keys:
                     kw[key] = kw_to_dbus[key](kw[key])
         return kw

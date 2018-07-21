@@ -1,5 +1,7 @@
+from __future__ import absolute_import
+from builtins import object
 from django.contrib import admin
-from models import Giorno, Configure, ProgramType, Show, Schedule, \
+from .models import Giorno, Configure, ProgramType, Show, Schedule, \
     PeriodicSchedule,AperiodicSchedule,Episode,Enclosure,ScheduleDone
 from autoradio.programs.models import ParentCategory, ChildCategory, MediaCategory
 from django import forms
@@ -118,7 +120,7 @@ class MyEnclosureAdminForm(forms.ModelForm):
     """
     Check file if it is a known media file.
     """
-    class Meta:
+    class Meta(object):
         model = Enclosure
         fields = '__all__'
 

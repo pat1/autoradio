@@ -1,5 +1,6 @@
+from __future__ import absolute_import
 from django.conf.urls import *
-import views
+from . import views
 
 urlpatterns = [
     # Episode detail of one show

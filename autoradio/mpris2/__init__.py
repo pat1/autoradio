@@ -91,21 +91,23 @@ Interfaces
 
 
 '''
+from __future__ import print_function
+from __future__ import absolute_import
 
-from interfaces import Interfaces
-from mediaplayer2 import MediaPlayer2
-from player import Player
-from playlists import Playlists
-from tracklist import TrackList
+from .interfaces import Interfaces
+from .mediaplayer2 import MediaPlayer2
+from .player import Player
+from .playlists import Playlists
+from .tracklist import TrackList
 
-import types as types
-import utils as utils
+from . import types as types
+from . import utils as utils
 
 if __name__ == '__main__':
-    print Interfaces
-    print MediaPlayer2
-    print Player
-    print Playlists
-    print TrackList
-    print types
-    print utils
+    print(Interfaces)
+    print(MediaPlayer2)
+    print(Player)
+    print(Playlists)
+    print(TrackList)
+    print(types)
+    print(utils)

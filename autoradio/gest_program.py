@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2009 Paolo Patruno.
 
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import object
 import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
 from django.conf import settings
@@ -8,18 +11,18 @@ from django.conf import settings
 import logging
 from datetime import *
 
-from autoradio_config import *
+from .autoradio_config import *
 
-from programs.models import Schedule
-from programs.models import ScheduleDone
-from programs.models import Show
-from programs.models import Configure
+from .programs.models import Schedule
+from .programs.models import ScheduleDone
+from .programs.models import Show
+from .programs.models import Configure
 
 # to get metadata from audio files
 import mutagen
 import os
 
-class gest_program:
+class gest_program(object):
 
     def __init__ (self,now,minelab):
         """init of program application:
@@ -131,10 +134,10 @@ def main():
         
         #pass
 
-        print programma.ar_filename
-        print programma.ar_url
-        print programma.ar_scheduledatetime
-        print programma.ar_length
+        print(programma.ar_filename)
+        print(programma.ar_url)
+        print(programma.ar_scheduledatetime)
+        print(programma.ar_length)
 
         #programma.program.get_file_filename()
 

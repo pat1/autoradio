@@ -1,13 +1,18 @@
 #!/usr/bin/env python
 # GPL. (C) 2007 Paolo Patruno.
 
+from __future__ import division
+from __future__ import absolute_import
+from builtins import str
+from past.utils import old_div
+from builtins import object
 import logging
 import xmms,autoxmms
 from datetime import *
 from threading import *
 from django.conf import settings
 import os
-import autoradio_config
+from . import autoradio_config
 #import signal
 
 class XmmsError(Exception):
@@ -16,7 +21,7 @@ class XmmsError(Exception):
 
 def shuffle_playlist(infile,shuffle=False,relative_path=False,length=None):
 
-    import mkplaylist
+    from . import mkplaylist
     import os,random,tempfile,codecs
 
     media_files=list(mkplaylist.read_playlist(infile, not relative_path))
@@ -49,7 +54,7 @@ def ar_emitted(self):
     self.save()
 
 
-class ScheduleProgram:
+class ScheduleProgram(object):
     '''
     activate a schedule setting it for a time in the future
     '''
@@ -143,7 +148,7 @@ def ManageXmms (session,schedule):
       ar_emitted(schedule.djobj)
       logging.info( "ManageXmms: write in django: %s",schedule.djobj)
 
-   except XmmsError, e:
+   except XmmsError as e:
       logging.error(e.message)
       
    #except:
@@ -155,7 +160,7 @@ def ManageXmms (session,schedule):
 
 def secondi(delta):
     secondi=float(delta.seconds)
-    secondi=secondi+(delta.microseconds/100000.)
+    secondi=secondi+(old_div(delta.microseconds,100000.))
     # correggo i viaggi che si fa seconds
     if delta.days < 0 :
         secondi = secondi + (3600*24*delta.days)
@@ -163,7 +168,7 @@ def secondi(delta):
 
 
 
-class dummy_programma:
+class dummy_programma(object):
 
     def __init__(self):
         pass
@@ -223,7 +228,7 @@ def save_status(session):
 
 def main():
 
-    import autoradio_core
+    from . import autoradio_core
 
     programma=dummy_programma()
 

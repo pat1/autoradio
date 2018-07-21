@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2009 Paolo Patruno.
 
+from builtins import range
+from builtins import object
 import dbus
 import time
 import datetime
@@ -9,7 +11,7 @@ import os
 # ------- dbus interface ---------
 import dbus
 
-class audacious:
+class audacious(object):
 
 
     def __init__(self,session=0):
@@ -107,7 +109,7 @@ class audacious:
                 # delete the old ones
             if pos > atlast :
 
-                for prm in xrange(0,pos-atlast): 
+                for prm in range(0,pos-atlast): 
                     self.tracklist.DelTrack(0)
 
             return True
@@ -135,7 +137,7 @@ class audacious:
                 #elimino il troppo
             if length-pos > atlast :
 
-                for prm in xrange(length,pos+atlast,-1): 
+                for prm in range(length,pos+atlast,-1): 
                     self.tracklist.DelTrack(prm)
 
             return True

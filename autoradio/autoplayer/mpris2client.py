@@ -3,6 +3,7 @@
 # GPL. (C) 2013 Paolo Patruno.
 
 #Connect to player
+from __future__ import print_function
 from autoradio.mpris2.mediaplayer2 import MediaPlayer2
 from autoradio.mpris2.player import Player
 from autoradio.mpris2.tracklist import TrackList
@@ -18,13 +19,13 @@ def playhandler( *args, **kw):
     playbackstatus = args[2].get("PlaybackStatus",None)
     position = args[2].get("Position",None)
     if playbackstatus is not None:
-        print "PlaybackStatus",playbackstatus
+        print("PlaybackStatus",playbackstatus)
     if position is not None:
-        print "Position", position
+        print("Position", position)
 
 
 def trackhandler( *args, **kw): 
-    print args, kw
+    print(args, kw)
 
 
 DBusGMainLoop(set_as_default=True)
@@ -42,7 +43,7 @@ if len(uris) >0 :
     #uri = Interfaces.MEDIA_PLAYER + '.' + Some_Players.AUTOPLAYER
     #uri = Interfaces.MEDIA_PLAYER + '.' +'AutoPlayer'
 
-    print uri
+    print(uri)
 
     if busaddress is None:
         bus = dbus.SessionBus()
@@ -57,7 +58,7 @@ if len(uris) >0 :
 
     #Get attributes
     #print play.Metadata #current media data
-    print play.PlaybackStatus
+    print(play.PlaybackStatus)
 
     play.PropertiesChanged = playhandler
 
@@ -66,15 +67,15 @@ if len(uris) >0 :
             tl = TrackList(dbus_interface_info={'dbus_uri': uri})
         # attributes and methods together
             for track in  tl.GetTracksMetadata( tl.Tracks):
-                print  track.get(u'mpris:trackid',None),track.get(u'mpris:length',None),track.get(u'xesam:artist',None), track.get(u'xesam:title',None)
+                print(track.get(u'mpris:trackid',None),track.get(u'mpris:length',None),track.get(u'xesam:artist',None), track.get(u'xesam:title',None))
                 tl.PropertiesChanged = trackhandler
     except:
-        print "mmm audacious mpris2 interface is buggy"
+        print("mmm audacious mpris2 interface is buggy")
 
     mloop.run()
 
 else:
-    print "No players availables"
+    print("No players availables")
     
 
 #s = get_session()

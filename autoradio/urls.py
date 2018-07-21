@@ -1,5 +1,6 @@
+from __future__ import absolute_import
 from django.conf.urls import *
-import settings
+from . import settings
 from django.conf.urls.static import static
 
 

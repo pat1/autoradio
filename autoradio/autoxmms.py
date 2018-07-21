@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2009 Paolo Patruno.
 
+from builtins import range
 import xmms
 import time
 import datetime
@@ -72,7 +73,7 @@ def playlist_clear_up(atlast=10,session=0):
             # delete the old ones
         if pos > atlast :
 
-            for prm in xrange(0,pos-atlast): 
+            for prm in range(0,pos-atlast): 
                 xmms.control.playlist_delete(0,session)
 
         return True
@@ -100,7 +101,7 @@ def playlist_clear_down(atlast=500,session=0):
             #elimino il troppo
         if length-pos > atlast :
 
-            for prm in xrange(length,pos+atlast,-1): 
+            for prm in range(length,pos+atlast,-1): 
                 xmms.control.playlist_delete(prm,session)
 
         return True

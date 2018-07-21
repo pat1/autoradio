@@ -2,6 +2,9 @@
 # This Python file uses the following encoding: utf-8
 # GPL. (C) 2007-2009 Paolo Patruno.
 
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import object
 import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
 from django.conf import settings
@@ -9,7 +12,7 @@ from django.conf import settings
 import logging
 from datetime import *
 
-from autoradio_config import *
+from .autoradio_config import *
 
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -17,9 +20,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from itertools import *
 import calendar
 
-from jingles.models import Configure
-from jingles.models import Jingle
-from jingles.models import Giorno
+from .jingles.models import Configure
+from .jingles.models import Jingle
+from .jingles.models import Giorno
 
 # used to get metadata from audio files
 import mutagen
@@ -46,7 +49,7 @@ def time_iterator(datesched_min,datesched_max,emission_freq):
         yield datac
     
 
-class gest_jingle:
+class gest_jingle(object):
             
     def __init__ (self,now,minelab):
         """init of jingle application:
@@ -122,22 +125,22 @@ class gest_jingle:
 
         many_jingles=cycle(self.jingles)
 
-#        for datac in time_iterator(self.datesched_min,self.datesched_max,self.emission_freq):
+        #        for datac in time_iterator(self.datesched_min,self.datesched_max,self.emission_freq):
         for datac in time_iterator(self.now,self.datesched_max,self.emission_freq):
-            jingle=many_jingles.next()
+            jingle=next(many_jingles)
             jingle.ar_filename=jingle.file.path.encode("utf8")
             jingle.ar_url=jingle.file.url
-#            jingle.ar_filename=jingle.get_file_filename()
+            #            jingle.ar_filename=jingle.get_file_filename()
             jingle.ar_scheduledatetime=datac
             jingle.ar_emission_done=jingle.emission_done
 
             # elaborate the media time length
-	    try:
-            	jingle.ar_length=mutagen.File(jingle.ar_filename).info.length
+            try:
+                jingle.ar_length=mutagen.File(jingle.ar_filename).info.length
                 logging.debug("JINGLE: time length: %s",jingle.ar_length)
-	    except:
+            except:
                 logging.error("JINGLE: error establish time length; use an estimation %s", jingle.ar_filename)
-            	jingle.ar_length=30
+                jingle.ar_length=30
 
             yield jingle
 
@@ -149,16 +152,16 @@ def main():
     
     for jingle in jingles.get_jingle():
 
-        print "----------------------------"
-        print jingle
-        print jingle.ar_url
-        print jingle.ar_filename
-        print jingle.ar_scheduledatetime
-        print jingle.ar_length
-        print jingle.ar_emission_done
+        print("----------------------------")
+        print(jingle)
+        print(jingle.ar_url)
+        print(jingle.ar_filename)
+        print(jingle.ar_scheduledatetime)
+        print(jingle.ar_length)
+        print(jingle.ar_emission_done)
 
         for giorno in jingle.giorni.all():
-            print giorno
+            print(giorno)
 
 if __name__ == '__main__':
     main()  # (this code was run as script)

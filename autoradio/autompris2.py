@@ -15,15 +15,16 @@ if sys.version_info[0] == 3:
     from gi.repository import GObject as gobject
 else:
     import gobject
-import autoradio.settings
+
+from . import settings
 from dbus.mainloop.glib import DBusGMainLoop
-from autoradio.mpris2.mediaplayer2 import MediaPlayer2
-from autoradio.mpris2.player import Player
-from autoradio.mpris2.tracklist import TrackList
-from autoradio.mpris2.interfaces import Interfaces
-from autoradio.mpris2.some_players import Some_Players
-from autoradio.mpris2.utils import get_players_uri
-from autoradio.mpris2.utils import get_session
+from .mpris2.mediaplayer2 import MediaPlayer2
+from .mpris2.player import Player
+from .mpris2.tracklist import TrackList
+from .mpris2.interfaces import Interfaces
+from .mpris2.some_players import Some_Players
+from .mpris2.utils import get_players_uri
+from .mpris2.utils import get_session
 
 # ------- dbus mpris2 interface ---------
 # http://specifications.freedesktop.org/mpris-spec/latest/index.html
@@ -71,7 +72,7 @@ from autoradio.mpris2.utils import get_session
 
 class mediaplayer(object):
 
-    def __init__(self,player="AutoPlayer",session=0, busaddress=autoradio.settings.busaddressplayer):
+    def __init__(self,player="AutoPlayer",session=0, busaddress=settings.busaddressplayer):
 
 #qdbus --literal org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get org.mpris.MediaPlayer2.TrackList Tracks
 #            import gobject

@@ -31,7 +31,10 @@ from builtins import str
 from builtins import object
 from past.utils import old_div
 import sys, time, _thread
-import gobject
+if sys.version_info[0] == 3:
+  from gi.repository import GObject as gobject
+else:
+  import gobject
 import pygst
 pygst.require("0.10")
 import gst

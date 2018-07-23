@@ -25,6 +25,7 @@ from . import autompris
 from . import autompris2
 
 cpversion3=cherrypy.__version__.startswith("3")
+cpversion5=cherrypy.__version__.startswith("5")
 maxplele=100      # max number of elements in playlist
 port=8888         # server port
 
@@ -122,8 +123,8 @@ class HomePage(object):
 
         try:
             cpos=mp.get_playlist_pos()
-	    if cpos is None: cpos=0
-	    cpos=int(cpos)
+            if cpos is None: cpos=0
+            cpos=int(cpos)
 
         except:
             return "error get_playlist_pos()"
@@ -169,15 +170,15 @@ class HomePage(object):
                 htmlresponse+='</tr>'
 
         except:
-		htmlresponse+='error getting player information'
+            htmlresponse+='error getting player information'
 
         htmlresponse+='</table>'
 
-	try:
-		if len > maxplele :
-			htmlresponse+="<p>ATTENTION: there are more file than you can see here.</p>"
-	except:
-		pass
+        try:
+            if len > maxplele :
+                htmlresponse+="<p>ATTENTION: there are more file than you can see here.</p>"
+        except:
+            pass
 
         if (self.iht) :
             htmlresponse+=tail
@@ -217,7 +218,7 @@ def start_http_server(iht=False,player="AutoPlayer",session=0):
 # to objects, so we need to mount a request handler object here. A request
 # to '/' will be mapped to cherrypy.root.index().
 
-    if (cpversion3):
+    if (cpversion3 or cpversion5):
         cherrypy.quickstart(HomePage(iht,player,session),config=settings)
 
     else:
@@ -226,12 +227,11 @@ def start_http_server(iht=False,player="AutoPlayer",session=0):
         cherrypy.server.start()
 
 
-if __name__ == '__main__':
-
+def main():
     # Set the signal handler
     #import signal
     #signal.signal(signal.SIGINT, signal.SIG_IGN)
-
+        
     # Start the CherryPy server.
     try:
         start_http_server(iht=True,player=autoradio_config.player,session=0)
@@ -242,3 +242,9 @@ if __name__ == '__main__':
     finally:
         print("Terminated")
 
+
+        
+if __name__ == '__main__':
+
+    main()
+    

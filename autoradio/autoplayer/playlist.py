@@ -147,7 +147,10 @@ class XSPFParser2(handler.ContentHandler):
       if (url.scheme == "http"):
         s.track['location']=url.geturl()
       else:
-        s.track['location']=urllib.parse.urljoin("file://",urllib.parse.unquote(url.path.encode("UTF-8")))
+        if sys.version_info[0] == 3:
+          s.track['location']=urllib.parse.urljoin(u"file://",urllib.parse.unquote(url.path))
+        else:
+          s.track['location']=urllib.parse.urljoin(u"file://",urllib.parse.unquote(url.path.encode("UTF-8")))
 
     elif s.path == "/playlist/trackList/track/title":
       s.track['title'] = s.content
@@ -210,8 +213,9 @@ class Playlist(list):
     except:
 
       lines = data.split('\n')
-      lines = [line.strip().rstrip() for line in lines]
-      lines = [line for line in lines if line if line != "" and line[0] != '#' else None]
+      lines = map(lambda line: line.strip().rstrip(), lines)
+      lines = filter(lambda line: line if line != "" and line[0] != '#' else None, lines)
+      
       if lines == []:
         return
 
@@ -229,7 +233,7 @@ class Playlist(list):
         if (url.scheme == "http"):
           location=url.geturl()
         else:
-          location=urllib.parse.urljoin("file://",urllib.parse.unquote(url.path))
+          location=urllib.parse.urljoin(u"file://",urllib.parse.unquote(url.path))
 
         track=Track._make(list(Track(location,None,None,None,None,None).get_metadata().values()))
         s.append(track)
@@ -299,13 +303,26 @@ class Playlist(list):
         track=track._asdict()
         f.write('\t<track>\n')
         if track.get('title') not in ['', None]:
-          f.write( '\t\t<title>%s</title>\n' \
+          if sys.version_info[0] == 3:
+            f.write( '\t\t<title>%s</title>\n' \
+                     % doc.createTextNode(track['title']).toxml() )
+          else:
+            f.write( '\t\t<title>%s</title>\n' \
                      % doc.createTextNode(track['title'].encode("utf-8")).toxml() )
         if track.get('artist') not in ['', None]:
-          f.write('\t\t<creator>%s</creator>\n' \
+
+          if sys.version_info[0] == 3:
+            f.write('\t\t<creator>%s</creator>\n' \
+                    % doc.createTextNode(track['artist']).toxml() )
+          else:
+            f.write('\t\t<creator>%s</creator>\n' \
                     % doc.createTextNode(track['artist'].encode("utf-8")).toxml() )
         if track.get('album') not in ['', None]:
-          f.write( '\t\t<album>%s</album>\n' \
+          if sys.version_info[0] == 3:
+            f.write( '\t\t<album>%s</album>\n' \
+                     % doc.createTextNode(track['album']).toxml() )
+          else:
+            f.write( '\t\t<album>%s</album>\n' \
                      % doc.createTextNode(track['album'].encode("utf-8")).toxml() )
         if track.get('tracknum') not in ['', None]:
           if type(track['tracknum']) == int:
@@ -343,11 +360,14 @@ class Playlist(list):
         if (url.scheme == "http"):
           location=url.geturl()
         else:
-          #here problem when file name come fron gtk or command line
+          #here problem when file name come from gtk or command line
           try:
-            location=urllib.parse.urljoin("file://",urllib.parse.quote(url.path))
+            location=urllib.parse.urljoin(u"file://",urllib.parse.quote(url.path))
           except:
-            location=urllib.parse.urljoin("file://",urllib.parse.quote(url.path.encode("UTF-8")))
+            if sys.version_info[0] == 3:
+              raise
+            else:
+              location=urllib.parse.urljoin("file://",urllib.parse.quote(url.path.encode("UTF-8")))
 
         ##location = location.encode("utf-8")
         #if    not 'http://' in location.lower() and \
@@ -381,7 +401,10 @@ class Playlist(list):
                 v = '1' if v else '0'
               elif t in [int, int]:
                 t = "int"
-                v = str(v).encode("utf-8")
+                if sys.version_info[0] == 3:
+                  v = str(v)
+                else:
+                  v = str(v).encode("utf-8")
               elif t == float:
                 t = "float"
                 v = repr(v)

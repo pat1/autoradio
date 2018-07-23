@@ -6,15 +6,29 @@ http://www.mpris.org/2.1/spec/Player_Node.html
 from __future__ import print_function
 from __future__ import absolute_import
 
-from autoradio.pydbusdecorator.dbus_attr import DbusAttr
-from autoradio.pydbusdecorator.dbus_interface import DbusInterface
-from autoradio.pydbusdecorator.dbus_method import DbusMethod
-from autoradio.pydbusdecorator.dbus_signal import DbusSignal
+
+#insert projet at path
+# not required if installed
+#import sys
+#sys.path = ["/home/pat1/git/autoradio"] + sys.path
+
+
+from autoradio.dbusdecorator import DbusAttr
+from autoradio.dbusdecorator import DbusInterface
+from autoradio.dbusdecorator import DbusMethod
+from autoradio.dbusdecorator import DbusSignal
 
 from .interfaces import Interfaces
-from .types import Time_In_Us, Loop_Status, Playback_Status, \
-Playback_Rate, Metadata_Map, Volume
 
+#from types import Time_In_Us, Loop_Status, Playback_Status, \
+#    Playback_Rate, Metadata_Map, Volume
+
+from .time_in_us import Time_In_Us
+from .loop_status import Loop_Status
+from .playback_status import Playback_Status
+from .playback_rate import Playback_Rate
+from .metada_map import Metadata_Map
+from .volume import Volume
 
 class Player(Interfaces):
     '''
@@ -439,7 +453,7 @@ class Player(Interfaces):
         pass
     
 if __name__ == '__main__':
-    from mpris2.utils import SomePlayers
+    from utils import SomePlayers
     #uri = Interfaces.MEDIA_PLAYER + '.' + SomePlayers.GMUSICBROWSER
     #mp2 = Player(dbus_interface_info={'dbus_uri': uri})
     #print mp2.LoopStatus
@@ -461,7 +475,7 @@ if __name__ == '__main__':
     #print mp2.Seeked
     #mp2.Seeked = my_handler
     #mp2.PropertiesChanged = another_handler
-    from mpris2.utils import get_session
+    from utils import get_session
     s = get_session()
     s.add_signal_receiver(another_handler, "PropertiesChanged", "org.freedesktop.DBus.Properties", path="/org/mpris/MediaPlayer2")
     mloop.run()

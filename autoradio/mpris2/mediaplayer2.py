@@ -7,10 +7,10 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 
-from autoradio.pydbusdecorator.dbus_attr import DbusAttr
-from autoradio.pydbusdecorator.dbus_interface import DbusInterface
-from autoradio.pydbusdecorator.dbus_method import DbusMethod
-from autoradio.pydbusdecorator.dbus_signal import DbusSignal
+from autoradio.dbusdecorator import DbusAttr
+from autoradio.dbusdecorator import DbusInterface
+from autoradio.dbusdecorator import DbusMethod
+from autoradio.dbusdecorator import DbusSignal
 
 from .interfaces import Interfaces
 

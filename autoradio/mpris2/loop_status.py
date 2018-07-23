@@ -17,7 +17,7 @@ class Loop_Status(str):
     '''
     VALUES = (NONE, TRACK, PLAYLIST)
     def __init__(self, status, *args, **kw):
-        super(Loop_Status, self).__init__(status, *args, **kw)
+        super(Loop_Status, self).__init__()
         self._status = status
     
     def __int__(self, *args, **kwargs):

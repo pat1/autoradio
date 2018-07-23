@@ -314,7 +314,7 @@ setup(name='autoradio',
                 'autoradio.jingles.migrations', 'autoradio.programs.migrations',
                 'autoradio.player', 'autoradio.doc',
                 'autoradio.autoplayer', 'autoradio.mpris2',
-                'autoradio.pydbusdecorator'],
+                'autoradio.dbusdecorator'],
       package_data={
           'autoradio.doc': ['templates/doc/*'],
           'autoradio.programs': ['fixtures/*.json',

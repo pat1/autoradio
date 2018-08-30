@@ -45,7 +45,10 @@ def main():
 
     import logging,os,sys,errno,signal,logging.handlers
     import subprocess
-    import thread
+    try:
+        import thread
+    except:
+        import _thread as thread
     import datetime
     import time as timesleep
     #from threading import *
@@ -150,7 +153,7 @@ def main():
               type=schedule.type
               emission_done=schedule.emission_done
 
-              if ( emission_done <> None ):
+              if ( emission_done != None ):
                   if ( type == "program" ):
                       #la trasmissione ha una schedula con un'unica emissione prevista
                       logging.debug( " %s %s %s schedula already done; ignore it !",type,scheduledatetime,emission_done)

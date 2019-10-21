@@ -14,7 +14,7 @@ from datetime import *
 from threading import *
 import os
 from . import autoradio_config
-
+import traceback
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 from django.conf import settings
@@ -140,7 +140,7 @@ def ManagePlayer (player,session,schedule):
             raise PlayerError("Managempris: ERROR in xmms.control.get_playlist_posauto")
 
          logging.info( "ManageXmms: insert media: %s at position %d",media,pos)
-         aud.playlist_add_atpos("file://"+media,pos)
+         aud.playlist_add_atpos("file://"+media.decode("utf-8"),pos)
                 
          # recheck for consistency
          newpos=aud.get_playlist_pos()
@@ -173,7 +173,7 @@ def ManagePlayer (player,session,schedule):
 
    except:
       logging.error("generic error in ManagePlayer")
-
+      traceback.print_exc()
    return
 
 

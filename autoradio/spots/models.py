@@ -56,7 +56,7 @@ class Giorno(models.Model):
 
         name = models.CharField(max_length=20,choices=giorno_giorno(),unique=True,
                                 help_text=ugettext_lazy("weekday name"))
-        def __unicode__(self):
+        def __str__(self):
             return self.name
 
         class Admin(object):
@@ -90,7 +90,7 @@ class Giorno(models.Model):
 
 ##        #name = models.CharField(max_length=20)
        
-##         def __unicode__(self):
+##         def __str__(self):
 ##             return self.name
 
 ##         class Admin:
@@ -107,7 +107,7 @@ class Configure(models.Model):
                  help_text=ugettext_lazy("The end time the spot will be active"))
 
 
-        def __unicode__(self):
+        def __str__(self):
             if self.emission_starttime is None:
                 start="-"
             else:
@@ -155,7 +155,7 @@ class Fascia(models.Model):
         #       		self.spot_set.exclude(prologo__exact=True).exclude(epilogo__exact=True).order_by('priorita')).append(\
         #       		self.spot_set.filter(epilogo__exact=True).order_by('priorita'))
 
-    def __unicode__(self):
+    def __str__(self):
             return self.name+" "+self.emission_time.isoformat()
 
     class Admin(object):
@@ -197,7 +197,7 @@ class Spot(models.Model):
     
        was_recorded_today.short_description = ugettext_lazy('Recorded today?')
 
-       def __unicode__(self):
+       def __str__(self):
        	return self.spot
 
        class Admin(object):

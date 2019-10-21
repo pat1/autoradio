@@ -239,7 +239,7 @@ TEMPLATES = [
 
 
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -250,6 +250,7 @@ MIDDLEWARE_CLASSES = [
 ROOT_URLCONF = 'autoradio.urls'
 
 INSTALLED_APPS = [
+    'django.contrib.messages',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

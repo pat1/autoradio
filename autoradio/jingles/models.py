@@ -55,7 +55,7 @@ class Giorno(models.Model):
         name = models.CharField(max_length=20,choices=giorno_giorno(),unique=True,\
                help_text=ugettext_lazy("weekday name"))
 
-        def __unicode__(self):
+        def __str__(self):
             return self.name
 
         class Admin(object):
@@ -69,7 +69,7 @@ class Configure(models.Model):
         emission_freq = models.TimeField(ugettext_lazy('Frequency'))
 
 
-        def __unicode__(self):
+        def __str__(self):
             return self.sezione+" "+self.active.__str__()+" "+self.emission_freq.isoformat()
 
         class Admin(object):
@@ -105,7 +105,7 @@ class Jingle(models.Model):
     
        was_recorded_today.short_description = ugettext_lazy('Recorded today?')
 
-       def __unicode__(self):
+       def __str__(self):
        	return self.jingle
 
        class Admin(object):

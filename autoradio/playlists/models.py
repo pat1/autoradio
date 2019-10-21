@@ -55,7 +55,7 @@ class Giorno(models.Model):
 
         name = models.CharField(max_length=20,choices=giorno_giorno(),unique=True,\
                                     help_text=ugettext_lazy("weekday name"))
-        def __unicode__(self):
+        def __str__(self):
             return self.name
 
 class Configure(models.Model):
@@ -70,7 +70,7 @@ class Configure(models.Model):
                                             help_text=ugettext_lazy("The end time the playlist will be active"))
 
 
-        def __unicode__(self):
+        def __str__(self):
             if self.emission_starttime is None:
                 start="-"
             else:
@@ -99,7 +99,7 @@ class Playlist(models.Model):
     
     was_recorded_today.short_description = ugettext_lazy('Generated today?')
 
-    def __unicode__(self):
+    def __str__(self):
         #return self.playlist+" "+self.rec_date.isoformat()+" "+self.active.__str__()
         return self.playlist
 
@@ -109,7 +109,7 @@ class Schedule(models.Model):
 #    num_in_admin=2,verbose_name='si riferisce al programma:',editable=False)
 
     playlist = models.ForeignKey(Playlist, verbose_name=\
-       				ugettext_lazy('refer to playlist:'))
+       				ugettext_lazy('refer to playlist:'), on_delete=models.CASCADE)
 
     shuffle = models.BooleanField(ugettext_lazy("Shuffle Playlist on start"),default=True,\
                                       help_text=ugettext_lazy("Every time the playlist will be scheduled it's order will be randomly changed"))
@@ -140,7 +140,7 @@ class Schedule(models.Model):
         return self.playlist.playlist
     file.short_description = ugettext_lazy('Linked Playlist')
 
-    def __unicode__(self):
+    def __str__(self):
         return str(self.playlist)
 
 class PeriodicSchedule(models.Model):
@@ -149,7 +149,7 @@ class PeriodicSchedule(models.Model):
 #    num_in_admin=2,verbose_name='si riferisce al programma:',editable=False)
 
     playlist = models.ForeignKey(Playlist,verbose_name=\
-       				ugettext_lazy('refer to playlist:'))
+       				ugettext_lazy('refer to playlist:'), on_delete=models.CASCADE)
 
     shuffle = models.BooleanField(ugettext_lazy("Shuffle Playlist on start"),default=True,\
                                       help_text=ugettext_lazy("Every time the playlist will be scheduled it's order will be randomly changed"))
@@ -174,6 +174,6 @@ class PeriodicSchedule(models.Model):
         return self.playlist.playlist
     file.short_description = ugettext_lazy('Linked Playlist')
 
-    def __unicode__(self):
+    def __str__(self):
         return str(self.playlist)
 

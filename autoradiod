@@ -146,7 +146,8 @@ def main():
       while ( True):
 
           scheds=autoradio.autoradio_core.schedules([])
-          for schedule in scheds.get_all_refine(now):
+          scheds.get_all_refine(now)
+          for schedule in scheds:
 
               scheduledatetime=schedule.scheduledatetime
               filename=schedule.filename

@@ -84,8 +84,8 @@ class gest_playlist(object):
             # warning here we are around midnight
             logging.debug("PLAYLIST: around midnight")
 
-            ieri=str(calendar.day_name[self.datesched_min.weekday()], 'utf-8')
-            domani=str(calendar.day_name[self.datesched_max.weekday()], 'utf-8')
+            ieri=str(calendar.day_name[self.datesched_min.weekday()])
+            domani=str(calendar.day_name[self.datesched_max.weekday()])
             
             self.periodicschedule=PeriodicSchedule.objects.filter \
                 (Q(start_date__lte=self.oggi) | Q(start_date__isnull=True),\

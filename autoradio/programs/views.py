@@ -33,10 +33,16 @@ from django.utils.translation import ugettext_lazy
 
 def index(request):
 
-
     scheds=autoradio.autoradio_core.schedules([])
 
-    return render_to_response('schedule/index.html', {'schedule': scheds.get_all_refine(genfile=False)})
+    scheds.get_all_refine(genfile=False)
+    #print ("s=",scheds)
+    #for ss in scheds:
+    #    ss
+    #    print ("ss=",ss)
+    #    for sss in ss:
+    #        print ("sss=",sss)
+    return render_to_response('schedule/index.html', {'schedules': scheds})
 
 
 def stato(request):
@@ -270,7 +276,7 @@ def programsbook(request):
         form = ExtremeForm() # An unbound form
 
     return render_to_response('palimpsest/extreme.html', {
-        'form': form,})
+        'form': form})
 
 
 #----------------------------------------------------
@@ -279,8 +285,7 @@ from django.views.generic.list  import ListView
 from django.views.generic.detail import DetailView
 #from django.views.generic.list_detail import object_list
 from autoradio.programs.models import Episode, Show, Enclosure
-from django.core.urlresolvers import reverse
-
+from django.urls import reverse
 
 class episode_detail(DetailView):
 #class episode_detail(ListView):

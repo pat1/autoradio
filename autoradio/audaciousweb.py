@@ -4,7 +4,11 @@
 """
 Show audacious playlist on a simple web server.
 """
+from __future__ import print_function
 
+from builtins import str
+from builtins import range
+from builtins import object
 maxplele=100      # max number of elements in playlist
 port=8888         # server port
 
@@ -57,7 +61,7 @@ tail='''
 </html>
 '''
 
-class HomePage:
+class HomePage(object):
     
 #    def Main(self):
 #        # Let's link to another method here.
@@ -141,7 +145,7 @@ class HomePage:
             htmlresponse+='<table border="1">'
             htmlresponse+='<td>posizione</td><td>durata</td><td>brano</td>'
 
-            for pos in xrange(0,min(len,maxplele)):
+            for pos in range(0,min(len,maxplele)):
                 htmlresponse+='<tr>'
                 metadata=tracklist.GetMetadata(pos)
 
@@ -185,7 +189,7 @@ class HomePage:
                     col="#00FF00"
                     toend=""
 
-                print artist,title
+                print(artist,title)
                 if (artist is not None) or (title is not None):
                     htmlresponse+='<td bgcolor="%s">%i</td><td> %s // %s </td><td><a href="%s">%s // %s</a></td>' % \
                     (col,pos+1,str(timelength),str(toend),file,artist,title)
@@ -262,8 +266,8 @@ if __name__ == '__main__':
     try:
         start_http_server(iht=True)
     except:
-        print "Error"
+        print("Error")
         raise
     finally:
-        print "Terminated"
+        print("Terminated")
 

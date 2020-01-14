@@ -2,6 +2,13 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2013 Paolo Patruno.
 
+from __future__ import division
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
+from builtins import object
+from past.utils import old_div
 from autoradio.mpris2.mediaplayer2 import MediaPlayer2
 from autoradio.mpris2.player import Player
 from autoradio.mpris2.tracklist import TrackList
@@ -10,12 +17,23 @@ from autoradio.mpris2.some_players import Some_Players
 from autoradio.mpris2.utils import get_players_uri
 from autoradio.mpris2.utils import get_session
 from dbus.mainloop.glib import DBusGMainLoop
-import pygtk, gtk
-import os,stat,time,urlparse,urllib,optparse,sys
+#import pygtk
+try:
+    from gi import pygtkcompat
+except ImportError:
+    pygtkcompat = None
+
+if pygtkcompat is not None:
+    pygtkcompat.enable() 
+    pygtkcompat.enable_gtk(version='3.0')
+
+import gtk
+
+import os,stat,time,urllib.parse,urllib.request,urllib.parse,urllib.error,optparse,sys
 import gobject
 import dbus
 import autoradio.settings
-import urlparse
+import urllib.parse
 import traceback
 
 busaddress=autoradio.settings.busaddressplayer
@@ -38,11 +56,11 @@ class Main(object):
     return False
  
   def playhandler(self, *args, **kw): 
-      #print args, kw
-      playbackstatus = args[2].get("PlaybackStatus",None)
-      position = args[2].get("Position",None)
+      playbackstatus = args[1].get("PlaybackStatus",None)
+      position = args[1].get("Position",None)
+
       if playbackstatus is not None:
-          print "PlaybackStatus",playbackstatus
+          print("PlaybackStatus",playbackstatus)
 
       if playbackstatus == "Stopped":
           self.play_button.set_sensitive(True)
@@ -63,7 +81,7 @@ class Main(object):
           if id is not None:
               length=self.tl.GetTracksMetadata((id,))[0].get(u'mpris:length',None)
               if position <= length and length != 0:
-                  frac = float(position)/float(length)
+                  frac = old_div(float(position),float(length))
               else:
                   frac = 0
           else:
@@ -92,7 +110,7 @@ class Main(object):
         self.mp2 = MediaPlayer2(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
         self.play = Player(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
     else:
-        print "No players availables"
+        print("No players availables")
         return
     
     if hasattr (self.mp2, 'HasTrackList'):
@@ -144,7 +162,7 @@ class Main(object):
 
     # Create the ProgressBar
     self.pbar = gtk.ProgressBar()
-    self.pbar.set_orientation(gtk.PROGRESS_LEFT_TO_RIGHT)
+    self.pbar.set_inverted(False)
     self.pbar.set_fraction(.5)
     hbox.pack_start(self.pbar)
     self.pbar.show()
@@ -188,7 +206,7 @@ class Main(object):
     #gobject.timeout_add(6000,self.update)
 
   def update(self, *args, **kw):
-    print "update gtktree"
+    print("update gtktree")
     try:
       new_model = self.make_list()
       self.treeview.set_model(new_model)
@@ -215,15 +233,15 @@ class Main(object):
       for path in paths:
           iter = model.get_iter(path)
           # Remove the ListStore row referenced by iter
-          print "remove: ",model.get_value(iter, 0)
+          print("remove: ",model.get_value(iter, 0))
           self.tl.RemoveTrack(model.get_value(iter, 0))
           #model.remove(iter)
 
 
   def on_file_selected(self, widget):
     multimedia_file = self.load_file.get_filename()
-    url=urlparse.urlsplit(multimedia_file)
-    uri=urlparse.urljoin("file://",urllib.unquote(url.path))
+    url=urllib.parse.urlsplit(multimedia_file)
+    uri=urllib.parse.urljoin("file://",urllib.parse.unquote(url.path))
     new_model = self.make_list()
     self.treeview.set_model(new_model)
     self.tl.AddTrack(uri, self.play.Metadata.get(u'mpris:trackid',""), False)
@@ -238,7 +256,7 @@ class Main(object):
   def open_file(self, treeview, path, column):
         model = treeview.get_model()
         iter = model.get_iter(path)
-        print "goto: ",model.get_value(iter, 0)
+        print("goto: ",model.get_value(iter, 0))
         self.tl.GoTo(model.get_value(iter, 0))
         new_model = self.make_list()
         self.treeview.set_model(new_model)
@@ -253,13 +271,13 @@ class Main(object):
                 for track in  self.tl.GetTracksMetadata( self.tl.Tracks):
                     listmodel.append([track.get(u'mpris:trackid',"")])
     except:
-        print traceback.format_exc()
-        print "Error getting player playlist"
+        print(traceback.format_exc())
+        print("Error getting player playlist")
         gtk.main_quit()
 
     return listmodel
 
-  def id(self, column, cell, model, iter):
+  def id(self, column, cell, model, iter, data=None):
         cell.set_property('text', model.get_value(iter, 0))
         if model.get_value(iter, 0) == self.play.Metadata.get(u'mpris:trackid',None):
             cell.set_property('cell-background',"red")
@@ -267,20 +285,20 @@ class Main(object):
             cell.set_property('cell-background',"green")
         return
 
-  def Len(self, column, cell, model, iter):
+  def Len(self, column, cell, model, iter, data=None):
     track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
     cell.set_property('text', convert_ns(track[0].get(u'mpris:length',"")))
     return
 
-  def Artist(self, column, cell, model, iter):
+  def Artist(self, column, cell, model, iter, data=None):
     track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
-    dir=os.path.dirname(urlparse.urlparse(track[0].get(u'xesam:url',"")).path).split('/')[-1]
+    dir=os.path.dirname(urllib.parse.urlparse(track[0].get(u'xesam:url',"")).path).split('/')[-1]
     cell.set_property('text', track[0].get(u'xesam:artist', dir))
     return
 
-  def Title(self, column, cell, model, iter):
+  def Title(self, column, cell, model, iter, data=None):
     track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
-    file=os.path.basename(urlparse.urlparse(track[0].get(u'xesam:url',"")).path)
+    file=os.path.basename(urllib.parse.urlparse(track[0].get(u'xesam:url',"")).path)
     cell.set_property('text', track[0].get(u'xesam:title',file))
     return
       
@@ -302,5 +320,5 @@ if __name__ == "__main__":
             gtk.main()
     except KeyboardInterrupt :
         # Clean up
-        print 'Keyboard Exiting'
+        print('Keyboard Exiting')
         gtk.main_quit()

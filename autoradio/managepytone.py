@@ -1,3 +1,5 @@
+from __future__ import print_function
+from builtins import object
 import os,sys
 import events, network, requests, version, helper
 from datetime import *
@@ -10,7 +12,7 @@ def ar_emitted(self):
     self.save()
 
 
-class ScheduleProgram:
+class ScheduleProgram(object):
 
     def __init__ (self,function,operation,media,scheduledatetime,programma):
         "init schedule"
@@ -22,9 +24,9 @@ class ScheduleProgram:
         self.programma=programma
 
         scheduledatetime
-        print "differenza ",datetime.now(),self.scheduledatetime
+        print("differenza ",datetime.now(),self.scheduledatetime)
         delta=( self.scheduledatetime - datetime.now())
-        print delta
+        print(delta)
 
         #self.deltasec=max(secondi(delta),1)
         self.deltasec=secondi(delta)
@@ -43,14 +45,14 @@ def ManagePytone (operation,media,programma):
 
     unixsocketfile =  os.path.expanduser("~/.pytone/pytonectl")
     networklocation = unixsocketfile
-    print networklocation
+    print(networklocation)
 
     try:
         channel = network.clientchannel(networklocation)
 
-    except Exception, e:
+    except Exception as e:
 
-        print "Error: cannot connect to PyTone server: %s" % e
+        print("Error: cannot connect to PyTone server: %s" % e)
         sys.exit(2)
         
     channel.start()
@@ -68,7 +70,7 @@ def ManagePytone (operation,media,programma):
         medias=(media,)
 
     for mediasplit in medias:
-        print "invio ->",mediasplit
+        print("invio ->",mediasplit)
         if operation == "queueMedia":
             song = channel.request(\
                 requests.autoregisterer_queryregistersong("main", mediasplit))
@@ -77,10 +79,10 @@ def ManagePytone (operation,media,programma):
     channel.quit()
 
 
-    print "scrivo in django"
-    print programma
+    print("scrivo in django")
+    print(programma)
     ar_emitted(programma)
-    print "scritto in django"
+    print("scritto in django")
 
 
 def secondi(delta):
@@ -90,13 +92,13 @@ def secondi(delta):
         secondi = secondi + (3600*24*delta.days)
     return secondi
 
-class dummy_programma:
+class dummy_programma(object):
 
     def __init__(self):
         pass
     
     def save(self):
-        print "faccio finta di salvarlo"
+        print("faccio finta di salvarlo")
 
 def main():
 

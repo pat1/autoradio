@@ -27,7 +27,15 @@
 # everywhere we change the tracklist
 # we use this in autoplayergui to update the tracklist
 
-import sys, time, thread
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
+from past.utils import old_div
+import sys, time, _thread
 import tempfile,os
 
 #import pygst
@@ -39,7 +47,7 @@ import gi
 gi.require_version('Gst', '1.0')
 from gi.repository import GObject, Gst
 
-import playlist
+from . import playlist
 import dbus
 import dbus.service
 import dbus.mainloop.glib
@@ -352,7 +360,7 @@ class AutoPlayer(dbus.service.Object):
     def GetAll(self, interface):
         read_props = {}
         props = self.__prop_mapping[interface]
-        for key, (getter, setter) in props.iteritems():
+        for key, (getter, setter) in props.items():
             if callable(getter):
                 getter = getter(self)
             read_props[key] = getter
@@ -419,7 +427,7 @@ class AutoPlayer(dbus.service.Object):
 
     @dbus.service.method(PLAYER_IFACE)
     def Next(self):
-      self.player.next()
+      next(self.player)
 
     @dbus.service.method(PLAYER_IFACE)
     def Previous(self):
@@ -515,7 +523,7 @@ class AutoPlayer(dbus.service.Object):
                 myattr=None
               if myattr is not None:
                 if key == "mpris:length":
-                  myattr=long(round(myattr/1000.))
+                  myattr=int(round(old_div(myattr,1000.)))
                 meta[key]=myattr
       
             metadata.append(dbus.Dictionary(meta, signature='sv'))
@@ -536,7 +544,7 @@ class AutoPlayer(dbus.service.Object):
       self.Quit()
 
 
-class Player:
+class Player(object):
 	
   def __init__(self,myplaylist=None,loop=None,starttoplay=False,myaudiosink=None):
     self.playlist=myplaylist
@@ -695,7 +703,7 @@ class Player:
     #self.player.set_state(Gst.State.NULL)      
     #self.playmode = "Stopped"
     #self.statuschanged = True
-    self.next()
+    next(self)
 
   def on_message_error(self, bus, message):
 
@@ -711,7 +719,7 @@ class Player:
     logging.warning("current media: %s" % currenturi)
 
     self.playmode= self.recoverplaymode
-    self.next()
+    next(self)
     
 #    if err.domain == gst.RESOURCE_ERROR :
 #      logging.warning("restart to play after an RESOURCE_ERROR")
@@ -756,9 +764,9 @@ class Player:
           self.playmode = "Playing"
           self.statuschanged = True
 
-  def next(self):
+  def __next__(self):
       logging.info( "next")
-      self.playlist.next()
+      next(self.playlist)
       if self.playlist.current is None:
           logging.info( "end playlist")
           self.stop()
@@ -804,7 +812,7 @@ class Player:
     logging.info("seek")
     try:
       pos_int = self.player.query_position(Gst.Format.TIME)[1]
-      pos_int =pos_int/1000 + t
+      pos_int =old_div(pos_int,1000) + t
       logging.info("seek %s" % str(pos_int))
       self.setposition(self.playlist.current,pos_int)
       return pos_int
@@ -835,7 +843,7 @@ class Player:
         res = self.player.send_event(event)
         if res:
           #self.player.set_new_stream_time(0L)
-          self.player.set_start_time(0L)
+          self.player.set_start_time(0)
         #if wait: self.playbin.get_state(timeout=50*gst.MSECOND)
 
         # this cause a doble seek with playbin2
@@ -848,8 +856,8 @@ class Player:
     logging.info( "loaduri")
 
     if self.playlist.current is None:
-      if len(self.playlist.keys()) > 0:
-        self.playlist.set_current(self.playlist.keys()[0])
+      if len(list(self.playlist.keys())) > 0:
+        self.playlist.set_current(list(self.playlist.keys())[0])
 
     uri = self.playlist.get_current().path
     if uri is not None:
@@ -920,7 +928,7 @@ class Player:
       logging.warning( "in query_position:"+str(e) )
       return None
 			    
-    return int(round(pos_int/1000.))
+    return int(round(old_div(pos_int,1000.)))
 
 
   def printinfo(self):
@@ -929,7 +937,7 @@ class Player:
       dur_int = self.player.query_duration(Gst.Format.TIME)[1]
       #      if dur_int == -1:
       #        print "bho"
-      print self.playmode,self.convert_ns(pos_int)+"//"+self.convert_ns(dur_int)
+      print(self.playmode,self.convert_ns(pos_int)+"//"+self.convert_ns(dur_int))
 
     except(Gst.QueryError):
         #print "error printinfo"
@@ -981,8 +989,8 @@ class Player:
     time.sleep(1)
     logging.info ( "recover last status from disk: position %s" % self.playlist.position)
     if self.playlist.position is not None:
-      logging.info ( "set current %s and position %s " % (self.playlist.current,int(round(self.playlist.position/1000.))))
-      self.setposition(self.playlist.current,int(round(self.playlist.position/1000.)))
+      logging.info ( "set current %s and position %s " % (self.playlist.current,int(round(old_div(self.playlist.position,1000.)))))
+      self.setposition(self.playlist.current,int(round(old_div(self.playlist.position,1000.))))
     if self.starttoplay:
       time.sleep(1)
       self.play()

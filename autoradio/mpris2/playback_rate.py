@@ -1,3 +1,4 @@
+from __future__ import print_function
 class Playback_Rate(float):
     '''
     A playback rate
@@ -17,4 +18,4 @@ class Playback_Rate(float):
     
 if __name__ == "__main__":
     pr = Playback_Rate(12)
-    print pr == '12'
+    print(pr == '12')

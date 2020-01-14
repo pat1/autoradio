@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # GPL. (C) 2007-2009 Paolo Patruno.
 
+from __future__ import print_function
 import os
 from configobj import ConfigObj,flatten_errors
 from validate import Validator
@@ -44,7 +45,7 @@ for entry in flatten_errors(config, test):
     section_string = ', '.join(section_list)
     if error == False:
         error = 'Missing value or section.'
-    print section_string, ' = ', error
+    print(section_string, ' = ', error)
     raise error
 
 # section autoradiod

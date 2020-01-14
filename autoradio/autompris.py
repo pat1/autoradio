@@ -9,6 +9,9 @@
 # Audacious provide non standard interface to do this
 # ----------------------------------------
 
+from builtins import str
+from builtins import range
+from builtins import object
 import dbus
 import time
 import datetime
@@ -17,7 +20,7 @@ import logging
 import dbus
 
 
-class mediaplayer:
+class mediaplayer(object):
 
 
     def __init__(self,player="audacious",session=0):
@@ -160,7 +163,7 @@ class mediaplayer:
                 # delete the old ones
             if pos > atlast :
 
-                for prm in xrange(0,pos-atlast): 
+                for prm in range(0,pos-atlast): 
                     self.tracklist.DelTrack(0)
 
             return True
@@ -188,7 +191,7 @@ class mediaplayer:
                 #elimino il troppo
             if length-pos > atlast :
 
-                for prm in xrange(length,pos+atlast,-1): 
+                for prm in range(length,pos+atlast,-1): 
                     self.tracklist.DelTrack(prm)
 
             return True
@@ -218,7 +221,7 @@ class mediaplayer:
             try:
                 #Fix how older versions of Audacious misreport the URI of the song.
                 if metadata is not None:
-                    if metadata.has_key ("URI") and not metadata.has_key ("location"):
+                    if "URI" in metadata and "location" not in metadata:
                         metadata["location"] = metadata["URI"]
 
                 file=metadata["location"]
@@ -241,7 +244,7 @@ class mediaplayer:
 
                     #Fix how older versions of Audacious misreport the URI of the song.
                     if metadata is not None:
-                        if metadata.has_key ("URI") and not metadata.has_key ("location"):
+                        if "URI" in metadata and "location" not in metadata:
                             metadata["location"] = metadata["URI"]
 
                     file=metadata["location"]

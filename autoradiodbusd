@@ -40,7 +40,7 @@ def main(self):
         self.procs=[subprocess.Popen(["dbus-daemon", "--config-file="+autoradio.settings.conffiledbus,
             '--address='+busaddress, "--nofork"],cwd=self.cwd)]
     else:
-        print "busaddress is not defined in config file: dbus-daemon not started"
+        print ("busaddress is not defined in config file: dbus-daemon not started")
 
 if __name__ == '__main__':
 

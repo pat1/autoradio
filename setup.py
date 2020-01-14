@@ -1,3 +1,4 @@
+from __future__ import print_function
 from distutils.core import setup
 import os
 
@@ -47,42 +48,42 @@ class distclean(Command):
         for root, dirs, files in os.walk(os.getcwd(), topdown=False):
             for name in files:
                 if name.endswith('.pyc') and os.path.isfile(os.path.join(root, name)):
-                    print 'removing: %s' % os.path.join(root, name)
+                    print('removing: %s' % os.path.join(root, name))
                     if not(self.dry_run): os.remove(os.path.join(root, name))
 
 
         try:
             os.remove("autoradio/programs/static/programs/playogg/js/jquery-1.12.4.min.js")
         except:
-            print "autoradio/programs/static/programs/playogg/js/jquery-1.12.4.min.js not removed"
+            print("autoradio/programs/static/programs/playogg/js/jquery-1.12.4.min.js not removed")
         try:
             os.remove("autoradio/programs/static/programs/playogg/js/jquery.min.js")
         except:
-            print "autoradio/programs/static/programs/playogg/js/jquery.min.js not removed"
+            print("autoradio/programs/static/programs/playogg/js/jquery.min.js not removed")
         try:
             os.remove("autoradio/programs/static/programs/playogg/flash/AnOgg.swf")
         except:
-            print "autoradio/programs/static/programs/playogg/flash/AnOgg.swf not removed"
+            print("autoradio/programs/static/programs/playogg/flash/AnOgg.swf not removed")
         try:
             os.remove("anoggplayer/anoggplayer/AnOgg.swf")
         except:
-            print "anoggplayer/anoggplayer/AnOgg.swf not removed"
+            print("anoggplayer/anoggplayer/AnOgg.swf not removed")
         try:
             os.remove("autoradio/programs/static/programs/playogg/java/cortado.jar")
         except:
-            print "autoradio/programs/static/programs/playogg/java/cortado.jar not removed"
+            print("autoradio/programs/static/programs/playogg/java/cortado.jar not removed")
         try:
             os.remove("autoradio/programs/static/programs/playogg/java/cortado-ovt-stripped-0.6.0.jar")
         except:
-            print "autoradio/programs/static/programs/playogg/java/cortado-ovt-stripped-0.6.0.jar not removed"
+            print("autoradio/programs/static/programs/playogg/java/cortado-ovt-stripped-0.6.0.jar not removed")
         try:
             os.remove("autoradio/programs/static/programs/playogg/swfobject/expressInstall.swf")
         except:
-            print "autoradio/programs/static/programs/playogg/swfobject/expressInstall.swf not removed"
+            print("autoradio/programs/static/programs/playogg/swfobject/expressInstall.swf not removed")
         try:
             os.remove("autoradio/programs/static/programs/playogg/swfobject/swfobject.js")
         except:
-            print "autoradio/programs/static/programs/playogg/swfobject/swfobject.js not removed"
+            print("autoradio/programs/static/programs/playogg/swfobject/swfobject.js not removed")
 
 
 class build(build_):
@@ -169,7 +170,7 @@ class haxecompileanoggplayer(Command):
             subprocess.check_call(["make"])
             os.chdir("../..")
         except:
-            print "WARNING !!!!!  anoggplayer not created"
+            print("WARNING !!!!!  anoggplayer not created")
 
 class djangocollectstatic(Command):
     description = "collect static files for web server to serve it"
@@ -301,6 +302,11 @@ setup(name='autoradio',
       author_email='p.patruno@iperbole.bologna.it',
       platforms = ["any"],
       url='http://autoradiobc.sf.net',
+      classifiers=(
+          "Programming Language :: Python :: 3",
+          "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+          "Operating System :: OS Independent",
+      ),
       cmdclass={'build': build,'compilemessages':compilemessages,'createmanpages':createmanpages,"distclean":distclean,"haxecompileanoggplayer":haxecompileanoggplayer,"installbin":installbin,"buildall":buildall,"djangocollectstatic":djangocollectstatic},
       packages=['autoradio', 'autoradio.playlists','autoradio.spots', 
                 'autoradio.jingles', 'autoradio.programs',
@@ -308,7 +314,7 @@ setup(name='autoradio',
                 'autoradio.jingles.migrations', 'autoradio.programs.migrations',
                 'autoradio.player', 'autoradio.doc',
                 'autoradio.autoplayer', 'autoradio.mpris2',
-                'autoradio.pydbusdecorator'],
+                'autoradio.dbusdecorator'],
       package_data={
           'autoradio.doc': ['templates/doc/*'],
           'autoradio.programs': ['fixtures/*.json',

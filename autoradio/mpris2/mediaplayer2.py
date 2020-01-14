@@ -3,14 +3,16 @@ This is python mprisV2.1 documentation
 
 http://www.mpris.org/2.1/spec/Root_Node.html
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 
-from autoradio.pydbusdecorator.dbus_attr import DbusAttr
-from autoradio.pydbusdecorator.dbus_interface import DbusInterface
-from autoradio.pydbusdecorator.dbus_method import DbusMethod
-from autoradio.pydbusdecorator.dbus_signal import DbusSignal
+from autoradio.dbusdecorator import DbusAttr
+from autoradio.dbusdecorator import DbusInterface
+from autoradio.dbusdecorator import DbusMethod
+from autoradio.dbusdecorator import DbusSignal
 
-from interfaces import Interfaces
+from .interfaces import Interfaces
 
 
 class MediaPlayer2(Interfaces):
@@ -178,7 +180,7 @@ if __name__ == '__main__':
     from mpris2.utils import SomePlayers
     uri = Interfaces.MEDIA_PLAYER + '.' + SomePlayers.GMUSICBROWSER
     mp2 = MediaPlayer2(dbus_interface_info={'dbus_uri': uri})
-    print mp2.SupportedUriSchemes
+    print(mp2.SupportedUriSchemes)
 #    
 #    
 #    from dbus.mainloop.glib import DBusGMainLoop

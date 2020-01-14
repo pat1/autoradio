@@ -47,7 +47,8 @@ def initdb(cwd):
         #os.chdir(cwd)
 
     if (options.syncdb):
-        management.call_command("migrate",no_initial_data=True )
+        #management.call_command("migrate",no_initial_data=True )
+        management.call_command("migrate" )
 
 
 if __name__ == '__main__':

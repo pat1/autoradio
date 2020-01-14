@@ -2,13 +2,19 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2013 Paolo Patruno.
 
+from __future__ import division
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from past.utils import old_div
 import logging
 import collections
 import mutagen
 import sys
 from xml.sax import make_parser, handler, SAXParseException
 from xml.dom.minidom import Document
-import urllib, urlparse
+import urllib.request, urllib.parse, urllib.error, urllib.parse
 
 class Track(collections.namedtuple('Track',("path","time","artist","album","title","id"))):
   __slots__ = ()
@@ -137,11 +143,14 @@ class XSPFParser2(handler.ContentHandler):
       ##s.track['location'] = urllib.unquote(s.content)
       #s.track['location'] = urllib.unquote(s.content.encode("UTF-8"))
 
-      url=urlparse.urlsplit(s.content)
+      url=urllib.parse.urlsplit(s.content)
       if (url.scheme == "http"):
         s.track['location']=url.geturl()
       else:
-        s.track['location']=urlparse.urljoin("file://",urllib.unquote(url.path.encode("UTF-8")))
+        if sys.version_info[0] == 3:
+          s.track['location']=urllib.parse.urljoin(u"file://",urllib.parse.unquote(url.path))
+        else:
+          s.track['location']=urllib.parse.urljoin(u"file://",urllib.parse.unquote(url.path.encode("UTF-8")))
 
     elif s.path == "/playlist/trackList/track/title":
       s.track['title'] = s.content
@@ -176,7 +185,7 @@ class Playlist(list):
         else:
           track_meta=Track(ele,None,None,None,None,None)
         #print track_meta.get_metadata().values()
-          tr=Track._make(track_meta.get_metadata().values())
+          tr=Track._make(list(track_meta.get_metadata().values()))
           self.append(tr)
 
     if tracks is not None:
@@ -186,7 +195,7 @@ class Playlist(list):
   def read(s, path):
 
     try:
-      with open(urlparse.urlsplit(path).path, "r") as f:
+      with open(urllib.parse.urlsplit(path).path, "r") as f:
         data = f.read()
 
     except IOError :
@@ -206,6 +215,7 @@ class Playlist(list):
       lines = data.split('\n')
       lines = map(lambda line: line.strip().rstrip(), lines)
       lines = filter(lambda line: line if line != "" and line[0] != '#' else None, lines)
+      
       if lines == []:
         return
 
@@ -216,16 +226,16 @@ class Playlist(list):
 
       for location in lines:
 
-        url=urlparse.urlsplit(location)
+        url=urllib.parse.urlsplit(location)
         #                 mmmmmm encode / decode every time do not work ! 
         #location=urlparse.urljoin("file://",urllib.unquote(url.path.encode("UTF-8")))
 
         if (url.scheme == "http"):
           location=url.geturl()
         else:
-          location=urlparse.urljoin("file://",urllib.unquote(url.path))
+          location=urllib.parse.urljoin(u"file://",urllib.parse.unquote(url.path))
 
-        track=Track._make(Track(location,None,None,None,None,None).get_metadata().values())
+        track=Track._make(list(Track(location,None,None,None,None,None).get_metadata().values()))
         s.append(track)
 
     else:
@@ -235,8 +245,8 @@ class Playlist(list):
       logging.debug( "PLAYLIST: xspf parsed")
 
       for ele in p.tracks:
-        track=Track._make(Track(ele.get('location',None),ele.get('time',None),ele.get('creator',None),
-                    ele.get('album',None),ele.get('title',None),ele.get('id',None)).get_metadata().values())
+        track=Track._make(list(Track(ele.get('location',None),ele.get('time',None),ele.get('creator',None),
+                    ele.get('album',None),ele.get('title',None),ele.get('id',None)).get_metadata().values()))
         s.append(track)
 
 
@@ -293,18 +303,31 @@ class Playlist(list):
         track=track._asdict()
         f.write('\t<track>\n')
         if track.get('title') not in ['', None]:
-          f.write( '\t\t<title>%s</title>\n' \
+          if sys.version_info[0] == 3:
+            f.write( '\t\t<title>%s</title>\n' \
+                     % doc.createTextNode(track['title']).toxml() )
+          else:
+            f.write( '\t\t<title>%s</title>\n' \
                      % doc.createTextNode(track['title'].encode("utf-8")).toxml() )
         if track.get('artist') not in ['', None]:
-          f.write('\t\t<creator>%s</creator>\n' \
+
+          if sys.version_info[0] == 3:
+            f.write('\t\t<creator>%s</creator>\n' \
+                    % doc.createTextNode(track['artist']).toxml() )
+          else:
+            f.write('\t\t<creator>%s</creator>\n' \
                     % doc.createTextNode(track['artist'].encode("utf-8")).toxml() )
         if track.get('album') not in ['', None]:
-          f.write( '\t\t<album>%s</album>\n' \
+          if sys.version_info[0] == 3:
+            f.write( '\t\t<album>%s</album>\n' \
+                     % doc.createTextNode(track['album']).toxml() )
+          else:
+            f.write( '\t\t<album>%s</album>\n' \
                      % doc.createTextNode(track['album'].encode("utf-8")).toxml() )
         if track.get('tracknum') not in ['', None]:
           if type(track['tracknum']) == int:
             no = track['tracknum']
-          elif type(track['tracknum']) in [unicode, str]:
+          elif type(track['tracknum']) in [str, str]:
             cnum=track['tracknum'].split("/")[0].lstrip('0')
             if cnum != "":
               no = int( track['tracknum'].split("/")[0].lstrip('0') )
@@ -320,7 +343,7 @@ class Playlist(list):
         if type(track.get('time')) == float:
           tm = track['time']*1000000
         elif type(track.get('time')) == int:
-          tm = track['time']/1000000.
+          tm = old_div(track['time'],1000000.)
         else:
           tm= None
 
@@ -332,16 +355,19 @@ class Playlist(list):
         #make valid quoted location
         location = track['path']
 
-        url=urlparse.urlsplit(location)
+        url=urllib.parse.urlsplit(location)
 
         if (url.scheme == "http"):
           location=url.geturl()
         else:
-          #here problem when file name come fron gtk or command line
+          #here problem when file name come from gtk or command line
           try:
-            location=urlparse.urljoin("file://",urllib.quote(url.path))
+            location=urllib.parse.urljoin(u"file://",urllib.parse.quote(url.path))
           except:
-            location=urlparse.urljoin("file://",urllib.quote(url.path.encode("UTF-8")))
+            if sys.version_info[0] == 3:
+              raise
+            else:
+              location=urllib.parse.urljoin("file://",urllib.parse.quote(url.path.encode("UTF-8")))
 
         ##location = location.encode("utf-8")
         #if    not 'http://' in location.lower() and \
@@ -367,15 +393,18 @@ class Playlist(list):
             if track[k] != None:
               v = track[k]
               t = type(v)
-              if t in [str, unicode]:
+              if t in [str, str]:
                 t = "str"
-                v = unicode(v)
+                v = str(v)
               elif t == bool:
                 t = "bool"
                 v = '1' if v else '0'
-              elif t in [int, long]:
+              elif t in [int, int]:
                 t = "int"
-                v = str(v).encode("utf-8")
+                if sys.version_info[0] == 3:
+                  v = str(v)
+                else:
+                  v = str(v).encode("utf-8")
               elif t == float:
                 t = "float"
                 v = repr(v)
@@ -415,7 +444,7 @@ class Playlist_mpris2(collections.OrderedDict):
         if len (self) == 0 :
           self.current = None
         else:
-          self.current = self.keys()[0]
+          self.current = list(self.keys())[0]
       else:
         self.current=playlist.current
         
@@ -436,12 +465,12 @@ class Playlist_mpris2(collections.OrderedDict):
       return Track(None,None,None,None,None,None)
 
   def set_current(self,id):
-    if id in self.keys():
+    if id in list(self.keys()):
       self.current=id
     else:
       logging.warning ("set_current: invalid id")
 
-  def next(self):
+  def __next__(self):
 
     self.current = self.nextid(self.current)
     logging.info ( "current: %s" % self.current)
@@ -451,7 +480,7 @@ class Playlist_mpris2(collections.OrderedDict):
     if id is None:
       return None
 
-    keys=self.keys()
+    keys=list(self.keys())
     ind = keys.index(id)
 
     if len(keys)-1 <= ind :
@@ -471,7 +500,7 @@ class Playlist_mpris2(collections.OrderedDict):
     if id is None:
       return None
 
-    keys=self.keys()
+    keys=list(self.keys())
     ind = keys.index(id)
 
     if ind == 0 :
@@ -482,7 +511,7 @@ class Playlist_mpris2(collections.OrderedDict):
 
   def addtrack(self,uri,aftertrack=None,setascurrent=False):
 
-    keys=self.keys()
+    keys=list(self.keys())
 
     if aftertrack is None:
       ind = max(len(keys)-1,0)
@@ -504,7 +533,7 @@ class Playlist_mpris2(collections.OrderedDict):
 
     # here we have empty new list were copy old and new
 
-    for id,track in self.iteritems():
+    for id,track in self.items():
       newself[id]=track
       if id == aftertrack:
         p=Playlist([uri])
@@ -533,7 +562,7 @@ class Playlist_mpris2(collections.OrderedDict):
 
     
   def write(self,path):
-    Playlist(tracks=self.values(),current=self.current,position=self.position).write(path)
+    Playlist(tracks=list(self.values()),current=self.current,position=self.position).write(path)
     
 def main():
 
@@ -548,34 +577,34 @@ def main():
 
   uri=u"file:///home/pat1/Musica/Paolo Benvegnù/Piccoli fragilissimi film/2 - Cerchi nell'acqua.flac"
 
-  print "-------------- playlist ------------------"
+  print("-------------- playlist ------------------")
   p=Playlist(media)
 
-  print "--------- playlist ord dict -----------------------"
+  print("--------- playlist ord dict -----------------------")
   op=Playlist_mpris2(p)
 
   op.write("/tmp/tmp.xspf")
 
-  print "--------- playlist from file -----------------------"
+  print("--------- playlist from file -----------------------")
   p=Playlist(["/tmp/tmp.xspf"])
 
-  print "--------- playlist from file ord dict -----------------------"
+  print("--------- playlist from file ord dict -----------------------")
   op=Playlist_mpris2(p)
 
   op=op.addtrack(uri,aftertrack="1")
 
   op=op.addtrack(uri,aftertrack="1",setascurrent=True)
-  print op
+  print(op)
 
   op.write("/tmp/tmpout.xspf")
 
-  print "--------- reread playlist from file ord dict -----------------------"
+  print("--------- reread playlist from file ord dict -----------------------")
   p=Playlist(["/tmp/tmpout.xspf"])
   op=Playlist_mpris2(p)
 
-  print "remove ",op.current
+  print("remove ",op.current)
   op=op.removetrack("0")
-  print op
+  print(op)
   op.write("/tmp/tmpout2.xspf")
   
 if __name__ == '__main__':

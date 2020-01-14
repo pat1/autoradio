@@ -28,6 +28,12 @@
     It is not necessary to have the version of the vorbis library in ogg meta
     data for example.
 """
+from __future__ import print_function
+from past.builtins import cmp
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import sys
 import os
 import os.path
@@ -35,7 +41,7 @@ import random
 import logging
 from itertools import chain
 import mutagen
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 __author__ = "Marc 'BlackJack' Rintsch <marc(at)rintsch(dot)de>"
 __version__ = '0.6.0'
@@ -108,7 +114,7 @@ def metadata_reader(path):
 
 #-----------------------------------------------------------------------------
 
-class PlaylistEntry:
+class PlaylistEntry(object):
     """A generic playlist entry with a `path` attribute and dictionary
     like behavior for meta data.
     
@@ -168,7 +174,7 @@ class PlaylistEntry:
             log.info("Could not decode UTF-8: %s ",self.path)
             return ""
 
-class PlaylistEntryFactory:
+class PlaylistEntryFactory(object):
     """A media file factory allows registritation of media file types,
     their file name extensions and functions for reading meta data from
     the files.
@@ -257,7 +263,7 @@ def write_m3u(playlist, outfile,timelen=None):
                 continue
 
         if totaltime < timelen or timelen is None :
-            print >> outfile, unicode(entry)
+            print(str(entry), file=outfile)
             i+=1
         else:
             break
@@ -269,7 +275,7 @@ def write_extm3u(playlist, outfile,timelen=None):
     
     totaltime=0.
     i=0 
-    print >> outfile, '#EXTM3U'
+    print('#EXTM3U', file=outfile)
     for entry in playlist:
         if not  entry['TIME'] is None :
             totaltime += entry['TIME']
@@ -282,11 +288,11 @@ def write_extm3u(playlist, outfile,timelen=None):
             time=entry['TIME']
             if time is None : time = -1
             if entry['ARTIST'] and entry['TITLE']:
-                print >> outfile, '#EXTINF:%s,%s - %s' % (time,
+                print('#EXTINF:%s,%s - %s' % (time,
                                                       entry['ARTIST'],
-                                                      entry['TITLE'])
+                                                      entry['TITLE']), file=outfile)
         
-            print >> outfile, unicode(entry)
+            print(str(entry), file=outfile)
             i+=1
         else:
 
@@ -301,8 +307,8 @@ def write_pls(playlist, outfile,timelen=None):
     :todo: Add command line option for playlist title.
     """
     totaltime=0.
-    print >> outfile, '[playlist]'
-    print >> outfile, 'PlaylistName=Playlist'
+    print('[playlist]', file=outfile)
+    print('PlaylistName=Playlist', file=outfile)
     i = 0
     for i, entry in enumerate(playlist):
         if not  entry['TIME'] is None :
@@ -314,17 +320,17 @@ def write_pls(playlist, outfile,timelen=None):
         if totaltime < timelen  or timelen is None :
 
             i += 1
-            print >> outfile, 'File%d=%s' % (i, entry)
+            print('File%d=%s' % (i, entry), file=outfile)
             title = entry['TITLE'] or os.path.basename(str(entry))
-            print >> outfile, 'Title%d=%s' % (i, title)
-            print >> outfile, 'Length%d=%s' % (i, entry['TIME'])
+            print('Title%d=%s' % (i, title), file=outfile)
+            print('Length%d=%s' % (i, entry['TIME']), file=outfile)
 
         else:
 
             break
 
-    print >> outfile, 'NumberOfEntries=%d' % i
-    print >> outfile, 'Version=2'
+    print('NumberOfEntries=%d' % i, file=outfile)
+    print('Version=2', file=outfile)
     log.info("That's %d out file(s).", i)
 
 
@@ -455,9 +461,9 @@ def main():
                      help="name of the output file or '-' for stdout (default)")
     parser.add_option("-f", "--output-format", type="choice",
                       dest="output_format", default="extm3u",
-                      choices=WRITERS.keys(),
+                      choices=list(WRITERS.keys()),
                       help="format of the output %r (default: %%default)" %
-                            WRITERS.keys())
+                            list(WRITERS.keys()))
     parser.add_option("-r", "--relative-paths", action="store_true",
                       dest="relative_paths", default=False,
                       help="write relative paths. (default: absolute paths)")

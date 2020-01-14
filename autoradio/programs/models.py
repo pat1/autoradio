@@ -1,11 +1,11 @@
 
+from builtins import str
+from builtins import range
+from builtins import object
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy
-
-from django.db.models import permalink
 from autoradio.programs.managers import EpisodeManager
-
 import datetime
 import calendar
 from django.db.models import Q
@@ -93,12 +93,12 @@ class MediaCategory(models.Model):
     name = models.CharField(max_length=50, choices=MEDIA_CATEGORY_CHOICES)
     slug = models.SlugField(blank=True, unique=False, help_text=ugettext_lazy('A <a href="http://docs.djangoproject.com/en/dev/ref/models/fields/#slugfield">slug</a> is a URL-friendly nickname. For example, a slug for "Games & Hobbies" is "games-hobbies".'))
 
-    class Meta:
+    class Meta(object):
         ordering = ['slug']
         verbose_name = 'category (Media RSS)'
         verbose_name_plural = 'categories (Media RSS)'
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % (self.name)
 
 
@@ -125,12 +125,12 @@ class ParentCategory(models.Model):
     name = models.CharField(max_length=50, choices=PARENT_CHOICES, help_text=ugettext_lazy('After saving this parent category, please map it to one or more Child Categories below.'))
     slug = models.SlugField(blank=True, unique=False, help_text=ugettext_lazy('A <a href="http://docs.djangoproject.com/en/dev/ref/models/fields/#slugfield">slug</a> is a URL-friendly nickname. For example, a slug for "Games & Hobbies" is "games-hobbies".'))
 
-    class Meta:
+    class Meta(object):
         ordering = ['slug']
         verbose_name = 'category (iTunes parent)'
         verbose_name_plural = 'categories (iTunes parent)'
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % (self.name)
 
 
@@ -223,16 +223,16 @@ class ChildCategory(models.Model):
             )
         ),
     )
-    parent = models.ForeignKey(ParentCategory, related_name='child_category_parents')
+    parent = models.ForeignKey(ParentCategory, related_name='child_category_parents', on_delete=models.CASCADE)
     name = models.CharField(max_length=50, blank=True, choices=CHILD_CHOICES, help_text=ugettext_lazy('Please choose a child category that corresponds to its respective parent category (e.g., "Design" is a child category of "Arts").<br />If no such child category exists for a parent category (e.g., Comedy, Kids & Family, Music, News & Politics, or TV & Film), simply leave this blank and save.'))
     slug = models.SlugField(blank=True, unique=False, help_text=ugettext_lazy('A <a href="http://docs.djangoproject.com/en/dev/ref/models/fields/#slugfield">slug</a> is a URL-friendly nickname. For exmaple, a slug for "Fashion & Beauty" is "fashion-beauty".'))
 
-    class Meta:
+    class Meta(object):
         ordering = ['parent', 'slug']
         verbose_name = 'category (iTunes child)'
         verbose_name_plural = 'categories (iTunes child)'
 
-    def __unicode__(self):
+    def __str__(self):
         if self.name!='':
             return u'%s > %s' % (self.parent, self.name)
         else:
@@ -240,43 +240,43 @@ class ChildCategory(models.Model):
 
 
 def giorno_giorno():
-	giorni=[]
-	for giorno in (calendar.day_name):
-		giorno=giorno.decode('utf-8')
-		giorni.append(( giorno, giorno))
-	return giorni
-#	yield 'Tutti','Tutti'
+       giorni=[]
+       for giorno in (calendar.day_name):
+              #giorno=giorno.decode('utf-8')
+              giorni.append(( giorno, giorno))
+       return giorni
+#       yield 'Tutti','Tutti'
 
 class Giorno(models.Model):
 
         name = models.CharField(max_length=20,choices=giorno_giorno(),unique=True,\
                                 help_text=ugettext_lazy("weekday name"))
-        def __unicode__(self):
+        def __str__(self):
             return self.name
 
 class Configure(models.Model):
 
 
-	sezione = models.CharField(max_length=50,unique=True\
-					   ,default='show',editable=False)
-	active = models.BooleanField(ugettext_lazy("Active show"),default=True,\
+       sezione = models.CharField(max_length=50,unique=True\
+              			   ,default='show',editable=False)
+       active = models.BooleanField(ugettext_lazy("Active show"),default=True,\
                                          help_text=ugettext_lazy("activate/deactivate the intere program class"))
-        emission_starttime = models.TimeField(ugettext_lazy('Programmed start time'),null=True,blank=True,\
+       emission_starttime = models.TimeField(ugettext_lazy('Programmed start time'),null=True,blank=True,\
                                                   help_text=ugettext_lazy("The start time from wich the programs will be active"))
-        emission_endtime = models.TimeField(ugettext_lazy('Programmed end time'),null=True,blank=True,\
+       emission_endtime = models.TimeField(ugettext_lazy('Programmed end time'),null=True,blank=True,\
                                             help_text=ugettext_lazy("The end time the programs will be active"))
 
 
-        radiostation = models.CharField(max_length=50,unique=True, default='Radio',editable=True,\
+       radiostation = models.CharField(max_length=50,unique=True, default='Radio',editable=True,\
                        help_text=ugettext_lazy("The station name for the print of programs book"))
-        channel = models.CharField(max_length=80,unique=True, default='103', editable=True,\
+       channel = models.CharField(max_length=80,unique=True, default='103', editable=True,\
                        help_text=ugettext_lazy("The station channel for the print of programs book"))
-        mezzo = models.CharField(max_length=50,unique=True, default='analogico terrestre', editable=True,\
+       mezzo = models.CharField(max_length=50,unique=True, default='analogico terrestre', editable=True,\
                        help_text=ugettext_lazy("The station kind of emission for the print of programs book"))
-        type = models.CharField(max_length=50,unique=True, default='radiofonica', editable=True,\
+       type = models.CharField(max_length=50,unique=True, default='radiofonica', editable=True,\
                        help_text=ugettext_lazy("The station type for the print of programs book"))
 
-        def __unicode__(self):
+       def __str__(self):
 
             if self.emission_starttime is None:
                 emission_starttime = "-"
@@ -289,8 +289,8 @@ class Configure(models.Model):
                 emission_endtime = self.emission_endtime.isoformat()
 
             return self.sezione+" "+self.active.__str__()+" "\
-		+emission_starttime+" "\
-		+emission_endtime
+              +emission_starttime+" "\
+              +emission_endtime
 
 
 class ProgramType(models.Model):
@@ -300,12 +300,12 @@ class ProgramType(models.Model):
     subtype = models.CharField(ugettext_lazy("SubType"),max_length=254,default=None,null=False,blank=False)
     description = models.TextField(ugettext_lazy("Description"),default=None,null=True,blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.type+"/"+self.subtype
 
 def Production():
-	for production in (ugettext_lazy("autoproduction"),ugettext_lazy("eteroproduction")):
-		yield production, production
+       for production in (ugettext_lazy("autoproduction"),ugettext_lazy("eteroproduction")):
+              yield production, production
 
 
 class Show(models.Model):
@@ -315,24 +315,24 @@ class Show(models.Model):
     active = models.BooleanField(ugettext_lazy("Active"),default=True,help_text=ugettext_lazy("Activate the show for emission"))
     slug = models.SlugField(unique=True, help_text=ugettext_lazy('Auto-generated from Title.'))
     length = models.FloatField(ugettext_lazy("Time length (seconds)"),default=None,null=True,blank=True, help_text=ugettext_lazy('Time lenght how you want to see it in the palimpsest'))
-    type = models.ForeignKey(ProgramType, verbose_name=	ugettext_lazy('Program Type'), help_text=ugettext_lazy('The categorization that follow the italian law (you have to use it to produce the programs book'))
+    type = models.ForeignKey(ProgramType, verbose_name=       ugettext_lazy('Program Type'), help_text=ugettext_lazy('The categorization that follow the italian law (you have to use it to produce the programs book') , on_delete=models.CASCADE)
 
     production = models.CharField(ugettext_lazy("Production"),max_length=30,choices=Production(),default=None,null=True,blank=True, help_text=ugettext_lazy('The type of production'))
     COPYRIGHT_CHOICES = (
-	    ('Public domain', 'Public domain'),
-	    ('Creative Commons: Attribution (by)', 'Creative Commons: Attribution (by)'),
-	    ('Creative Commons: Attribution-Share Alike (by-sa)', 'Creative Commons: Attribution-Share Alike (by-sa)'),
-	    ('Creative Commons: Attribution-No Derivatives (by-nd)', 'Creative Commons: Attribution-No Derivatives (by-nd)'),
-	    ('Creative Commons: Attribution-Non-Commercial (by-nc)', 'Creative Commons: Attribution-Non-Commercial (by-nc)'),
-	    ('Creative Commons: Attribution-Non-Commercial-Share Alike (by-nc-sa)', 'Creative Commons: Attribution-Non-Commercial-Share Alike (by-nc-sa)'),
-	    ('Creative Commons: Attribution-Non-Commercial-No Dreivatives (by-nc-nd)', 'Creative Commons: Attribution-Non-Commercial-No Dreivatives (by-nc-nd)'),
-	    ('All rights reserved', 'All rights reserved'),
-	    )
+           ('Public domain', 'Public domain'),
+           ('Creative Commons: Attribution (by)', 'Creative Commons: Attribution (by)'),
+           ('Creative Commons: Attribution-Share Alike (by-sa)', 'Creative Commons: Attribution-Share Alike (by-sa)'),
+           ('Creative Commons: Attribution-No Derivatives (by-nd)', 'Creative Commons: Attribution-No Derivatives (by-nd)'),
+           ('Creative Commons: Attribution-Non-Commercial (by-nc)', 'Creative Commons: Attribution-Non-Commercial (by-nc)'),
+           ('Creative Commons: Attribution-Non-Commercial-Share Alike (by-nc-sa)', 'Creative Commons: Attribution-Non-Commercial-Share Alike (by-nc-sa)'),
+           ('Creative Commons: Attribution-Non-Commercial-No Dreivatives (by-nc-nd)', 'Creative Commons: Attribution-Non-Commercial-No Dreivatives (by-nc-nd)'),
+           ('All rights reserved', 'All rights reserved'),
+           )
     EXPLICIT_CHOICES = (
-	    ('Yes', 'Yes'),
-	    ('No', 'No'),
-	    ('Clean', 'Clean'),
-	    )
+           ('Yes', 'Yes'),
+           ('No', 'No'),
+           ('Clean', 'Clean'),
+           )
     # RSS 2.0
     organization = models.CharField(max_length=255, help_text=ugettext_lazy('Name of the organization, company or Web site producing the podcast.'))
     link = models.URLField(help_text=ugettext_lazy('URL of either the main website or the podcast section of the main website.'))
@@ -341,7 +341,7 @@ class Show(models.Model):
     copyright = models.CharField(max_length=255, default='All rights reserved', choices=COPYRIGHT_CHOICES, help_text=ugettext_lazy('See <a href="http://creativecommons.org/about/license/">Creative Commons licenses</a> for more information.'))
     copyright_url = models.URLField('Copyright URL', blank=True, help_text=ugettext_lazy('A URL pointing to additional copyright information. Consider a <a href="http://creativecommons.org/licenses/">Creative Commons license URL</a>.'))
     author = models.ManyToManyField(User, related_name='display_authors', help_text=ugettext_lazy('Remember to save the user\'s name and e-mail address in the <a href="../../../auth/user/">User application</a>.<br />'))
-    webmaster = models.ForeignKey(User, related_name='display_webmaster', blank=True, null=True, help_text=ugettext_lazy('Remember to save the user\'s name and e-mail address in the <a href="../../../auth/user/">User application</a>.'))
+    webmaster = models.ForeignKey(User, related_name='display_webmaster', blank=True, null=True, help_text=ugettext_lazy('Remember to save the user\'s name and e-mail address in the <a href="../../../auth/user/">User application</a>.') , on_delete=models.CASCADE)
     category_show = models.CharField('Category', max_length=255, blank=True, help_text=ugettext_lazy('Limited to one user-specified category for the sake of sanity.'))
     domain = models.URLField(blank=True, help_text=ugettext_lazy('A URL that identifies a categorization taxonomy.'))
     ttl = models.PositiveIntegerField('TTL', help_text=ugettext_lazy('"Time to Live," the number of minutes a channel can be cached before refreshing.'), blank=True, null=True)
@@ -358,10 +358,10 @@ class Show(models.Model):
     itunes = models.URLField('iTunes Store URL', help_text=ugettext_lazy('Fill this out after saving this show and at least one episode. URL should look like "http://phobos.apple.com/WebObjects/MZStore.woa/wa/viewPodcast?id=000000000". See <a href="http://code.google.com/p/django-podcast/">documentation</a> for more.'), blank=True)
 
 
-    class Meta:
+    class Meta(object):
         ordering = ['organization', 'slug']
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % (self.title)
 
     #@models.permalink
@@ -369,7 +369,7 @@ class Show(models.Model):
     #    return ('podcast_episodes', (), { 'slug': self.slug })
 
     def get_absolute_url(self):
-        from django.core.urlresolvers import reverse
+        from django.urls import reverse
         return reverse('podcast_episodes', args=[str(self.slug)])
 
 
@@ -552,7 +552,7 @@ class Episode(models.Model):
         ('never', 'Never'),
     )
     # RSS 2.0
-    show = models.ForeignKey(Show)
+    show = models.ForeignKey(Show , on_delete=models.CASCADE)
     title = models.CharField(max_length=255, help_text=ugettext_lazy('Make it specific but avoid explicit language. Limit to 100 characters for a Google video sitemap.'))
     active = models.BooleanField(ugettext_lazy("Active"),default=True)
     date = models.DateTimeField(ugettext_lazy('Recording date'),auto_now_add=True)
@@ -601,10 +601,10 @@ class Episode(models.Model):
     # Behind the scenes
     objects = EpisodeManager()
 
-    class Meta:
+    class Meta(object):
         ordering = ['-date', 'slug']
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % (self.title)
 
     #@models.permalink
@@ -612,7 +612,7 @@ class Episode(models.Model):
     #    return ('podcast_episode', (), { 'show_slug': self.show.slug, 'episode_slug': self.slug })
 
     def get_absolute_url(self):
-        from django.core.urlresolvers import reverse
+        from django.urls import reverse
         return reverse('podcast_episode', args=[str(self.show.slug),str(self.slug)])
 
     def seconds_total(self):
@@ -628,7 +628,7 @@ class Episode(models.Model):
         return self.rec_date.date() == datetime.date.today()
     was_recorded_today.short_description = ugettext_lazy('Recorded today?')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -702,9 +702,9 @@ class Enclosure(models.Model):
     embed = models.BooleanField(help_text=ugettext_lazy('Check to allow Google to embed your external player in search results on <a href="http://video.google.com">Google Video</a>.'), blank=True)
     width = models.PositiveIntegerField(blank=True, null=True, help_text=ugettext_lazy("Width of the browser window in <br />which the URL should be opened. <br />YouTube's default is 425."))
     height = models.PositiveIntegerField(blank=True, null=True, help_text=ugettext_lazy("Height of the browser window in <br />which the URL should be opened. <br />YouTube's default is 344."))
-    episode = models.ForeignKey(Episode, help_text=ugettext_lazy('Include any number of media files; for example, perhaps include an iPhone-optimized, AppleTV-optimized and Flash Video set of video files. Note that the iTunes feed only accepts the first file. More uploading is available after clicking "Save and continue editing."'))
+    episode = models.ForeignKey(Episode, help_text=ugettext_lazy('Include any number of media files; for example, perhaps include an iPhone-optimized, AppleTV-optimized and Flash Video set of video files. Note that the iTunes feed only accepts the first file. More uploading is available after clicking "Save and continue editing."'), on_delete=models.CASCADE)
 
-    class Meta:
+    class Meta(object):
         ordering = ['mime', 'file']
 
 
@@ -718,7 +718,7 @@ class Enclosure(models.Model):
         super(Enclosure, self).save(*args, **kwargs)
 
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % (self.file)
 
 
@@ -727,44 +727,44 @@ class Schedule(models.Model):
 #    program = models.ForeignKey(Program, edit_inline=models.TABULAR,\
 #    num_in_admin=2,verbose_name='si riferisce al programma:',editable=False)
 
-	episode = models.ForeignKey(Episode, \
-		  verbose_name=ugettext_lazy('Linked episode:'))
+       episode = models.ForeignKey(Episode, \
+                verbose_name=ugettext_lazy('Linked episode:'), on_delete=models.CASCADE)
 
-	emission_date = models.DateTimeField(ugettext_lazy('programmed date'),\
+       emission_date = models.DateTimeField(ugettext_lazy('programmed date'),\
                                                  help_text=ugettext_lazy("This is the date and time when the program will be on air"))
 
 
-	#    def emitted(self):
-	#	    return self.emission_done != None 
-	#    emitted.short_description = 'Trasmesso'
+       #    def emitted(self):
+       #           return self.emission_done != None 
+       #    emitted.short_description = 'Trasmesso'
 
-	def was_scheduled_today(self):
-		return self.emission_date.date() == datetime.date.today()
+       def was_scheduled_today(self):
+              return self.emission_date.date() == datetime.date.today()
     
-	was_scheduled_today.short_description = ugettext_lazy('Scheduled for today?')
+       was_scheduled_today.short_description = ugettext_lazy('Scheduled for today?')
 
-	def refepisode(self):
-		return self.episode.title
-	refepisode.short_description = ugettext_lazy('Linked episode:')
+       def refepisode(self):
+              return self.episode.title
+       refepisode.short_description = ugettext_lazy('Linked episode:')
 
-	def __unicode__(self):
-	        return unicode(self.episode.title)
+       def __str__(self):
+               return str(self.episode.title)
 
 
 
 class ScheduleDone(models.Model):
 
-	schedule = models.ForeignKey(Schedule, \
-		  verbose_name=ugettext_lazy('Linked schedule:'))
+       schedule = models.ForeignKey(Schedule, \
+                verbose_name=ugettext_lazy('Linked schedule:'), on_delete=models.CASCADE)
 
-	enclosure = models.ForeignKey(Enclosure, \
-		  verbose_name=ugettext_lazy('Linked enclosure:'))
+       enclosure = models.ForeignKey(Enclosure, \
+                verbose_name=ugettext_lazy('Linked enclosure:'), on_delete=models.CASCADE)
 
-	emission_done = models.DateTimeField(ugettext_lazy('emission done')\
-						     ,null=True,editable=False )
+       emission_done = models.DateTimeField(ugettext_lazy('emission done')\
+              				     ,null=True,editable=False )
 
-	def __unicode__(self):
-	        return unicode(self.emission_done)
+       def __str__(self):
+               return str(self.emission_done)
 
 
 
@@ -774,7 +774,7 @@ class PeriodicSchedule(models.Model):
 #    num_in_admin=2,verbose_name='si riferisce al programma:',editable=False)
 
     show = models.ForeignKey(Show,verbose_name=\
-					ugettext_lazy('refer to show:'))
+              			ugettext_lazy('refer to show:'), on_delete=models.CASCADE)
 
     start_date = models.DateField(ugettext_lazy('Programmed start date'),null=True,blank=True,\
                              help_text=ugettext_lazy("The program will be in palimpsest starting from this date"))
@@ -786,8 +786,8 @@ class PeriodicSchedule(models.Model):
                                         help_text=ugettext_lazy("The program will be in palimpsest those weekdays"))
 
 
-    def __unicode__(self):
-        return unicode(self.show)
+    def __str__(self):
+        return str(self.show)
 
 class AperiodicSchedule(models.Model):
 
@@ -795,7 +795,7 @@ class AperiodicSchedule(models.Model):
 #    num_in_admin=2,verbose_name='si riferisce al programma:',editable=False)
 
     show = models.ForeignKey(Show, verbose_name=\
-					ugettext_lazy('refer to Show:'))
+              			ugettext_lazy('refer to Show:'), on_delete=models.CASCADE)
 
     emission_date = models.DateTimeField(ugettext_lazy('Programmed date'),\
                              help_text=ugettext_lazy("This is the date and time when the program is planned in palimsest"))
@@ -805,6 +805,6 @@ class AperiodicSchedule(models.Model):
     
     was_scheduled_today.short_description = ugettext_lazy('Programmed for today?')
 
-    def __unicode__(self):
-        return unicode(self.show)
+    def __str__(self):
+        return str(self.show)
 

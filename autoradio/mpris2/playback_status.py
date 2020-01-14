@@ -16,8 +16,8 @@ class Playback_Status(str):
     '''
     VALUES = (PLAYING, PAUSED, STOPPED)
     
-    def __init__(self, status, *args, **kw):
-        super(Playback_Status, self).__init__(status, *args, **kw)
+    def __init__(self, status):
+        super(Playback_Status, self).__init__()
         self._status = status
     
     @property

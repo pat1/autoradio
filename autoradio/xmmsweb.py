@@ -5,6 +5,9 @@
 Show xmms playlist on a simple web server.
 """
 
+from builtins import str
+from builtins import range
+from builtins import object
 session=0         # sessione di xmms
 maxplele=100      # massimo numero di elementi della playlist
 iht=False         # emetti header e tail
@@ -54,7 +57,7 @@ tail='''
 </html>
 '''
 
-class HomePage:
+class HomePage(object):
     
 #    def Main(self):
 #        # Let's link to another method here.
@@ -106,7 +109,7 @@ class HomePage:
             htmlresponse+='<table border="1">'
             htmlresponse+='<td>posizione</td><td>durata</td><td>brano</td>'
 
-            for pos in xrange(0,min(len,maxplele)):
+            for pos in range(0,min(len,maxplele)):
                 htmlresponse+='<tr>'
                 file=xmms.control.get_playlist_file(pos, session)
                 title=xmms.control.get_playlist_title(pos, session)

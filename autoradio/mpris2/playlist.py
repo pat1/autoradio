@@ -59,7 +59,7 @@ class Maybe_Playlist(Struct):
     def Playlist(self):
         return Playlist(self[1])
     
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.Valid)
     
     def __bool__(self):

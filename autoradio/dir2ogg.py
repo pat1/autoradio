@@ -32,7 +32,15 @@ This script converts mp3s to wavs using mpg123 then converts the wavs to oggs us
 m4a conversions require faad. Id3 tag support requires mutagen for mp3s.
 Scratch tags using the filename will be written for wav files (and mp3s with no tags!)
 '''
+from __future__ import division
+from __future__ import print_function
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from past.utils import old_div
+from builtins import object
 import sys
 import os, os.path
 import re
@@ -55,9 +63,9 @@ FILTERS = {'mp3': ('*.mp3',),
 def mmatch(names, patterns, rbool=True):
     '''names/patterns=str/list/tuple'''
     results = []
-    if isinstance(names, (str, unicode)):
+    if isinstance(names, str):
         names = [names]
-    if isinstance(patterns, (str, unicode)):
+    if isinstance(patterns, str):
         patterns = [patterns]
     for pat in patterns:
         pat = pat.lower()
@@ -111,7 +119,7 @@ def read_opts():
         'cd':  ('cdparanoia', 'icedax','cdda2wav', 'mplayer'),
         }
 
-    for ext, dec in commands.items():
+    for ext, dec in list(commands.items()):
         default, choices = None, []
         for command in dec:
             in_path = [prefix for prefix in os.environ['PATH'].split(os.pathsep) if os.path.exists(os.path.join(prefix, command))]
@@ -125,7 +133,7 @@ def read_opts():
 
     options.convert_cd = options.cdda
     options.filters    = []
-    for ext, pat in FILTERS.items():
+    for ext, pat in list(FILTERS.items()):
         # Activate Encoders for files on the commandline
         if options.convert_all or mmatch(args, pat):
             setattr(options, 'convert_' + ext, True)
@@ -140,15 +148,15 @@ def read_opts():
     return options, args
 
 def info(msg):
-    print 'Information: %s' % msg
+    print('Information: %s' % msg)
 
 def warn(msg):
     '''print errors to the screen (red)'''
-    print >> sys.stderr, "Warning: %s" % msg
+    print("Warning: %s" % msg, file=sys.stderr)
 
 def fatal(msg):
     '''Fatal error (error + exit)'''
-    print >> sys.stderr, "Error: %s" % msg
+    print("Error: %s" % msg, file=sys.stderr)
     sys.exit(1)
 
 def return_dirs(root):
@@ -158,7 +166,7 @@ def return_dirs(root):
             mydirs[pdir] = files
     return mydirs
 
-class Id3TagHandler:
+class Id3TagHandler(object):
     '''Class for handling meta-tags. (Needs mutagen)'''
     accept = ['album', 'album_subtitle', 'albumartist', 'albumartistsort',
               'albumsort', 'artist', 'artistsort', 'asin', 'bpm', 'comment',
@@ -179,15 +187,15 @@ class Id3TagHandler:
         '''Common grabber, starts the handler and applies the tags to self.tags'''
         try:
             mydict  = handler(self.song)
-        except error, msg:
+        except error as msg:
             import warnings,traceback;
             warn('Mutagen failed on %s, no tags available' % self.song)
             traceback.print_exc(0)
-            print >> sys.stderr
+            print(file=sys.stderr)
             return
         if convert:
-            convert = dict([(k.lower(), v.lower()) for k, v in convert.items()]) # Fix convert
-        for key, val in mydict.items():
+            convert = dict([(k.lower(), v.lower()) for k, v in list(convert.items())]) # Fix convert
+        for key, val in list(mydict.items()):
             key = key.lower()
             key = convert and (key in convert and convert[key] or key) or key
             if not key in self.accept:
@@ -201,13 +209,13 @@ class Id3TagHandler:
                 if not isinstance(val, list):
                     val = [val]
                 for i in val:
-                    if not isinstance(i, unicode):
+                    if not isinstance(i, str):
                         # Convert all invalid values to unicode
                         try:
-                            new_val.append(unicode(i))
+                            new_val.append(str(i))
                         except UnicodeDecodeError:
                             warn('Ignoring UnicodeDecodeError in key %s' % key)
-                            new_val.append(unicode(i, errors='ignore'))
+                            new_val.append(str(i, errors='ignore'))
                     else:
                         new_val.append(i)
                 val = new_val
@@ -314,7 +322,7 @@ class Id3TagHandler:
 
     def list_if_verbose(self):
         info('Meta-tags I will write:')
-        for key, val in self.tags.items():
+        for key, val in list(self.tags.items()):
             if type(val) == list:
                 info(key + ': ' + ','.join(val))
             else:
@@ -345,7 +353,7 @@ class Convert(Id3TagHandler):
 
         # (smartmp3) I have to remember default quality for next files
         original_quality = self.conf.quality
-        for ext, pat in FILTERS.items():
+        for ext, pat in list(FILTERS.items()):
             if mmatch(self.song, pat) and ext != 'wav':
                 self.decoder = getattr(self.conf, ext + '_decoder')
                 getattr(self, 'grab_%s_tags' % ext)()
@@ -380,7 +388,7 @@ class Convert(Id3TagHandler):
         self.conf.quality = round(5.383 * math.log(0.01616 * bitrate/1000.) - self.conf.smart_mp3_correction, 2)
         self.conf.quality = max(self.conf.quality, -1) # Lowest quality is -1
         self.conf.quality = min(self.conf.quality, 6) # Highest quality is 6
-        info("(smartmp3) Detected bitrate: %d kbps" % (bitrate/1000))
+        info("(smartmp3) Detected bitrate: %d kbps" % (old_div(bitrate,1000)))
         info("(smartmp3) Assumed vorbis quality: %.02f" % self.conf.quality)
 
     def decode(self):
@@ -490,7 +498,7 @@ class ConvertTrack(Convert):
         self.decoder           = 'cd-' + self.conf.cd_decoder
         self.convert()
 
-class ConvertDisc:
+class ConvertDisc(object):
     '''Wrapper around ConvertTrack to Convert complete cds
     Currently uses MusicBrainz, but a CDDB fallback will be added, too.'''
     def __init__(self, dev, conf):
@@ -527,20 +535,20 @@ class ConvertDisc:
             title['genre']  = read_info['DGENRE']
             title['date']   = read_info['DYEAR']
             title['title']  = read_info['TTITLE' + str(track)]
-            title['tracktotal'] = str(len(range(disc_id[1])) + 1)
+            title['tracktotal'] = str(len(list(range(disc_id[1]))) + 1)
             title['ntracknumber'] = '0' * (len(title['tracktotal'] ) - len(str(track+1)) ) + str(track+1)
             title['tracknumber'] = str(track+1)
-            for key, val in title.items():
-                title[key] =  unicode(str(val), "ISO-8859-1")
+            for key, val in list(title.items()):
+                title[key] =  str(str(val), "ISO-8859-1")
             ConvertTrack(self.dev, self.conf, track+1, title)
 
     def get_mb(self):
         try:
             import musicbrainz2.disc as mbdisc
             import musicbrainz2.webservice as mbws
-        except ImportError, err:
+        except ImportError as err:
             warn('You need python-musicbrainz2 (or python-cddb) to convert cds. Please install it. Trying cddb.')
-            raise self.MBError, err
+            raise self.MBError(err)
 
         service = mbws.WebService()
         query = mbws.Query(service)
@@ -548,7 +556,7 @@ class ConvertDisc:
         # Read the disc in the drive
         try:
             disc = mbdisc.readDisc(self.dev)
-        except mbdisc.DiscError, err:
+        except mbdisc.DiscError as err:
             warn(err)
             raise self.MBError
 
@@ -556,18 +564,18 @@ class ConvertDisc:
         try:
             myfilter = mbws.ReleaseFilter(discId=discId)
             results = query.getReleases(myfilter)
-        except mbws.WebServiceError, err:
+        except mbws.WebServiceError as err:
             warn(err)
             raise self.MBError
 
         if len(results) == 0:
-            print "Disc is not yet in the MusicBrainz database."
-            print "Consider adding it via", mbdisc.getSubmissionUrl(disc)
+            print("Disc is not yet in the MusicBrainz database.")
+            print("Consider adding it via", mbdisc.getSubmissionUrl(disc))
             raise self.MBError
         try:
             inc = mbws.ReleaseIncludes(artist=True, tracks=True, releaseEvents=True)
             release = query.getReleaseById(results[0].release.getId(), inc)
-        except mbws.WebServiceError, err:
+        except mbws.WebServiceError as err:
             warn(err)
             raise self.MBError
 
@@ -576,7 +584,7 @@ class ConvertDisc:
         try:
             # try to get the CDDB ID
             import DiscID
-            cddb_id = '%08lx' % long(DiscID.disc_id(DiscID.open(self.dev))[0])
+            cddb_id = '%08lx' % int(DiscID.disc_id(DiscID.open(self.dev))[0])
         except:
             cddb_id = False
 
@@ -600,7 +608,7 @@ class ConvertDisc:
             ConvertTrack(self.dev, self.conf, trackn, title)
             trackn+=1
 
-class ConvertDirectory:
+class ConvertDirectory(object):
     '''
     This class is just a wrapper for Convert.
 
@@ -630,20 +638,20 @@ class ConvertDirectory:
         ''' Echo files to be converted if verbose flag is set.'''
         info('In %s I am going to convert:' % self.directory)
         for song in self.songs:
-            print " ", song
+            print(" ", song)
 
 
 def show_banner():
-    print 'dir2ogg %s (%s), converts audio files into ogg vorbis.\n' % (__version__, __date__)
+    print('dir2ogg %s (%s), converts audio files into ogg vorbis.\n' % (__version__, __date__))
 
 def show_license(*args, **kwargs):
-    print 'Copyright (C) 2007-2008 Julian Andres Klode <jak@jak-linux.org>'
-    print 'Copyright (C) 2003-2006 Darren Kirby <d@badcomputer.org>\n'
-    print 'This program is distributed in the hope that it will be useful,'
-    print 'but WITHOUT ANY WARRANTY; without even the implied warranty of'
-    print 'MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the'
-    print 'GNU General Public License for more details.\n'
-    print 'Currently developed by Julian Andres Klode <jak@jak-linux.org>.'
+    print('Copyright (C) 2007-2008 Julian Andres Klode <jak@jak-linux.org>')
+    print('Copyright (C) 2003-2006 Darren Kirby <d@badcomputer.org>\n')
+    print('This program is distributed in the hope that it will be useful,')
+    print('but WITHOUT ANY WARRANTY; without even the implied warranty of')
+    print('MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the')
+    print('GNU General Public License for more details.\n')
+    print('Currently developed by Julian Andres Klode <jak@jak-linux.org>.')
     sys.exit(0)
 
 def main():
@@ -662,7 +670,7 @@ def main():
                 rdirs.update(return_dirs(path))
             elif conf.directory:
                 rdirs.update({path: os.listdir(path)})
-        for directory, files in rdirs.items():
+        for directory, files in list(rdirs.items()):
             try:
                 ConvertDirectory(conf, directory, files)
             except:

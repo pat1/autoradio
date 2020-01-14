@@ -3,6 +3,7 @@ Created on Nov 5, 2011
 
 @author: hugosenari
 '''
+from __future__ import print_function
 class Time_In_Us(int):
     '''Time in microseconds.'''
     
@@ -17,4 +18,4 @@ class Time_In_Us(int):
         return self._time
 
 if __name__ == "__main__":
-    print Time_In_Us(10)
+    print(Time_In_Us(10))

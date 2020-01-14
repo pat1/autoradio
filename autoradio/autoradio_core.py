@@ -2,16 +2,24 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2007-2009 Paolo Patruno.
 
-from autoradio_config import *
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import zip
+from builtins import str
+from builtins import range
+from past.utils import old_div
+from builtins import object
+from .autoradio_config import *
 
-from gest_program import *
-from gest_spot import *
-from gest_jingle import *
-from gest_playlist import *
-from gest_palimpsest import *
+from .gest_program import *
+from .gest_spot import *
+from .gest_jingle import *
+from .gest_playlist import *
+from .gest_palimpsest import *
 
 
-class schedule:
+class schedule(object):
     """
     Single schedule object
     attributes:
@@ -30,9 +38,9 @@ class schedule:
         """
         init of schedule object:
         """
-        self.djobj=djobj
+        self.mydjobj=djobj
         self.scheduledatetime=scheduledatetime
-        self.media=media
+        self.mymedia=media
         self.filename=filename
         #self.mediaweb = self.media[len(settings.MEDIA_URL)+1:]
         self.length=length
@@ -40,30 +48,32 @@ class schedule:
         self.emission_done=emission_done
         self.shuffle=shuffle
         self.maxlength=maxlength
-        self.title=title
+        self.mytitle=title
 
-    def __cmp__ (self, b):
 
-        if self.scheduledatetime is None and b.scheduledatetime is None :
-            return 0
-    
-        if self.scheduledatetime is None :
-            return -1
-    
-        if b.scheduledatetime is None :
-            return 1
-    
+    def __eq__(self, other):
+        if (self.scheduledatetime is None and other.scheduledatetime is None
+            or self.scheduledatetime == other.scheduledatetime) :
+            return True
 
-        if  self.scheduledatetime == b.scheduledatetime :
-            return 0
-        elif   self.scheduledatetime < b.scheduledatetime :
-            return -1
-        elif    self.scheduledatetime > b.scheduledatetime :
-            return 1
+    def __ne__(self, other):
+        return not self.__eq__(self, other)
 
+    def __lt__(self, other):
+        return self.scheduledatetime < other.scheduledatetime
+
+    def __le__(self, other):
+        return self.scheduledatetime <= other.scheduledatetime
+
+    def __gt__(self, other):
+        return self.scheduledatetime > other.scheduledatetime
+
+    def __ge__(self, other):
+        return self.scheduledatetime >= other.scheduledatetime
+
+        
     def future (self,now=None):
-        self.future=self.scheduledatetime > now
-        return self.future
+        return self.scheduledatetime > now
 
     def filter (self):
 
@@ -72,31 +82,64 @@ class schedule:
 
         return True
 
-    def __str__ (self):
+    def __repr__ (self):
 
-        return self.type+" "+self.media
-
-
-    def __iter__(self,now=None):
-        '''
-        return a list  nome,datet,media,len,tipo,datetdone,future 
-        '''
-
-        if now is None : now=datetime.now()
-
-        #return iter((self.djobj,self.scheduledatetime,self.media,self.length,self.type,\
-        # self.emission_done,self.shuffle,self.future(now)))
-
-        yield self.djobj
-        yield self.title
-        yield self.scheduledatetime
-        yield self.media
-        yield str((datetime(2000,1,1)+timedelta(seconds=int(self.length))).time())
-        yield self.type
-        yield self.emission_done
-        yield self.future(now)
+        return self.type+" "+self.mymedia
 
 
+#    def __iter__(self,now=None):
+#        self.index=0
+#        self.now=now
+#        if self.now is None : self.now=datetime.now()
+#        return self
+#        
+#    def __next__(self):
+#        self.index+=1
+#        if (self.index==1):
+#            return self.mydjobj
+#        if (self.index==2):
+#            return self.mytitle
+#        if (self.index==3):
+#            return self.scheduledatetime
+#        if (self.index==4):
+#            return self.mymedia
+#        if (self.index==5):
+#            return str((datetime(2000,1,1)+timedelta(seconds=int(self.length))).time())
+#        if (self.index==6):
+#            return self.type
+#        if (self.index==7):
+#            return self.emission_done
+#        if (self.index==8):
+#            return self.future(self.now)
+#        raise StopIteration
+
+    def get_djobj(self):
+        return self.mydjobj
+    def get_title(self):
+        return self.mytitle
+    def get_datet(self):
+        return self.scheduledatetime
+    def get_media(self):
+        return self.mymedia
+    def get_length_s(self):
+        return str((datetime(2000,1,1)+timedelta(seconds=int(self.length))).time())
+    def get_tipo(self):
+        return self.type        
+    def get_datetdone(self):
+        return self.emission_done
+    def get_isfuture(self):
+        return self.future(datetime.now())
+
+    djobj=property(get_djobj)
+    title=property(get_title)
+    datet=property(get_datet)
+    media=property(get_media)
+    length_s=property(get_length_s)
+    tipo=property(get_tipo)
+    datetdone=property(get_datetdone)
+    isfuture=property(get_isfuture)
+
+    
 class schedules(list):
     """
     multiple schedule object
@@ -142,7 +185,7 @@ class schedules(list):
                     length=schedule.length
                     type=schedule.type
                     endscheduledatetime=scheduledatetime+timedelta(seconds=length)
-                    halfscheduledatetime=scheduledatetime+timedelta(seconds=length/2)
+                    halfscheduledatetime=scheduledatetime+timedelta(seconds=old_div(length,2))
 
                     if (type == "spot" or type == "playlist" or type == "jingle" ): continue
 
@@ -222,7 +265,7 @@ class schedules(list):
                     length=schedule.adjustedlength
                     type=schedule.type
                     endscheduledatetime=scheduledatetime+timedelta(seconds=length)
-                    halfscheduledatetime=scheduledatetime+timedelta(seconds=length/2)
+                    halfscheduledatetime=scheduledatetime+timedelta(seconds=old_div(length,2))
 
                     if (type == "spot" or type == "playlist" or type == "jingle" ): continue
 
@@ -308,8 +351,8 @@ class schedules(list):
 
     def purge(self):
 
-        from itertools import izip
-        reverse_enumerate = lambda l: izip(xrange(len(l)-1, -1, -1), reversed(l))
+        
+        reverse_enumerate = lambda l: zip(range(len(l)-1, -1, -1), reversed(l))
 
         for ind,schedula in reverse_enumerate(self):
             if not schedula.filter():
@@ -334,7 +377,7 @@ class schedules(list):
             emission_done=spots.ar_emission_done
             number=spots.ar_spots_in_fascia
             #print scheduledatetime,media,length,number,emission_done
-            if (number <> 0 ):
+            if (number != 0 ):
                 self.append(schedule(fascia,scheduledatetime,media,filename,length,"spot",emission_done,title=str(fascia)))
 
 
@@ -385,7 +428,7 @@ class schedules(list):
                                      emission_done,title=str(jingle)))
 
 
-        return self
+        #return self
 
 
     def get_all_refine(self,now=None,genfile=True):
@@ -396,12 +439,12 @@ class schedules(list):
             pass
         self.purge()
         self.sort()
+        
+        #return self
 
-        return self
 
 
-
-class palimpsest:
+class palimpsest(object):
 
 
     def __init__ (self,title=None,datetime_start=None,datetime_end=None,
@@ -467,24 +510,35 @@ class palimpsest:
             str(self.datetime_end)+" "+str(self.type)+" "+\
             str(self.subtype)+" "+str(self.production)+" "+str(self.note)
 
-
+    
     def __iter__(self):
         '''
         return a list
         '''
+        self.index=0
+        return self
 
-        yield self.title
-        yield self.datetime_start
-        yield self.datetime_end
-        yield self.code
-        yield self.type
-        yield self.subtype
-        yield self.production
-        yield self.note
+    def __next__(self):
+        self.index+=1
+        if (self.index==1):
+            return self.title
+        if (self.index==2):
+            return self.datetime_start
+        if (self.index==3):
+            return self.datetime_end
+        if (self.index==4):
+            return self.code
+        if (self.index==5):
+            return self.type
+        if (self.index==6):
+            return self.subtype
+        if (self.index==7):
+            return self.production
+        if (self.index==8):
+            return self.note
+        raise StopIteration
 
-
-
-class dates:
+class dates(object):
 
     def __init__(self,datetime_start, datetime_end,step):
 
@@ -498,13 +552,14 @@ class dates:
         return self
 
 
-    def next(self):
+    def __next__(self):
 
         self.datetime_start=self.datetime_start+self.step
         if self.datetime_start <= self.datetime_end:
             return self.datetime_start
         else:
             raise StopIteration
+            #return
 
 
 class palimpsests(list):
@@ -542,9 +597,9 @@ class palimpsests(list):
 
         self.sort()
 
-        #print "prima:"
+        #print ("prima:")
         #for program in self:
-        #    print program
+        #    print (program)
 
         # timing adjust:
         #    1) overlay
@@ -574,7 +629,7 @@ class palimpsests(list):
 
             if self[i].datetime_end != self[i+1].datetime_start:
 
-                dtmean=self[i].datetime_end+((self[i+1].datetime_start-self[i].datetime_end)/2)
+                dtmean=self[i].datetime_end+(old_div((self[i+1].datetime_start-self[i].datetime_end),2))
 
                 self[i].datetime_end=dtmean
                 self[i+1].datetime_start=dtmean
@@ -624,7 +679,7 @@ class palimpsests(list):
                 note="%d Spot" % number
 
                 #if (number <> 0 and pdatetime_start.date() == dateelab):
-                if number <> 0 and  pdatetime_start >= datetime_start and pdatetime_end < datetime_end :
+                if number != 0 and  pdatetime_start >= datetime_start and pdatetime_end < datetime_end :
                     self.append(palimpsest(title,pdatetime_start,pdatetime_end,
                                            type,subtype,production,note))
 
@@ -654,20 +709,20 @@ def main():
 
     # get the schedule of my insterest
     # I do a list
-    print "------- schedules --------"
+    print("------- schedules --------")
     for sched in scheds.get_all_refine():
     
 
-        print "------- schedule --------"
+        print("------- schedule --------")
 
         for elemento in sched:
-            print elemento
+            print(elemento)
 
-        print sched.type
-        print sched.media
-        print sched.scheduledatetime
-        print sched.shuffle
-        print sched.length
+        print(sched.type)
+        print(sched.media)
+        print(sched.scheduledatetime)
+        print(sched.shuffle)
+        print(sched.length)
 
 
 

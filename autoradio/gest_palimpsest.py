@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2009 Paolo Patruno.
 
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import object
 import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
 from django.conf import settings
@@ -8,16 +11,16 @@ from django.conf import settings
 import logging
 from datetime import *
 
-from autoradio_config import *
+from .autoradio_config import *
 
 from django.db.models import Q
-from programs.models import Configure
-from programs.models import PeriodicSchedule
-from programs.models import AperiodicSchedule
+from .programs.models import Configure
+from .programs.models import PeriodicSchedule
+from .programs.models import AperiodicSchedule
 
 import os,calendar
 
-class gest_palimpsest:
+class gest_palimpsest(object):
 
     def __init__ (self,datetimeelab,minelab):
         """init of palimpsest application:
@@ -166,16 +169,16 @@ def main():
     pro=gest_palimpsest(datetimeelab,minelab)
 
     for info in pro.get_info():
-        print "info: ",info
+        print("info: ",info)
 
     # I do a list
     for program in pro.get_program():
         
         #pass
-        print program
-        print program.ar_scheduledatetime
-        print program.program.length
-        print "program",program.program
+        print(program)
+        print(program.ar_scheduledatetime)
+        print(program.program.length)
+        print("program",program.program)
         
 if __name__ == '__main__':
     main()  # (this code was run as script)

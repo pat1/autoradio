@@ -1,15 +1,20 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2012 Paolo Patruno.
 
+from __future__ import division
+from __future__ import absolute_import
+from builtins import str
+from past.utils import old_div
+from builtins import object
 import logging
 import dbus
-import autompris
-import autompris2
+from . import autompris
+from . import autompris2
 from datetime import *
 from threading import *
 import os
-import autoradio_config
-
+from . import autoradio_config
+import traceback
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 from django.conf import settings
@@ -23,7 +28,7 @@ class PlayerError(Exception):
 
 def shuffle_playlist(infile,shuffle=False,relative_path=False,length=None):
 
-    import mkplaylist
+    from . import mkplaylist
     import os,random,tempfile,codecs
 
     media_files=list(mkplaylist.read_playlist(infile, not relative_path))
@@ -56,7 +61,7 @@ def ar_emitted(self):
     self.save()
 
 
-class ScheduleProgram:
+class ScheduleProgram(object):
     '''
     activate a schedule setting it for a time in the future
     '''
@@ -135,7 +140,7 @@ def ManagePlayer (player,session,schedule):
             raise PlayerError("Managempris: ERROR in xmms.control.get_playlist_posauto")
 
          logging.info( "ManageXmms: insert media: %s at position %d",media,pos)
-         aud.playlist_add_atpos("file://"+media,pos)
+         aud.playlist_add_atpos("file://"+media.decode("utf-8"),pos)
                 
          # recheck for consistency
          newpos=aud.get_playlist_pos()
@@ -160,29 +165,29 @@ def ManagePlayer (player,session,schedule):
 
       aud.play_ifnot()
 
-   except PlayerError, e:
+   except PlayerError as e:
       logging.error(e)
 
-   except dbus.DBusException, e:
+   except dbus.DBusException as e:
       logging.error(e)
 
    except:
       logging.error("generic error in ManagePlayer")
-
+      traceback.print_exc()
    return
 
 
 
 def secondi(delta):
     secondi=float(delta.seconds)
-    secondi=secondi+(delta.microseconds/100000.)
+    secondi=secondi+(old_div(delta.microseconds,100000.))
 
     if delta.days < 0 :
         secondi = secondi + (3600*24*delta.days)
     return secondi
 
 
-class dummy_programma:
+class dummy_programma(object):
 
     def __init__(self):
         pass
@@ -254,7 +259,7 @@ def save_status(session):
 
 def main():
 
-    import autoradio_core
+    from . import autoradio_core
 
     player="AutoPlayer"
     session=0

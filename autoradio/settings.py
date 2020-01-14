@@ -1,3 +1,4 @@
+from __future__ import print_function
 # Django settings for autoradio project.
 
 import os
@@ -100,7 +101,7 @@ for entry in flatten_errors(config, test):
     section_string = ', '.join(section_list)
     if error == False:
         error = 'Missing value or section.'
-    print section_string, ' = ', error
+    print(section_string, ' = ', error)
     raise error
 
 # section django
@@ -238,7 +239,7 @@ TEMPLATES = [
 
 
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -249,6 +250,7 @@ MIDDLEWARE_CLASSES = [
 ROOT_URLCONF = 'autoradio.urls'
 
 INSTALLED_APPS = [
+    'django.contrib.messages',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -282,5 +284,5 @@ try:
     import django_extensions
     INSTALLED_APPS += 'django_extensions',
 except ImportError:
-    print "django_extensions is not installed; I do not use it"
+    print("django_extensions is not installed; I do not use it")
     pass

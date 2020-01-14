@@ -1,20 +1,30 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2012 Paolo Patruno.
 
+from __future__ import division
+from __future__ import print_function
+from builtins import str
+from builtins import range
+from builtins import object
+from past.utils import old_div
 import dbus
 import time
 import datetime
-import os
-import gobject
-import autoradio.settings
+import os,sys
+if sys.version_info[0] == 3:
+    from gi.repository import GObject as gobject
+else:
+    import gobject
+
+from . import settings
 from dbus.mainloop.glib import DBusGMainLoop
-from autoradio.mpris2.mediaplayer2 import MediaPlayer2
-from autoradio.mpris2.player import Player
-from autoradio.mpris2.tracklist import TrackList
-from autoradio.mpris2.interfaces import Interfaces
-from autoradio.mpris2.some_players import Some_Players
-from autoradio.mpris2.utils import get_players_uri
-from autoradio.mpris2.utils import get_session
+from .mpris2.mediaplayer2 import MediaPlayer2
+from .mpris2.player import Player
+from .mpris2.tracklist import TrackList
+from .mpris2.interfaces import Interfaces
+from .mpris2.some_players import Some_Players
+from .mpris2.utils import get_players_uri
+from .mpris2.utils import get_session
 
 # ------- dbus mpris2 interface ---------
 # http://specifications.freedesktop.org/mpris-spec/latest/index.html
@@ -60,9 +70,9 @@ from autoradio.mpris2.utils import get_session
 #-----------------------------------------------------------------------
 
 
-class mediaplayer:
+class mediaplayer(object):
 
-    def __init__(self,player="AutoPlayer",session=0, busaddress=autoradio.settings.busaddressplayer):
+    def __init__(self,player="AutoPlayer",session=0, busaddress=settings.busaddressplayer):
 
 #qdbus --literal org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get org.mpris.MediaPlayer2.TrackList Tracks
 #            import gobject
@@ -85,7 +95,7 @@ class mediaplayer:
             self.mp2 = MediaPlayer2(dbus_interface_info={'dbus_uri': uri,'dbus_session':self.bus})
             self.play = Player(dbus_interface_info={'dbus_uri': uri,'dbus_session':self.bus})
         else:
-            print "No players availables"
+            print("No players availables")
             return
 
         if self.mp2.HasTrackList:
@@ -176,7 +186,7 @@ class mediaplayer:
 
                 op=self.get_playlist()
 
-                for prm in xrange(0,pos-atlast): 
+                for prm in range(0,pos-atlast): 
                     #print "remove up: ",op[prm]
                     self.tl.RemoveTrack( str(op[prm]))
 
@@ -208,7 +218,7 @@ class mediaplayer:
 
                 op=self.get_playlist()
 
-                for prm in xrange(length-1,pos+atlast,-1): 
+                for prm in range(length-1,pos+atlast,-1): 
                     #print "remove down: ",op[prm]
                     self.tl.RemoveTrack( str(op[prm]) )
 
@@ -353,8 +363,8 @@ class mediaplayer:
             "file": file,
             "title": title,
             "artist": artist,
-            "mtimelength": long(round(mtimelength/1000.)),
-            "mtimeposition": long(round(mtimeposition/1000.))
+            "mtimelength": int(round(old_div(mtimelength,1000.))),
+            "mtimeposition": int(round(old_div(mtimeposition,1000.)))
             }
 
         return mymeta
@@ -396,7 +406,7 @@ def main():
 #    DBusGMainLoop(set_as_default=True,
 
     mp=mediaplayer(player="AutoPlayer")
-    print "status",mp
+    print("status",mp)
 #    mp.play_ifnot()
 #    print mp
 
@@ -406,18 +416,18 @@ def main():
     #mp.connect()
     #print "connected"
     #mp.loop()
-    print "pos",mp.get_playlist_pos()
-    print "securepos"
-    print mp.get_playlist_securepos()
-    print "clear_up"
-    print mp.playlist_clear_up(atlast=2)
-    print "clear_down"
-    print mp.playlist_clear_down(atlast=3)
-    print "playlist"
-    print mp.get_playlist()
+    print("pos",mp.get_playlist_pos())
+    print("securepos")
+    print(mp.get_playlist_securepos())
+    print("clear_up")
+    print(mp.playlist_clear_up(atlast=2))
+    print("clear_down")
+    print(mp.playlist_clear_down(atlast=3))
+    print("playlist")
+    print(mp.get_playlist())
     posauto=mp.get_playlist_posauto(autopath="/casa")
-    print "posauto",posauto
-    print "add_atpos"
+    print("posauto",posauto)
+    print("add_atpos")
     mp.playlist_add_atpos("file:///home",posauto)
     ##mp.playlist_add_atpos("file:///home",3)
 

@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2009 Paolo Patruno.
 
+from __future__ import print_function
+from builtins import range
+from builtins import object
 import dbus
 import time
 import datetime
@@ -10,7 +13,7 @@ import os
 
 import dbus
 
-class mediaplayer:
+class mediaplayer(object):
 
 
     def __init__(self,session=0):
@@ -40,8 +43,8 @@ class mediaplayer:
         '''
         # I check if mediaplayer is playing .... otherside I try to play
 
-        print self.tracklist.ListTracks()
-        print self.tracklist.Current
+        print(self.tracklist.ListTracks())
+        print(self.tracklist.Current)
 
 #        if (not self.player.PlaybackStatus == "Playing"):
 
@@ -108,7 +111,7 @@ class mediaplayer:
                 # delete the old ones
             if pos > atlast :
 
-                for prm in xrange(0,pos-atlast): 
+                for prm in range(0,pos-atlast): 
                     self.tracklist.DelTrack(0)
 
             return True
@@ -137,7 +140,7 @@ class mediaplayer:
                 #elimino il troppo
             if length-pos > atlast :
 
-                for prm in xrange(length,pos+atlast,-1): 
+                for prm in range(length,pos+atlast,-1): 
                     self.tracklist.DelTrack(prm)
 
             return True
@@ -201,7 +204,7 @@ class mediaplayer:
 def main():
 
     mp=mediaplayer()
-    print mp
+    print(mp)
     mp.play_ifnot()
 
     

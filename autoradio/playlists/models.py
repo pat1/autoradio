@@ -1,3 +1,4 @@
+from builtins import str
 from django.db import models
 from django.utils.translation import ugettext_lazy
 import datetime
@@ -43,25 +44,25 @@ else:
     DeletingFileField=models.FileField
 
 def giorno_giorno():
-	giorni=[]
-	for giorno in (calendar.day_name):
-		giorno=giorno.decode('utf-8')
-		giorni.append(( giorno, giorno))
-	return giorni
-#	yield 'Tutti','Tutti'
+       giorni=[]
+       for giorno in (calendar.day_name):
+       	#giorno=giorno.decode('utf-8')
+       	giorni.append(( giorno, giorno))
+       return giorni
+#       yield 'Tutti','Tutti'
 
 class Giorno(models.Model):
 
         name = models.CharField(max_length=20,choices=giorno_giorno(),unique=True,\
                                     help_text=ugettext_lazy("weekday name"))
-        def __unicode__(self):
+        def __str__(self):
             return self.name
 
 class Configure(models.Model):
         sezione = models.CharField(max_length=50,unique=True\
-					   ,default='playlist',editable=False)
+       				   ,default='playlist',editable=False)
 
-	active = models.BooleanField(ugettext_lazy("Activate Playlist"),default=True,\
+        active = models.BooleanField(ugettext_lazy("Activate Playlist"),default=True,\
                                          help_text=ugettext_lazy("activate/deactivate the intere playlist class"))
         emission_starttime = models.TimeField(ugettext_lazy('Programmed start time'),null=True,blank=True,\
                                                   help_text=ugettext_lazy("The start time from wich the playlist will be active"))
@@ -69,7 +70,7 @@ class Configure(models.Model):
                                             help_text=ugettext_lazy("The end time the playlist will be active"))
 
 
-        def __unicode__(self):
+        def __str__(self):
             if self.emission_starttime is None:
                 start="-"
             else:
@@ -98,7 +99,7 @@ class Playlist(models.Model):
     
     was_recorded_today.short_description = ugettext_lazy('Generated today?')
 
-    def __unicode__(self):
+    def __str__(self):
         #return self.playlist+" "+self.rec_date.isoformat()+" "+self.active.__str__()
         return self.playlist
 
@@ -108,7 +109,7 @@ class Schedule(models.Model):
 #    num_in_admin=2,verbose_name='si riferisce al programma:',editable=False)
 
     playlist = models.ForeignKey(Playlist, verbose_name=\
-					ugettext_lazy('refer to playlist:'))
+       				ugettext_lazy('refer to playlist:'), on_delete=models.CASCADE)
 
     shuffle = models.BooleanField(ugettext_lazy("Shuffle Playlist on start"),default=True,\
                                       help_text=ugettext_lazy("Every time the playlist will be scheduled it's order will be randomly changed"))
@@ -124,10 +125,10 @@ class Schedule(models.Model):
 #    giorni = models.ManyToManyField(Giorno,verbose_name='Giorni programmati',null=True,blank=True)
     
     emission_done = models.DateTimeField(ugettext_lazy('Emission done')\
-			        ,null=True,editable=False )
+       		        ,null=True,editable=False )
 
 #    def emitted(self):
-#	    return self.emission_done != None 
+#           return self.emission_done != None 
 #    emitted.short_description = 'Trasmesso'
 
     def was_scheduled_today(self):
@@ -139,8 +140,8 @@ class Schedule(models.Model):
         return self.playlist.playlist
     file.short_description = ugettext_lazy('Linked Playlist')
 
-    def __unicode__(self):
-        return unicode(self.playlist)
+    def __str__(self):
+        return str(self.playlist)
 
 class PeriodicSchedule(models.Model):
 
@@ -148,7 +149,7 @@ class PeriodicSchedule(models.Model):
 #    num_in_admin=2,verbose_name='si riferisce al programma:',editable=False)
 
     playlist = models.ForeignKey(Playlist,verbose_name=\
-					ugettext_lazy('refer to playlist:'))
+       				ugettext_lazy('refer to playlist:'), on_delete=models.CASCADE)
 
     shuffle = models.BooleanField(ugettext_lazy("Shuffle Playlist on start"),default=True,\
                                       help_text=ugettext_lazy("Every time the playlist will be scheduled it's order will be randomly changed"))
@@ -163,16 +164,16 @@ class PeriodicSchedule(models.Model):
     giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Programmed days'),blank=True,\
                                         help_text=ugettext_lazy("The playlist will be scheduled those weekdays"))
     emission_done = models.DateTimeField(ugettext_lazy('Emission done')\
-			        ,null=True,editable=False )
+       		        ,null=True,editable=False )
 
 #    def emitted(self):
-#	    return self.emission_done != None 
+#           return self.emission_done != None 
 #    emitted.short_description = 'Trasmesso'
 
     def file(self):
         return self.playlist.playlist
     file.short_description = ugettext_lazy('Linked Playlist')
 
-    def __unicode__(self):
-        return unicode(self.playlist)
+    def __str__(self):
+        return str(self.playlist)
 

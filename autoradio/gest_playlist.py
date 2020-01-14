@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2007-2009 Paolo Patruno.
 
+from __future__ import print_function
+from __future__ import absolute_import
+from builtins import str
+from builtins import object
 import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
 from django.conf import settings
@@ -9,20 +13,20 @@ from django.conf import settings
 import logging
 import datetime
 
-from autoradio_config import *
+from .autoradio_config import *
 
 from django.db.models import Q
-from playlists.models import Configure
-from playlists.models import PeriodicSchedule
-from playlists.models import Schedule
-from playlists.models import Playlist
+from .playlists.models import Configure
+from .playlists.models import PeriodicSchedule
+from .playlists.models import Schedule
+from .playlists.models import Playlist
 
 if (player == "amarok") :
     from autoradiod import amarok
 
 import os,calendar
 
-class gest_playlist:
+class gest_playlist(object):
 
     def __init__ (self,now,minelab):
         """init of playlist application:
@@ -80,8 +84,8 @@ class gest_playlist:
             # warning here we are around midnight
             logging.debug("PLAYLIST: around midnight")
 
-            ieri=unicode(calendar.day_name[self.datesched_min.weekday()], 'utf-8')
-            domani=unicode(calendar.day_name[self.datesched_max.weekday()], 'utf-8')
+            ieri=str(calendar.day_name[self.datesched_min.weekday()])
+            domani=str(calendar.day_name[self.datesched_max.weekday()])
             
             self.periodicschedule=PeriodicSchedule.objects.filter \
                 (Q(start_date__lte=self.oggi) | Q(start_date__isnull=True),\
@@ -193,8 +197,8 @@ def main():
     for hour in (0,3,6,9,12,15,18,21):
 
         now=now.replace(hour=hour)
-        print
-        print "Runnig for date: ",now
+        print()
+        print("Runnig for date: ",now)
 
         # get the playlists of my insterest
         pla=gest_playlist(now,minelab)
@@ -202,15 +206,15 @@ def main():
         # I do a list
         for playlist in pla.get_playlist():
 
-            print "--------------------------------"
-            print "found schedule: ",playlist
-            print playlist.ar_filename
-            print playlist.ar_url
-            print playlist.ar_scheduledatetime
-            print playlist.ar_length
-            print "playlist",playlist.playlist
+            print("--------------------------------")
+            print("found schedule: ",playlist)
+            print(playlist.ar_filename)
+            print(playlist.ar_url)
+            print(playlist.ar_scheduledatetime)
+            print(playlist.ar_length)
+            print("playlist",playlist.playlist)
             #.program.get_file_filename()
-            print "--------------------------------"
+            print("--------------------------------")
         
 if __name__ == '__main__':
     main()  # (this code was run as script)

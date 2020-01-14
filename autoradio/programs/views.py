@@ -1,7 +1,12 @@
+from __future__ import absolute_import
 # Create your views here.
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
 from django.shortcuts import render_to_response
-from models import Schedule
+from .models import Schedule
 from django.http import HttpResponse,HttpResponseRedirect
 from datetime import date,datetime,timedelta,time
 import autoradio.autoradio_config
@@ -11,7 +16,7 @@ import autoradio.autompris2
 import os
 
 #from django.forms.extras.widgets import SelectDateWidget
-from widgets import MySelectDateWidget
+from .widgets import MySelectDateWidget
 from django.utils.translation import ugettext_lazy
 
 #----------------------------------------------------
@@ -28,18 +33,24 @@ from django.utils.translation import ugettext_lazy
 
 def index(request):
 
-
     scheds=autoradio.autoradio_core.schedules([])
 
-    return render_to_response('schedule/index.html', {'schedule': scheds.get_all_refine(genfile=False)})
+    scheds.get_all_refine(genfile=False)
+    #print ("s=",scheds)
+    #for ss in scheds:
+    #    ss
+    #    print ("ss=",ss)
+    #    for sss in ss:
+    #        print ("sss=",sss)
+    return render_to_response('schedule/index.html', {'schedules': scheds})
 
 
 def stato(request):
-    import urllib2
+    import urllib.request, urllib.error, urllib.parse
         
     xmmsweb=""
     try:
-        url=urllib2.urlopen("http://"+autoradio.autoradio_config.XMMSHOST+":8888/")
+        url=urllib.request.urlopen("http://"+autoradio.autoradio_config.XMMSHOST+":8888/")
         for line in url:
             xmmsweb=xmmsweb+line
     except:
@@ -78,7 +89,7 @@ def dbusstato(request):
         htmlresponse+='<table border="1">'
         htmlresponse+='<td>position</td><td>lenght // remain</td><td>media</td>'
 
-        for pos in xrange(0,min(len,maxplele)):
+        for pos in range(0,min(len,maxplele)):
             htmlresponse+='<tr>'
             metadata=mp.get_metadata(pos)
 
@@ -201,10 +212,10 @@ def programsbook(request):
             PAGE_HEIGHT=defaultPageSize[1]
             styles = getSampleStyleSheet()
 
-            MezzoTrasmissione=Paragraph("Mezzo di diffusione: "+unicode(mezzo)+
-                                        "  //   Tipo di trasmissione: "+unicode(trasmissione), styles["Normal"])
-            EmittenteCanale=Paragraph("Denominazione dell'emittente: "+unicode(emittente)+
-                                      "  //   Denominazione del canale: "+unicode(canale), styles["Normal"])
+            MezzoTrasmissione=Paragraph("Mezzo di diffusione: "+str(mezzo)+
+                                        "  //   Tipo di trasmissione: "+str(trasmissione), styles["Normal"])
+            EmittenteCanale=Paragraph("Denominazione dell'emittente: "+str(emittente)+
+                                      "  //   Denominazione del canale: "+str(canale), styles["Normal"])
             Space=Spacer(inch, 0.25 * inch)
 
             # First the top row, with all the text centered and in Times-Bold,
@@ -254,7 +265,7 @@ def programsbook(request):
             Elements = [MezzoTrasmissione,EmittenteCanale,Space,Tabella]
 
             # Create the PDF object, using the response object as its "file."
-            p = SimpleDocTemplate(response,title="Libro programmi: "+unicode(emittente),author=author)
+            p = SimpleDocTemplate(response,title="Libro programmi: "+str(emittente),author=author)
             p.build(Elements, onFirstPage=myPages, onLaterPages=myPages)
 
 
@@ -265,7 +276,7 @@ def programsbook(request):
         form = ExtremeForm() # An unbound form
 
     return render_to_response('palimpsest/extreme.html', {
-        'form': form,})
+        'form': form})
 
 
 #----------------------------------------------------
@@ -274,8 +285,7 @@ from django.views.generic.list  import ListView
 from django.views.generic.detail import DetailView
 #from django.views.generic.list_detail import object_list
 from autoradio.programs.models import Episode, Show, Enclosure
-from django.core.urlresolvers import reverse
-
+from django.urls import reverse
 
 class episode_detail(DetailView):
 #class episode_detail(ListView):

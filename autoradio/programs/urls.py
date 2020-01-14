@@ -1,8 +1,9 @@
+from __future__ import absolute_import
 from django.conf.urls import *
 #from django.contrib import admin
 
 #from models import Program, Schedule
-import views
+from . import views
 
 urlpatterns = [
     url(r'^$', views.index),

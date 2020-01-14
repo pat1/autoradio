@@ -1,3 +1,4 @@
+from __future__ import print_function
 NONE = 'None'
 TRACK = 'Track'
 PLAYLIST = 'Playlist'
@@ -16,7 +17,7 @@ class Loop_Status(str):
     '''
     VALUES = (NONE, TRACK, PLAYLIST)
     def __init__(self, status, *args, **kw):
-        super(Loop_Status, self).__init__(status, *args, **kw)
+        super(Loop_Status, self).__init__()
         self._status = status
     
     def __int__(self, *args, **kwargs):
@@ -27,7 +28,7 @@ Loop_Status.TRACK = Loop_Status(TRACK)
 Loop_Status.PLAYLIST = Loop_Status(PLAYLIST)
 
 if  __name__ == "__main__":
-    print Loop_Status.PLAYLIST
-    print type(Loop_Status.PLAYLIST)
-    print Loop_Status.PLAYLIST == NONE 
-    print Loop_Status.PLAYLIST == PLAYLIST
+    print(Loop_Status.PLAYLIST)
+    print(type(Loop_Status.PLAYLIST))
+    print(Loop_Status.PLAYLIST == NONE) 
+    print(Loop_Status.PLAYLIST == PLAYLIST)

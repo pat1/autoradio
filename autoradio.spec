@@ -20,7 +20,7 @@ Requires:python3-mutagen >= 1.17 , python3-django >= 2.2,  python3-configobj, py
 #Requires: pyxmms, xmms
 #%else
 ## Requires: dbus-python, audacious >= 1.5
-Requires: dbus-python, gstreamer, gstreamer-plugins-base, gstreamer-plugins-good, gstreamer-python
+Requires: python3-dbus, python3-gstreamer1, gstreamer1-plugins-base, gstreamer1-plugins-good
 #, gstreamer-plugins-bad, gstreamer-plugins-bad-free, gstreamer-plugins-bad-free-extras
 #%endif
 

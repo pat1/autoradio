@@ -112,22 +112,25 @@ class Main(object):
     else:
         print("No players availables")
         return
-    
-    if hasattr (self.mp2, 'HasTrackList'):
-        if self.mp2.HasTrackList:
-            self.tl = TrackList(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
 
-            #self.tl.PropertiesChanged = self.update
-            self.tl.TrackListReplaced = self.update
-            self.tl.TrackAdded = self.update
-            self.tl.TrackRemoved = self.update
-            self.tl.TrackMetadataChanged = self.update
+    try:
+        if hasattr (self.mp2, 'HasTrackList'):
+            if self.mp2.HasTrackList:
+                self.tl = TrackList(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
+                
+                #self.tl.PropertiesChanged = self.update
+                self.tl.TrackListReplaced = self.update
+                self.tl.TrackAdded = self.update
+                self.tl.TrackRemoved = self.update
+                self.tl.TrackMetadataChanged = self.update
 
+            else:
+                self.tl = None
         else:
             self.tl = None
-    else:
-      self.tl = None
-
+    except  dbus.exceptions.DBusException:
+            self.tl = None
+        
     self.play.PropertiesChanged = self.playhandler
 
     self.connected = True

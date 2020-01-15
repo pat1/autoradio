@@ -1,9 +1,3 @@
-%{!?__python2: %define __python2 python2}
-%{!?python2_sitelib: %define python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python2_lib; print get_python2_lib()"
-)}
-%{!?python2_sitearch: %define python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python2_lib; print get_python2_lib(
-1)")}
-
 Summary: radio automation software
 Name: autoradio
 Version: 3.3
@@ -21,7 +15,7 @@ Url: https://github.com/pat1/autoradio
 BuildRequires: python3-devel, python3-setuptools, gettext, python3-configobj, python3-magic, python3-django >= 2.2 , help2man, python3-setuptools
 Requires:python3-mutagen >= 1.17 , python3-django >= 2.2,  python3-configobj, python3-cherrypy, python3-reportlab >= 2.0,  python3-docutils, sqlite >= 3.6.22, speex-tools, python3-magic, python3-pillow, python3-six 
 #, python-django-extensions
-Requires: initscripts
+#Requires: initscripts
 #%if 0%%{?fedora} < 10
 #Requires: pyxmms, xmms
 #%else
@@ -29,15 +23,6 @@ Requires: initscripts
 Requires: dbus-python, gstreamer, gstreamer-plugins-base, gstreamer-plugins-good, gstreamer-python
 #, gstreamer-plugins-bad, gstreamer-plugins-bad-free, gstreamer-plugins-bad-free-extras
 #%endif
-
-# Compile options:
-# --with cherrypy          : do not need cherrypy2
-##%%if 0%%{?fedora} < 10
-##%%if 0%%{?_with_}
-##Requires: python-cherrypy
-##%%else
-##Requires: python-cherrypy2
-##%endif
 
 %description
 \ 
@@ -66,12 +51,10 @@ Developed with Python, Django, Dbus it works in an production enviroment
 %setup -n %{name}-%{version} -n %{name}-%{version}
 
 %build
-##%{__python2} setup.py build
-%py2_build
+%py3_build
 
 %install
-##%{__python2} setup.py install --root=$RPM_BUILD_ROOT
-%py2_install
+%py3_install
 
 ##%{__install} -d -m 0710 %{buildroot}%{_var}/{run/autoradio,log/autoradio}
 

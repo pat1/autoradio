@@ -1,5 +1,5 @@
-= AutoRadio version 2.8.5 =
-http://autoradiobc.sourceforge.net/
+= AutoRadio version 33 =
+https://github.com/pat1/autoradio
 
 OVERVIEW
 --------
@@ -27,7 +27,7 @@ Developed with Python, Django, Dbus it works in an production enviroment
 FEATURES
 --------
 
- * manage ogg, mp3, and other media file format managed by player
+ * manage ogg, mp3, and other media file format managed by gstreamer
  * it's designed as client - server
  * manage playlists, inserting on it jingles, spots and programs
  * programmable rules for schedule and period schedule
@@ -48,7 +48,7 @@ REQUIRES
 
 autoradio requires:
 
-python >= 2.7
+python >= 3.7
 
 mutagen
 muatgen version >= 1.17
@@ -56,7 +56,7 @@ http://code.google.com/p/mutagen/
 
 django
 http://www.djangoproject.com/
-Suggested Django >= 1.7
+Suggested Django >= 2.2
 
 configobj
 Summary     : Config file reading, writing, and validation
@@ -95,19 +95,6 @@ Player (xmms or audacious in alternative):
     http://audacious-media-player.org/
 
 the player web server respond on port 8888
-
-In debian/ubuntu distribution you need those packeges: python
-python-setuptools, python-django, python-django-extensions, python-configobj, gettext
-python-reportlab, audacious, python-mutagen (>=1.17) ,python-cherrypy3
-, python-dbus, python-magic
-
-In Fedora distibution you need those pckages: python-mutagen >= 1.17 ,
-Django, python-configobj, python-cherrypy, python-reportlab, python-docutils,
-python-magic and
-
-pyxmms, xmms
-or
-dbus-python, audacious >= 1.5
 
 
 HOW TO INSTALL
@@ -212,10 +199,15 @@ in /etc/autoradio-site.cfg
 for Fedora Centos and Debian/Ubuntu you have the possibility to install from
 pachages in a easy way.
 
+For Debian/Ubuntu you can find autoradio in standard distribution.
+
+For Fedora use copr repo at
+https://copr.fedorainfracloud.org/coprs/pat1/autoradio/
+
 The pachage create the autoradio user for you and set everything in a
 standard way for an easy use.
 
-to start everythings from root user (prepend sudo command for Ubuntu):
+To start everythings from root user (prepend sudo command for Ubuntu):
 autoradioctrl --syncdb --changeuser
 autoradioweb restart
 

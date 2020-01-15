@@ -6,7 +6,7 @@
 
 Summary: radio automation software
 Name: autoradio
-Version: 2.8.10
+Version: 3.3
 Release: 1%{?dist}
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
@@ -191,6 +191,20 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Wed Jan 15 2020 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.3-1
+- added shebang for python3 ; release 3.3 (p.patruno@iperbole.bologna.it)
+- release 3.2 for Debian (p.patruno@iperbole.bologna.it)
+- migrate to django 2.2 and python3 bugs (p.patruno@iperbole.bologna.it)
+- bug on debian install (default locale) and python3 refinements
+  (root@localhost.localdomain)
+- ready for release 3.0 (p.patruno@iperbole.bologna.it)
+- ported player to python 3 (p.patruno@iperbole.bologna.it)
+- new migration for python3 (p.patruno@iperbole.bologna.it)
+- porting to python3 with futurize (p.patruno@iperbole.bologna.it)
+- sure you specify the proper version support in your setup.py file
+  (p.patruno@iperbole.bologna.it)
+- new stable release for Debian (ppatruno@arpa.emr.it)
+
 * Wed Feb 01 2017 Paolo Patruno <ppatruno@arpa.emr.it> 2.8.9-1
 - 
 

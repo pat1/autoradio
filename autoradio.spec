@@ -18,8 +18,8 @@ Prefix: %{_prefix}
 BuildArch: noarch
 Vendor: Paolo Patruno <p.patruno@iperbole.bologna.it>
 Url: https://github.com/pat1/autoradio
-BuildRequires: python2-devel, python-setuptools, gettext, python-configobj, python-magic, python-django >= 1.7.0 , help2man, python-setuptools
-Requires:python-mutagen >= 1.17 , python-django >= 1.7.0,  python-configobj, python-cherrypy, python-reportlab >= 2.0,  python-docutils, sqlite >= 3.6.22, speex-tools, python-magic, python-pillow, python-six 
+BuildRequires: python3-devel, python-setuptools, gettext, python-configobj, python-magic, python-django >= 2.2 , help2man, python-setuptools
+Requires:python-mutagen >= 1.17 , python-django >= 2.2,  python-configobj, python-cherrypy, python-reportlab >= 2.0,  python-docutils, sqlite >= 3.6.22, speex-tools, python-magic, python-pillow, python-six 
 #, python-django-extensions
 Requires: initscripts
 #%if 0%{?fedora} < 10

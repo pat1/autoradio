@@ -76,9 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING README doc/*
 %config(noreplace) %{_sysconfdir}/%{name}/autoradio-site.cfg
 %config(noreplace) %{_sysconfdir}/%{name}/dbus-autoradio.conf
-%dir %{python2_sitelib}/%{name}
-%{python2_sitelib}/%{name}/*
-%{python2_sitelib}/%{name}-*
+%dir %{python3_sitelib}/%{name}
+%{python3_sitelib}/%{name}/*
+%{python3_sitelib}/%{name}-*
 %{_mandir}/man1/*
 
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/%{name}.conf

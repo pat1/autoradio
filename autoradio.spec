@@ -22,7 +22,7 @@ BuildRequires: python3-devel, python3-setuptools, gettext, python3-configobj, py
 Requires:python3-mutagen >= 1.17 , python3-django >= 2.2,  python3-configobj, python3-cherrypy, python3-reportlab >= 2.0,  python3-docutils, sqlite >= 3.6.22, speex-tools, python3-magic, python3-pillow, python3-six 
 #, python-django-extensions
 Requires: initscripts
-#%if 0%{?fedora} < 10
+#%if 0%%{?fedora} < 10
 #Requires: pyxmms, xmms
 #%else
 ## Requires: dbus-python, audacious >= 1.5
@@ -32,8 +32,8 @@ Requires: dbus-python, gstreamer, gstreamer-plugins-base, gstreamer-plugins-good
 
 # Compile options:
 # --with cherrypy          : do not need cherrypy2
-##%%if 0%{?fedora} < 10
-##%%if 0%{?_with_}
+##%%if 0%%{?fedora} < 10
+##%%if 0%%{?_with_}
 ##Requires: python-cherrypy
 ##%%else
 ##Requires: python-cherrypy2
@@ -100,7 +100,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/%{name}.conf
 
-#%{_datadir}/autoradio/*
+#%%{_datadir}/autoradio/*
 %{_bindir}/autoradiod
 %{_bindir}/autoradioweb
 %{_bindir}/autoradioctrl

@@ -10,7 +10,7 @@ Version: 3.3
 Release: 1%{?dist}
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
-#Source1:  %{name}-tmpfiles.conf
+#Source1:  %%{name}-tmpfiles.conf
 License: GNU GPL v2
 Group: Development/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -18,8 +18,8 @@ Prefix: %{_prefix}
 BuildArch: noarch
 Vendor: Paolo Patruno <p.patruno@iperbole.bologna.it>
 Url: https://github.com/pat1/autoradio
-BuildRequires: python3-devel, python-setuptools, gettext, python-configobj, python-magic, python-django >= 2.2 , help2man, python-setuptools
-Requires:python-mutagen >= 1.17 , python-django >= 2.2,  python-configobj, python-cherrypy, python-reportlab >= 2.0,  python-docutils, sqlite >= 3.6.22, speex-tools, python-magic, python-pillow, python-six 
+BuildRequires: python3-devel, python3-setuptools, gettext, python3-configobj, python3-magic, python3-django >= 2.2 , help2man, python3-setuptools
+Requires:python3-mutagen >= 1.17 , python3-django >= 2.2,  python3-configobj, python3-cherrypy, python3-reportlab >= 2.0,  python3-docutils, sqlite >= 3.6.22, speex-tools, python3-magic, python3-pillow, python3-six 
 #, python-django-extensions
 Requires: initscripts
 #%if 0%{?fedora} < 10
@@ -32,10 +32,10 @@ Requires: dbus-python, gstreamer, gstreamer-plugins-base, gstreamer-plugins-good
 
 # Compile options:
 # --with cherrypy          : do not need cherrypy2
-##%if 0%{?fedora} < 10
-##%if 0%{?_with_}
+##%%if 0%{?fedora} < 10
+##%%if 0%{?_with_}
 ##Requires: python-cherrypy
-##%else
+##%%else
 ##Requires: python-cherrypy2
 ##%endif
 

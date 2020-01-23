@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
 Version: 3.3
-Release: 3
+Release: 4
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -174,6 +174,9 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Thu Jan 23 2020 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.3-4
+- exception with player without track list (p.patruno@iperbole.bologna.it)
+
 * Wed Jan 15 2020 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.3-3
 - working on spec file (p.patruno@iperbole.bologna.it)
 - little update in documentation (p.patruno@iperbole.bologna.it)

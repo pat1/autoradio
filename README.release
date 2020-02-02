@@ -15,7 +15,9 @@ to release for debian:
 python3 setup.py distclean
 python3 setup.py sdist
 
-create a tag as:
-debian-autoradio-3.4
+create a release on github as  3.x. 3.x.x
+for example 3.3
 
-upload dist/autoradio-3.4.tar.gz
+upload dist/autoradio-3.3.tar.gz
+
+tag as 3.3-1 will be ignored

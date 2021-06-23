@@ -212,9 +212,11 @@ class Playlist(list):
       parser.feed(data)
     except:
 
-      lines = data.split('\n')
-      lines = map(lambda line: line.strip().rstrip(), lines)
-      lines = filter(lambda line: line if line != "" and line[0] != '#' else None, lines)
+      li = data.split('\n')
+      lin = map(lambda line: line.strip().rstrip(), li)
+      lines=[]
+      for line in filter(lambda line: line if line != "" and line[0] != '#' else None, lin):
+        lines.append(line)
       
       if lines == []:
         return

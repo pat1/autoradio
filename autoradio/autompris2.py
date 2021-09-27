@@ -83,7 +83,7 @@ class mediaplayer(object):
 
         DBusGMainLoop(set_as_default=True)
 
-        uris = get_players_uri(pattern=".*"+player+"$",busaddress=busaddress)
+        uris = list(get_players_uri(pattern=".*"+player+"$",busaddress=busaddress))
 
         if len(uris) >0 :
             uri=uris[0]

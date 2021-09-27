@@ -9,13 +9,13 @@ from .decorator.utils import get_session, get_uri, get_mainloop  # @UnusedImport
 from .decorator.utils import list_interfaces as _list_interfaces
 from .decorator.utils import implements as _implements
 
-def get_players_uri(pattern=''):
+def get_players_uri(pattern='',busaddress=None):
     '''
         Return string of player bus name
         @param pattern=None: string RegEx that filter response
         @return: array string of players bus name
     '''
-    return get_uri(Interfaces.MEDIA_PLAYER + '.*' + pattern)
+    return get_uri(Interfaces.MEDIA_PLAYER + '.*' + pattern,busaddress)
 
 
 def get_player_id_from_uri(uri):

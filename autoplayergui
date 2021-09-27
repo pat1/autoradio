@@ -101,8 +101,7 @@ class Main(object):
 
     #Connect to player
     DBusGMainLoop(set_as_default=True)
-    #uris = get_players_uri(pattern=".",busaddress=busaddress)
-    uris = list(get_players_uri(pattern="."))
+    uris = list(get_players_uri(pattern=".",busaddress=busaddress))
 
     if len(uris) >0 :
         uri=uris[0]

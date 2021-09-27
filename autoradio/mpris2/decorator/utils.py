@@ -17,19 +17,24 @@ def _match_uri(name, pattern='.+'):
     '''
     return re.match(pattern, name)
 
-def get_session():
+
+def get_session(busaddress=None):
     '''
         @return: dbus.SessionBus.get_session()
     '''
-    return dbus.SessionBus.get_session()
 
-def get_uri(pattern='.'):
+    if busaddress is None:
+        return dbus.SessionBus.get_session()
+    else:
+        return dbus.bus.BusConnection(busaddress)
+
+def get_uri(pattern='.',busaddress=None):
     '''
     Return string of player bus name
     @param pattern=None: string RegEx that filter response
     @return: array string of players bus name
     '''
-    for item in get_session().list_names():
+    for item in get_session(busaddress).list_names():
         if _match_uri(item, pattern):
             yield item
 

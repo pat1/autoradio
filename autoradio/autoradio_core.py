@@ -144,7 +144,11 @@ class schedules(list):
     """
     multiple schedule object
     """
-
+    def __init__(self, *args, **kwargs):
+        super(schedules, self).__init__(*args, **kwargs)
+        self.districatimes=0
+        
+        
     def districa(self):
         '''
         english:
@@ -159,7 +163,9 @@ class schedules(list):
         logging.debug("execute districa")
 
         needrecompute=False
-
+        recomputedtimes=0
+        self.districatimes += 0
+        
         #Spots
         #v=0
         for v,schedulej in enumerate(self):
@@ -436,7 +442,9 @@ class schedules(list):
 
         self.get_all(now,genfile)
         while self.districa():
-            pass
+            if (self.districatimes >= 20 ):
+                logging.error("districa do not converge: too many programs in few time")
+                break
         self.purge()
         self.sort()
         

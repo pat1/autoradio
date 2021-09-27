@@ -269,9 +269,9 @@ class AutoPlayer(dbus.service.Object):
     def __Position(self):
       position = self.player.position()
       if position is None:
-        return dbus.Int64(0)
+        return dbus.UInt64(0)
       else:
-        return dbus.Int64(position)
+        return dbus.UInt64(position)
 
     def __CanPlay(self):
         if self.player.playlist.current is None :
@@ -523,7 +523,7 @@ class AutoPlayer(dbus.service.Object):
                 myattr=None
               if myattr is not None:
                 if key == "mpris:length":
-                  myattr=int(round(old_div(myattr,1000.)))
+                  myattr=dbus.UInt64(round(old_div(myattr,1000.)))
                 meta[key]=myattr
       
             metadata.append(dbus.Dictionary(meta, signature='sv'))
@@ -551,6 +551,12 @@ class Player(object):
     #self.player = gst.element_factory_make("playbin2", "playbin2")
     Gst.init(None)
     self.player = Gst.ElementFactory.make("playbin", None)
+    try:
+      self.rgvolume = Gst.ElementFactory.make("rgvolume", "rgvolume")
+      self.player.set_property('audio-filter', self.rgvolume)
+    except:
+      logging.error( "setting replaygain player plugin")
+
     self.playmode = "Stopped"
     self.recoverplaymode = "Stopped"
     self.statuschanged = False
@@ -609,34 +615,34 @@ class Player(object):
 
 
     # ReplayGain
-    if (Gst.ElementFactory.find('rgvolume') and
-        Gst.ElementFactory.find('rglimiter')):
-      self.audioconvert = Gst.ElementFactory.make('audioconvert',None)
-
-      self.rgvolume = Gst.ElementFactory.make('rgvolume',None)
-      self.rgvolume.set_property('album-mode', False)
-      self.rgvolume.set_property('pre-amp', 0)
-      self.rgvolume.set_property('fallback-gain', 0)
-
-      self.rgvolume.set_property('headroom',0)
-      self.rgvolume.set_property('pre-amp',0)
-
-      self.rglimiter = Gst.ElementFactory.make('rglimiter',None)
-      self.rglimiter.set_property('enabled', True)
-
-      self.rgfilter = Gst.Bin()
-      self.rgfilter.add(self.rgvolume)
-      self.rgfilter.add(self.rglimiter)
-      self.rgvolume.link(self.rglimiter)
-      self.rgfilter.add_pad(Gst.GhostPad.new('sink',
-                self.rgvolume.get_static_pad('sink')))
-      self.rgfilter.add_pad(Gst.GhostPad.new('src',
-                self.rglimiter.get_static_pad('src')))
-      try:
-        self.player.set_property('audio-filter', self.rgfilter)
-      except:
-        logging.error( "setting replaygain player")
-        #raise Exception("cannot manage replaygain!")
+    #if (Gst.ElementFactory.find('rgvolume') and
+    #    Gst.ElementFactory.find('rglimiter')):
+    #  self.audioconvert = Gst.ElementFactory.make('audioconvert',None)
+    #
+    #  self.rgvolume = Gst.ElementFactory.make('rgvolume',None)
+    #  self.rgvolume.set_property('album-mode', False)
+    #  self.rgvolume.set_property('pre-amp', 0)
+    #  self.rgvolume.set_property('fallback-gain', 0)
+    #
+    #  self.rgvolume.set_property('headroom',0)
+    #  self.rgvolume.set_property('pre-amp',0)
+    #
+    #  self.rglimiter = Gst.ElementFactory.make('rglimiter',None)
+    #  self.rglimiter.set_property('enabled', True)
+    #
+    #  self.rgfilter = Gst.Bin()
+    #  self.rgfilter.add(self.rgvolume)
+    #  self.rgfilter.add(self.rglimiter)
+    #  self.rgvolume.link(self.rglimiter)
+    #  self.rgfilter.add_pad(Gst.GhostPad.new('sink',
+    #            self.rgvolume.get_static_pad('sink')))
+    #  self.rgfilter.add_pad(Gst.GhostPad.new('src',
+    #            self.rglimiter.get_static_pad('src')))
+    #  try:
+    #    self.player.set_property('audio-filter', self.rgfilter)
+    #  except:
+    #    logging.error( "setting replaygain player")
+    #    #raise Exception("cannot manage replaygain!")
         
 
 #    TODO replaygain

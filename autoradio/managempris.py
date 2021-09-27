@@ -132,14 +132,14 @@ def ManagePlayer (player,session,schedule):
             raise PlayerError("Managempris: ERROR in playlist_clear_up")
 
          #print settings.MEDIA_ROOT
-         pos=aud.get_playlist_posauto(autopath=settings.MEDIA_ROOT,securesec=10)
+         pos=aud.get_playlist_posauto(autopath=settings.MEDIA_ROOT,securesec=20)
          curpos=aud.get_playlist_pos()
 
          # inserisco il file nella playlist
          if pos is None:
             raise PlayerError("Managempris: ERROR in xmms.control.get_playlist_posauto")
 
-         logging.info( "ManageXmms: insert media: %s at position %d",media,pos)
+         logging.info( "Managempris: insert media: %s at position %d",media,pos)
          aud.playlist_add_atpos("file://"+media.decode("utf-8"),pos)
                 
          # recheck for consistency

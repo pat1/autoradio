@@ -125,7 +125,7 @@ class mediaplayer(object):
 
 
 
-    def get_playlist_securepos(self,securesec=10):
+    def get_playlist_securepos(self,securesec=20):
         '''
         Try to secure that there are some time (securesec) to complete all operations in time:
         if the player change song during operation will be a big problem

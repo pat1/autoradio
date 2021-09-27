@@ -1,15 +1,9 @@
 '''
-Created on Nov 12, 2011
+From mprisV2.2 documentation
 
-@author: hugosenari
+http://specifications.freedesktop.org/mpris-spec/2.2/Playlists_Interface.html#Enum:Playlist_Ordering
 '''
 
-    
-ALPHABETICAL = 'Alphabetical'
-CREATION_DATE = 'CreationDate'
-MODIFIED_DATE = 'ModifiedDate'
-LAST_PLAY_DATE = 'LastPlayDate'
-USER_DEFINE = 'UserDefined'
 
 class Playlist_Ordering(str):
     '''
@@ -26,22 +20,23 @@ class Playlist_Ordering(str):
     * UserDefined (User)
         A user-defined ordering.
     '''
-    
-    ALPHABETICAL = ALPHABETICAL
-    CREATION_DATE = CREATION_DATE
-    MODIFIED_DATE = MODIFIED_DATE
-    LAST_PLAY_DATE = LAST_PLAY_DATE
-    USER_DEFINE = USER_DEFINE
+
+    ALPHABETICAL = 'Alphabetical'
+    CREATION_DATE = 'CreationDate'
+    MODIFIED_DATE = 'ModifiedDate'
+    LAST_PLAY_DATE = 'LastPlayDate'
+    USER_DEFINE = 'UserDefined'    
     VALUES = (ALPHABETICAL,CREATION_DATE,MODIFIED_DATE,LAST_PLAY_DATE,USER_DEFINE)
     
-    def __init__(self, ordering, *args, **kw):
-        '''
-        Constructor
-        '''
+    def __init__(self, ordering):
         self._ordering = ordering
-        super(Playlist_Ordering, self).__init__(ordering, *args, **kw)
-    
-    @property
-    def ordering(self):
+
+    def __str__(self):
         return self._ordering
-    
+
+
+if __name__ == '__main__':
+    po = Playlist_Ordering('Alphabetical')
+    assert po == 'Alphabetical'
+    assert po == Playlist_Ordering.ALPHABETICAL
+    assert po != Playlist_Ordering.CREATION_DATE

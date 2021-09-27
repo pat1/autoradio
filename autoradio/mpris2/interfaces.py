@@ -1,13 +1,12 @@
-# -*- coding: UTF8 -*
-"""
-This is mprisV2.1 documentation
+'''
+From mprisV2.2 documentation
 
-http://www.mpris.org/2.1/spec/index.html
-"""
+http://specifications.freedesktop.org/mpris-spec/2.2/#Interfaces
+'''
 
-from builtins import object
+
 class Interfaces(object):
-    """
+    '''
     This class contains the constants defined at index of MPRIS2 definition:
 
     
@@ -36,7 +35,7 @@ class Interfaces(object):
     * OBJECT_PATH
         '/org/mpris/MediaPlayer2'
     
-    """
+    '''
     #interface
     MEDIA_PLAYER = 'org.mpris.MediaPlayer2'
     TRACK_LIST = 'org.mpris.MediaPlayer2.TrackList'
@@ -47,5 +46,3 @@ class Interfaces(object):
     SIGNAL = 'PropertiesChanged'
     #Object
     OBJECT_PATH = '/org/mpris/MediaPlayer2'
-    
-    

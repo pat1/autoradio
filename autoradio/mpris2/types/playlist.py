@@ -1,4 +1,12 @@
+'''
+From mprisV2.2 documentation
+
+http://specifications.freedesktop.org/mpris-spec/2.2/Playlists_Interface.html#Struct:Playlist
+'''
+
 from dbus import Struct
+
+
 class Playlist(Struct):
     '''
     A data structure describing a playlist.
@@ -33,6 +41,7 @@ class Playlist(Struct):
     def Icon(self):
         return self[2]
 
+
 class Maybe_Playlist(Struct):
     '''
     * Valid - b
@@ -40,7 +49,10 @@ class Maybe_Playlist(Struct):
     * Playlist - (oss) (Playlist)
         The playlist, providing Valid is true, otherwise undefined.
         
-    When constructing this type, it should be noted that the playlist ID must be a valid object path, or D-Bus implementations may reject it. This is true even when Valid is false. It is suggested that "/" is used as the playlist ID in this case.
+    When constructing this type, it should be noted that the playlist ID must 
+    be a valid object path, or D-Bus implementations may reject it. This is
+    true even when Valid is false. It is suggested that '/' is used as the
+    playlist ID in this case.
     '''
     
     def __init__(self, maybe_playlist=None):
@@ -59,8 +71,20 @@ class Maybe_Playlist(Struct):
     def Playlist(self):
         return Playlist(self[1])
     
-    def __bool__(self):
+    def __nonzero__(self):
         return bool(self.Valid)
     
     def __bool__(self):
         return self.__nonzero__()
+
+
+if __name__ == '__main__':
+    expect = Struct((1, 'My Playlist', None), signature='iss')
+    p = Playlist(expect)
+    assert p.Id == 1
+    assert p.Name == 'My Playlist'
+    assert p.Icon == None
+    m_expect = Struct((False, p))
+    mp = Maybe_Playlist(m_expect)
+    assert not mp.Valid
+    assert not mp

@@ -77,7 +77,11 @@ class Main(object):
 
 
       if position is not None:
-          id = self.play.Metadata.get(u'mpris:trackid',None)
+          try:
+              id = self.play.Metadata.get(u'mpris:trackid',None)
+          except:
+              id = None
+
           if id is not None:
               length=self.tl.GetTracksMetadata((id,))[0].get(u'mpris:length',None)
               if position <= length and length != 0:
@@ -97,7 +101,8 @@ class Main(object):
 
     #Connect to player
     DBusGMainLoop(set_as_default=True)
-    uris = get_players_uri(pattern=".",busaddress=busaddress)
+    #uris = get_players_uri(pattern=".",busaddress=busaddress)
+    uris = list(get_players_uri(pattern="."))
 
     if len(uris) >0 :
         uri=uris[0]
@@ -136,18 +141,18 @@ class Main(object):
     self.connected = True
 
     # Create the GUI
-    self.win = gtk.Window(gtk.WINDOW_TOPLEVEL)
+    self.win = gtk.Window(type=gtk.WINDOW_TOPLEVEL)
 
     self.win.set_size_request(400, 600)
     self.win.set_title("AutoPlayer gui")
     self.win.connect("delete_event", self.delete_event)
-    vbox = gtk.VBox(False, 0)
-    hbox = gtk.HBox(False, 0)
-    self.load_file = gtk.FileChooserButton("Choose Audio File")
-    self.play_button = gtk.ToolButton( gtk.STOCK_MEDIA_PLAY)
-    self.pause_button = gtk.ToolButton( gtk.STOCK_MEDIA_PAUSE)
-    self.stop_button = gtk.ToolButton( gtk.STOCK_MEDIA_STOP)
-    self.delete_button = gtk.Button('Delete')
+    vbox = gtk.VBox(homogeneous=False,spacing=0)
+    hbox = gtk.HBox(homogeneous=False,spacing=0)
+    self.load_file = gtk.FileChooserButton(homogeneous="Choose Audio File")
+    self.play_button = gtk.ToolButton( stock_id=gtk.STOCK_MEDIA_PLAY)
+    self.pause_button = gtk.ToolButton( stock_id=gtk.STOCK_MEDIA_PAUSE)
+    self.stop_button = gtk.ToolButton( stock_id=gtk.STOCK_MEDIA_STOP)
+    self.delete_button = gtk.Button(label='Delete')
     self.delete_button.connect('clicked', self.on_delete_button_clicked) 
     self.load_file.connect("selection-changed",self.on_file_selected)
     self.play_button.connect("clicked", self.on_play_clicked)

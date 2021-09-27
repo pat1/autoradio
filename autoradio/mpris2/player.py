@@ -1,34 +1,21 @@
 '''
-This is python mprisV2.1 documentation
+From mprisV2.2 documentation
 
-http://www.mpris.org/2.1/spec/Player_Node.html
+http://specifications.freedesktop.org/mpris-spec/latest/Player_Interface.html
 '''
-from __future__ import print_function
-from __future__ import absolute_import
 
-
-#insert projet at path
-# not required if installed
-#import sys
-#sys.path = ["/home/pat1/git/autoradio"] + sys.path
-
-
-from autoradio.dbusdecorator import DbusAttr
-from autoradio.dbusdecorator import DbusInterface
-from autoradio.dbusdecorator import DbusMethod
-from autoradio.dbusdecorator import DbusSignal
-
+from .decorator import DbusAttr
+from .decorator import DbusInterface
+from .decorator import DbusMethod
+from .decorator import DbusSignal
 from .interfaces import Interfaces
+from .types import Time_In_Us
+from .types import Loop_Status
+from .types import Playback_Status
+from .types import Playback_Rate
+from .types import Metadata_Map
+from .types import Volume
 
-#from types import Time_In_Us, Loop_Status, Playback_Status, \
-#    Playback_Rate, Metadata_Map, Volume
-
-from .time_in_us import Time_In_Us
-from .loop_status import Loop_Status
-from .playback_status import Playback_Status
-from .playback_rate import Playback_Rate
-from .metada_map import Metadata_Map
-from .volume import Volume
 
 class Player(Interfaces):
     '''
@@ -38,7 +25,7 @@ class Player(Interfaces):
     @DbusInterface(Interfaces.PLAYER, Interfaces.OBJECT_PATH)
     def __init__(self):
         '''Constructor'''
-        pass
+        
     
     @DbusMethod
     def Next(self):
@@ -51,7 +38,7 @@ class Player(Interfaces):
 
         If CanGoNext is false, attempting to call this method should have no effect.
         '''
-        pass
+        
     
     @DbusMethod 
     def Previous(self):
@@ -64,7 +51,7 @@ class Player(Interfaces):
 
         If CanGoPrevious is false, attempting to call this method should have no effect.
         '''
-        pass
+        
     
     @DbusMethod
     def Pause(self):
@@ -77,7 +64,7 @@ class Player(Interfaces):
 
         If CanPause is false, attempting to call this method should have no effect.
         '''
-        pass
+        
     
     @DbusMethod
     def PlayPause(self):
@@ -90,7 +77,7 @@ class Player(Interfaces):
 
         If CanPause is false, attempting to call this method should have no effect and raise an error.
         '''
-        pass
+        
     
     @DbusMethod
     def Stop(self):
@@ -103,7 +90,7 @@ class Player(Interfaces):
 
         If CanControl is false, attempting to call this method should have no effect and raise an error.
         '''
-        pass
+        
     
     @DbusMethod
     def Play(self):
@@ -116,7 +103,7 @@ class Player(Interfaces):
 
         If CanPlay is false, attempting to call this method should have no effect.
         '''
-        pass
+        
     
     @DbusMethod
     def Seek(self, Offet):
@@ -134,7 +121,7 @@ class Player(Interfaces):
 
         If the CanSeek property is false, this has no effect.
         '''
-        pass
+        
     
     @DbusMethod
     def SetPosition(self, TrackId, Position):
@@ -144,7 +131,7 @@ class Player(Interfaces):
         * TrackId - o (Track_Id)
             The currently playing track's identifier.
 
-            If this does not match the id of the currently-playing track, the call is ignored as "stale".
+            If this does not match the id of the currently-playing track, the call is ignored as 'stale'.
         * Position - x (Time_In_Us)
             Track position in microseconds.
 
@@ -158,7 +145,7 @@ class Player(Interfaces):
 
         If the CanSeek property is false, this has no effect.
         '''
-        pass
+        
     
     @DbusMethod
     def OpenUri(self, Uri):
@@ -178,7 +165,7 @@ class Player(Interfaces):
 
         If the media player implements the TrackList interface, then the opened track should be made part of the tracklist, the org.mpris.MediaPlayer2.TrackList.TrackAdded or org.mpris.MediaPlayer2.TrackList.TrackListReplaced signal should be fired, as well as the org.freedesktop.DBus.Properties.PropertiesChanged signal on the tracklist interface.
         '''
-        pass
+        
     
     @DbusSignal
     def Seeked(self, Position):
@@ -201,7 +188,7 @@ class Player(Interfaces):
 
     @DbusSignal(iface=Interfaces.PROPERTIES)
     def PropertiesChanged(self, *args, **kw):
-        """
+        '''
         **Parameters**
         
         * args - list
@@ -210,8 +197,8 @@ class Player(Interfaces):
             named parameters passed by dbus signal
             
         Every time that some property change, signal will be called
-        """
-        pass
+        '''
+        
     
     @DbusAttr(produces=Playback_Status)
     def PlaybackStatus(self):
@@ -223,9 +210,9 @@ class Player(Interfaces):
             
         The current playback status.
         
-        May be "Playing", "Paused" or "Stopped".
+        May be 'Playing', 'Paused' or 'Stopped'.
         '''
-        pass
+        
     
     @DbusAttr(produces=Loop_Status)
     def LoopStatus(self):
@@ -239,15 +226,15 @@ class Player(Interfaces):
         
         May be:
         
-        * "None" if the playback will stop when there are no more tracks to play
-        * "Track" if the current track will start again from the begining once it has finished playing
-        * "Playlist" if the playback loops through a list of tracks
+        * 'None' if the playback will stop when there are no more tracks to play
+        * 'Track' if the current track will start again from the begining once it has finished playing
+        * 'Playlist' if the playback loops through a list of tracks
         
         This property is optional, and clients should deal with NotSupported errors gracefully.
         
         If CanControl is false, attempting to set this property should have no effect and raise an error.
         '''
-        pass    
+            
 
     @DbusAttr(produces=Playback_Rate)
     def Rate(self):
@@ -263,9 +250,9 @@ class Player(Interfaces):
         
         If the media player has no ability to play at speeds other than the normal playback rate, this must still be implemented, and must return 1.0. The MinimumRate and MaximumRate properties must also be set to 1.0.
         
-        Not all values may be accepted by the media player. It is left to media player implementations to decide how to deal with values they cannot use; they may either ignore them or pick a "best fit" value. Clients are recommended to only use sensible fractions or multiples of 1 (eg: 0.5, 0.25, 1.5, 2.0, etc).
+        Not all values may be accepted by the media player. It is left to media player implementations to decide how to deal with values they cannot use; they may either ignore them or pick a 'best fit' value. Clients are recommended to only use sensible fractions or multiples of 1 (eg: 0.5, 0.25, 1.5, 2.0, etc).
         '''
-        pass
+        
 
     @DbusAttr
     def Shuffle(self):
@@ -281,7 +268,7 @@ class Player(Interfaces):
         
         If CanControl is false, attempting to set this property should have no effect and raise an error.
         '''
-        pass
+        
 
     @DbusAttr(produces=Metadata_Map)
     def Metadata(self):
@@ -293,11 +280,11 @@ class Player(Interfaces):
         
         The metadata of the current element.
         
-        If there is a current track, this must have a "mpris:trackid" entry at the very least, which contains a string that uniquely identifies this track.
+        If there is a current track, this must have a 'mpris:trackid' entry at the very least, which contains a string that uniquely identifies this track.
         
         See the type documentation for more details.
         '''
-        pass
+        
 
     @DbusAttr(produces=Volume)
     def Volume(self):
@@ -313,7 +300,7 @@ class Player(Interfaces):
         
         If CanControl is false, attempting to set this property should have no effect and raise an error.
         '''
-        pass
+        
 
     @DbusAttr
     def Position(self):
@@ -330,7 +317,7 @@ class Player(Interfaces):
         
         If the playback progresses in a way that is inconstistant with the Rate property, the Seeked signal is emited.
         '''
-        pass
+        
 
     @DbusAttr
     def MinimumRate(self):
@@ -346,7 +333,7 @@ class Player(Interfaces):
         
         This value should always be 1.0 or less.
         '''
-        pass
+        
 
     @DbusAttr
     def MaximumRate(self):
@@ -360,7 +347,7 @@ class Player(Interfaces):
         
         This value should always be 1.0 or greater.
         '''
-        pass
+        
 
     @DbusAttr
     def CanGoNext(self):
@@ -374,7 +361,7 @@ class Player(Interfaces):
         
         If CanControl is false, this property should also be false.
         '''
-        pass
+        
     
     @DbusAttr
     def CanGoPrevious(self):
@@ -388,7 +375,7 @@ class Player(Interfaces):
         
         If CanControl is false, this property should also be false.
         '''
-        pass
+        
     
     @DbusAttr
     def CanPlay(self):
@@ -400,11 +387,11 @@ class Player(Interfaces):
         
         Whether playback can be started using Play or PlayPause.
         
-        Note that this is related to whether there is a "current track": the value should not depend on whether the track is currently paused or playing. In fact, if a track is currently playing CanControl is true), this should be true.
+        Note that this is related to whether there is a 'current track': the value should not depend on whether the track is currently paused or playing. In fact, if a track is currently playing CanControl is true), this should be true.
         
         If CanControl is false, this property should also be false.
         '''
-        pass
+        
         
     @DbusAttr
     def CanPause(self):
@@ -420,7 +407,6 @@ class Player(Interfaces):
         
         If CanControl is false, this property should also be false.
         '''
-        pass
     
     @DbusAttr
     def CanSeek(self):
@@ -434,7 +420,6 @@ class Player(Interfaces):
         
         If CanControl is false, this property should also be false.
         '''
-        pass
     
     @DbusAttr
     def CanControl(self):
@@ -448,34 +433,19 @@ class Player(Interfaces):
         
         This property is not expected to change, as it describes an intrinsic capability of the implementation.
         
-        If this is false, clients should assume that all properties on this interface are read-only (and will raise errors if writing to them is attempted); all methods are not implemented and all other properties starting with "Can" are also false.
+        If this is false, clients should assume that all properties on this interface are read-only (and will raise errors if writing to them is attempted); all methods are not implemented and all other properties starting with 'Can' are also false.
         '''
-        pass
+
     
 if __name__ == '__main__':
-    from utils import SomePlayers
-    #uri = Interfaces.MEDIA_PLAYER + '.' + SomePlayers.GMUSICBROWSER
-    #mp2 = Player(dbus_interface_info={'dbus_uri': uri})
-    #print mp2.LoopStatus
-    #print mp2.Shuffle
-    #mp2.Shuffle = False if mp2.Shuffle else True
-    #print mp2.Shuffle
-    from dbus.mainloop.glib import DBusGMainLoop
-    DBusGMainLoop(set_as_default=True)
-    import gobject
-    
-    def my_handler(self, Position):
-        print('handled', Position, type(Position))
-        print('self handled', self.last_fn_return, type(self.last_fn_return))
-    
-    def another_handler(self, *args, **kw): 
-        print(args, kw)
-
-    mloop = gobject.MainLoop()
-    #print mp2.Seeked
-    #mp2.Seeked = my_handler
-    #mp2.PropertiesChanged = another_handler
-    from utils import get_session
-    s = get_session()
-    s.add_signal_receiver(another_handler, "PropertiesChanged", "org.freedesktop.DBus.Properties", path="/org/mpris/MediaPlayer2")
-    mloop.run()
+    from .utils import get_players_uri, implements
+    for uri in get_players_uri():
+        if implements(uri, Interfaces.PLAYER):
+            mp2 = Player(dbus_interface_info={'dbus_uri': uri})
+            print( mp2.LoopStatus )
+            print( mp2.Shuffle )
+            mp2.Shuffle = not mp2.Shuffle
+            print( mp2.Shuffle )
+            break
+    else:
+        print('no player with player interface found')

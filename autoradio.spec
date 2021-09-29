@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
-Version: 3.3
-Release: 4
+Version: 3.5
+Release: 1
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -174,6 +174,21 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Wed Sep 29 2021 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.5-1
+- changed securesec (the time to have to play in current position in playlist
+  when we insert track in playlist) from 10 to 20 sec
+  (p.patruno@iperbole.bologna.it)
+- revert busaddress patch and limit the number of districa call to solve
+  infinite loop, ported the web interface (p.patruno@iperbole.bologna.it)
+- migrate to the last mpris2 python interface (p.patruno@iperbole.bologna.it)
+- close #30 (p.patruno@iperbole.bologna.it)
+- bug loading playlist; generator in python 3 do not work if used more time
+  (p.patruno@iperbole.bologna.it)
+- more documentation (p.patruno@iperbole.bologna.it)
+- new release for debian new convenction with matainer
+  (p.patruno@iperbole.bologna.it)
+- new README (p.patruno@iperbole.bologna.it)
+
 * Thu Jan 23 2020 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.3-4
 - exception with player without track list (p.patruno@iperbole.bologna.it)
 

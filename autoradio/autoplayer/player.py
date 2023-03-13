@@ -874,7 +874,7 @@ class Player(object):
     if ret == Gst.StateChangeReturn.FAILURE:
         logging.error( "Unable to set the pipeline to the READY state.")
 
-
+        
   def play(self):
     logging.info( "play")
     self.recoverplaymode = "Playing"

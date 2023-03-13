@@ -127,7 +127,7 @@ STATIC_ROOT             = config['django']['STATIC_ROOT']
 if "%s" in STATIC_ROOT:
     STATIC_ROOT = STATIC_ROOT  % os.getcwd()
 SERVE_STATIC            = config['django']['SERVE_STATIC']
-
+ALLOWED_HOSTS = ['*']
 
 
 # section autoradioweb

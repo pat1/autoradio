@@ -55,7 +55,7 @@ class Main(object):
     gtk.main_quit()
     return False
  
-  def playhandler(self, *args, **kw): 
+  def playhandler(self, *args, **kw):
       playbackstatus = args[1].get("PlaybackStatus",None)
       position = args[1].get("Position",None)
 

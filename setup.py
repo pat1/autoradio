@@ -313,7 +313,7 @@ setup(name='autoradio',
                 'autoradio.playlists.migrations','autoradio.spots.migrations', 
                 'autoradio.jingles.migrations', 'autoradio.programs.migrations',
                 'autoradio.player', 'autoradio.doc',
-                'autoradio.autoplayer', 'autoradio.mpris2',
+                'autoradio.autoplayer', 'autoradio.mpris2','autoradio.mpris2.types','autoradio.mpris2.decorator',
                 'autoradio.dbusdecorator'],
       package_data={
           'autoradio.doc': ['templates/doc/*'],

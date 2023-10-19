@@ -3,7 +3,13 @@ Section: sound
 Priority: extra
 Maintainer: Andrea Capriotti <capriott@debian.org>
 Build-Depends: debhelper (>= 9)
-Build-Depends-Indep: python, python-setuptools, python-django (>=1.7.0) , python-configobj, help2man, gettext
+Build-Depends-Indep:
+   python3,
+   python3-setuptools,
+   python3-django,
+   python3-configobj,
+   help2man,
+   gettext,
 Standards-Version: 3.9.8
 Homepage: https://github.com/pat1/autoradio
 Vcs-Git: https://anonscm.debian.org/cgit/collab-maint/autoradio.git
@@ -11,7 +17,27 @@ Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/autoradio.git
 
 Package: autoradio
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, adduser, sqlite3, speex, python, python-reportlab (>=2.0), python-configobj, python-django (>=1.7.0),  python-mutagen (>=1.17), python-dbus, python-magic, python-docutils, python-pil, python-six, python-gst-1.0, libjs-jquery, libjs-swfobject, libcortado-java, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good
+Depends:
+   ${shlibs:Depends},
+   ${misc:Depends},
+   adduser,
+   sqlite3,
+   speex,
+   python,
+   python3-reportlab,
+   python3-configobj,
+   python3-django,
+   python3-mutagen,
+   python3-dbus,
+   python3-magic,
+   python3-docutils,
+   python3-pil,
+   python3-gst-1.0,
+   libjs-jquery,
+   libjs-swfobject,
+   libcortado-java,
+   gstreamer1.0-plugins-base,
+   gstreamer1.0-plugins-good,
 Suggests: python-django-extensions
 Description: radio automation software
  Simple to use, starting from digital audio

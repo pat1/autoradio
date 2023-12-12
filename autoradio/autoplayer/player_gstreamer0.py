@@ -22,19 +22,13 @@
 # TrackRemoved 	(o: TrackId) 	
 # TrackMetadataChanged 	(o: TrackId, a{sv}: Metadata) 	
 
-from __future__ import division
-from __future__ import print_function
-from __future__ import absolute_import
 from future import standard_library
 standard_library.install_aliases()
 from builtins import str
 from builtins import object
 from past.utils import old_div
 import sys, time, _thread
-if sys.version_info[0] == 3:
-  from gi.repository import GObject as gobject
-else:
-  import gobject
+from gi.repository import GObject as gobject
 import pygst
 pygst.require("0.10")
 import gst

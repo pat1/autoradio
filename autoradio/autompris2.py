@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2012 Paolo Patruno.
 
-from __future__ import division
-from __future__ import print_function
 from builtins import str
 from builtins import range
 from builtins import object
@@ -11,10 +9,7 @@ import dbus
 import time
 import datetime
 import os,sys
-if sys.version_info[0] == 3:
-    from gi.repository import GObject as gobject
-else:
-    import gobject
+from gi.repository import GObject as gobject
 
 from . import settings
 from dbus.mainloop.glib import DBusGMainLoop

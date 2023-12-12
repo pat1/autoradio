@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2009 Paolo Patruno.
 
-from __future__ import print_function
 from builtins import range
 from builtins import object
 import dbus

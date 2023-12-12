@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # GPL. (C) 2007-2009 Paolo Patruno.
 
-from __future__ import print_function
 import os
 from configobj import ConfigObj,flatten_errors
 from validate import Validator

@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2013 Paolo Patruno.
 
-from __future__ import division
-from __future__ import print_function
 from future import standard_library
 standard_library.install_aliases()
 from builtins import str
@@ -147,10 +145,7 @@ class XSPFParser2(handler.ContentHandler):
       if (url.scheme == "http"):
         s.track['location']=url.geturl()
       else:
-        if sys.version_info[0] == 3:
-          s.track['location']=urllib.parse.urljoin(u"file://",urllib.parse.unquote(url.path))
-        else:
-          s.track['location']=urllib.parse.urljoin(u"file://",urllib.parse.unquote(url.path.encode("UTF-8")))
+        s.track['location']=urllib.parse.urljoin(u"file://",urllib.parse.unquote(url.path))
 
     elif s.path == "/playlist/trackList/track/title":
       s.track['title'] = s.content
@@ -305,27 +300,15 @@ class Playlist(list):
         track=track._asdict()
         f.write('\t<track>\n')
         if track.get('title') not in ['', None]:
-          if sys.version_info[0] == 3:
-            f.write( '\t\t<title>%s</title>\n' \
-                     % doc.createTextNode(track['title']).toxml() )
-          else:
-            f.write( '\t\t<title>%s</title>\n' \
-                     % doc.createTextNode(track['title'].encode("utf-8")).toxml() )
+          f.write( '\t\t<title>%s</title>\n' \
+                   % doc.createTextNode(track['title']).toxml() )
         if track.get('artist') not in ['', None]:
 
-          if sys.version_info[0] == 3:
-            f.write('\t\t<creator>%s</creator>\n' \
-                    % doc.createTextNode(track['artist']).toxml() )
-          else:
-            f.write('\t\t<creator>%s</creator>\n' \
-                    % doc.createTextNode(track['artist'].encode("utf-8")).toxml() )
+          f.write('\t\t<creator>%s</creator>\n' \
+                  % doc.createTextNode(track['artist']).toxml() )
         if track.get('album') not in ['', None]:
-          if sys.version_info[0] == 3:
-            f.write( '\t\t<album>%s</album>\n' \
-                     % doc.createTextNode(track['album']).toxml() )
-          else:
-            f.write( '\t\t<album>%s</album>\n' \
-                     % doc.createTextNode(track['album'].encode("utf-8")).toxml() )
+          f.write( '\t\t<album>%s</album>\n' \
+                   % doc.createTextNode(track['album']).toxml() )
         if track.get('tracknum') not in ['', None]:
           if type(track['tracknum']) == int:
             no = track['tracknum']
@@ -366,10 +349,7 @@ class Playlist(list):
           try:
             location=urllib.parse.urljoin(u"file://",urllib.parse.quote(url.path))
           except:
-            if sys.version_info[0] == 3:
-              raise
-            else:
-              location=urllib.parse.urljoin("file://",urllib.parse.quote(url.path.encode("UTF-8")))
+            raise
 
         ##location = location.encode("utf-8")
         #if    not 'http://' in location.lower() and \
@@ -403,10 +383,7 @@ class Playlist(list):
                 v = '1' if v else '0'
               elif t in [int, int]:
                 t = "int"
-                if sys.version_info[0] == 3:
-                  v = str(v)
-                else:
-                  v = str(v).encode("utf-8")
+                v = str(v)
               elif t == float:
                 t = "float"
                 v = repr(v)

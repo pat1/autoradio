@@ -28,7 +28,6 @@
     It is not necessary to have the version of the vorbis library in ogg meta
     data for example.
 """
-from __future__ import print_function
 from past.builtins import cmp
 from future import standard_library
 standard_library.install_aliases()

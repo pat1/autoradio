@@ -4,8 +4,6 @@
 """
 Show audacious playlist on a simple web server.
 """
-from __future__ import print_function
-
 from builtins import str
 from builtins import range
 from builtins import object

@@ -3,7 +3,6 @@
 # GPL. (C) 2013 Paolo Patruno.
 
 #Connect to player
-from __future__ import print_function
 from mpris2.mediaplayer2 import MediaPlayer2
 from mpris2.player import Player
 from mpris2.tracklist import TrackList

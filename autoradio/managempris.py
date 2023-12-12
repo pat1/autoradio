@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2012 Paolo Patruno.
 
-from __future__ import division
-from __future__ import absolute_import
 from builtins import str
 from past.utils import old_div
 from builtins import object

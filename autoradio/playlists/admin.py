@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from .models import Giorno, Configure, Playlist, Schedule, PeriodicSchedule
 from django.contrib import admin
 

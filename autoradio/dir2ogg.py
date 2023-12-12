@@ -32,9 +32,6 @@ This script converts mp3s to wavs using mpg123 then converts the wavs to oggs us
 m4a conversions require faad. Id3 tag support requires mutagen for mp3s.
 Scratch tags using the filename will be written for wav files (and mp3s with no tags!)
 '''
-from __future__ import division
-from __future__ import print_function
-
 from future import standard_library
 standard_library.install_aliases()
 from builtins import str

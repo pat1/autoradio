@@ -4,8 +4,6 @@
 """
 Show mediaplayer playlist on a simple web server.
 """
-from __future__ import print_function
-from __future__ import absolute_import
 
 #try:
 #    import sys,glob

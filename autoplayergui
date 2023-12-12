@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2013 Paolo Patruno.
 
-from __future__ import division
-from __future__ import print_function
 from future import standard_library
 standard_library.install_aliases()
 from builtins import range

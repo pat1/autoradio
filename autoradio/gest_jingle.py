@@ -2,8 +2,6 @@
 # This Python file uses the following encoding: utf-8
 # GPL. (C) 2007-2009 Paolo Patruno.
 
-from __future__ import print_function
-from __future__ import absolute_import
 from builtins import object
 import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'

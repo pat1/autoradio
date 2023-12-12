@@ -1,4 +1,4 @@
-from builtins import object
+
 from .models import Giorno, Configure, Jingle
 from django.contrib import admin
 from django import forms

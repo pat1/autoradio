@@ -1,7 +1,4 @@
 
-from builtins import str
-from builtins import range
-from builtins import object
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy

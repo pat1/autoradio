@@ -1,4 +1,3 @@
-from builtins import object
 from django.db import models
 from django.utils.translation import ugettext_lazy
 import calendar

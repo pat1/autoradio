@@ -5,9 +5,6 @@
 Show xmms playlist on a simple web server.
 """
 
-from builtins import str
-from builtins import range
-from builtins import object
 session=0         # sessione di xmms
 maxplele=100      # massimo numero di elementi della playlist
 iht=False         # emetti header e tail

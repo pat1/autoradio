@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # GPL. (C) 2007 Paolo Patruno.
 
-from builtins import str
-from builtins import object
 import logging
 from qt import *
 import dcopext
@@ -26,7 +24,7 @@ def KdeInit():
     KCmdLineArgs.init(aboutdata)
     return KApplication ()
 
-class Kde(object):
+class Kde:
 
     def __init__ (self,kapp):
         "init of kde application"
@@ -38,7 +36,7 @@ class Kde(object):
 
         self.dcopapplication = dcopext.DCOPApp(application, self.dcopclient)
 
-class ScheduleProgram(object):
+class ScheduleProgram:
 
     def __init__ (self,kapp,function,operation,media,scheduledatetime,programma):
         "init schedule"
@@ -126,7 +124,7 @@ def secondi(delta):
 
 
 
-class dummy_programma(object):
+class dummy_programma:
 
     def __init__(self):
         pass

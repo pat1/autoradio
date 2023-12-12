@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2009 Paolo Patruno.
 
-from builtins import range
-from builtins import object
 import dbus
 import time
 import datetime
@@ -12,7 +10,7 @@ import os
 
 import dbus
 
-class mediaplayer(object):
+class mediaplayer:
 
 
     def __init__(self,session=0):

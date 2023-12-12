@@ -12,9 +12,6 @@ Show mediaplayer playlist on a simple web server.
 #    sys.path.insert(0, compatCherryPyPath)
 #finally:
 
-from builtins import str
-from builtins import range
-from builtins import object
 from . import autoradio_config
 import cherrypy
 import os

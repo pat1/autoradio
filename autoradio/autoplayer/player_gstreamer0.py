@@ -22,10 +22,6 @@
 # TrackRemoved 	(o: TrackId) 	
 # TrackMetadataChanged 	(o: TrackId, a{sv}: Metadata) 	
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
-from builtins import object
 from past.utils import old_div
 import sys, time, _thread
 from gi.repository import GObject as gobject

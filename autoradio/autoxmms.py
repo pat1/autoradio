@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2009 Paolo Patruno.
 
-from builtins import range
 import xmms
 import time
 import datetime

@@ -1,4 +1,3 @@
-from builtins import object
 import os,sys
 import events, network, requests, version, helper
 from datetime import *

@@ -9,9 +9,6 @@
 # Audacious provide non standard interface to do this
 # ----------------------------------------
 
-from builtins import str
-from builtins import range
-from builtins import object
 import dbus
 import time
 import datetime
@@ -20,7 +17,7 @@ import logging
 import dbus
 
 
-class mediaplayer(object):
+class mediaplayer:
 
 
     def __init__(self,player="audacious",session=0):

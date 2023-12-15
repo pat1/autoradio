@@ -2,11 +2,7 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2007-2009 Paolo Patruno.
 
-from builtins import zip
-from builtins import str
-from builtins import range
 from past.utils import old_div
-from builtins import object
 from .autoradio_config import *
 
 from .gest_program import *
@@ -16,7 +12,7 @@ from .gest_playlist import *
 from .gest_palimpsest import *
 
 
-class schedule(object):
+class schedule:
     """
     Single schedule object
     attributes:

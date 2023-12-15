@@ -1,9 +1,5 @@
 # Create your views here.
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
-from builtins import range
 from django.shortcuts import render_to_response
 from .models import Schedule
 from django.http import HttpResponse,HttpResponseRedirect

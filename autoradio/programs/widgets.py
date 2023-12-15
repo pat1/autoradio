@@ -3,8 +3,6 @@
     from http://djangosnippets.org/snippets/1834/
 
 """
-from builtins import range
-from past.builtins import basestring
 import datetime
 import re
 
@@ -44,7 +42,7 @@ class MySelectDateWidget(Widget):
             year_val, month_val, day_val = value.year, value.month, value.day
         except AttributeError:
             year_val = month_val = day_val = None
-            if isinstance(value, basestring):
+            if isinstance(value, str):
                 match = RE_DATE.match(value)
                 if match:
                     year_val, month_val, day_val = [int(v) for v in match.groups()]

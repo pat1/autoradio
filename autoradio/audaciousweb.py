@@ -4,9 +4,6 @@
 """
 Show audacious playlist on a simple web server.
 """
-from builtins import str
-from builtins import range
-from builtins import object
 maxplele=100      # max number of elements in playlist
 port=8888         # server port
 

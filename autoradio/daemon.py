@@ -77,9 +77,6 @@ if __name__ == '__main__':
 """
 
 
-from builtins import str
-from past.builtins import basestring
-from builtins import object
 import sys, os, signal, pwd, grp, optparse
 
 
@@ -190,11 +187,11 @@ class Daemon(object):
 		if group is not None:
 			if isinstance(group, list):
 				for gr in group:
-					if isinstance(gr, basestring):
+					if isinstance(gr, str):
 						groups.append(grp.getgrnam(gr).gr_gid)
 				group = group[0]
 
-			if isinstance(group, basestring):
+			if isinstance(group, str):
 				group = grp.getgrnam(group).gr_gid
 
 			try:
@@ -206,7 +203,7 @@ class Daemon(object):
 			os.setegid(group)
 
 		if user is not None:
-			if isinstance(user, basestring):
+			if isinstance(user, str):
 				user = pwd.getpwnam(user).pw_uid
 			os.setuid(user)
 			os.seteuid(user)

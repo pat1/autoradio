@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2012 Paolo Patruno.
 
-from builtins import str
 from past.utils import old_div
-from builtins import object
 import logging
 import dbus
 from . import autompris

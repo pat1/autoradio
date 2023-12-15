@@ -1,4 +1,3 @@
-from builtins import object
 from django.contrib import admin
 from .models import Giorno, Configure, ProgramType, Show, Schedule, \
     PeriodicSchedule,AperiodicSchedule,Episode,Enclosure,ScheduleDone

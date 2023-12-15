@@ -1,4 +1,3 @@
-from builtins import object
 from .models import Giorno, Configure, Fascia, Spot
 from django.contrib import admin
 from django import forms

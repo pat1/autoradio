@@ -2,10 +2,6 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2013 Paolo Patruno.
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import range
-from builtins import object
 from past.utils import old_div
 from autoradio.mpris2.mediaplayer2 import MediaPlayer2
 from autoradio.mpris2.player import Player

@@ -27,10 +27,6 @@
 # everywhere we change the tracklist
 # we use this in autoplayergui to update the tracklist
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
-from builtins import object
 from past.utils import old_div
 import sys, time, _thread
 import tempfile,os

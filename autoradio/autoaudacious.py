@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2009 Paolo Patruno.
 
-from builtins import range
-from builtins import object
-import dbus
 import time
 import datetime
 import os
@@ -11,7 +8,7 @@ import os
 # ------- dbus interface ---------
 import dbus
 
-class audacious(object):
+class audacious:
 
 
     def __init__(self,session=0):

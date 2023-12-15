@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # GPL. (C) 2007 Paolo Patruno.
 
-from builtins import str
 from past.utils import old_div
-from builtins import object
 import logging
 import xmms,autoxmms
 from datetime import *
@@ -52,7 +50,7 @@ def ar_emitted(self):
     self.save()
 
 
-class ScheduleProgram(object):
+class ScheduleProgram:
     '''
     activate a schedule setting it for a time in the future
     '''
@@ -166,7 +164,7 @@ def secondi(delta):
 
 
 
-class dummy_programma(object):
+class dummy_programma:
 
     def __init__(self):
         pass

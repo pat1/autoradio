@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2013 Paolo Patruno.
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
 from past.utils import old_div
 import logging
 import collections

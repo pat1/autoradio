@@ -189,12 +189,13 @@ class gest_spot(object):
                 # this work if LANG is set
                 #f.write(os.path.basename(filename.encode(sys.getfilesystemencoding())))
                 #f.write(os.path.basename(filename.encode("UTF-8")))
-                f.write(filename.encode("UTF-8"))
+                #f.write(filename.encode("UTF-8"))
+                f.write(filename)
                 f.write("\n")
 
             # calcolo la lunghezza della fascia
             try:
-                filename=filename.encode("utf8")
+                #filename=filename.encode("utf8")
                 onelength=mutagen.File(filename).info.length
                 logging.debug("SPOT: computed the partial time length: %d",onelength)
                 length=length+onelength

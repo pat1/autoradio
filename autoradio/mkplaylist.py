@@ -257,7 +257,13 @@ def write_m3u(playlist, outfile,timelen=None):
                 log.error("error evalutate time length on file: %s ",entry )
                 continue
 
-        if totaltime < timelen or timelen is None :
+        if timelen is None :
+            wr=True
+        else:
+            wr=False
+            if totaltime < timelen :
+                wr=True
+        if (wr):
             print(str(entry), file=outfile)
             i+=1
         else:
@@ -279,7 +285,13 @@ def write_extm3u(playlist, outfile,timelen=None):
                 log.error("error evalutate time length on file: %s",entry )
                 continue
 
-        if totaltime < timelen  or timelen is None :
+        if timelen is None :
+            wr=True
+        else:
+            wr=False
+            if totaltime < timelen :
+                wr=True
+        if (wr):
             time=entry['TIME']
             if time is None : time = -1
             if entry['ARTIST'] and entry['TITLE']:
@@ -312,8 +324,13 @@ def write_pls(playlist, outfile,timelen=None):
             log.error("evaluate time length on file: %s",entry )
             continue
 
-        if totaltime < timelen  or timelen is None :
-
+        if timelen is None :
+            wr=True
+        else:
+            wr=False
+            if totaltime < timelen :
+                wr=True
+        if (wr) :
             i += 1
             print('File%d=%s' % (i, entry), file=outfile)
             title = entry['TITLE'] or os.path.basename(str(entry))
@@ -357,7 +374,7 @@ def read_playlist(infile, absolute_paths=True):
     if infile == '-':
         finfile = sys.stdin
     else:
-        finfile = file(infile, "r")
+        finfile = open(infile, encoding='utf-8', errors='replace')
         root  =  os.path.join(root , os.path.dirname(infile))
     
     log.debug("root dir: %s", root)
@@ -371,7 +388,7 @@ def read_playlist(infile, absolute_paths=True):
             continue
 
         # convert thinks like %20 in file name
-        filename=urllib2.url2pathname(filename)
+        filename=urllib.request.url2pathname(filename)
         if filename[:7] == "file://" :
             filename=filename[7:]
 

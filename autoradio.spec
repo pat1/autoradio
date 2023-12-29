@@ -1,6 +1,6 @@
 Summary: radio automation software
 Name: autoradio
-Version: 3.5
+Version: 3.6
 Release: 1
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
@@ -174,6 +174,12 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Fri Dec 29 2023 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.6-1
+- drop extraneous imports of part of stdlib (alexandre.detiste@gmail.com)
+- remove Python2 support (alexandre.detiste@gmail.com)
+- remove SIX crumbs (alexandre.detiste@gmail.com)
+- minor improvements (p.patruno@iperbole.bologna.it)
+
 * Wed Sep 29 2021 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.5-1
 - changed securesec (the time to have to play in current position in playlist
   when we insert track in playlist) from 10 to 20 sec

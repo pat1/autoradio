@@ -260,7 +260,7 @@ def main():
     player="AutoPlayer"
     session=0
     logging.getLogger('').setLevel(logging.DEBUG)
-
+    
     programma=dummy_programma()
     player_watchdog(player=player,session=session)
     shuffle=False

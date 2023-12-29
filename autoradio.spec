@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
 Version: 3.6
-Release: 3
+Release: 4
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -174,6 +174,9 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Fri Dec 29 2023 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.6-4
+- sintax error (p.patruno@iperbole.bologna.it)
+
 * Fri Dec 29 2023 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.6-3
 - remove python3-future dependency (p.patruno@iperbole.bologna.it)
 

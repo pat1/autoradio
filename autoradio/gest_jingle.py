@@ -126,7 +126,7 @@ class gest_jingle(object):
                 jingle=next(many_jingles)
             except StopIteration:
                 return
-            jingle.ar_filename=jingle.file.path.encode("utf8")
+            jingle.ar_filename=jingle.file.path
             jingle.ar_url=jingle.file.url
             #            jingle.ar_filename=jingle.get_file_filename()
             jingle.ar_scheduledatetime=datac

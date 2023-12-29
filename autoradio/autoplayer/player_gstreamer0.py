@@ -707,7 +707,7 @@ class Player(object):
     logging.info("seek")
     try:
       pos_int = self.player.query_position(gst.FORMAT_TIME, None)[0]
-      pos_int =int(pos_int/1000 + t
+      pos_int =int(pos_int/1000) + t
       logging.info("seek %s" % str(pos_int))
       self.setposition(self.playlist.current,pos_int)
       return pos_int

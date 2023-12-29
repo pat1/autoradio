@@ -28,7 +28,6 @@
     It is not necessary to have the version of the vorbis library in ogg meta
     data for example.
 """
-from past.builtins import cmp
 import sys
 import os
 import os.path
@@ -157,7 +156,7 @@ class PlaylistEntry(object):
             self.path = key
     
     def __cmp__(self, other):
-        return cmp(self.path, other.path)
+        return (self.path > other.path) - (self.path < other.path)
         
     def __str__(self):
         return self.path

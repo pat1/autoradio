@@ -27,7 +27,6 @@
 # everywhere we change the tracklist
 # we use this in autoplayergui to update the tracklist
 
-from past.utils import old_div
 import sys, time, _thread
 import tempfile,os
 
@@ -516,7 +515,7 @@ class AutoPlayer(dbus.service.Object):
                 myattr=None
               if myattr is not None:
                 if key == "mpris:length":
-                  myattr=dbus.UInt64(round(old_div(myattr,1000.)))
+                  myattr=dbus.UInt64(round(myattr/1000.))
                 meta[key]=myattr
       
             metadata.append(dbus.Dictionary(meta, signature='sv'))
@@ -811,7 +810,7 @@ class Player(object):
     logging.info("seek")
     try:
       pos_int = self.player.query_position(Gst.Format.TIME)[1]
-      pos_int =old_div(pos_int,1000) + t
+      pos_int =int(pos_int/1000) + t
       logging.info("seek %s" % str(pos_int))
       self.setposition(self.playlist.current,pos_int)
       return pos_int
@@ -927,7 +926,7 @@ class Player(object):
       logging.warning( "in query_position:"+str(e) )
       return None
 			    
-    return int(round(old_div(pos_int,1000.)))
+    return int(round(pos_int/1000.))
 
 
   def printinfo(self):
@@ -988,8 +987,8 @@ class Player(object):
     time.sleep(1)
     logging.info ( "recover last status from disk: position %s" % self.playlist.position)
     if self.playlist.position is not None:
-      logging.info ( "set current %s and position %s " % (self.playlist.current,int(round(old_div(self.playlist.position,1000.)))))
-      self.setposition(self.playlist.current,int(round(old_div(self.playlist.position,1000.))))
+      logging.info ( "set current %s and position %s " % (self.playlist.current,int(round(self.playlist.position/1000.))))
+      self.setposition(self.playlist.current,int(round(self.playlist.position/1000.)))
     if self.starttoplay:
       time.sleep(1)
       self.play()

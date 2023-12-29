@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2007-2009 Paolo Patruno.
 
-from past.utils import old_div
 from .autoradio_config import *
 
 from .gest_program import *
@@ -184,7 +183,7 @@ class schedules(list):
                     length=schedule.length
                     type=schedule.type
                     endscheduledatetime=scheduledatetime+timedelta(seconds=length)
-                    halfscheduledatetime=scheduledatetime+timedelta(seconds=old_div(length,2))
+                    halfscheduledatetime=scheduledatetime+timedelta(seconds=int(length/2))
 
                     if (type == "spot" or type == "playlist" or type == "jingle" ): continue
 
@@ -264,7 +263,7 @@ class schedules(list):
                     length=schedule.adjustedlength
                     type=schedule.type
                     endscheduledatetime=scheduledatetime+timedelta(seconds=length)
-                    halfscheduledatetime=scheduledatetime+timedelta(seconds=old_div(length,2))
+                    halfscheduledatetime=scheduledatetime+timedelta(seconds=int(length/2))
 
                     if (type == "spot" or type == "playlist" or type == "jingle" ): continue
 
@@ -630,7 +629,7 @@ class palimpsests(list):
 
             if self[i].datetime_end != self[i+1].datetime_start:
 
-                dtmean=self[i].datetime_end+(old_div((self[i+1].datetime_start-self[i].datetime_end),2))
+                dtmean=self[i].datetime_end+(int((self[i+1].datetime_start-self[i].datetime_end)/2))
 
                 self[i].datetime_end=dtmean
                 self[i+1].datetime_start=dtmean

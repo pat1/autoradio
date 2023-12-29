@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2012 Paolo Patruno.
 
-from past.utils import old_div
 import logging
 import dbus
 from . import autompris
@@ -176,7 +175,7 @@ def ManagePlayer (player,session,schedule):
 
 def secondi(delta):
     secondi=float(delta.seconds)
-    secondi=secondi+(old_div(delta.microseconds,100000.))
+    secondi=secondi+(delta.microseconds/100000.)
 
     if delta.days < 0 :
         secondi = secondi + (3600*24*delta.days)

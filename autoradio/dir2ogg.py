@@ -32,7 +32,6 @@ This script converts mp3s to wavs using mpg123 then converts the wavs to oggs us
 m4a conversions require faad. Id3 tag support requires mutagen for mp3s.
 Scratch tags using the filename will be written for wav files (and mp3s with no tags!)
 '''
-from past.utils import old_div
 import sys
 import os, os.path
 import re
@@ -380,7 +379,7 @@ class Convert(Id3TagHandler):
         self.conf.quality = round(5.383 * math.log(0.01616 * bitrate/1000.) - self.conf.smart_mp3_correction, 2)
         self.conf.quality = max(self.conf.quality, -1) # Lowest quality is -1
         self.conf.quality = min(self.conf.quality, 6) # Highest quality is 6
-        info("(smartmp3) Detected bitrate: %d kbps" % (old_div(bitrate,1000)))
+        info("(smartmp3) Detected bitrate: %d kbps" % (int(bitrate/1000)))
         info("(smartmp3) Assumed vorbis quality: %.02f" % self.conf.quality)
 
     def decode(self):

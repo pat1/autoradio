@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2013 Paolo Patruno.
 
-from past.utils import old_div
 from autoradio.mpris2.mediaplayer2 import MediaPlayer2
 from autoradio.mpris2.player import Player
 from autoradio.mpris2.tracklist import TrackList
@@ -79,7 +78,7 @@ class Main(object):
           if id is not None:
               length=self.tl.GetTracksMetadata((id,))[0].get(u'mpris:length',None)
               if position <= length and length != 0:
-                  frac = old_div(float(position),float(length))
+                  frac = float(position)/float(length)
               else:
                   frac = 0
           else:

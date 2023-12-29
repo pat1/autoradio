@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # GPL. (C) 2007-2012 Paolo Patruno.
 
-from past.utils import old_div
 import dbus
 import time
 import datetime
@@ -355,8 +354,8 @@ class mediaplayer(object):
             "file": file,
             "title": title,
             "artist": artist,
-            "mtimelength": int(round(old_div(mtimelength,1000.))),
-            "mtimeposition": int(round(old_div(mtimeposition,1000.)))
+            "mtimelength": int(round(mtimelength/1000.)),
+            "mtimeposition": int(round(mtimeposition/1000.))
             }
 
         return mymeta

@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # GPL. (C) 2013 Paolo Patruno.
 
-from past.utils import old_div
 import logging
 import collections
 import mutagen
@@ -325,7 +324,7 @@ class Playlist(list):
         if type(track.get('time')) == float:
           tm = track['time']*1000000
         elif type(track.get('time')) == int:
-          tm = old_div(track['time'],1000000.)
+          tm = track['time']/1000000.
         else:
           tm= None
 

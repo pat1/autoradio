@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext_lazy
 
 import calendar
 from autoradio.autoradio_config import *
@@ -54,7 +54,7 @@ def giorno_giorno():
 class Giorno(models.Model):
 
         name = models.CharField(max_length=20,choices=giorno_giorno(),unique=True,
-                                help_text=ugettext_lazy("weekday name"))
+                                help_text=gettext_lazy("weekday name"))
         def __str__(self):
             return self.name
 
@@ -98,12 +98,12 @@ class Giorno(models.Model):
 
 class Configure(models.Model):
         sezione = models.CharField(max_length=50,unique=True,default='spot',editable=False)
-        active = models.BooleanField(ugettext_lazy("Activate Spot"),default=True,\
-                 help_text=ugettext_lazy("activate/deactivate the intere spot class"))
-        emission_starttime = models.TimeField(ugettext_lazy('Programmed start time'),null=True,blank=True,\
-                 help_text=ugettext_lazy("The start time from wich the spot will be active"))
-        emission_endtime = models.TimeField(ugettext_lazy('Programmed end time'),null=True,blank=True,\
-                 help_text=ugettext_lazy("The end time the spot will be active"))
+        active = models.BooleanField(gettext_lazy("Activate Spot"),default=True,\
+                 help_text=gettext_lazy("activate/deactivate the intere spot class"))
+        emission_starttime = models.TimeField(gettext_lazy('Programmed start time'),null=True,blank=True,\
+                 help_text=gettext_lazy("The start time from wich the spot will be active"))
+        emission_endtime = models.TimeField(gettext_lazy('Programmed end time'),null=True,blank=True,\
+                 help_text=gettext_lazy("The end time the spot will be active"))
 
 
         def __str__(self):
@@ -125,12 +125,12 @@ class Configure(models.Model):
 
 class Fascia(models.Model):
     name = models.CharField(max_length=50,unique=True,\
-                       help_text=ugettext_lazy("The name of commercial break"))
+                       help_text=gettext_lazy("The name of commercial break"))
     emission_time = models.TimeField(unique=True,\
-                       help_text=ugettext_lazy("This is the date and time when the commercial break will be on air"))
-    active = models.BooleanField(ugettext_lazy("Active"),default=True,\
-                       help_text=ugettext_lazy("Activate the commercial break for emission"))
-    emission_done = models.DateTimeField(ugettext_lazy('Emission done'),null=True,editable=False )
+                       help_text=gettext_lazy("This is the date and time when the commercial break will be on air"))
+    active = models.BooleanField(gettext_lazy("Active"),default=True,\
+                       help_text=gettext_lazy("Activate the commercial break for emission"))
+    emission_done = models.DateTimeField(gettext_lazy('Emission done'),null=True,editable=False )
 
 
     def spots(self):
@@ -164,37 +164,37 @@ class Fascia(models.Model):
 
 class Spot(models.Model):
        
-       spot = models.CharField(ugettext_lazy("Spot Name"),max_length=80,unique=True,\
-                       help_text=ugettext_lazy("The name of the spot"))
-       file = DeletingFileField(ugettext_lazy('File'),upload_to='spots',max_length=255,\
-                       help_text=ugettext_lazy("The spot file to upload"))
-       rec_date = models.DateTimeField(ugettext_lazy('Record date'),\
-                       help_text=ugettext_lazy("When the spot was done (for reference only)"))
-       active = models.BooleanField(ugettext_lazy("Active"),default=True,\
-                       help_text=ugettext_lazy("Activate the spot for emission"))
-       start_date = models.DateTimeField(ugettext_lazy('Programmed starting date'),null=True,blank=True,\
-                       help_text=ugettext_lazy("The spot will be scheduled starting from this date"))
-       end_date = models.DateTimeField(ugettext_lazy('Programmed ending date'),null=True,blank=True,\
-                       help_text=ugettext_lazy("The spot will be scheduled ending this date"))
+       spot = models.CharField(gettext_lazy("Spot Name"),max_length=80,unique=True,\
+                       help_text=gettext_lazy("The name of the spot"))
+       file = DeletingFileField(gettext_lazy('File'),upload_to='spots',max_length=255,\
+                       help_text=gettext_lazy("The spot file to upload"))
+       rec_date = models.DateTimeField(gettext_lazy('Record date'),\
+                       help_text=gettext_lazy("When the spot was done (for reference only)"))
+       active = models.BooleanField(gettext_lazy("Active"),default=True,\
+                       help_text=gettext_lazy("Activate the spot for emission"))
+       start_date = models.DateTimeField(gettext_lazy('Programmed starting date'),null=True,blank=True,\
+                       help_text=gettext_lazy("The spot will be scheduled starting from this date"))
+       end_date = models.DateTimeField(gettext_lazy('Programmed ending date'),null=True,blank=True,\
+                       help_text=gettext_lazy("The spot will be scheduled ending this date"))
 
        # giorni = models.PositiveIntegerField( choices=DAY_CHOICES)
 #       giorni = models.ForeignKey(Giorno,verbose_name='Giorni programmati',editable=False)
-       giorni = models.ManyToManyField(Giorno,verbose_name=ugettext_lazy('Programmed days'),blank=True,\
-                       help_text=ugettext_lazy("The spot will be scheduled those weekdays"))
+       giorni = models.ManyToManyField(Giorno,verbose_name=gettext_lazy('Programmed days'),blank=True,\
+                       help_text=gettext_lazy("The spot will be scheduled those weekdays"))
        fasce = models.ManyToManyField(Fascia,blank=True,\
-                       help_text=ugettext_lazy("The spot will be included in those commercial break"))
+                       help_text=gettext_lazy("The spot will be included in those commercial break"))
 
-       priorita = models.IntegerField(ugettext_lazy("Priority"),default=50,\
-                       help_text=ugettext_lazy("The order of the spots in commercial breaks will be ordered by this numer"))
-       prologo =  models.BooleanField(ugettext_lazy("Prologue"),default=False,\
-                       help_text=ugettext_lazy("This spot will be the firt in commercial breaks to introduce the others"))
-       epilogo =  models.BooleanField(ugettext_lazy("Epilogue"),default=False,\
-                       help_text=ugettext_lazy("This spot will be the last in commercial breaks to leave-taking"))
+       priorita = models.IntegerField(gettext_lazy("Priority"),default=50,\
+                       help_text=gettext_lazy("The order of the spots in commercial breaks will be ordered by this numer"))
+       prologo =  models.BooleanField(gettext_lazy("Prologue"),default=False,\
+                       help_text=gettext_lazy("This spot will be the firt in commercial breaks to introduce the others"))
+       epilogo =  models.BooleanField(gettext_lazy("Epilogue"),default=False,\
+                       help_text=gettext_lazy("This spot will be the last in commercial breaks to leave-taking"))
        
        def was_recorded_today(self):
        	return self.rec_date.date() == datetime.date.today()
     
-       was_recorded_today.short_description = ugettext_lazy('Recorded today?')
+       was_recorded_today.short_description = gettext_lazy('Recorded today?')
 
        def __str__(self):
        	return self.spot

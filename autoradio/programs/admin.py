@@ -3,7 +3,7 @@ from .models import Giorno, Configure, ProgramType, Show, Schedule, \
     PeriodicSchedule,AperiodicSchedule,Episode,Enclosure,ScheduleDone
 from autoradio.programs.models import ParentCategory, ChildCategory, MediaCategory
 from django import forms
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext_lazy
 import autoradio.settings
 import autoradio.mime
 
@@ -36,10 +36,10 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
                                 return file
 
                             if not type:
-                                raise forms.ValidationError(ugettext_lazy("Browser say that Content-Type is not audio"))
+                                raise forms.ValidationError(gettext_lazy("Browser say that Content-Type is not audio"))
 
                             if not os.path.splitext(file.name)[1] in websuffix_audio:
-                                raise forms.ValidationError(ugettext_lazy("Doesn't have proper extension: .mp3, .wav, .ogg, .oga, .flac"))
+                                raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .mp3, .wav, .ogg, .oga, .flac"))
 
                             try:
                                 mime = ma.file(file.temporary_file_path())
@@ -48,7 +48,7 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
                                 audio=False
 
                             if not audio:
-                                raise forms.ValidationError(ugettext_lazy("Not a valid audio file"))
+                                raise forms.ValidationError(gettext_lazy("Not a valid audio file"))
 
                             if autoradio.settings.require_tags_in_enclosure:
                                 #Check file if it is a known media file. The check is based on mutagen file test.
@@ -58,7 +58,7 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
                                     audio = False
 
                                 if not audio:
-                                    raise forms.ValidationError(ugettext_lazy("Not a valid audio file: probably no tags present"))
+                                    raise forms.ValidationError(gettext_lazy("Not a valid audio file: probably no tags present"))
 
                         else:
 
@@ -69,10 +69,10 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
                                 return file
 
                             if not type:
-                                raise forms.ValidationError(ugettext_lazy("Browser say that Content-Type is not audio ogg vorbis"))
+                                raise forms.ValidationError(gettext_lazy("Browser say that Content-Type is not audio ogg vorbis"))
 
                             if not os.path.splitext(file.name)[1] in websuffix_ogg:
-                                raise forms.ValidationError(ugettext_lazy("Doesn't have proper extension: .ogg, .oga"))
+                                raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .ogg, .oga"))
 
                             try:
                                 mime = ma.file(file.temporary_file_path())
@@ -81,7 +81,7 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
                                 audio=False
 
                             if not audio:
-                                raise forms.ValidationError(ugettext_lazy("Not a valid ogg/oga vorbis audio file"))
+                                raise forms.ValidationError(gettext_lazy("Not a valid ogg/oga vorbis audio file"))
 
                             if autoradio.settings.require_tags_in_enclosure:
                                 #Check file if it is a known media file. The check is based on mutagen file test.
@@ -94,15 +94,15 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
                                     sample_rate=0
 
                                 if not audio:
-                                    raise forms.ValidationError(ugettext_lazy("Not a valid ogg/oga vorbis audio file: probably no tags present"))
+                                    raise forms.ValidationError(gettext_lazy("Not a valid ogg/oga vorbis audio file: probably no tags present"))
 
                                 if not sample_rate == 44100:
-                                    raise forms.ValidationError(ugettext_lazy("Sample rate is Not 44100Hz: cannot use it in podcasting web interface"))
+                                    raise forms.ValidationError(gettext_lazy("Sample rate is Not 44100Hz: cannot use it in podcasting web interface"))
             
                         return file
 
                     else:
-                        raise forms.ValidationError(ugettext_lazy("Couldn't read uploaded file"))
+                        raise forms.ValidationError(gettext_lazy("Couldn't read uploaded file"))
 
             except AttributeError:
                 # annoyingly, if a subform is invalid Django explicity raises
@@ -110,7 +110,7 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
                 pass
 
         if count < 1:
-            raise forms.ValidationError(ugettext_lazy('You must have at least one Enclosure'))
+            raise forms.ValidationError(gettext_lazy('You must have at least one Enclosure'))
 
 
 
@@ -137,12 +137,12 @@ class MyEnclosureAdminForm(forms.ModelForm):
                         return file
 
                     if not type:
-                        raise forms.ValidationError(ugettext_lazy("Content-Type is not audio/mpeg or audio/flac or video/ogg"))
+                        raise forms.ValidationError(gettext_lazy("Content-Type is not audio/mpeg or audio/flac or video/ogg"))
     
                     if not os.path.splitext(file.name)[1] in [".mp3",".wav",".ogg",".oga",".flac",
 							      ".Mp3",".Wav",".Ogg",".Oga",".Flac",
 							      ".MP3",".WAV",".OGG",".OGA",".FLAC" ]:
-                        raise forms.ValidationError(ugettext_lazy("Doesn't have proper extension: .mp3, .wav, .ogg, .oga, .flac"))
+                        raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .mp3, .wav, .ogg, .oga, .flac"))
                     #Check file if it is a known media file. The check is based on mutagen file test.
                     try:
                         audio = not mutagen.File(file.temporary_file_path()) is None
@@ -150,7 +150,7 @@ class MyEnclosureAdminForm(forms.ModelForm):
                         audio = False
 
                     if not audio:
-                        raise forms.ValidationError(ugettext_lazy("Not a valid audio file"))
+                        raise forms.ValidationError(gettext_lazy("Not a valid audio file"))
                     return file
 
                 else:
@@ -161,10 +161,10 @@ class MyEnclosureAdminForm(forms.ModelForm):
                         return file
 
                     if not type:
-                        raise forms.ValidationError(ugettext_lazy("Content-Type is not audio/oga or video/ogg"))
+                        raise forms.ValidationError(gettext_lazy("Content-Type is not audio/oga or video/ogg"))
 
                     if not os.path.splitext(file.name)[1] in [".ogg",".oga",".Ogg",".Oga",".OGG"]:
-                        raise forms.ValidationError(ugettext_lazy("Doesn't have proper extension: .ogg, .oga"))
+                        raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .ogg, .oga"))
                     #Check file if it is a known media file. The check is based on mutagen file test.
                     try:
                         mut=mutagen.File(file.temporary_file_path())
@@ -176,15 +176,15 @@ class MyEnclosureAdminForm(forms.ModelForm):
                         sample_rate=0
 
                     if not audio:
-                        raise forms.ValidationError(ugettext_lazy("Not a valid audio file"))
+                        raise forms.ValidationError(gettext_lazy("Not a valid audio file"))
 
                     if not sample_rate == 44100:
-                        raise forms.ValidationError(ugettext_lazy("Sample rate is Not 44100Hz: cannot use it in podcasting web interface"))
+                        raise forms.ValidationError(gettext_lazy("Sample rate is Not 44100Hz: cannot use it in podcasting web interface"))
             
                     return file
                 
 	    else:
-		    raise forms.ValidationError(ugettext_lazy("Couldn't read uploaded file"))
+		    raise forms.ValidationError(gettext_lazy("Couldn't read uploaded file"))
 
 
 class CategoryInline(admin.StackedInline):

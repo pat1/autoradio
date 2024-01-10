@@ -1,7 +1,7 @@
 from .models import Giorno, Configure, Fascia, Spot
 from django.contrib import admin
 from django import forms
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext_lazy
 import autoradio.settings
 import magic
 import autoradio.mime
@@ -31,10 +31,10 @@ class MySpotAdminForm(forms.ModelForm):
                     return file
 
                 if not type:
-                    raise forms.ValidationError(ugettext_lazy("Content-Type is not audio/mpeg or audio/flac or video/ogg"))
+                    raise forms.ValidationError(gettext_lazy("Content-Type is not audio/mpeg or audio/flac or video/ogg"))
 
                 if not os.path.splitext(file.name)[1] in websuffix_audio:
-                    raise forms.ValidationError(ugettext_lazy("Doesn't have proper extension: .mp3, .wav, .ogg, .oga, .flac"))
+                    raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .mp3, .wav, .ogg, .oga, .flac"))
 
                 try:
                     mime = ma.file(file.temporary_file_path())
@@ -43,7 +43,7 @@ class MySpotAdminForm(forms.ModelForm):
                     audio=False
                     
                 if not audio:
-                    raise forms.ValidationError(ugettext_lazy("Not a valid audio file"))
+                    raise forms.ValidationError(gettext_lazy("Not a valid audio file"))
 
                 if autoradio.settings.require_tags_in_enclosure:
                     #Check file if it is a known media file. The check is based on mutagen file test.
@@ -53,12 +53,12 @@ class MySpotAdminForm(forms.ModelForm):
                         audio = False
 
                     if not audio:
-                        raise forms.ValidationError(ugettext_lazy("Not a valid audio file: probably no tags present"))
+                        raise forms.ValidationError(gettext_lazy("Not a valid audio file: probably no tags present"))
 
                 return file
 
 	    else:
-                raise forms.ValidationError(ugettext_lazy("Couldn't read uploaded file"))
+                raise forms.ValidationError(gettext_lazy("Couldn't read uploaded file"))
 
 
 class GiornoAdmin(admin.ModelAdmin):

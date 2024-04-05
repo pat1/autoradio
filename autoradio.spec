@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
 Version: 3.6
-Release: 4
+Release: 5
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -174,6 +174,12 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Fri Apr 05 2024 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.6-5
+- close #39 (p.patruno@iperbole.bologna.it)
+- close #36 (p.patruno@iperbole.bologna.it)
+- close #40 (p.patruno@iperbole.bologna.it)
+- DJango 3.x compatibility (tchet@debian.org)
+
 * Fri Dec 29 2023 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.6-4
 - sintax error (p.patruno@iperbole.bologna.it)
 

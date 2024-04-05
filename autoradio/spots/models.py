@@ -161,6 +161,8 @@ class Fascia(models.Model):
        	search_fields = ['name','emission_time','emission_done','active','spots']
        	list_display = ('name','emission_time','emission_done','active','spots')
 
+    class Meta:
+        ordering = ['emission_time']
 
 class Spot(models.Model):
        
@@ -215,3 +217,5 @@ class Spot(models.Model):
        #class Meta:
        #	unique_together = ("prologo", "epilogo","fasce")
        	
+       class Meta:
+           ordering = ['end_date']

@@ -356,7 +356,7 @@ class Show(models.Model):
 
 
     class Meta(object):
-        ordering = ['organization', 'slug']
+        ordering = ['title']
 
     def __str__(self):
         return u'%s' % (self.title)

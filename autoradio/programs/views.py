@@ -12,7 +12,7 @@ import os
 
 #from django.forms.extras.widgets import SelectDateWidget
 from .widgets import MySelectDateWidget
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext_lazy
 
 #----------------------------------------------------
 # section for programs
@@ -156,9 +156,9 @@ class ExtremeForm(forms.Form):
 
 #    datetime_start = forms.DateTimeField(required=True,initial=initial_start,widget=SelectDateWidget(years=(2010,etc)))
 #    datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=SelectDateWidget(years=(2010,etc)))
-    datetime_start = forms.DateTimeField(required=True,initial=initial_start,widget=MySelectDateWidget(),label=ugettext_lazy("Starting date & time"),help_text=ugettext_lazy("Elaborate palimpsest starting from this date and time"))
+    datetime_start = forms.DateTimeField(required=True,initial=initial_start,widget=MySelectDateWidget(),label=gettext_lazy("Starting date & time"),help_text=gettext_lazy("Elaborate palimpsest starting from this date and time"))
 
-    datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=MySelectDateWidget(),label=ugettext_lazy("Ending date & time"),help_text=ugettext_lazy("Elaborate palimpsest ending to this date and time"))
+    datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=MySelectDateWidget(),label=gettext_lazy("Ending date & time"),help_text=gettext_lazy("Elaborate palimpsest ending to this date and time"))
 
 def programsbook(request):
 

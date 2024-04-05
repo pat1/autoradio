@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 import autoradio.settings
 
 
@@ -11,7 +11,7 @@ def playercmd(request, media):
 
     """
 
-    return render_to_response('player/player.html', {'media': media})
+    return render(request,'player/player.html', {'media': media})
 
 def playernohtml5cmd(request, media):
     """
@@ -22,4 +22,4 @@ def playernohtml5cmd(request, media):
 
     """
 
-    return render_to_response('player/playernohtml5.html', {'media': media})
+    return render(request,'player/playernohtml5.html', {'media': media})

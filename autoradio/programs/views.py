@@ -1,6 +1,6 @@
 # Create your views here.
 
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from .models import Schedule
 from django.http import HttpResponse,HttpResponseRedirect
 from datetime import date,datetime,timedelta,time
@@ -37,7 +37,7 @@ def index(request):
     #    print ("ss=",ss)
     #    for sss in ss:
     #        print ("sss=",sss)
-    return render_to_response('schedule/index.html', {'schedules': scheds})
+    return render(request,'schedule/index.html', {'schedules': scheds})
 
 
 def stato(request):
@@ -52,7 +52,7 @@ def stato(request):
         xmmsweb="<p>Error getting player status !!</p>"
         xmmsweb=xmmsweb+"<p>Start autoradiod or verify settings</p>"
 
-    return render_to_response('xmms/index.html', {'xmmsweb': xmmsweb,})
+    return render(request,'xmms/index.html', {'xmmsweb': xmmsweb,})
 
 
 def dbusstato(request):
@@ -67,7 +67,7 @@ def dbusstato(request):
         except:
             htmlresponse +="<p>Error getting player status !!</p>"
             htmlresponse +=htmlresponse+"<p>Start autoradiod or verify settings</p>"
-            return render_to_response('xmms/index.html', {'xmmsweb': htmlresponse,})
+            return render(request,'xmms/index.html', {'xmmsweb': htmlresponse,})
     else:
         return stato(request)
         #htmlresponse += "Invalid player for dbus interface"
@@ -122,7 +122,7 @@ def dbusstato(request):
         htmlresponse +=htmlresponse+"<p>Start autoradiod or verify settings</p>"
         
     del mp
-    return render_to_response('xmms/index.html', {'xmmsweb': htmlresponse,})
+    return render(request,'xmms/index.html', {'xmmsweb': htmlresponse,})
 
 
 
@@ -270,7 +270,7 @@ def programsbook(request):
     else:
         form = ExtremeForm() # An unbound form
 
-    return render_to_response('palimpsest/extreme.html', {
+    return render(request,'palimpsest/extreme.html', {
         'form': form})
 
 
@@ -380,8 +380,8 @@ class episode_sitemap(ListView):
         self.queryset=Episode.objects.published().filter(show__slug__exact=self.slug).order_by('-date')
         return super(episode_sitemap, self).get(request, *args, **kwargs)
 
-    def render_to_response(self, context, **kwargs):
-        return super(episode_sitemap, self).render_to_response(context,
+    def render(request,self, context, **kwargs):
+        return super(episode_sitemap, self).render(request,context,
                         content_type='application/xml', **kwargs)
 
 
@@ -426,8 +426,8 @@ class show_list_feed(ListView):
         self.queryset=Episode.objects.filter(show__slug__exact=slug).order_by('-date')[0:21]
         return super(show_list_feed, self).get(request, *args, **kwargs)
 
-    def render_to_response(self, context, **kwargs):
-        return super(show_list_feed, self).render_to_response(context,
+    def render(request,self, context, **kwargs):
+        return super(show_list_feed, self).render(request,context,
                         content_type='application/xml', **kwargs)
 
 
@@ -457,8 +457,8 @@ class show_list_media(ListView):
         self.queryset=Episode.objects.filter(show__slug__exact=self.slug).order_by('-date')[0:21]
         return super(show_list_media, self).get(request, *args, **kwargs)
 
-    def render_to_response(self, context, **kwargs):
-        return super(show_list_media, self).render_to_response(context,
+    def render(request,self, context, **kwargs):
+        return super(show_list_media, self).render(request,context,
                         content_type='application/xml', **kwargs)
 
 
@@ -487,6 +487,6 @@ class show_list_atom(ListView):
         self.queryset=Episode.objects.filter(show__slug__exact=self.slug).order_by('-date')[0:21]
         return super(show_list_atom, self).get(request, *args, **kwargs)
 
-    def render_to_response(self, context, **kwargs):
+    def render(request,self, context, **kwargs):
         return super(show_list_atom, self).render_to_response(context,
                         content_type='application/xml', **kwargs)

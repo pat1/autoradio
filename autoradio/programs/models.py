@@ -690,7 +690,7 @@ class Enclosure(models.Model):
     medium = models.CharField(max_length=255, blank=True, choices=MEDIUM_CHOICES)
     expression = models.CharField(max_length=25, choices=EXPRESSION_CHOICES, blank=True)
     frame = models.CharField('Frame rate', max_length=5, help_text=gettext_lazy('Measured in frames per second (fps), often 29.97.'),choices=FRAME_CHOICES,blank=True)
-    bitrate = models.CharField('Bit rate', max_length=5, blank=True, help_text=gettext_lazy('Measured in kilobits per second (kbps), often 128 or 192.'),choices=BITRATE_CHOICES)
+    bitrate = models.CharField('Bit rate', max_length=6, blank=True, help_text=gettext_lazy('Measured in kilobits per second (kbps), often 128 or 192.'),choices=BITRATE_CHOICES)
     sample = models.CharField('Sample rate', max_length=5, blank=True, help_text=gettext_lazy('Measured in kilohertz (kHz), often 44.1.'),choices=SAMPLE_CHOICHES)
     channel = models.CharField(max_length=5, blank=True, help_text=gettext_lazy('Number of channels; 2 for stereo, 1 for mono.'),choices=CHANNEL_CHOICES)
     algo = models.CharField('Hash algorithm', max_length=50, blank=True, choices=ALGO_CHOICES)

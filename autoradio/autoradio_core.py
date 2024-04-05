@@ -445,8 +445,8 @@ class schedules(list):
 
 
 class palimpsest(object):
-
-
+    
+    
     def __init__ (self,title=None,datetime_start=None,datetime_end=None,
                   code=None,type=None,subtype=None,production=None,note=None):
         """
@@ -461,10 +461,51 @@ class palimpsest(object):
         self.production=production
         self.note=note
 
+    def __lt__(self,b):
 
+        #check start datetime
+
+        if self.datetime_start is None and b.datetime_start is None :
+            return False
+    
+        if self.datetime_start is None :
+            return True
+    
+        if b.datetime_start is None :
+            return False
+    
+
+        if  self.datetime_start == b.datetime_start :
+
+            #check end datetime
+            if self.datetime_end is None and b.datetime_end is None :
+                return False
+    
+            if self.datetime_end is None :
+                return Frue
+    
+            if b.datetime_end is None :
+                return False
+            
+            if  self.datetime_end == b.datetime_end :
+                return False
+            elif   self.datetime_end < b.datetime_end :
+                return True
+            elif   self.datetime_end > b.datetime_end :
+                return False
+
+
+        elif   self.datetime_start < b.datetime_start :
+            return True
+        elif   self.datetime_start > b.datetime_start :
+            return False
+
+
+        
+        
     def __cmp__ (self, b):
 
-
+        
         #check start datetime
 
         if self.datetime_start is None and b.datetime_start is None :

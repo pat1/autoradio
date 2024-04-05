@@ -382,7 +382,7 @@ class ScheduleAdmin(admin.ModelAdmin):
     list_display = ('episode', 'emission_date'\
                         ,'was_scheduled_today')
     list_filter = ['emission_date']
-    search_fields = ['episode','emission_date']
+    search_fields = ['episode__title','emission_date']
     date_hierarchy = 'emission_date'
 
 admin.site.register(Schedule, ScheduleAdmin)
@@ -391,21 +391,21 @@ admin.site.register(Schedule, ScheduleAdmin)
 class PeriodicScheduleAdmin(admin.ModelAdmin):
     list_display = ('start_date','end_date','time')
     list_filter = ['start_date','end_date','time','giorni']
-    search_fields = ['playlist','giorni']
+    search_fields = ['show__title','giorni__name']
     date_hierarchy = 'start_date'
 
 admin.site.register(PeriodicSchedule, PeriodicScheduleAdmin)
 
 class AperiodicScheduleAdmin(admin.ModelAdmin):
     list_display = ('emission_date','show')
-    search_fields = ['show']
+    search_fields = ['show__title']
     date_hierarchy = 'emission_date'
 
 admin.site.register(AperiodicSchedule, AperiodicScheduleAdmin)
 
 class ScheduleDoneAdmin(admin.ModelAdmin):
     list_display = ('emission_done','schedule','enclosure')
-    search_fields = ['enclosure']
+    search_fields = ['enclosure__title']
     date_hierarchy = 'emission_done'
 
 admin.site.register(ScheduleDone, ScheduleDoneAdmin)

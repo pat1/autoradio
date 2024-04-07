@@ -45,9 +45,9 @@ def stato(request):
         
     xmmsweb=""
     try:
-        url=urllib.request.urlopen("http://"+autoradio.autoradio_config.XMMSHOST+":8888/")
-        for line in url:
-            xmmsweb=xmmsweb+line
+        with urllib.request.urlopen("http://"+autoradio.autoradio_config.XMMSHOST+":8888/") as response:
+            for line in response:
+                xmmsweb=xmmsweb+line
     except:
         xmmsweb="<p>Error getting player status !!</p>"
         xmmsweb=xmmsweb+"<p>Start autoradiod or verify settings</p>"

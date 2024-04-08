@@ -218,4 +218,4 @@ class Spot(models.Model):
        #	unique_together = ("prologo", "epilogo","fasce")
        	
        class Meta:
-           ordering = ['end_date']
+           ordering = ['-end_date']

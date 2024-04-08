@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
 Version: 3.6
-Release: 5
+Release: 6
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -174,6 +174,10 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Mon Apr 08 2024 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.6-6
+- close #35 (p.patruno@iperbole.bologna.it)
+- migrate to django 3 (p.patruno@iperbole.bologna.it)
+
 * Fri Apr 05 2024 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.6-5
 - close #39 (p.patruno@iperbole.bologna.it)
 - close #36 (p.patruno@iperbole.bologna.it)

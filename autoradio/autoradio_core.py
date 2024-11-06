@@ -670,7 +670,7 @@ class palimpsests(list):
 
             if self[i].datetime_end != self[i+1].datetime_start:
 
-                dtmean=self[i].datetime_end+(int((self[i+1].datetime_start-self[i].datetime_end)/2))
+                dtmean=self[i].datetime_end+((self[i+1].datetime_start-self[i].datetime_end)/2)
 
                 self[i].datetime_end=dtmean
                 self[i+1].datetime_start=dtmean

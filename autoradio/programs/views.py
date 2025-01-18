@@ -151,13 +151,14 @@ def decode(code):
 
 class ExtremeForm(forms.Form):
 
-    initial_start=date.today()-timedelta(days=10)
-    initial_end=date.today()
+    def  initial_start ():
+        return date.today()-timedelta(days=10)
+    def initial_end ():
+        return date.today()
 
-#    datetime_start = forms.DateTimeField(required=True,initial=initial_start,widget=SelectDateWidget(years=(2010,etc)))
-#    datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=SelectDateWidget(years=(2010,etc)))
+    #    datetime_start = forms.DateTimeField(required=True,initial=initial_start,widget=SelectDateWidget(years=(2010,etc)))
+    #    datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=SelectDateWidget(years=(2010,etc)))
     datetime_start = forms.DateTimeField(required=True,initial=initial_start,widget=MySelectDateWidget(),label=gettext_lazy("Starting date & time"),help_text=gettext_lazy("Elaborate palimpsest starting from this date and time"))
-
     datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=MySelectDateWidget(),label=gettext_lazy("Ending date & time"),help_text=gettext_lazy("Elaborate palimpsest ending to this date and time"))
 
 def programsbook(request):

@@ -194,13 +194,14 @@ class gest_spot(object):
 
             # calcolo la lunghezza della fascia
             try:
-                onelength=mutagen.File(filename).info.length
-                logging.debug("SPOT: computed the partial time length: %d",onelength)
-                length=length+onelength
+                with open(filename) as f:
+                    onelength=mutagen.File(f).info.length
+                    logging.debug("SPOT: computed the partial time length: %d",onelength)
+                    length=length+onelength
             except:
 
                 logging.error( "SPOT: error establish time length; use an estimation %s", filename)
-       	length=length+30
+       	        length=length+30      # default for one spot
 
         self.ar_length=length
         logging.debug("SPOT: computed total time length: %d",self.ar_length)

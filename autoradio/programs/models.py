@@ -333,7 +333,7 @@ class Show(models.Model):
     # RSS 2.0
     organization = models.CharField(max_length=255, help_text=gettext_lazy('Name of the organization, company or Web site producing the podcast.'))
     link = models.URLField(help_text=gettext_lazy('URL of either the main website or the podcast section of the main website.'))
-    description = models.TextField(help_text=gettext_lazy('Describe subject matter, media format, episode schedule and other relevant information while incorporating keywords.'))
+    description = models.CharField(max_length=80,help_text=gettext_lazy('Describe subject matter, media format, episode schedule and other relevant information while incorporating keywords.'),default=None,null=True,blank=True)
     language = models.CharField(max_length=5, default='en-us', help_text=gettext_lazy('Default is American English. See <a href="http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1</a> and <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements">ISO 3166-1</a> for more language codes.'), blank=True)
     copyright = models.CharField(max_length=255, default='All rights reserved', choices=COPYRIGHT_CHOICES, help_text=gettext_lazy('See <a href="http://creativecommons.org/about/license/">Creative Commons licenses</a> for more information.'))
     copyright_url = models.URLField('Copyright URL', blank=True, help_text=gettext_lazy('A URL pointing to additional copyright information. Consider a <a href="http://creativecommons.org/licenses/">Creative Commons license URL</a>.'))

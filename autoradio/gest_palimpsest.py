@@ -31,9 +31,9 @@ class gest_palimpsest(object):
         self.type=None
 
         self.datetimeelab = datetimeelab
-        self.oggi=self.datetimeelab.date()
+        self.dateelab=self.datetimeelab.date()
 
-        ora=datetimeelab.time()
+        timeelab=datetimeelab.time()
 
         self.giorno=calendar.day_name[self.datetimeelab.weekday()]
 
@@ -52,9 +52,9 @@ class gest_palimpsest(object):
         if (Configure.objects.filter(active__exact=False).count() == 1):
             return
         #todo: the use of ora here is not exact
-        if (Configure.objects.filter(emission_starttime__gt=ora).count() == 1) :
+        if (Configure.objects.filter(emission_starttime__gt=timeelab).count() == 1) :
             return
-        if (Configure.objects.filter(emission_endtime__lt=ora).count() == 1):
+        if (Configure.objects.filter(emission_endtime__lt=timeelab).count() == 1):
             return
 
 
@@ -70,8 +70,8 @@ class gest_palimpsest(object):
         # retrive the right records relative to periodicschedule
         if (self.timesched_min < self.timesched_max):
             self.periodicschedule=PeriodicSchedule.objects\
-                .filter(Q(start_date__lte=self.oggi) | Q(start_date__isnull=True))\
-                .filter(Q(end_date__gte=self.oggi)   | Q(end_date__isnull=True))\
+                .filter(Q(start_date__lte=self.dateelab) | Q(start_date__isnull=True))\
+                .filter(Q(end_date__gte=self.dateelab)   | Q(end_date__isnull=True))\
                 .filter(time__gte=self.timesched_min)\
                 .filter(time__lte=self.timesched_max)\
                 .filter(giorni__name__exact=self.giorno)\
@@ -82,13 +82,14 @@ class gest_palimpsest(object):
             # warning here we are around midnight
             logging.debug("PALIMPSEST: around midnight")
 
-            domani=calendar.day_name[self.datesched_max.weekday()]
+            day_min = calendar.day_name[self.datesched_min.weekday()]
+            day_max = calendar.day_name[self.datesched_max.weekday()]
 
             self.periodicschedule=PeriodicSchedule.objects\
-                .filter(Q(start_date__lte=self.oggi) | Q(start_date__isnull=True))\
-                .filter(Q(end_date__gte=self.oggi)   | Q(end_date__isnull=True))\
-                .filter(Q(time__gte=self.timesched_min) & Q(giorni__name__exact=self.giorno) |\
-                        Q(time__lte=self.timesched_max) & Q(giorni__name__exact=domani))\
+                .filter(Q(start_date__lte=self.dateelab) | Q(start_date__isnull=True))\
+                .filter(Q(end_date__gte=self.dateelab)   | Q(end_date__isnull=True))\
+                .filter((Q(time__gte=self.timesched_min) & Q(giorni__name__exact=day_min)) |\
+                        (Q(time__lte=self.timesched_max) & Q(giorni__name__exact=day_max)))\
                 .filter(show__active__exact=True)\
                 .order_by('time')
 
@@ -107,8 +108,6 @@ class gest_palimpsest(object):
     def get_program(self):
         "iterable to get programs"
 
-        ora=self.datetimeelab.time()
-                
         for program in self.schedule:
             logging.debug("PALIMPSEST: schedule %s %s", program.show.title, ' --> '\
                               ,program.emission_date.isoformat())

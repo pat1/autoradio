@@ -584,7 +584,7 @@ class dates(object):
     def __init__(self,datetime_start, datetime_end,step):
 
         self.step=step
-        self.datetime_start=datetime_start-self.step
+        self.datetime_start=datetime_start
         self.datetime_end=datetime_end
 
 
@@ -628,7 +628,7 @@ class palimpsests(list):
                 type=program.show.type.type
                 subtype=program.show.type.subtype
                 production=program.show.production
-                note=""
+                note=program.show.description
 
                 if pdatetime_start >= datetime_start and pdatetime_end < datetime_end :
 

@@ -314,8 +314,9 @@ class ShowAdmin(admin.ModelAdmin):
         )
 
 
-    list_display = ('title',)
-    #list_filter = ['end_date',]
+    list_display = ('active','title','description')
+    list_editable = ('title','description')
+    list_filter = ['active','organization','author__username',]
     search_fields = ['title',]
 
 #    is better without EpisodeInline and start from Episode 

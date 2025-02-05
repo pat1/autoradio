@@ -182,7 +182,7 @@ def programsbook(request):
 
             # time constants
             now=datetime.now()
-            minelab=1
+            minelab=60
 
 
             datetime_start=form.cleaned_data['datetime_start']
@@ -251,7 +251,7 @@ def programsbook(request):
 
                 dati.append([str(pdatetime_start.date()),Paragraph(title, styles["Normal"]),
                              pdatetime_start.time().strftime("%H:%M"),pdatetime_end.time().strftime("%H:%M"),
-                             Paragraph(type, styles["Normal"]),Paragraph(subtype, styles["Normal"]),production,note])
+                             Paragraph(type, styles["Normal"]),Paragraph(subtype, styles["Normal"]),production,""]) #note removed
 
 
             #dati.append(["totale","fine"])

@@ -1,0 +1,206 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# GPL. (C) 2025 Paolo Patruno.
+# This program is free software; you can redistribute it and/or modify 
+# it under the terms of the GNU General Public License as published by 
+# the Free Software Foundation; either version 2 of the License, or 
+# (at your option) any later version. 
+# 
+# This program is distributed in the hope that it will be useful, 
+# but WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# GNU General Public License for more details. 
+# 
+# You should have received a copy of the GNU General Public License 
+# along with this program; if not, write to the Free Software 
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+# 
+from autoradio import daemon
+from autoradio.mpris2.mediaplayer2 import MediaPlayer2
+from autoradio.mpris2.player import Player
+from autoradio.mpris2.tracklist import TrackList
+from autoradio.mpris2.interfaces import Interfaces
+from autoradio.mpris2.some_players import Some_Players
+from autoradio.mpris2.utils import get_players_uri
+from autoradio.mpris2.utils import get_session
+import dbus
+
+from datetime import date,datetime,timedelta
+import time
+import requests
+import urllib.parse
+
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
+from django.conf import settings
+import django
+
+import autoradio.settings
+import autoradio.autoradio_config
+from autoradio import daemon
+from autoradio import _version_
+import logging,errno,signal,logging.handlers
+
+# check schedule every timedelta
+timestep=timedelta(seconds=15)
+
+metatraced = daemon.Daemon(
+        stdin="/dev/null",
+        stdout=autoradio.settings.logfileautoradiometatrace,
+        stderr=autoradio.settings.errfileautoradiometatrace,
+        pidfile=autoradio.settings.lockfileautoradiometatrace,
+        user=autoradio.settings.userautoradiometatrace,
+        group=autoradio.settings.groupautoradiometatrace
+)
+
+def main():
+
+    current_title=None
+    
+    django.setup()
+    import autoradio.autoradio_core
+
+    formatter=logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s",datefmt="%Y-%m-%d %H:%M:%S")
+    handler = logging.handlers.RotatingFileHandler(autoradio.settings.logfileautoradiometatrace, maxBytes=5000000, backupCount=10)
+    handler.setFormatter(formatter)
+    # Add the log message handler to the root logger
+    logging.getLogger().addHandler(handler)
+    logging.getLogger().setLevel(logging.INFO)
+
+    metatraceformatter=logging.Formatter("%(asctime)s;%(message)s;",datefmt="%Y-%m-%d %H:%M:%S")
+    metatracehandler = logging.handlers.RotatingFileHandler(autoradio.settings.fileautoradiometatrace, maxBytes=5000000, backupCount=10)
+    metatracehandler.setFormatter(metatraceformatter)
+    metatracelogger=logging.getLogger("metatracelogger")
+    # Add the log message handler to the metatrace logger
+    metatracelogger.addHandler(metatracehandler)
+    metatracelogger.setLevel(logging.INFO)
+    
+    logging.info('Starting up autometatraced version '+_version_)
+    metatracelogger.info
+    
+    uris = list(get_players_uri(pattern=".",busaddress=autoradio.settings.busaddressplayer))
+
+    if len(uris) >0 :
+        uri=uris[0]
+
+        if autoradio.settings.busaddressplayer is None:
+            bus = dbus.SessionBus()
+        else:
+            bus =dbus.bus.BusConnection(autoradio.settings.busaddressplayer)
+            mp2 = MediaPlayer2(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
+            play = Player(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
+    else:
+        logging.error("No players availables")
+        return
+
+            
+    while (True):
+        pali=autoradio.autoradio_core.palimpsests([])
+
+        now=datetime.now()
+        logging.info(f"datetime {now}")
+
+        for title,pdatetime_start,pdatetime_end,code,type,subtype,production,note in pali.get_palimpsest(now-timedelta(minutes=600),now+timedelta(minutes=600)):
+            #print(title,pdatetime_start,pdatetime_end,code)
+            artist=note
+            if (artist is None or artist == ""): artist = subtype
+            if (pdatetime_start< now and pdatetime_end >now):
+                logging.info(f"--> {artist} : {title} : {type} : {subtype}")            
+                if (code == "5"):
+                    logging.info("skip pubblicità")
+
+                elif (code == "13f"):
+                    try: 
+                        if mp2.HasTrackList:
+                            tl = TrackList(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
+                            id = play.Metadata.get(u'mpris:trackid',None)
+                            for track in  tl.GetTracksMetadata( tl.Tracks):
+                                if (track.get(u'mpris:trackid',None) == id):
+                                    logging.info(">> {} {} {} {} {}".format(track.get(u'mpris:trackid',None),
+                                                                      track.get(u'mpris:length',None),
+                                                                      track.get(u'xesam:artist',None),
+                                                                      track.get(u'xesam:title',None),
+                                                                      track.get(u'xesam:url',None)))
+                                    file=track.get(u'xesam:url',None)
+                                    filepath=os.path.dirname(file)
+                                    autopath=settings.MEDIA_ROOT
+                                    artist=track.get(u'xesam:artist',"Stai ascoltando")
+                                    title=track.get(u'xesam:title',"Musica no stop")
+                                    position=int(play.Position)
+                                    start=now-timedelta(microseconds=position)
+                                    end=start+timedelta(microseconds=int(track.get(u'mpris:length',None)))
+                                    length=timedelta(microseconds=int(track.get(u'mpris:length',None)))
+
+                                    if ( os.path.commonprefix ((filepath,"file://"+autopath)) == "file://"+autopath):
+                                        logging.info("skip autoradio file: {}".format(file))
+                                        artist="Stai ascoltando"
+                                        title="Musica no stop"
+
+                                    if (title != current_title):
+                                        logging.info (f"musica no stop: {artist} {title}")
+                                        metatracelogger.info(f"{artist};{title};{start};{end};{length}")
+                                        get_dict={ 'mount' : "/rcf.ogg", 'mode' : 'updinfo', 'title' : title, 'artist' : artist}
+                                        get_param= urllib.parse.urlencode(get_dict)
+                                        url = autoradio.settings.icecastapiurlautoradiometatrace+get_param
+                                        response = requests.get(url)
+                                        logging.info(response.text)
+                                        current_title=title
+                    except:
+                        logging.error("Error with mpris2 interface")
+                        uris = get_players_uri(pattern=".",busaddress=autoradio.settings.busaddressplayer)
+
+                        for uri in uris:
+                            break
+
+                        bus =dbus.bus.BusConnection(autoradio.settings.busaddressplayer)
+                        mp2 = MediaPlayer2(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
+                        play = Player(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
+
+                else:
+                    if (title != current_title):
+                        logging.info (f"program: {artist} {title}")
+                        length=pdatetime_end-pdatetime_start
+                        metatracelogger.info(f"{artist};{title};{pdatetime_start};{pdatetime_end};{length}")
+                        get_dict={ 'mount' : "/rcf.ogg", 'mode' : 'updinfo', 'title' : title, 'artist' : artist, 'charset': 'UTF-8'}
+                        get_param= urllib.parse.urlencode(get_dict)
+                        url = "https://"+USERNAME+":"+PASSWORD+"@streaming.radiocittafujiko.it:8000/admin/metadata?"+get_param
+                        response = requests.get(url)
+                        logging.info(response.text)
+                        current_title=title
+                        
+                        delay=(pdatetime_end-now)
+                        if (delay > timestep):
+                            logging.info("sleep {} seconds".format(delay.seconds))
+                            time.sleep((delay-(timestep/2)).seconds)
+
+        time.sleep(timestep.seconds)
+
+
+if __name__ == '__main__':
+
+    import sys, os
+    metatraced.cwd=os.getcwd()
+
+    # this is a triky for ubuntu and debian that remove /var/run every boot
+    # ATTENTION, this should be a security problem
+    path=os.path.dirname(autoradio.settings.lockfileweb)
+    if (not os.path.lexists(path) and path == "/var/run/autoradio" ):
+        os.mkdir(path)
+        if (os.getuid() == 0):
+
+            user=autoradio.settings.userweb
+            group=autoradio.settings.groupweb
+            if user is not None and group is not None:
+                from pwd import getpwnam
+                from grp import getgrnam
+                uid = getpwnam<(user)[2]
+                gid = getgrnam(group)[2]
+                os.chown(path,uid,gid)
+
+    if metatraced.service():
+        sys.stdout.write("Autoradioweb version "+_version_+"\n")
+        sys.stdout.write("Daemon started with pid %d\n" % os.getpid())
+        sys.stdout.write("Daemon stdout output\n")
+        sys.stderr.write("Daemon stderr output\n")
+
+        sys.exit(main())  # (this code was run as script)

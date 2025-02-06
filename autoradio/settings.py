@@ -80,6 +80,15 @@ configspec['jackdaemon']['lockfile'] = "string(default='/tmp/jackdaemon.lock')"
 configspec['jackdaemon']['user']     = "string(default=None)"
 configspec['jackdaemon']['group']    = "string(default=None)"
 
+configspec['autoradiometatrace']={}
+
+configspec['autoradiometatrace']['logfile']  = "string(default='/tmp/autoradiometatrace.log')"
+configspec['autoradiometatrace']['errfile']  = "string(default='/tmp/autoradiometatrace.err')"
+configspec['autoradiometatrace']['lockfile'] = "string(default='/tmp/autoradiometatrace.lock')"
+configspec['autoradiometatrace']['user']     = "string(default=None)"
+configspec['autoradiometatrace']['group']    = "string(default=None)"
+configspec['autoradiometatrace']['filemetatrace']    = "string(default='metatrace.log')"
+configspec['autoradiometatrace']['icecastapiurl']    = "string(default='https://uaername:password@server:port/stream.ogg')"
 
 config    = ConfigObj ('/etc/autoradio/autoradio-site.cfg',file_error=False,configspec=configspec)
 
@@ -171,6 +180,14 @@ lockfilejack             = config['jackdaemon']['lockfile']
 userjack                 = config['jackdaemon']['user']
 groupjack                = config['jackdaemon']['group']
 
+# section autoradiometatrace
+logfileautoradiometatrace              = config['autoradiometatrace']['logfile']
+errfileautoradiometatrace              = config['autoradiometatrace']['errfile']
+lockfileautoradiometatrace             = config['autoradiometatrace']['lockfile']
+userautoradiometatrace                 = config['autoradiometatrace']['user']
+groupautoradiometatrace                = config['autoradiometatrace']['group']
+fileautoradiometatrace                 = config['autoradiometatrace']['filemetatrace']
+icecastapiurlautoradiometatrace        = config['autoradiometatrace']['icecastapiurl']
 
 if DATABASE_ENGINE == "mysql":
     # Recommended for MySQL. See http://code.djangoproject.com/ticket/13906 

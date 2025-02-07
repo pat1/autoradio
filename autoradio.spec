@@ -91,6 +91,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/autoplayergui
 %{_bindir}/autoradiodbusd
 %{_bindir}/jackdaemon
+%{_bindir}/autometatraced
 
 %attr(-,autoradio,autoradio) %dir %{_datadir}/autoradio
 %attr(-,autoradio,autoradio) %{_datadir}/%{name}/*

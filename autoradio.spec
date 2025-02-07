@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
-Version: 3.6
-Release: 6
+Version: 3.7
+Release: 1
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -174,6 +174,17 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Fri Feb 07 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.7-1
+- added autometatraced schedule logger and streaming updater
+  (p.patruno@iperbole.bologna.it)
+- solve bug in palimpsest around midnight and better management for metadata in
+  streaming (p.patruno@iperbole.bologna.it)
+- try to solve too many file opened error (p.patruno@iperbole.bologna.it)
+- dynamic initial values in programsbook form (p.patruno@iperbole.bologna.it)
+- bug for palimpsest generation (p.patruno@iperbole.bologna.it)
+- configuration for jackd changed (p.patruno@iperbole.bologna.it)
+- reverse order for spots (p.patruno@iperbole.bologna.it)
+
 * Mon Apr 08 2024 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.6-6
 - close #35 (p.patruno@iperbole.bologna.it)
 - migrate to django 3 (p.patruno@iperbole.bologna.it)

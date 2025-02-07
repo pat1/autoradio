@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
 Version: 3.7
-Release: 1
+Release: 2
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -175,6 +175,9 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Fri Feb 07 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.7-2
+- added autometatraced in spec file (p.patruno@iperbole.bologna.it)
+
 * Fri Feb 07 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.7-1
 - added autometatraced schedule logger and streaming updater
   (p.patruno@iperbole.bologna.it)

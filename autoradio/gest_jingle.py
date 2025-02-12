@@ -12,6 +12,7 @@ from datetime import *
 from .autoradio_config import *
 
 from django.db.models import Q
+from django.db.models import F
 from django.core.exceptions import ObjectDoesNotExist
 
 from itertools import *
@@ -80,7 +81,6 @@ class gest_jingle(object):
             return
 
 
-#todo: ma i NULL nel sort dove stanno? all'inizio o alla fine?
 #todo: l'order by qui non funziona in quanto vale praticamente sempre
 #quello che è stato emesso piu' in la nel tempo
 #la priorità di fatto non viene considerata
@@ -90,6 +90,7 @@ class gest_jingle(object):
         # we select every jingle active at "now"
         # if not selected some time limits is like 00 for start and 24 for end
         # warning: if you set 18:00 for start and nothing for end it start 18:00 and stop at 24:00
+	# i NULL in emission_done nel sort impostati per essere all'inizio
 
         self.jingles= Jingle.objects.filter\
             (Q(start_date__lte=self.oggi) | Q(start_date__isnull=True),\
@@ -97,7 +98,7 @@ class gest_jingle(object):
              Q(start_time__lte=self.ora)  | Q(start_time__isnull=True),\
              Q(end_time__gte=self.ora)    | Q(end_time__isnull=True),\
              Q(giorni__name__exact=self.giorno) , Q(active__exact=True))\
-             .order_by('emission_done','priorita')
+             .order_by(F('emission_done').desc(nulls_last=True),'priorita')
 
 
 

@@ -37,12 +37,13 @@ import django
 
 import autoradio.settings
 import autoradio.autoradio_config
-from autoradio import daemon
 from autoradio import _version_
 import logging,errno,signal,logging.handlers
 
 # check schedule every timedelta
 timestep=timedelta(seconds=15)
+
+nexttimeadvice=timedelta(seconds=300)
 
 metatraced = daemon.Daemon(
         stdin="/dev/null",
@@ -56,6 +57,11 @@ metatraced = daemon.Daemon(
 def main():
 
     current_title=None
+    current_title_log=None
+    next_title=None
+    next_artist=None
+    spare=False
+    title=None
     
     django.setup()
     import autoradio.autoradio_core
@@ -101,16 +107,21 @@ def main():
         logging.info(f"datetime {now}")
 
         for title,pdatetime_start,pdatetime_end,code,type,subtype,production,note in pali.get_palimpsest(now-timedelta(minutes=600),now+timedelta(minutes=600)):
-            #print(title,pdatetime_start,pdatetime_end,code)
             artist=note
+            # if description is missed set it from program subtype
             if (artist is None or artist == ""): artist = subtype
-            if (pdatetime_start< now and pdatetime_end >now):
-                logging.info(f"--> {artist} : {title} : {type} : {subtype}")            
-                if (code == "5"):
-                    logging.info("skip pubblicità")
 
+            if (pdatetime_start< now and pdatetime_end >now):
+                # current program found
+                logging.info(f"--> {artist} : {title} : {type} : {subtype}")
+                # check for spot
+                if (code == "5"):
+                    logging.info("skip spot")
+
+                # check playlist
                 elif (code == "13f"):
-                    try: 
+                    try:
+                        # get metadataa from player playlist
                         if mp2.HasTrackList:
                             tl = TrackList(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
                             id = play.Metadata.get(u'mpris:trackid',None)
@@ -124,6 +135,7 @@ def main():
                                     file=track.get(u'xesam:url',None)
                                     filepath=os.path.dirname(file)
                                     autopath=settings.MEDIA_ROOT
+                                    onair="playlist"
                                     artist=track.get(u'xesam:artist',"Stai ascoltando")
                                     title=track.get(u'xesam:title',"Musica no stop")
                                     position=int(play.Position)
@@ -133,18 +145,10 @@ def main():
 
                                     if ( os.path.commonprefix ((filepath,"file://"+autopath)) == "file://"+autopath):
                                         logging.info("skip autoradio file: {}".format(file))
+                                        onair="program not in palimpsest"
                                         artist="Stai ascoltando"
                                         title="Musica no stop"
 
-                                    if (title != current_title):
-                                        logging.info (f"musica no stop: {artist} {title}")
-                                        metatracelogger.info(f"{artist};{title};{start};{end};{length}")
-                                        get_dict={ 'mount' : "/rcf.ogg", 'mode' : 'updinfo', 'title' : title, 'artist' : artist}
-                                        get_param= urllib.parse.urlencode(get_dict)
-                                        url = autoradio.settings.icecastapiurlautoradiometatrace+get_param
-                                        response = requests.get(url)
-                                        logging.info(response.text)
-                                        current_title=title
                     except:
                         logging.error("Error with mpris2 interface")
                         uris = get_players_uri(pattern=".",busaddress=autoradio.settings.busaddressplayer)
@@ -157,22 +161,51 @@ def main():
                         play = Player(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
 
                 else:
-                    if (title != current_title):
-                        logging.info (f"program: {artist} {title}")
-                        length=pdatetime_end-pdatetime_start
-                        metatracelogger.info(f"{artist};{title};{pdatetime_start};{pdatetime_end};{length}")
-                        get_dict={ 'mount' : "/rcf.ogg", 'mode' : 'updinfo', 'title' : title, 'artist' : artist, 'charset': 'UTF-8'}
-                        get_param= urllib.parse.urlencode(get_dict)
-                        url = "https://"+USERNAME+":"+PASSWORD+"@streaming.radiocittafujiko.it:8000/admin/metadata?"+get_param
-                        response = requests.get(url)
-                        logging.info(response.text)
-                        current_title=title
-                        
-                        delay=(pdatetime_end-now)
-                        if (delay > timestep):
-                            logging.info("sleep {} seconds".format(delay.seconds))
-                            time.sleep((delay-(timestep/2)).seconds)
+                    onair="program"
+                    start=pdatetime_start
+                    end=pdatetime_end
+                    length=pdatetime_end-pdatetime_start
+                    delay=pdatetime_end-(now+nexttimeadvice)
+                    if (delay > 2*timestep):
+                        logging.info("sleep {} seconds".format(delay.seconds))
+                        time.sleep((delay).seconds)
 
+            # check for next program message
+            if (pdatetime_start< (now+nexttimeadvice) and pdatetime_end > (now+nexttimeadvice)):
+                logging.info(f"next --> {artist} : {title} : {type} : {subtype}")
+                if (code == "5" or code == "13f"):
+                    logging.info("skip spot and playlist for next program")
+                    next_artist=None
+                    next_title=None
+                else:
+                    next_artist="Tra poco"
+                    next_title=title
+
+
+        if (title != current_title_log):
+            metatracelogger.info(f"{onair};{artist};{title};{start};{end};{length}")
+
+        if (spare and next_title is not None):
+            get_dict={ 'mount' : "/rcf.ogg", 'mode' : 'updinfo', 'title' : next_title, 'artist' : next_artist}
+            get_param= urllib.parse.urlencode(get_dict)
+            url = autoradio.settings.icecastapiurlautoradiometatrace+get_param
+            response = requests.get(url)
+            logging.info(response.text)
+            next_artist=None
+            next_title=None
+            current_title=next_title
+            spare = False
+
+        elif (title is not None and title != current_title):
+            get_dict={ 'mount' : "/rcf.ogg", 'mode' : 'updinfo', 'title' : title, 'artist' : artist}
+            get_param= urllib.parse.urlencode(get_dict)
+            url = autoradio.settings.icecastapiurlautoradiometatrace+get_param
+            response = requests.get(url)
+            logging.info(response.text)
+            current_title_log=title
+            current_title=title
+            spare = True
+            
         time.sleep(timestep.seconds)
 
 

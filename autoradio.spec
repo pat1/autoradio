@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
 Version: 3.7
-Release: 3
+Release: 4
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -175,6 +175,9 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Sat Feb 15 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.7-4
+- added next on air in autometatraced (p.patruno@iperbole.bologna.it)
+
 * Wed Feb 12 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.7-3
 - bug: new inserted jingles with a big number of old jingles ordered with NULL
   emission_date was never emitted (p.patruno@iperbole.bologna.it)

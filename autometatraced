@@ -105,21 +105,27 @@ def main():
 
         now=datetime.now()
         logging.info(f"datetime {now}")
-
-        for title,pdatetime_start,pdatetime_end,code,type,subtype,production,note in pali.get_palimpsest(now-timedelta(minutes=600),now+timedelta(minutes=600)):
-            artist=note
-            # if description is missed set it from program subtype
-            if (artist is None or artist == ""): artist = subtype
+        update=False
+        onair=None
+        artist=None
+        start=None
+        end=None
+        length=None
+        
+        for program_title,pdatetime_start,pdatetime_end,code,type,subtype,production,note in pali.get_palimpsest(now-timedelta(minutes=600),now+timedelta(minutes=600)):
 
             if (pdatetime_start< now and pdatetime_end >now):
+
                 # current program found
-                logging.info(f"--> {artist} : {title} : {type} : {subtype}")
+                logging.info(f"--> {note} : {program_title} : {type} : {subtype}")
                 # check for spot
                 if (code == "5"):
-                    logging.info("skip spot")
+                    onair="spot"
+                    logging.info(f"--> skip spot")
 
                 # check playlist
                 elif (code == "13f"):
+                    logging.info(f"--> playlist")
                     try:
                         # get metadataa from player playlist
                         if mp2.HasTrackList:
@@ -127,7 +133,7 @@ def main():
                             id = play.Metadata.get(u'mpris:trackid',None)
                             for track in  tl.GetTracksMetadata( tl.Tracks):
                                 if (track.get(u'mpris:trackid',None) == id):
-                                    logging.info(">> {} {} {} {} {}".format(track.get(u'mpris:trackid',None),
+                                    logging.info("--> {} {} {} {} {}".format(track.get(u'mpris:trackid',None),
                                                                       track.get(u'mpris:length',None),
                                                                       track.get(u'xesam:artist',None),
                                                                       track.get(u'xesam:title',None),
@@ -135,60 +141,69 @@ def main():
                                     file=track.get(u'xesam:url',None)
                                     filepath=os.path.dirname(file)
                                     autopath=settings.MEDIA_ROOT
-                                    onair="playlist"
-                                    artist=track.get(u'xesam:artist',"Stai ascoltando")
-                                    title=track.get(u'xesam:title',"Musica no stop")
                                     position=int(play.Position)
                                     start=now-timedelta(microseconds=position)
                                     end=start+timedelta(microseconds=int(track.get(u'mpris:length',None)))
                                     length=timedelta(microseconds=int(track.get(u'mpris:length',None)))
+                                    update=True
 
                                     if ( os.path.commonprefix ((filepath,"file://"+autopath)) == "file://"+autopath):
-                                        logging.info("skip autoradio file: {}".format(file))
+                                        logging.info("--> skip autoradio file: {}".format(file))
                                         onair="program not in palimpsest"
                                         artist="Stai ascoltando"
                                         title="Musica no stop"
+                                    else:
+                                        onair="playlist"
+                                        artist=track.get(u'xesam:artist',"Stai ascoltando")
+                                        title=track.get(u'xesam:title',"Musica no stop")
 
                     except:
                         logging.error("Error with mpris2 interface")
                         uris = get_players_uri(pattern=".",busaddress=autoradio.settings.busaddressplayer)
 
-                        for uri in uris:
-                            break
+                        if len(uris) >0 :
+                            uri=uris[0]
 
-                        bus =dbus.bus.BusConnection(autoradio.settings.busaddressplayer)
-                        mp2 = MediaPlayer2(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
-                        play = Player(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
+                            if autoradio.settings.busaddressplayer is None:
+                                bus = dbus.SessionBus()
+                            else:
+                                bus =dbus.bus.BusConnection(autoradio.settings.busaddressplayer)
+                                mp2 = MediaPlayer2(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
+                                play = Player(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
 
                 else:
+                    title=program_title
+                    artist=note
+                    # if description is missed set it from program subtype
+                    if (artist is None or artist == ""): artist = subtype
                     onair="program"
                     start=pdatetime_start
                     end=pdatetime_end
                     length=pdatetime_end-pdatetime_start
-                    delay=pdatetime_end-(now+nexttimeadvice)
-                    if (delay > 2*timestep):
-                        logging.info("sleep {} seconds".format(delay.seconds))
-                        time.sleep((delay).seconds)
+                    update=True
 
             # check for next program message
             if (pdatetime_start< (now+nexttimeadvice) and pdatetime_end > (now+nexttimeadvice)):
-                logging.info(f"next --> {artist} : {title} : {type} : {subtype}")
+                logging.info(f"--> next {note} : {program_title} : {type} : {subtype}")
                 if (code == "5" or code == "13f"):
-                    logging.info("skip spot and playlist for next program")
+                    logging.info("--> next skip spot and playlist for next program")
                     next_artist=None
                     next_title=None
                 else:
                     next_artist="Tra poco"
-                    next_title=title
+                    next_title=program_title
 
+        logging.info(f"ELABORATE {update} ; {onair} ; {artist} ; {title} ; {start} ; {end} ; {length}")
 
-        if (title != current_title_log):
+        if (update and title != current_title_log):
             metatracelogger.info(f"{onair};{artist};{title};{start};{end};{length}")
+            current_title_log=title
 
-        if (spare and next_title is not None):
+        if (spare and next_title is not None and next_title != title):
+            logging.info(f"NEXT   {next_artist};{next_title};{start};{end};{length}")
             get_dict={ 'mount' : "/rcf.ogg", 'mode' : 'updinfo', 'title' : next_title, 'artist' : next_artist}
             get_param= urllib.parse.urlencode(get_dict)
-            url = autoradio.settings.icecastapiurlautoradiometatrace+get_param
+            url = autoradio.settings.icecastapiurlautoradiometatrace+"?"+get_param
             response = requests.get(url)
             logging.info(response.text)
             next_artist=None
@@ -196,16 +211,22 @@ def main():
             current_title=next_title
             spare = False
 
-        elif (title is not None and title != current_title):
+        elif (update and title is not None and title != current_title):
+            logging.info(f"CURRENT {onair};{artist};{title};{start};{end};{length}")
             get_dict={ 'mount' : "/rcf.ogg", 'mode' : 'updinfo', 'title' : title, 'artist' : artist}
             get_param= urllib.parse.urlencode(get_dict)
-            url = autoradio.settings.icecastapiurlautoradiometatrace+get_param
+            url = autoradio.settings.icecastapiurlautoradiometatrace+"?"+get_param
             response = requests.get(url)
             logging.info(response.text)
-            current_title_log=title
             current_title=title
             spare = True
             
+        if (update):
+            delay=end-(now+nexttimeadvice)
+            if (delay > 2*timestep):
+                logging.info("sleep {} seconds".format(delay.seconds))
+                time.sleep((delay).seconds)
+            logging.info("sleep {} seconds".format(timestep.seconds))
         time.sleep(timestep.seconds)
 
 

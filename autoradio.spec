@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
 Version: 3.7
-Release: 4
+Release: 5
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -175,6 +175,13 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Mon Feb 17 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.7-5
+- better admin interface (p.patruno@iperbole.bologna.it)
+- skip jingle and spots in autometatraced during playlist
+  (p.patruno@iperbole.bologna.it)
+- bug wrong jingle order for null date (p.patruno@iperbole.bologna.it)
+- added next program message to autometatraced (p.patruno@iperbole.bologna.it)
+
 * Sat Feb 15 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.7-4
 - added next on air in autometatraced (p.patruno@iperbole.bologna.it)
 

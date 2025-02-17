@@ -141,6 +141,7 @@ def main():
                                     file=track.get(u'xesam:url',None)
                                     filepath=os.path.dirname(file)
                                     autopath=settings.MEDIA_ROOT
+                                    programpath=settings.MEDIA_ROOT+"podcasts"
                                     position=int(play.Position)
                                     start=now-timedelta(microseconds=position)
                                     end=start+timedelta(microseconds=int(track.get(u'mpris:length',None)))
@@ -149,9 +150,11 @@ def main():
 
                                     if ( os.path.commonprefix ((filepath,"file://"+autopath)) == "file://"+autopath):
                                         logging.info("--> skip autoradio file: {}".format(file))
-                                        onair="program not in palimpsest"
-                                        artist="Stai ascoltando"
-                                        title="Musica no stop"
+                                        if ( os.path.commonprefix ((filepath,"file://"+programpath)) == "file://"+programpath):
+                                            logging.warning("--> program not in palimpsest file: {}".format(file))
+                                            onair="program not in palimpsest"
+                                            artist="sconosciuto"
+                                            title=filepath
                                     else:
                                         onair="playlist"
                                         artist=track.get(u'xesam:artist',"Stai ascoltando")

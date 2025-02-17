@@ -299,7 +299,7 @@ class ShowAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ("title",)}
 
     fieldsets = (
-        (None, {'fields': ('title','slug','length','type','production',\
+        (None, {'fields': ('active','title','slug','length','type','production',\
                                'organization','link','description','author')}),
 
         ('Podcast options', {
@@ -314,10 +314,11 @@ class ShowAdmin(admin.ModelAdmin):
         )
 
 
-    list_display = ('active','title','description')
-    list_editable = ('title','description')
+    list_display = ('active','slug','title','description')
+    list_editable = ('active','title','description')
+    list_display_links = ('slug',)
     list_filter = ['active','organization','author__username',]
-    search_fields = ['title',]
+    search_fields = ['title','description']
 
 #    is better without EpisodeInline and start from Episode 
 #    inlines = [

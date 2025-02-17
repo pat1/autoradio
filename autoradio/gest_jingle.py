@@ -98,7 +98,7 @@ class gest_jingle(object):
              Q(start_time__lte=self.ora)  | Q(start_time__isnull=True),\
              Q(end_time__gte=self.ora)    | Q(end_time__isnull=True),\
              Q(giorni__name__exact=self.giorno) , Q(active__exact=True))\
-             .order_by(F('emission_done').desc(nulls_last=False),'priorita')
+             .order_by(F('emission_done').asc(nulls_last=False),'priorita')
 
 
 

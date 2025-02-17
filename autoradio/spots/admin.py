@@ -80,22 +80,24 @@ admin.site.register(Fascia, FasciaAdmin)
 
 
 class SpotAdmin(admin.ModelAdmin):
-	fieldsets = (
-		(None, {'fields': ('spot','file','rec_date')}),
-		('Emission information', {'fields': \
-		  ('start_date','end_date','giorni','fasce','priorita','prologo','epilogo')}),
-		)
-	#	    list_display = ('spot', 'rec_date', 'was_recorded_today','giorni','fasce','priorita')
-	list_filter = ['start_date','end_date','rec_date','fasce','giorni',"prologo","epilogo"]
+    fieldsets = (
+	(None, {'fields': ('active','spot','file','rec_date')}),
+	('Emission information', {'fields': \
+		                  ('start_date','end_date','giorni','fasce','priorita','prologo','epilogo')}),
+    )
+    #	    list_display = ('spot', 'rec_date', 'was_recorded_today','giorni','fasce','priorita')
+    list_filter = ['start_date','end_date','rec_date','fasce','giorni',"prologo","epilogo"]
 
-	# rec_date sarebbe standard, ma per eliminare cose vecchie meglio usare end_date
-	#date_hierarchy = 'rec_date'
-	date_hierarchy = 'end_date'
+    # rec_date sarebbe standard, ma per eliminare cose vecchie meglio usare end_date
+    #date_hierarchy = 'rec_date'
+    date_hierarchy = 'rec_date'
 
-	search_fields = ['spot','giorni__name','fasce__name',]
-	list_display = ('spot','file','rec_date','priorita')
+    search_fields = ['active','spot','giorni__name','fasce__name',]
+    list_display = ('active','spot','file','start_date','end_date','priorita')
+    list_display_links = ('spot',)
+    list_editable = ('active','start_date','end_date','priorita')
 
-	form = MySpotAdminForm
+    form = MySpotAdminForm
 
 
 admin.site.register(Spot, SpotAdmin)

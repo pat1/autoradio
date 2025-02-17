@@ -58,8 +58,8 @@ class Giorno(models.Model):
         def __str__(self):
             return self.name
 
-        class Admin(object):
-            search_fields = ['name']
+#        class Admin(object):
+#            search_fields = ['name']
 
 ## class Giorno(models.Model):
 
@@ -119,8 +119,8 @@ class Configure(models.Model):
 
             return self.sezione+" "+self.active.__str__()+" "+start+" "+end
 
-        class Admin(object):
-       	    list_display = ('sezione','active','emission_starttime','emission_endtime')
+#        class Admin(object):
+#       	    list_display = ('sezione','active','emission_starttime','emission_endtime')
 
 
 class Fascia(models.Model):
@@ -157,9 +157,9 @@ class Fascia(models.Model):
     def __str__(self):
             return self.name+" "+self.emission_time.isoformat()
 
-    class Admin(object):
-       	search_fields = ['name','emission_time','emission_done','active','spots']
-       	list_display = ('name','emission_time','emission_done','active','spots')
+#    class Admin(object):
+#       	search_fields = ['name','emission_time','emission_done','active','spots']
+#       	list_display = ('name','emission_time','emission_done','active','spots')
 
     class Meta:
         ordering = ['emission_time']
@@ -201,17 +201,17 @@ class Spot(models.Model):
        def __str__(self):
        	return self.spot
 
-       class Admin(object):
-       	fields = (
-       		(None, {'fields': ('spot','file','rec_date')}),
-       		('Emission information', {'fields': \
-       		  ('start_date','end_date','giorni','fasce','priorita','prologo','epilogo')}),
-       		)
-       	#	    list_display = ('spot', 'rec_date', 'was_recorded_today','giorni','fasce','priorita')
-       	list_filter = ['start_date','end_date','fasce','giorni',"prologo","epilogo"]
-       	date_hierarchy = 'rec_date'
-       	search_fields = ['spot','giorni','fascie']
-       	list_display = ('spot','file','rec_date','priorita')
+#       class Admin(object):
+#       	fields = (
+#       		(None, {'fields': ('spot','file','rec_date')}),
+#       		('Emission information', {'fields': \
+#       		  ('start_date','end_date','giorni','fasce','priorita','prologo','epilogo')}),
+#       		)
+#       	#	    list_display = ('spot', 'rec_date', 'was_recorded_today','giorni','fasce','priorita')
+#       	list_filter = ['start_date','end_date','fasce','giorni',"prologo","epilogo"]
+#       	date_hierarchy = 'rec_date'
+#       	search_fields = ['spot','giorni','fascie']
+#       	list_display = ('spot','file','rec_date','priorita')
 
 
        #class Meta:

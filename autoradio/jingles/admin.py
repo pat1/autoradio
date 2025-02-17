@@ -76,16 +76,18 @@ admin.site.register(Configure, ConfigureAdmin)
 
 
 class JingleAdmin(admin.ModelAdmin):
-	fieldsets = (
-		(None, {'fields': ('jingle','file','rec_date','active')}),
-		('Emission information', {'fields': ('start_date','end_date','start_time','end_time','giorni','priorita')}),
-		)
-	list_display = ('jingle','file','rec_date','emission_done','active')
-	list_filter = ['active','start_date','end_date','start_time','end_time','rec_date','giorni']
-	date_hierarchy = 'rec_date'
-	search_fields = ['jingle','file']
+    fieldsets = (
+	(None, {'fields': ('active','jingle','file','rec_date')}),
+	('Emission information', {'fields': ('start_date','end_date','start_time','end_time','giorni','priorita')}),
+    )
+    list_display = ('active','jingle','file','start_date','end_date','emission_done')
+    list_display_links = ('jingle',)
+    list_editable = ('active','start_date','end_date')
+    list_filter = ['active','rec_date','giorni']
+    search_fields = ['jingle','file']
+    date_hierarchy = 'rec_date'
 
-	form = MyJingleAdminForm
+    form = MyJingleAdminForm
 
 admin.site.register(Jingle, JingleAdmin)
 

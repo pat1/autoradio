@@ -107,15 +107,16 @@ class Jingle(models.Model):
        def __str__(self):
        	return self.jingle
 
-       class Admin(object):
-       	fields = (
-       		(None, {'fields': ('jingle','file','rec_date','active')}),
-       		('Emission information', {'fields': ('start_date','end_date','start_time','end_time','giorni','priorita')}),
-       		)
-       	list_display = ('jingle','file','rec_date','emission_done')
-       	list_filter = ['start_date','end_date','start_time','end_time','giorni']
-       	date_hierarchy = 'rec_date'
-       	search_fields = ['jingle']
+#       class Admin(object):
+#
+#        fields = (
+#       		(None, {'fields': ('jingle','file','rec_date','active')}),
+#       		('Emission information', {'fields': ('start_date','end_date','start_time','end_time','giorni','priorita')}),
+#       		)
+#       	list_display = ('jingle','file','rec_date','emission_done')
+#       	list_filter = ['start_date','end_date','start_time','end_time','giorni']
+#       	date_hierarchy = 'rec_date'
+#       	search_fields = ['jingle']
 
        #class Meta:
        #	unique_together = ("prologo", "epilogo","fasce")

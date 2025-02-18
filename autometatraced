@@ -82,7 +82,6 @@ def main():
     metatracelogger.setLevel(logging.INFO)
     
     logging.info('Starting up autometatraced version '+_version_)
-    metatracelogger.info
     
     uris = list(get_players_uri(pattern=".",busaddress=autoradio.settings.busaddressplayer))
 
@@ -229,7 +228,7 @@ def main():
             if (delay > 2*timestep):
                 logging.info("sleep {} seconds".format(delay.seconds))
                 time.sleep((delay).seconds)
-            logging.info("sleep {} seconds".format(timestep.seconds))
+        #logging.info("sleep {} seconds".format(timestep.seconds))
         time.sleep(timestep.seconds)
 
 

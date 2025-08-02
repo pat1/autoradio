@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
 Version: 3.7
-Release: 6
+Release: 7
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -175,6 +175,12 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Sat Aug 02 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.7-7
+- bugs and better admin for spots; solve ignored active field in spot
+  (p.patruno@iperbole.bologna.it)
+- minors on autometatraced (p.patruno@iperbole.bologna.it)
+- better admin for show (p.patruno@iperbole.bologna.it)
+
 * Mon Feb 17 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.7-6
 - bug in gest_spot mutagen file (p.patruno@iperbole.bologna.it)
 

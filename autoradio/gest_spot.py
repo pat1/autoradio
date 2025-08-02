@@ -105,7 +105,8 @@ class gest_spot(object):
 
     def get_prologhi(self):
 
-        prologhi= self.fascia.spot_set.filter(Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
+        prologhi= self.fascia.spot_set.filter(Q(active__exact = True),\
+                                    Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
                                     Q(end_date__gte=self.now) | Q(end_date__isnull=True),\
                                     Q(giorni__name__exact=self.giorno) , Q(prologo__exact=True)).order_by('priorita')
 
@@ -117,7 +118,8 @@ class gest_spot(object):
 
     def count_spots(self):
 
-        return self.fascia.spot_set.filter(Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
+        return self.fascia.spot_set.filter(Q(active__exact = True),\
+                                    Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
                                     Q(end_date__gte=self.now) | Q(end_date__isnull=True),\
                                     Q(giorni__name__exact=self.giorno)).exclude(prologo__exact=True)\
                                     .exclude(epilogo__exact=True).count()
@@ -126,7 +128,8 @@ class gest_spot(object):
 
     def get_spots(self):
 
-        spots=self.fascia.spot_set.filter(Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
+        spots=self.fascia.spot_set.filter(Q(active__exact = True),\
+                                    Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
                                     Q(end_date__gte=self.now) | Q(end_date__isnull=True),\
                                     Q(giorni__name__exact=self.giorno)).exclude(prologo__exact=True)\
                                     .exclude(epilogo__exact=True).order_by('priorita')
@@ -139,7 +142,8 @@ class gest_spot(object):
 
     def get_epiloghi(self):
 
-        epiloghi=self.fascia.spot_set.filter(Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
+        epiloghi=self.fascia.spot_set.filter(Q(active__exact = True),\
+                                    Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
                                     Q(end_date__gte=self.now) | Q(end_date__isnull=True),\
                                     Q(giorni__name__exact=self.giorno) , Q(epilogo__exact=True)).order_by('priorita')
         for epilogo in epiloghi:

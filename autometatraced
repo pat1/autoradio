@@ -119,7 +119,6 @@ def main():
                 logging.info(f"--> {note} : {program_title} : {type} : {subtype}")
                 # check for spot
                 if (code == "5"):
-                    onair="spot"
                     logging.info(f"--> skip spot")
 
                 # check playlist

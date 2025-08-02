@@ -341,7 +341,7 @@ setup(name='autoradio',
       data_files = data_files,
       license = "GNU GPL v2",
       requires= [ "mutagen","django","reportlab","configobj"],
-      long_description="""\ 
+      long_description=""" 
 Radio automation software. Simple to use, starting from digital audio
 files, manage on-air broadcasting over a radio-station or
 web-radio. The main components are:

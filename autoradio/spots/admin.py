@@ -73,9 +73,12 @@ class ConfigureAdmin(admin.ModelAdmin):
 admin.site.register(Configure, ConfigureAdmin)
 
 class FasciaAdmin(admin.ModelAdmin):
-	search_fields = ['name','spots']
-	list_display = ('name','emission_time','emission_done','active','spots')
-
+    search_fields = ['name','spot__spot']
+    list_display = ('active','name','emission_time','emission_done','spots')
+    list_editable = ('active','emission_time')
+    list_filter = ['active',]
+    list_display_links=('name',)
+    
 admin.site.register(Fascia, FasciaAdmin)
 
 

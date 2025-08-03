@@ -89,7 +89,7 @@ class SpotAdmin(admin.ModelAdmin):
 		                  ('start_date','end_date','giorni','fasce','priorita','prologo','epilogo')}),
     )
     #	    list_display = ('spot', 'rec_date', 'was_recorded_today','giorni','fasce','priorita')
-    list_filter = ['start_date','end_date','rec_date','fasce','giorni',"prologo","epilogo"]
+    list_filter = ['active','start_date','end_date','rec_date','fasce','giorni',"prologo","epilogo"]
 
     # rec_date sarebbe standard, ma per eliminare cose vecchie meglio usare end_date
     #date_hierarchy = 'rec_date'

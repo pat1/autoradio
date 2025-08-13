@@ -110,7 +110,8 @@ def main():
         start=None
         end=None
         length=None
-        
+        last_message_is_next=False
+            
         for program_title,pdatetime_start,pdatetime_end,code,type,subtype,production,note in pali.get_palimpsest(now-timedelta(minutes=600),now+timedelta(minutes=600)):
 
             if (pdatetime_start< now and pdatetime_end >now):
@@ -211,6 +212,7 @@ def main():
             next_title=None
             current_title=next_title
             spare = False
+            last_message_is_next=True
 
         elif (update and title is not None and title != current_title):
             logging.info(f"CURRENT {onair};{artist};{title};{start};{end};{length}")
@@ -224,11 +226,11 @@ def main():
             
         if (update):
             delay=end-(now+nexttimeadvice)
-            if (delay > 2*timestep):
-                logging.info("sleep {} seconds".format(delay.seconds))
-                time.sleep((delay).seconds)
-        #logging.info("sleep {} seconds".format(timestep.seconds))
-        time.sleep(timestep.seconds)
+            if (delay > 2*timestep and not last_message_is_next):
+                logging.info("sleep {} seconds".format(delay.total_seconds()))
+                time.sleep(delay.total_seconds())
+        #logging.info("sleep {} seconds".format(timestep.total_seconds()))
+        time.sleep(timestep.total_seconds())
 
 
 if __name__ == '__main__':

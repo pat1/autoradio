@@ -114,10 +114,10 @@ def main():
             
         for program_title,pdatetime_start,pdatetime_end,code,type,subtype,production,note in pali.get_palimpsest(now-timedelta(minutes=600),now+timedelta(minutes=600)):
 
-            if (pdatetime_start< now and pdatetime_end >now):
+            if (pdatetime_start <= now and pdatetime_end >now):
 
                 # current program found
-                logging.info(f"--> {note} : {program_title} : {type} : {subtype}")
+                logging.info(f"------> {note} : {program_title} : {type} : {subtype}")
                 # check for spot
                 if (code == "5"):
                     logging.info(f"--> skip spot")
@@ -142,22 +142,23 @@ def main():
                                     autopath=settings.MEDIA_ROOT
                                     programpath=settings.MEDIA_ROOT+"podcasts"
                                     position=int(play.Position)
-                                    start=now-timedelta(microseconds=position)
-                                    end=start+timedelta(microseconds=int(track.get(u'mpris:length',None)))
-                                    length=timedelta(microseconds=int(track.get(u'mpris:length',None)))
                                     update=True
 
                                     if ( os.path.commonprefix ((filepath,"file://"+autopath)) == "file://"+autopath):
                                         logging.info("--> skip autoradio file: {}".format(file))
+                                        onair="program not in palimpsest"
                                         if ( os.path.commonprefix ((filepath,"file://"+programpath)) == "file://"+programpath):
                                             logging.warning("--> program not in palimpsest file: {}".format(file))
-                                            onair="program not in palimpsest"
                                             artist="sconosciuto"
-                                            title=filepath
+                                            title=os.path.splitext(os.path.split(filepath)[1])[0]
                                     else:
                                         onair="playlist"
                                         artist=track.get(u'xesam:artist',"Stai ascoltando")
                                         title=track.get(u'xesam:title',"Musica no stop")
+                                        start=now-timedelta(microseconds=position)
+                                        end=start+timedelta(microseconds=int(track.get(u'mpris:length',None)))
+                                        length=timedelta(microseconds=int(track.get(u'mpris:length',None)))
+
 
                     except:
                         logging.error("Error with mpris2 interface")
@@ -185,7 +186,7 @@ def main():
                     update=True
 
             # check for next program message
-            if (pdatetime_start< (now+nexttimeadvice) and pdatetime_end > (now+nexttimeadvice)):
+            if (pdatetime_start <= (now+nexttimeadvice) and pdatetime_end > (now+nexttimeadvice)):
                 logging.info(f"--> next {note} : {program_title} : {type} : {subtype}")
                 if (code == "5" or code == "13f"):
                     logging.info("--> next skip spot and playlist for next program")
@@ -224,7 +225,7 @@ def main():
             current_title=title
             spare = True
             
-        if (update):
+        if (update and end is not None):
             delay=end-(now+nexttimeadvice)
             if (delay > 2*timestep and not last_message_is_next):
                 logging.info("sleep {} seconds".format(delay.total_seconds()))

@@ -93,10 +93,10 @@ class mediaplayer(object):
             self.tl = TrackList(dbus_interface_info={'dbus_uri': uri,'dbus_session':self.bus})
         else:
             self.tl = None
-
+            
     def __str__(self):
         return self.play.PlaybackStatus
-    
+
 
     def play_ifnot(self):
         '''

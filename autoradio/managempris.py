@@ -52,7 +52,7 @@ def ar_emitted(self):
     Save in django datatime when emission is done
     '''
 
-    self.emission_done=datetime.now()
+    self.emission_done=datetime.now(timezone.utc)
     self.save()
 
 
@@ -64,7 +64,7 @@ class ScheduleProgram(object):
     def __init__ (self,player,session,schedule):
         "init schedule"
         
-        self.deltasec=secondi( schedule.scheduledatetime - datetime.now())
+        self.deltasec=secondi( schedule.scheduledatetime - datetime.now(timezone.utc))
         # round to nearest future
         if self.deltasec < 5 : self.deltasec = 5
         self.player=player
@@ -123,6 +123,10 @@ def ManagePlayer (player,session,schedule):
       # Regione critica
       lock.acquire()
       try:
+
+         if (aud.get_playlist_len()==0):
+            aud.playlist_add_atpos("file://default_playlist.xspf",None)
+
          if not aud.playlist_clear_up(atlast=10):
             raise PlayerError("Managempris: ERROR in playlist_clear_up")
 
@@ -271,18 +275,18 @@ def main():
     #media = "/home/autoradio/django/media/playlist/tappeto_musicale.m3u"
     #media = raw_input("dammi il media? ")
 
-    scheduledatetime=datetime.now()+timedelta(seconds=5)
+    scheduledatetime=datetime.now(timezone.utc)+timedelta(seconds=5)
     sched=autoradio_core.schedule(programma,scheduledatetime,media,filename=media,type=type,shuffle=shuffle,maxlength=maxlength)
 
     threadschedule=ScheduleProgram(player,session,sched)
     threadschedule.start()
 
-#    scheduledatetime=datetime.now()+timedelta(seconds=8)
+#    scheduledatetime=datetime.now(timezone.utc)+timedelta(seconds=8)
 #    media = "/home/autoradio/django/media/programs/borsellino_giordano.mp3"
 #    schedule=ScheduleProgram(session,function,operation,media,scheduledatetime,programma,shuffle)
 #    schedule.start()
 
-#    scheduledatetime=datetime.now()+timedelta(seconds=10)
+#    scheduledatetime=datetime.now(timezone.utc)+timedelta(seconds=10)
 #    media = "/home/autoradio/django/media/programs/mister_follow_follow.mp3"
 #    schedule=ScheduleProgram(session,function,operation,media,scheduledatetime,programma,shuffle)
 #    schedule.start()

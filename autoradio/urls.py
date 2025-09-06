@@ -1,7 +1,7 @@
 from django.conf.urls import *
 from . import settings
 from django.conf.urls.static import static
-
+from django.urls import re_path
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -18,16 +18,16 @@ urlpatterns = [
 #    (r'^$', include('jingles.urls')),
 
 #    Uncomment the next line to enable admin documentation:
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    re_path(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
 #    Uncomment the next line to enable the admin:
-    url(r'^admin/', admin.site.urls),
+    re_path(r'^admin/', admin.site.urls),
 
-    url(r'^', include('autoradio.programs.urls')),
-#    url(r'^', include('autoradio.palimpsest.urls')),
-    url(r'^podcasts/', include('autoradio.programs.urls_podcast')),
-    url(r'^player/', include('autoradio.player.urls')),
-    url(r'^doc/', include('autoradio.doc.urls')),
+    re_path(r'^', include('autoradio.programs.urls')),
+#    re_path(r'^', include('autoradio.palimpsest.urls')),
+    re_path(r'^podcasts/', include('autoradio.programs.urls_podcast')),
+    re_path(r'^player/', include('autoradio.player.urls')),
+    re_path(r'^doc/', include('autoradio.doc.urls')),
 ]
 
 if ( settings.SERVE_STATIC ):

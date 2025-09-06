@@ -18,16 +18,16 @@
     {% for schedule in schedules %}
       <tr>
         <td 
-	   {%ifequal schedule.tipo "spot" %} bgcolor="#FFA500" {% endifequal %}
-	   {%ifequal schedule.tipo "playlist" %} bgcolor="#FFFF00" {% endifequal %}
-	   {%ifequal schedule.tipo "program" %} bgcolor="#1E90FF" {% endifequal %}
-	   {%ifequal schedule.tipo "jingle" %} bgcolor="#448888" {% endifequal %}
+	   {%if schedule.tipo == "spot" %} bgcolor="#FFA500" {% endif %}
+	   {%if schedule.tipo == "playlist" %} bgcolor="#FFFF00" {% endif %}
+	   {%if schedule.tipo == "program" %} bgcolor="#1E90FF" {% endif %}
+	   {%if schedule.tipo == "jingle" %} bgcolor="#448888" {% endif %}
            >  {{ schedule.tipo  }} </td>
 	<td
-	   {%ifequal schedule.tipo "spot" %} bgcolor="#FFA500" {% endifequal %}
-	   {%ifequal schedule.tipo "playlist" %} bgcolor="#FFFF00" {% endifequal %}
-	   {%ifequal schedule.tipo "program" %} bgcolor="#1E90FF" {% endifequal %}
-	   {%ifequal schedule.tipo "jingle" %} bgcolor="#448888" {% endifequal %}
+	   {%if schedule.tipo == "spot" %} bgcolor="#FFA500" {% endif %}
+	   {%if schedule.tipo == "playlist" %} bgcolor="#FFFF00" {% endif %}
+	   {%if schedule.tipo == "program" %} bgcolor="#1E90FF" {% endif %}
+	   {%if schedule.tipo == "jingle" %} bgcolor="#448888" {% endif %}
 	   > {{ schedule.title  }} </td>
 	<td {% if schedule.isfuture %} bgcolor="#884488" {%else %} bgcolor="#00FF00" {% endif %}> {{  schedule.datet|date:"Y-m-d H:i:s" }} </td>
 	<td {% if schedule.isfuture %} bgcolor="#884488" {%else %} bgcolor="#00FF00" {% endif %}> {%if schedule.datet %} {% if schedule.isfuture %} {% trans "in" %} {{ schedule.datet|timeuntil }} {% else %} {{ schedule.datet|timesince }} {% trans "ago" %} {% endif %}{% endif %}</td>

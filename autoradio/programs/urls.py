@@ -1,12 +1,13 @@
 from django.conf.urls import *
 #from django.contrib import admin
+from django.urls import re_path
 
 #from models import Program, Schedule
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.index),
-    url(r'^xmms/$', views.dbusstato),
-    url(r'^programsbook/$', views.programsbook),
+    re_path(r'^$', views.index),
+    re_path(r'^xmms/$', views.dbusstato),
+    re_path(r'^programsbook/$', views.programsbook),
 ]
 

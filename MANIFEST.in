@@ -4,6 +4,9 @@ include README
 include TODO
 include *.txt
 include autoradio.wsgi
+include default_playlist.xspf
+include autoradio_1.ogg
+include autoradio_2.ogg
 global-include  *.txt *.py *.sh *.in *.cfg *.json *.conf
 recursive-include doc *
 recursive-include locale *.po

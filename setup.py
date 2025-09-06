@@ -261,7 +261,9 @@ for dirpath, dirnames, filenames in os.walk('templates'):
     if filenames:
         data_files.append(['share/autoradio/'+dirpath, [os.path.join(dirpath, f) for f in filenames]])
 
-data_files.append(['share/autoradio/server/',['autoradio.wsgi']])
+data_files.append(['share/autoradio/',['default_playlist.xspf']])
+data_files.append(['share/autoradio/',['autoradio_1.ogg']])
+data_files.append(['share/autoradio/',['autoradio_2.ogg']])
 
 for dirpath, dirnames, filenames in os.walk('static'):
     # Ignore dirnames that start with '.'

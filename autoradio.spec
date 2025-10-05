@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
-Version: 3.7
-Release: 7
+Version: 3.8
+Release: 1
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -175,6 +175,14 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Sun Oct 05 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.8-1
+- added default playlist for cold start (p.patruno@iperbole.bologna.it)
+- porting to django 5 (p.patruno@iperbole.bologna.it)
+- bug in autometatraced for popolare news (p.patruno@iperbole.bologna.it)
+- bug: sleeping wrong time and with last metadata 'tra poco'
+  (p.patruno@iperbole.bologna.it)
+- filter spots by active (p.patruno@iperbole.bologna.it)
+
 * Sat Aug 02 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.7-7
 - bugs and better admin for spots; solve ignored active field in spot
   (p.patruno@iperbole.bologna.it)

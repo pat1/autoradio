@@ -152,15 +152,15 @@ class gest_playlist(object):
                 #print self.datesched_min.date()
                 #print playlist.time
 
-                playlist.ar_scheduledatetime=datetime.datetime.combine(self.datesched_min.date(), playlist.time)
+                playlist.ar_scheduledatetime=datetime.datetime.combine(self.datesched_min.date(), playlist.time,tzinfo=None)
                 
             else:
                 # we are around midnight we have to check the correct date (today, tomorrow)
 
                 if playlist.time > datetime.time(12):
-                    playlist.ar_scheduledatetime=datetime.datetime.combine(self.datesched_min.date(), playlist.time)
+                    playlist.ar_scheduledatetime=datetime.datetime.combine(self.datesched_min.date(), playlist.time,tzinfo=None)
                 else:
-                    playlist.ar_scheduledatetime=datetime.datetime.combine(self.datesched_max.date(), playlist.time)
+                    playlist.ar_scheduledatetime=datetime.datetime.combine(self.datesched_max.date(), playlist.time,tzinfo=None)
 
             playlist.ar_emission_done=playlist.emission_done
 

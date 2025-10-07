@@ -120,7 +120,7 @@ class schedule:
     def get_datetdone(self):
         return self.emission_done
     def get_isfuture(self):
-        return self.future(datetime.now(timezone.utc))
+        return self.future(datetime.now(tz=None))
 
     djobj=property(get_djobj)
     title=property(get_title)
@@ -362,7 +362,7 @@ class schedules(list):
         # time constants
 
         #this is the first and last time that I set the current time
-        if now is None : now=datetime.now(timezone.utc)
+        if now is None : now=datetime.now(tz=None)
 
         spots=gest_spot(now,minelab,playlistdir)
 

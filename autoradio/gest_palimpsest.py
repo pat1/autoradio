@@ -125,15 +125,15 @@ class gest_palimpsest(object):
 
             if (self.timesched_min < self.timesched_max):
 
-                program.ar_scheduledatetime=datetime.combine(self.datesched_min.date(), program.time)
+                program.ar_scheduledatetime=datetime.combine(self.datesched_min.date(), program.time,tzinfo=None)
                 
             else:
                 # we are around midnight we have to check the correct date (today, tomorrow)
 
                 if program.time > time(12):
-                    program.ar_scheduledatetime=datetime.combine(self.datesched_min.date(), program.time)
+                    program.ar_scheduledatetime=datetime.combine(self.datesched_min.date(), program.time,tzinfo=None)
                 else:
-                    program.ar_scheduledatetime=datetime.combine(self.datesched_max.date(), program.time)
+                    program.ar_scheduledatetime=datetime.combine(self.datesched_max.date(), program.time,tzinfo=None)
 
             yield program
 

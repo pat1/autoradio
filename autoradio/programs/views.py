@@ -188,8 +188,8 @@ def programsbook(request):
             datetime_start=form.cleaned_data['datetime_start']
             datetime_end=form.cleaned_data['datetime_end']
 
-            datetime_start = datetime.combine(datetime_start.date(),time(00))
-            datetime_end = datetime.combine(datetime_end.date(),time(23,59))
+            datetime_start = datetime.combine(datetime_start.date(),time(00),tzinfo=None)
+            datetime_end = datetime.combine(datetime_end.date(),time(23,59),tzinfo=None)
 
             #datetime_start=(now-timedelta(days=4))
             #datetime_end=now

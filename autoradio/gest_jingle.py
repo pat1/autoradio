@@ -33,7 +33,7 @@ def time_iterator(datesched_min,datesched_max,emission_freq):
     delta=timedelta(hours=emission_freq.hour,minutes=emission_freq.minute,\
                     seconds=emission_freq.second)
 
-    datac=datetime.combine(datai,time(00,00,00),timezone.utc)
+    datac=datetime.combine(datai,time(00,00,00),tzinfo=None)
     
     while datac < datesched_min:
         datac=datac+delta
@@ -146,7 +146,7 @@ class gest_jingle(object):
 
 def main():
 
-    now=datetime.now(timezone.utc)
+    now=datetime.now(tz=None)
     jingles=gest_jingle(now,minelab)
     
     for jingle in jingles.get_jingle():

@@ -303,3 +303,5 @@ try:
 except ImportError:
     print("django_extensions is not installed; I do not use it")
     pass
+
+USE_TZ = False

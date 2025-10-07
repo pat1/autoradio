@@ -88,16 +88,16 @@ class gest_spot(object):
             self.ar_spots_in_fascia=self.count_spots()
             self.ar_filename,self.ar_url=self.get_fascia_playlist_media(genfile)
 
-            self.ar_scheduledatetime=datetime.datetime.combine(self.oggi, fascia.emission_time)
+            self.ar_scheduledatetime=datetime.datetime.combine(self.oggi, fascia.emission_time,tzinfo=None)
 
             # if we are around midnight we have to check the correct date (today, iesterday, tomorrow)
             datesched_min=self.now - datetime.timedelta( seconds=60*self.minelab)
             datesched_max=self.now + datetime.timedelta( seconds=60*self.minelab)
             if not (datesched_min <= self.ar_scheduledatetime and  self.ar_scheduledatetime <= datesched_max  ):
                 if self.now.time() < datetime.time(12):
-                    self.ar_scheduledatetime=datetime.datetime.combine(datesched_min.date(), fascia.emission_time)
+                    self.ar_scheduledatetime=datetime.datetime.combine(datesched_min.date(), fascia.emission_time,tzinfo=None)
                 else:
-                    self.ar_scheduledatetime=datetime.datetime.combine(datesched_max.date(), fascia.emission_time)
+                    self.ar_scheduledatetime=datetime.datetime.combine(datesched_max.date(), fascia.emission_time,tzinfo=None)
 
             self.ar_emission_done=fascia.emission_done
             yield fascia

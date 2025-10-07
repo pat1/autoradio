@@ -109,7 +109,7 @@ def main():
       # time constant
 
       # this is the first and last time that I set now with the current time
-      now=datetime.datetime.now(datetime.timezone.utc)
+      now=datetime.datetime.now(tz=None)
 
       first = True
 
@@ -206,7 +206,7 @@ def main():
 
           #now I advance minsched and wait the right time to proced
           now=now+datetime.timedelta(0,60*autoradio.autoradio_config.minsched)
-          while ( datetime.datetime.now(datetime.timezone.utc) < now):
+          while ( datetime.datetime.now(tz=None) < now):
               if (autoradio.autoradio_config.player == "amarok1"):
                   ok=manageplayer.save_status(kapp)
 

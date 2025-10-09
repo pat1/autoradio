@@ -18,7 +18,7 @@ configspec['autoradiod']['timestampfile'] = "string(default='/tmp/autoradiod.tim
 configspec['autoradiod']['xmms_host']     = "string(default='localhost')"
 configspec['autoradiod']['minelab']       = "integer(60,360,default=180)"
 configspec['autoradiod']['minsched']      = "integer(3,20,default=5)"
-configspec['autoradiod']['locale']        = "string(default='it_IT.UTF-8')"
+configspec['autoradiod']['locale']        = "string(default='C.UTF-8')"
 configspec['autoradiod']['user']          = "string(default=None)"
 configspec['autoradiod']['group']         = "string(default=None)"
 

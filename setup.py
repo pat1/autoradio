@@ -265,6 +265,8 @@ data_files.append(['share/autoradio/',['default_playlist.xspf']])
 data_files.append(['share/autoradio/',['autoradio_1.ogg']])
 data_files.append(['share/autoradio/',['autoradio_2.ogg']])
 
+data_files.append(['share/autoradio/server/',['autoradio.wsgi']])
+
 for dirpath, dirnames, filenames in os.walk('static'):
     # Ignore dirnames that start with '.'
     for i, dirname in enumerate(dirnames):

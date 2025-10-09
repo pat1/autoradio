@@ -1,6 +1,6 @@
 Summary: radio automation software
 Name: autoradio
-Version: 3.8
+Version: 3.8.1
 Release: 1
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
@@ -175,6 +175,12 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Thu Oct 09 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.8.1-1
+- updated spec file and install autoradio.wsgi (p.patruno@iperbole.bologna.it)
+- bugs with datetime management with and without tzinfo
+  (p.patruno@iperbole.bologna.it)
+- 3.8 release (p.patruno@iperbole.bologna.it)
+
 * Sun Oct 05 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.8-1
 - added default playlist for cold start (p.patruno@iperbole.bologna.it)
 - porting to django 5 (p.patruno@iperbole.bologna.it)

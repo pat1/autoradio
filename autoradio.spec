@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
 Version: 3.8.1
-Release: 1
+Release: 2
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -175,6 +175,11 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Thu Oct 09 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.8.1-2
+- release 3.8.1 (p.patruno@iperbole.bologna.it)
+- do not define locale for copr build system (p.patruno@iperbole.bologna.it)
+- do not define locale for copr build system (p.patruno@iperbole.bologna.it)
+
 * Thu Oct 09 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.8.1-1
 - updated spec file and install autoradio.wsgi (p.patruno@iperbole.bologna.it)
 - bugs with datetime management with and without tzinfo

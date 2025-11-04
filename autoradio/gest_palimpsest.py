@@ -109,7 +109,7 @@ class gest_palimpsest(object):
         "iterable to get programs"
 
         for program in self.schedule:
-            logging.debug("PALIMPSEST: schedule %s %s", program.show.title, ' --> '\
+            logging.debug("PALIMPSEST: schedule %s --> %s", program.show.title \
                               ,program.emission_date.isoformat())
 
 
@@ -119,7 +119,7 @@ class gest_palimpsest(object):
 
 
         for program in self.periodicschedule:
-            logging.debug("PALIMPSEST: periodic schedule %s %s", program.show.title, ' --> '\
+            logging.debug("PALIMPSEST: periodic schedule %s --> %s", program.show.title \
                               ,  program.time.isoformat())
 
 

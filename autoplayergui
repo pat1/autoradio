@@ -10,20 +10,12 @@ from autoradio.mpris2.some_players import Some_Players
 from autoradio.mpris2.utils import get_players_uri
 from autoradio.mpris2.utils import get_session
 from dbus.mainloop.glib import DBusGMainLoop
-#import pygtk
-try:
-    from gi import pygtkcompat
-except ImportError:
-    pygtkcompat = None
-
-if pygtkcompat is not None:
-    pygtkcompat.enable() 
-    pygtkcompat.enable_gtk(version='3.0')
-
-import gtk
+import gi
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk
 
 import os,stat,time,urllib.parse,urllib.request,urllib.parse,urllib.error,optparse,sys
-import gobject
+from gi.repository import GObject
 import dbus
 import autoradio.settings
 import urllib.parse
@@ -44,10 +36,6 @@ def convert_ns(t):
 
 class Main(object):
 
-  def delete_event(self, widget, event, data=None):
-    gtk.main_quit()
-    return False
- 
   def playhandler(self, *args, **kw):
       playbackstatus = args[1].get("PlaybackStatus",None)
       position = args[1].get("Position",None)
@@ -81,17 +69,21 @@ class Main(object):
                   frac = float(position)/float(length)
               else:
                   frac = 0
+              if (self.oldid != id): self.update()
+              self.oldid = id
+
           else:
               frac = 0
           self.pbar.set_fraction(frac)
+
       else:
           self.pbar.pulse()
-
-
+                    
   def __init__(self):
 
     self.connected=False
-
+    self.oldid=None
+    
     #Connect to player
     DBusGMainLoop(set_as_default=True)
     uris = list(get_players_uri(pattern=".",busaddress=busaddress))
@@ -133,18 +125,19 @@ class Main(object):
     self.connected = True
 
     # Create the GUI
-    self.win = gtk.Window(type=gtk.WINDOW_TOPLEVEL)
+    #self.win = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
+    self.win = Gtk.Window()
 
     self.win.set_size_request(400, 600)
     self.win.set_title("AutoPlayer gui")
-    self.win.connect("delete_event", self.delete_event)
-    vbox = gtk.VBox(homogeneous=False,spacing=0)
-    hbox = gtk.HBox(homogeneous=False,spacing=0)
-    self.load_file = gtk.FileChooserButton(homogeneous="Choose Audio File")
-    self.play_button = gtk.ToolButton( stock_id=gtk.STOCK_MEDIA_PLAY)
-    self.pause_button = gtk.ToolButton( stock_id=gtk.STOCK_MEDIA_PAUSE)
-    self.stop_button = gtk.ToolButton( stock_id=gtk.STOCK_MEDIA_STOP)
-    self.delete_button = gtk.Button(label='Delete')
+    self.win.connect("destroy", Gtk.main_quit)
+    vbox = Gtk.VBox(homogeneous=False,spacing=0)
+    hbox = Gtk.HBox(homogeneous=False,spacing=0)
+    self.load_file = Gtk.FileChooserButton(homogeneous="Choose Audio File")
+    self.play_button = Gtk.ToolButton( stock_id=Gtk.STOCK_MEDIA_PLAY)
+    self.pause_button = Gtk.ToolButton( stock_id=Gtk.STOCK_MEDIA_PAUSE)
+    self.stop_button = Gtk.ToolButton( stock_id=Gtk.STOCK_MEDIA_STOP)
+    self.delete_button = Gtk.Button(label='Delete')
     self.delete_button.connect('clicked', self.on_delete_button_clicked) 
     self.load_file.connect("selection-changed",self.on_file_selected)
     self.play_button.connect("clicked", self.on_play_clicked)
@@ -155,67 +148,68 @@ class Main(object):
     hbox.pack_start(self.stop_button, False, True, 0)
     hbox.pack_start(self.delete_button, False, False, 1)
 #        # Create a centering alignment object
-#    align = gtk.Alignment(0.5, 0.5, 0, 0)
+#    align = Gtk.Alignment.new(0.5, 0.5, 0, 0)
 #    vbox.pack_start(align, False, False, 5)
 #    align.show()
 
 
     # Create the ProgressBar
-    self.pbar = gtk.ProgressBar()
+    self.pbar = Gtk.ProgressBar()
     self.pbar.set_inverted(False)
     self.pbar.set_fraction(.5)
-    hbox.pack_start(self.pbar)
+    hbox.pack_start(self.pbar, True, True, 0)
     self.pbar.show()
 
     vbox.pack_start(self.load_file, False, True, 0)
     vbox.pack_start(hbox, False, True, 0)
 
-#    vbox.pack_start(self.pbar)
+#    vbox.pack_start(self.pbar, True, True, 0)
 #    self.pbar.show()
 #    self.pbar.pulse()
-    #separator = gtk.HSeparator()
+    #separator = Gtk.HSeparator()
     #vbox.pack_start(separator, False, False, 0)
 
         # create the TreeView
     column_names = ['ID', 'Len', 'Artist', 'Title']
-    cell_data_funcs = (self.id, self.Len, self.Artist,self.Title)
+    cell_data_funcs = (self.get_id, self.Len, self.Artist,self.Title)
 
-    self.treeview = gtk.TreeView()
+    self.treeview = Gtk.TreeView()
  
         # create the TreeViewColumns to display the data
     self.tvcolumn = [None] * len(column_names)
     listmodel = self.make_list()
 
     for n in range(0, len(column_names)):
-      cell = gtk.CellRendererText()
-      self.tvcolumn[n] = gtk.TreeViewColumn(column_names[n], cell)
+      cell = Gtk.CellRendererText()
+      self.tvcolumn[n] = Gtk.TreeViewColumn(column_names[n], cell)
       if n == 1:
         cell.set_property('xalign', 1.0)
       self.tvcolumn[n].set_cell_data_func(cell, cell_data_funcs[n])
       self.treeview.append_column(self.tvcolumn[n])
 
     self.treeview.connect('row-activated', self.open_file)
-    self.scrolledwindow = gtk.ScrolledWindow()
+    self.scrolledwindow = Gtk.ScrolledWindow()
     self.scrolledwindow.add(self.treeview)
     vbox.pack_start(self.scrolledwindow, True, True, 0)
     self.treeview.set_model(listmodel)
-    self.treeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+    self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
     self.win.add(vbox)
     self.win.show_all()
 
-    #gobject.timeout_add(6000,self.update)
+    #GObject.timeout_add(6000,self.update)
 
   def update(self, *args, **kw):
     print("update gtktree")
     try:
       new_model = self.make_list()
       self.treeview.set_model(new_model)
-      while gtk.events_pending():
-          gtk.main_iteration_do(True)
+      while Gtk.events_pending():
+          Gtk.main_iteration_do(True)
+      #self.treeview.queue_draw()
       return True
 
     except:
-      gtk.main_quit()
+      Gtk.main_quit()
       return False
 
   def on_delete_button_clicked(self, button):
@@ -262,7 +256,7 @@ class Main(object):
         self.treeview.set_model(new_model)
 
   def make_list(self):
-    listmodel = gtk.ListStore(object)
+    listmodel = Gtk.ListStore(object)
 
     try:
         if self.tl is not None:
@@ -273,18 +267,18 @@ class Main(object):
     except:
         print(traceback.format_exc())
         print("Error getting player playlist")
-        gtk.main_quit()
+        Gtk.main_quit()
 
     return listmodel
 
-  def id(self, column, cell, model, iter, data=None):
+  def get_id(self, column, cell, model, iter, data=None):
         cell.set_property('text', model.get_value(iter, 0))
         if model.get_value(iter, 0) == self.play.Metadata.get(u'mpris:trackid',None):
             cell.set_property('cell-background',"red")
         else:
             cell.set_property('cell-background',"green")
         return
-
+    
   def Len(self, column, cell, model, iter, data=None):
     track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
     cell.set_property('text', convert_ns(track[0].get(u'mpris:length',"")))
@@ -317,8 +311,8 @@ if __name__ == "__main__":
 
     try:
         if Main().connected:
-            gtk.main()
+            Gtk.main()
     except KeyboardInterrupt :
         # Clean up
         print('Keyboard Exiting')
-        gtk.main_quit()
+        Gtk.main_quit()

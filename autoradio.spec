@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
-Version: 3.8.1
-Release: 2
+Version: 3.8.2
+Release: 1
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -175,6 +175,17 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Mon Nov 10 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.8.2-1
+- play twice bug: when the player change media file there is a little time it
+  is in stop state so we have to check it more times to restart to play to do
+  not repeat to play twice the same media file (p.patruno@iperbole.bologna.it)
+- solve: autoradio rely on pygtkcompat. pygtkcompat was a transitional
+  mechanism for porting from pygobject 2 to pygobject 3, and the pygobject
+  developers removed it after the 3.50.x release series.
+  (p.patruno@iperbole.bologna.it)
+- bug in logging messages (p.patruno@iperbole.bologna.it)
+- preparing new debian release (p.patruno@iperbole.bologna.it)
+
 * Thu Oct 09 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.8.1-2
 - release 3.8.1 (p.patruno@iperbole.bologna.it)
 - do not define locale for copr build system (p.patruno@iperbole.bologna.it)

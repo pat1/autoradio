@@ -103,9 +103,19 @@ class mediaplayer(object):
         start playing if not.
         '''
         # I check if mediaplayer is playing .... otherside I try to play
+        # when the player change media file there is a little time it is in stop state
+        # so we have to check it more times to do not repeat to play twice the same media file
 
-        if (not self.isplaying()):
-            self.play.Play()
+        if (self.isplaying()):
+            return
+        time.sleep(2)
+        if (self.isplaying()):
+            return
+        time.sleep(2)
+        if (self.isplaying()):
+            return
+        
+        self.play.Play()
 
     def isplaying(self):
         '''

@@ -1,5 +1,8 @@
 from setuptools import setup
-from setuptools.command.build import build as build_
+try:
+    from distutils.command.build import build as build_
+except:
+    from setuptools.command.build import build as build_
 from setuptools import Command
 
 import os

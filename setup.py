@@ -1,12 +1,8 @@
-from distutils.core import setup
+from setuptools import setup
+from setuptools.command.build import build as build_
+from setuptools import Command
+
 import os
-
-from distutils.command.build import build as build_
-from setuptools.command.develop import develop as develop_
-from distutils.core import Command
-#from buildutils.cmd import Command
-#from distutils.cmd import Command
-
 from django.core import management
 from autoradio import _version_
 

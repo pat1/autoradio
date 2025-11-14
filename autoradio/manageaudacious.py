@@ -161,8 +161,7 @@ class dummy_programma(object):
 
 def audacious_watchdog(session):
 
-
-   from distutils.version import LooseVersion
+   from packaging.version import parse as LooseVersion
    reqversion=LooseVersion("1.5")
    version=LooseVersion("0.0")
 

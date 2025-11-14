@@ -48,8 +48,7 @@ class mediaplayer:
 
 
         if player == "audacious":
-
-            from distutils.version import LooseVersion
+            from packaging.version import parse as LooseVersion
             reqversion=LooseVersion("1.5")
             version=LooseVersion("0.0")
 

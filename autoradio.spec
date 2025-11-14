@@ -1,6 +1,6 @@
 Summary: radio automation software
 Name: autoradio
-Version: 3.8.2
+Version: 3.8.3
 Release: 1
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
@@ -175,6 +175,11 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Fri Nov 14 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.8.3-1
+- release 3.8.3 (p.patruno@iperbole.bologna.it)
+- close #43 (p.patruno@iperbole.bologna.it)
+- release 3.8.2 (p.patruno@iperbole.bologna.it)
+
 * Mon Nov 10 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.8.2-1
 - play twice bug: when the player change media file there is a little time it
   is in stop state so we have to check it more times to restart to play to do

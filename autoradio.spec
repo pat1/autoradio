@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
 Version: 3.8.3
-Release: 2
+Release: 3
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -188,6 +188,10 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Fri Nov 14 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.8.3-3
+- compatibilitu for different version of python and fedora and el distribution
+  (p.patruno@iperbole.bologna.it)
+
 * Fri Nov 14 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.8.3-2
 - 
 

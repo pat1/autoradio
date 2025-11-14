@@ -4,6 +4,8 @@ emacs autoradio/__init__.py
 change _version as:
 _version_="3.3"
 
+git commit the change
+
 use tito to change spec file and do a new release for RPM:
 tito tag --use-release=4 --use-version=3.3
 

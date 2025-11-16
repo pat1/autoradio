@@ -401,6 +401,18 @@ class mediaplayer(object):
         mainloop = gobject.MainLoop()
         mainloop.run()
 
+    def quit(self):
+        '''stop the main loop'''
+        self.mainloop.quit()
+
+    def close(self):
+        '''close the bus'''
+        try:
+            self.bus.close()
+        except:
+            pass
+
+        
 def main():
 
 #    must be done before connecting to DBus

@@ -173,6 +173,8 @@ def ManagePlayer (player,session,schedule):
    except:
       logging.error("generic error in ManagePlayer")
       traceback.print_exc()
+
+   aud.close()
    return
 
 
@@ -244,6 +246,7 @@ def player_watchdog(player,session):
    except:
       logging.error("player_watchdog: cannot start playing if not")
 
+   aud.close()
    return True
 
 

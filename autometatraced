@@ -220,7 +220,6 @@ def main():
         if (update and title != current_title_log):
             metatracelogger.info(f"{onair};{artist};{title};{start};{end};{length}")
             current_title_log=title
-            update_metas(next_title, next_artist)
 
         if (spare and next_title is not None and next_title != title):
             logging.info(f"NEXT   {next_artist};{next_title};{start};{end};{length}")
@@ -233,11 +232,7 @@ def main():
 
         elif (update and title is not None and title != current_title):
             logging.info(f"CURRENT {onair};{artist};{title};{start};{end};{length}")
-            get_dict={ 'mount' : "/rcf.ogg", 'mode' : 'updinfo', 'title' : title, 'artist' : artist}
-            get_param= urllib.parse.urlencode(get_dict)
-            url = autoradio.settings.icecastapiurlautoradiometatrace+"?"+get_param
-            response = requests.get(url)
-            logging.info(response.text)
+            update_metas(title, artist)
             current_title=title
             spare = True
             

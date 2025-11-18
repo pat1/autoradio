@@ -98,6 +98,25 @@ def main():
         logging.error("No players availables")
         return
 
+    def update_meta(icecastapiurl, mount, next_title, next_artist):
+        try:
+            get_dict={ 'mount' : mount, 'mode' : 'updinfo', 'title' : next_title, 'artist' : next_artist}
+            get_param= urllib.parse.urlencode(get_dict)
+            url = icecastapiurl+"?"+get_param
+            response = requests.get(url)
+            logging.info(response.text)
+        except:
+            logging.error(f"updating metadata by icecast API {icecastapiurl} {mount} {next_title} {next_artist}")
+        
+    def update_metas(next_title, next_artist):
+        if (not autoradio.settings.icecastapiurlautoradiometatrace is None \
+            and not autoradio.settings.icecastmountautoradiometatrace is None):
+            update_meta(autoradio.settings.icecastapiurlautoradiometatrace, \
+                        autoradio.settings.icecastmountautoradiometatrace, next_title, next_artist)
+        if (not autoradio.settings.icecastapiurlautoradiometatrace_2 is None \
+            and not autoradio.settings.icecastmountautoradiometatrace_2 is None):
+            update_meta(autoradio.settings.icecastapiurlautoradiometatrace_2, \
+                        autoradio.settings.icecastmountautoradiometatrace_2, next_title, next_artist)
             
     while (True):
         pali=autoradio.autoradio_core.palimpsests([])
@@ -197,18 +216,15 @@ def main():
                     next_title=program_title
 
         logging.info(f"ELABORATE {update} ; {onair} ; {artist} ; {title} ; {start} ; {end} ; {length}")
-
+        
         if (update and title != current_title_log):
             metatracelogger.info(f"{onair};{artist};{title};{start};{end};{length}")
             current_title_log=title
+            update_metas(next_title, next_artist)
 
         if (spare and next_title is not None and next_title != title):
             logging.info(f"NEXT   {next_artist};{next_title};{start};{end};{length}")
-            get_dict={ 'mount' : "/rcf.ogg", 'mode' : 'updinfo', 'title' : next_title, 'artist' : next_artist}
-            get_param= urllib.parse.urlencode(get_dict)
-            url = autoradio.settings.icecastapiurlautoradiometatrace+"?"+get_param
-            response = requests.get(url)
-            logging.info(response.text)
+            update_metas(next_title, next_artist)
             next_artist=None
             next_title=None
             current_title=next_title

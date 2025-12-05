@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy
 
 import calendar
 from autoradio.autoradio_config import *
-
+from django.core.validators import MinLengthValidator
 
 from  django import VERSION as djversion
 
@@ -42,6 +42,16 @@ if ((djversion[0] == 1 and djversion[1] >= 3) or
 else:
     DeletingFileField=models.FileField
 
+
+class Channel(models.Model):
+    name = models.CharField(max_length=50, help_text=gettext_lazy("The name of channel"))
+    active = models.BooleanField(gettext_lazy("Active"),default=True,\
+                       help_text=gettext_lazy("Activate the channel"))
+    tag  = models.CharField(max_length=2, unique=True, help_text=gettext_lazy("The name of channel"), validators=[MinLengthValidator(2)])
+
+    def __str__(self):
+        return self.name
+    
 def giorno_giorno():
        giorni=[]
        for giorno in (calendar.day_name):
@@ -168,6 +178,8 @@ class Spot(models.Model):
        
        spot = models.CharField(gettext_lazy("Spot Name"),max_length=80,unique=True,\
                        help_text=gettext_lazy("The name of the spot"))
+       channels = models.ManyToManyField(Channel, related_name='spots')
+       
        file = DeletingFileField(gettext_lazy('File'),upload_to='spots',max_length=255,\
                        help_text=gettext_lazy("The spot file to upload"))
        rec_date = models.DateTimeField(gettext_lazy('Record date'),\

@@ -364,8 +364,11 @@ class schedules(list):
         #this is the first and last time that I set the current time
         if now is None : now=datetime.now(tz=None)
 
-        spots=gest_spot(now,minelab,playlistdir)
-
+        if (multi_channel):
+            spots=gest_spot_channel(now,minelab,playlistdir)
+        else:
+            spots=gest_spot(now,minelab,playlistdir)
+            
         for fascia in spots.get_fasce(genfile):
 
             media = spots.ar_url

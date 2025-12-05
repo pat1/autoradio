@@ -538,7 +538,7 @@ class AutoPlayer(dbus.service.Object):
 
 class Player(object):
 	
-  def __init__(self,myplaylist=None,loop=None,starttoplay=False,myaudiosink=None):
+  def __init__(self,myplaylist=None,loop=None,starttoplay=False,myaudiosink=None,multi_channel=False):
     self.playlist=myplaylist
     #self.player = gst.element_factory_make("playbin2", "playbin2")
     Gst.init(None)
@@ -672,6 +672,8 @@ class Player(object):
 
     if myaudiosink is None: myaudiosink = "autoaudiosink"
     audiosink = Gst.ElementFactory.make(myaudiosink,None)
+    if (myaudiosink == "jackaudiosink" and multi_channel):
+      audiosink.set_property("connect","none")                     # multitrack output
     self.player.set_property("audio-sink", audiosink)
 
 #
@@ -1033,7 +1035,7 @@ class Player(object):
     self.loop.quit()
 
 
-def main(busaddress=None,myaudiosink=None):  
+def main(busaddress=None,myaudiosink=None,multi_channel=False):  
 
   # Use logging for ouput at different *levels*.
   #
@@ -1069,7 +1071,7 @@ def main(busaddress=None,myaudiosink=None):
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
     #loop = gobject.MainLoop()
     loop=GObject.MainLoop()
-    mp = Player(plmpris,loop=loop,starttoplay=True,myaudiosink=myaudiosink)
+    mp = Player(plmpris,loop=loop,starttoplay=True,myaudiosink=myaudiosink,multi_channel=multi_channel)
 
     # Export our DBUS service
     #if not dbus_service:

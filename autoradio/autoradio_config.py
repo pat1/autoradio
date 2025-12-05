@@ -21,6 +21,7 @@ configspec['autoradiod']['minsched']      = "integer(3,20,default=5)"
 configspec['autoradiod']['locale']        = "string(default='C.UTF-8')"
 configspec['autoradiod']['user']          = "string(default=None)"
 configspec['autoradiod']['group']         = "string(default=None)"
+configspec['autoradiod']['multi_channel'] = "boolean(default=False)"
 
 configspec['autoradiod']['env']={}
 #configspec['autoradiod']['env']['display']       = "string(default=':0.0')"
@@ -70,6 +71,7 @@ minsched      = config['autoradiod']['minsched']
 user          = config['autoradiod']['user']
 group         = config['autoradiod']['group']
 env           = config['autoradiod']['env']
+multi_channel = config['autoradiod']['multi_channel']
 
 import locale
 locale.setlocale(locale.LC_ALL, config['autoradiod']['locale'])

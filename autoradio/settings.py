@@ -29,7 +29,6 @@ configspec['django']['STATIC_ROOT'] = "string(default='%s/static/')" % os.getcwd
 configspec['django']['STATIC_URL']="string(default='/static/')"
 configspec['django']['SERVE_STATIC']="boolean(default=True)"
 
-
 configspec['autoradioweb']={}
 
 configspec['autoradioweb']['logfile']  = "string(default='/tmp/autoradioweb.log')"
@@ -59,8 +58,9 @@ configspec['autoplayer']['errfile']  = "string(default='/tmp/autoplayer.err')"
 configspec['autoplayer']['lockfile'] = "string(default='/tmp/autoplayer.lock')"
 configspec['autoplayer']['user']     = "string(default=None)"
 configspec['autoplayer']['group']    = "string(default=None)"
-configspec['autoplayer']['busaddress']    = "string(default=None)"
+configspec['autoplayer']['busaddress']   = "string(default=None)"
 configspec['autoplayer']['audiosink']    = "string(default=None)"
+configspec['autoplayer']['multi_channel']="boolean(default=False)"
 
 configspec['autoradiodbus']={}
 
@@ -167,6 +167,7 @@ userplayer                 = config['autoplayer']['user']
 groupplayer                = config['autoplayer']['group']
 busaddressplayer           = config['autoplayer']['busaddress']
 audiosinkplayer            = config['autoplayer']['audiosink']
+player_multi_channel       = config['autoplayer']['multi_channel']
 
 # section autoradiodbus
 logfiledbus              = config['autoradiodbus']['logfile']

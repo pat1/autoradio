@@ -1,10 +1,12 @@
-from .models import Giorno, Configure, Fascia, Spot
+from .models import Giorno, Configure, Fascia, Spot, Channel
 from django.contrib import admin
 from django import forms
 from django.utils.translation import gettext_lazy
 import autoradio.settings
 import magic
 import autoradio.mime
+from django.db import models
+from django.forms import SelectMultiple
 
 ma = magic.open(magic.MAGIC_MIME_TYPE)
 ma.load()
@@ -60,7 +62,13 @@ class MySpotAdminForm(forms.ModelForm):
 	    else:
                 raise forms.ValidationError(gettext_lazy("Couldn't read uploaded file"))
 
+class ChannelAdmin(admin.ModelAdmin):
+	search_fields = ['name','tag']
 
+
+admin.site.register(Channel, ChannelAdmin)
+
+            
 class GiornoAdmin(admin.ModelAdmin):
 	search_fields = ['name']
 
@@ -83,25 +91,32 @@ admin.site.register(Fascia, FasciaAdmin)
 
 
 class SpotAdmin(admin.ModelAdmin):
+
+    def list_channels(self, obj):
+        return ", ".join([channel.tag for channel in obj.channels.all()])
+    
     fieldsets = (
-	(None, {'fields': ('active','spot','file','rec_date')}),
+	(None, {'fields': ('active','spot','channels','file','rec_date')}),
 	('Emission information', {'fields': \
 		                  ('start_date','end_date','giorni','fasce','priorita','prologo','epilogo')}),
     )
     #	    list_display = ('spot', 'rec_date', 'was_recorded_today','giorni','fasce','priorita')
-    list_filter = ['active','start_date','end_date','rec_date','fasce','giorni',"prologo","epilogo"]
+    list_filter = ['active','channels','start_date','end_date','rec_date','fasce','giorni',"prologo","epilogo"]
 
     # rec_date sarebbe standard, ma per eliminare cose vecchie meglio usare end_date
     #date_hierarchy = 'rec_date'
     date_hierarchy = 'rec_date'
 
     search_fields = ['active','spot','giorni__name','fasce__name',]
-    list_display = ('active','spot','file','start_date','end_date','priorita')
+    list_display = ('active','spot','list_channels','file','start_date','end_date','priorita')
     list_display_links = ('spot',)
     list_editable = ('active','start_date','end_date','priorita')
 
     form = MySpotAdminForm
-
-
+    
+    #formfield_overrides = { models.ManyToManyField: {'widget': SelectMultiple(attrs={'size':'4'})}, }
+    #radio_fields = {"channels": admin.HORIZONTAL}
+    #raw_id_fields  = ["channels"]
+    
 admin.site.register(Spot, SpotAdmin)
 

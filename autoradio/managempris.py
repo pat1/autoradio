@@ -136,7 +136,7 @@ def ManagePlayer (player,session,schedule):
 
          # inserisco il file nella playlist
          if pos is None:
-            raise PlayerError("Managempris: ERROR in xmms.control.get_playlist_posauto")
+            raise PlayerError("Managempris: ERROR in get_playlist_posauto")
 
          logging.info( "Managempris: insert media: %s at position %d",media,pos)
          aud.playlist_add_atpos("file://"+media,pos)

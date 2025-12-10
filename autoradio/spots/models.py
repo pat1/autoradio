@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy
 import calendar
 from autoradio.autoradio_config import *
 from django.core.validators import MinLengthValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 from  django import VERSION as djversion
 
@@ -47,11 +48,18 @@ class Channel(models.Model):
     name = models.CharField(max_length=50, help_text=gettext_lazy("The name of channel"))
     active = models.BooleanField(gettext_lazy("Active"),default=True,\
                        help_text=gettext_lazy("Activate the channel"))
-    tag  = models.CharField(max_length=2, unique=True, help_text=gettext_lazy("The name of channel"), validators=[MinLengthValidator(2)])
-
+    tag  = models.CharField(max_length=2, unique=True, help_text=gettext_lazy("The name of channel"),
+                        validators=[MinLengthValidator(2)])
+    stereo_channel_number = models.PositiveIntegerField(gettext_lazy("The stereo channel number"),
+                        unique=True,validators = [MinValueValidator(1),MaxValueValidator(8)],
+                        help_text=gettext_lazy("The channel number in stereo output(needed for ordered output)"),)
+    
     def __str__(self):
         return self.name
-    
+
+    class Meta:
+        ordering = ["stereo_channel_number"]
+
 def giorno_giorno():
        giorni=[]
        for giorno in (calendar.day_name):
@@ -140,7 +148,7 @@ class Fascia(models.Model):
                        help_text=gettext_lazy("This is the date and time when the commercial break will be on air"))
     active = models.BooleanField(gettext_lazy("Active"),default=True,\
                        help_text=gettext_lazy("Activate the commercial break for emission"))
-    emission_done = models.DateTimeField(gettext_lazy('Emission done'),null=True,editable=False )
+    emission_done = models.DateTimeField(gettext_lazy('Emission done'),null=True,blank=True )
 
 
     def spots(self):
@@ -178,7 +186,7 @@ class Spot(models.Model):
        
        spot = models.CharField(gettext_lazy("Spot Name"),max_length=80,unique=True,\
                        help_text=gettext_lazy("The name of the spot"))
-       channels = models.ManyToManyField(Channel, related_name='spots')
+       channels = models.ManyToManyField(Channel, related_name='spots',null=True,blank=True)
        
        file = DeletingFileField(gettext_lazy('File'),upload_to='spots',max_length=255,\
                        help_text=gettext_lazy("The spot file to upload"))
@@ -231,3 +239,41 @@ class Spot(models.Model):
        	
        class Meta:
            ordering = ['-end_date']
+
+
+class Filler(models.Model):
+       
+       filler = models.CharField(gettext_lazy("Filler Name"),max_length=80,unique=True,\
+                       help_text=gettext_lazy("The name of the filler"))
+       channels = models.ManyToManyField(Channel, related_name='fillers')
+       
+       file = DeletingFileField(gettext_lazy('File'),upload_to='spots',max_length=255,\
+                       help_text=gettext_lazy("The filler file to upload"))
+       rec_date = models.DateTimeField(gettext_lazy('Record date'),\
+                       help_text=gettext_lazy("When the filler was done (for reference only)"))
+       active = models.BooleanField(gettext_lazy("Active"),default=True,\
+                       help_text=gettext_lazy("Activate the filler for emission"))
+       start_date = models.DateTimeField(gettext_lazy('Programmed starting date'),null=True,blank=True,\
+                       help_text=gettext_lazy("The spot will be scheduled starting from this date"))
+       end_date = models.DateTimeField(gettext_lazy('Programmed ending date'),null=True,blank=True,\
+                       help_text=gettext_lazy("The filler will be scheduled ending this date"))
+       giorni = models.ManyToManyField(Giorno,verbose_name=gettext_lazy('Programmed days'),blank=True,\
+                       help_text=gettext_lazy("The filler will be scheduled those weekdays"))
+       fasce = models.ManyToManyField(Fascia,blank=True,\
+                       help_text=gettext_lazy("The filler will be included in those commercial break"))
+       priorita = models.IntegerField(gettext_lazy("Priority"),default=50,\
+                       help_text=gettext_lazy("The order of the filler in commercial breaks will be ordered by this numer"))
+       
+       def was_recorded_today(self):
+       	return self.rec_date.date() == datetime.date.today()
+    
+       was_recorded_today.short_description = gettext_lazy('Recorded today?')
+
+       def __str__(self):
+       	return self.filler
+
+       class Meta:
+           ordering = ['-end_date']
+
+
+           

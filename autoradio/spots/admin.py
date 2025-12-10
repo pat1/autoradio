@@ -1,4 +1,4 @@
-from .models import Giorno, Configure, Fascia, Spot, Channel
+from .models import Giorno, Configure, Fascia, Spot, Channel, Filler
 from django.contrib import admin
 from django import forms
 from django.utils.translation import gettext_lazy
@@ -119,4 +119,28 @@ class SpotAdmin(admin.ModelAdmin):
     #raw_id_fields  = ["channels"]
     
 admin.site.register(Spot, SpotAdmin)
+
+
+class FillerAdmin(admin.ModelAdmin):
+
+    def list_channels(self, obj):
+        return ", ".join([channel.tag for channel in obj.channels.all()])
+    
+    fieldsets = (
+	(None, {'fields': ('active','filler','channels','file','rec_date')}),
+	('Emission information', {'fields': \
+		                  ('start_date','end_date','giorni','fasce','priorita')}),
+    )
+    list_filter = ['active','channels','start_date','end_date','rec_date','fasce','giorni']
+
+    date_hierarchy = 'rec_date'
+
+    search_fields = ['active','filler','giorni__name','fasce__name',]
+    list_display = ('active','filler','list_channels','file','start_date','end_date','priorita')
+    list_display_links = ('filler',)
+    list_editable = ('active','start_date','end_date','priorita')
+
+    form = MySpotAdminForm
+    
+admin.site.register(Filler, FillerAdmin)
 

@@ -109,15 +109,13 @@ def main():
             logging.error(f"updating metadata by icecast API {icecastapiurl} {mount} {next_title} {next_artist}")
         
     def update_metas(next_title, next_artist):
-        if (not autoradio.settings.icecastapiurlautoradiometatrace is None \
-            and not autoradio.settings.icecastmountautoradiometatrace is None):
-            update_meta(autoradio.settings.icecastapiurlautoradiometatrace, \
-                        autoradio.settings.icecastmountautoradiometatrace, next_title, next_artist)
-        if (not autoradio.settings.icecastapiurlautoradiometatrace_2 is None \
-            and not autoradio.settings.icecastmountautoradiometatrace_2 is None):
-            update_meta(autoradio.settings.icecastapiurlautoradiometatrace_2, \
-                        autoradio.settings.icecastmountautoradiometatrace_2, next_title, next_artist)
-            
+
+        for mount in autoradio.settings.icecastmountautoradiometatrace:            
+            if (not autoradio.settings.icecastapiurlautoradiometatrace is None \
+                and not mount is None):
+                update_meta(autoradio.settings.icecastapiurlautoradiometatrace, \
+                        mount, next_title, next_artist)
+
     while (True):
         pali=autoradio.autoradio_core.palimpsests([])
 

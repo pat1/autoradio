@@ -89,9 +89,7 @@ configspec['autoradiometatrace']['user']     = "string(default=None)"
 configspec['autoradiometatrace']['group']    = "string(default=None)"
 configspec['autoradiometatrace']['filemetatrace']    = "string(default='metatrace.log')"
 configspec['autoradiometatrace']['icecastapiurl']    = "string(default='https://username:password@server:port/admin/metadata')"
-configspec['autoradiometatrace']['icecastmount']     = "string(default='/stream.ogg')"
-configspec['autoradiometatrace']['icecastapiurl_2']  = "string(default=None)"
-configspec['autoradiometatrace']['icecastmount_2']   = "string(default=None)"
+configspec['autoradiometatrace']['icecastmount']     = "string_list(default='/stream.ogg ,')"
 
 config    = ConfigObj ('/etc/autoradio/autoradio-site.cfg',file_error=False,configspec=configspec)
 
@@ -193,8 +191,6 @@ groupautoradiometatrace                = config['autoradiometatrace']['group']
 fileautoradiometatrace                 = config['autoradiometatrace']['filemetatrace']
 icecastapiurlautoradiometatrace        = config['autoradiometatrace']['icecastapiurl']
 icecastmountautoradiometatrace         = config['autoradiometatrace']['icecastmount']
-icecastapiurlautoradiometatrace_2      = config['autoradiometatrace']['icecastapiurl_2']
-icecastmountautoradiometatrace_2       = config['autoradiometatrace']['icecastmount_2']
 
 if DATABASE_ENGINE == "mysql":
     # Recommended for MySQL. See http://code.djangoproject.com/ticket/13906 

@@ -20,7 +20,7 @@ BuildRequires: python3-django
 BuildRequires: python3-django3
 %endif
 
-Requires:python3-mutagen >= 1.17, python3-configobj, python3-cherrypy, python3-reportlab >= 2.0,  python3-docutils, sqlite >= 3.6.22, speex-tools, python3-file-magic, python3-pillow
+Requires:python3-mutagen >= 1.17, python3-configobj, python3-cherrypy, python3-reportlab >= 2.0,  python3-docutils, sqlite >= 3.6.22, speex-tools, python3-file-magic, python3-pillow, pydub, ffmpeg
 %if 0%{?fedora}
 Requires: python3-django
 %else

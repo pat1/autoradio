@@ -213,7 +213,7 @@ class gest_spot(object):
 
     def get_prologhi(self):
 
-        prologhi= self.fascia.spot_set.filter(Q(channels__tag__exact = self.channel_tag),\
+        prologhi= self.fascia.spot_set.filter(Q(channels__tag__exact = self.channel_tag) | Q(channels__tag__exact = None),\
                                     Q(active__exact = True),\
                                     Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
                                     Q(end_date__gte=self.now) | Q(end_date__isnull=True),\
@@ -227,7 +227,7 @@ class gest_spot(object):
 
     def count_spots(self):
 
-        return self.fascia.spot_set.filter(Q(channels__tag__exact = self.channel_tag),\
+        return self.fascia.spot_set.filter(Q(channels__tag__exact = self.channel_tag) | Q(channels__tag__exact = None),\
                                     Q(active__exact = True),\
                                     Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
                                     Q(end_date__gte=self.now) | Q(end_date__isnull=True),\
@@ -238,7 +238,7 @@ class gest_spot(object):
 
     def get_spots(self):
 
-        spots=self.fascia.spot_set.filter(Q(channels__tag__exact = self.channel_tag),\
+        spots=self.fascia.spot_set.filter(Q(channels__tag__exact = self.channel_tag) | Q(channels__tag__exact = None),\
                                     Q(active__exact = True),\
                                     Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
                                     Q(end_date__gte=self.now) | Q(end_date__isnull=True),\
@@ -253,7 +253,7 @@ class gest_spot(object):
 
     def get_epiloghi(self):
 
-        epiloghi=self.fascia.spot_set.filter(Q(channels__tag__exact = self.channel_tag),\
+        epiloghi=self.fascia.spot_set.filter(Q(channels__tag__exact = self.channel_tag) | Q(channels__tag__exact = None),\
                                     Q(active__exact = True),\
                                     Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
                                     Q(end_date__gte=self.now) | Q(end_date__isnull=True),\

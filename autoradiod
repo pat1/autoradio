@@ -166,7 +166,7 @@ def main():
                           logging.debug(" %s %s %s schedula already done; ignore it !", type,scheduledatetime,emission_done)
                           continue
 
-                      if (multi_channel):
+                      if (autoradio.autoradio_config.multi_channel):
                           fascia_fillers=gest_filler(now,schedule.mydjobj, playlistdir)
                           fascia_fillers.make_playlist_fascia()
                           assemble_playlists_channel(schedule.mydjobj, playlistdir)        

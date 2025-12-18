@@ -162,7 +162,7 @@ def ManagePlayer (player,session,schedule):
       ar_emitted(schedule.djobj)
       logging.info( "Managempris: written in django: %s",schedule.djobj)
 
-      aud.play_ifnot()
+      #aud.play_ifnot()
 
    except PlayerError as e:
       logging.error(e)
@@ -239,16 +239,43 @@ def player_watchdog(player,session):
       except:
          logging.error("player_watchdog serious problem: player do not comunicate on d-bus")
 
-   try:
-      aud.play_ifnot()
-      logging.debug("player_watchdog: start playing if not")
-
-   except:
-      logging.error("player_watchdog: cannot start playing if not")
+   if (not autoradio_config.multi_channel):     # start to play if not in multi channel mode
+      try:
+         aud.play_ifnot()
+         logging.debug("player_watchdog: start playing if not")
+   
+      except:
+         logging.error("player_watchdog: cannot start playing if not")
 
    aud.close()
    return True
 
+
+def player_start_play(player,session):
+
+   logging.debug( "player_start_play: play if not" )
+
+   try:
+
+      if  player == "vlc" or player == "AutoPlayer":
+         aud = autompris2.mediaplayer(player=player,session=session)
+      else:
+         aud = autompris.mediaplayer(player=player,session=session)
+
+   except:
+      logging.error("player_start_play: player do not communicate on d-bus")
+      return False
+
+   try:
+      aud.play_ifnot()
+      logging.debug("player_watchdog: start playing if not")
+   
+   except:
+      logging.error("player_watchdog: cannot start playing if not")
+      return False
+
+   aud.close()
+   return True
 
 def save_status(session):
    """

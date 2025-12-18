@@ -8,7 +8,7 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname):
 
     NUM_CHANNEL=len(playlistnames)
     NUM_TRACK=NUM_CHANNEL*2
-
+            
     p=[]
     for playlistname in playlistnames:
         p.append(Playlist([playlistname]))
@@ -80,17 +80,27 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname):
 
     print ([len(tracks[i]) for i in range(NUM_TRACK)])
 
-    faketrack = AudioSegment.silent(duration = lunghezza+1000, frame_rate=tracks[0].frame_rate)[:lunghezza]
-
-    multitrack = AudioSegment.from_mono_audiosegments(*[tracks[i][:lunghezza] for i in range(NUM_TRACK)],faketrack) #,faketrack)
+    #faketrack = AudioSegment.silent(duration = lunghezza+1000, frame_rate=tracks[0].frame_rate)[:lunghezza]
+    #tracks.append(faketrack)
+    #if (NUM_CHANNEL == 6):
+    #    remap=(0,2,1,5,6,4)
+    #elif (NUM_CHANNEL == 7):
+    #remap=(0,2,1,6,5,3,4)
+    #else:
+    #remap=tuple((i) for i in range(NUM_TRACK+1))
+    #multitrack = AudioSegment.from_mono_audiosegments(*[tracks[remap[i]][:lunghezza] for i in range(NUM_TRACK+1)]) #,faketrack)
+    #multitrack = AudioSegment.from_mono_audiosegments(*[tracks[i][:lunghezza] for i in range(NUM_TRACK)], faketrack)
+    
+    multitrack = AudioSegment.from_mono_audiosegments(*[tracks[i][:lunghezza] for i in range(NUM_TRACK)])
 
     multitrack.export( multichannelname, format="ogg")
 
 
 def main():
-    playlistnames=["pydub/channel1.m3u","pydub/channel2.m3u","pydub/channel3.m3u"]
-    filler_name="base.ogg"
-    assemble_playlists(playlists,fillername)
+    playlists=["media/spots/er_mezzogiorno.m3u","media/spots/lo_mezzogiorno.m3u","media/spots/to_mezzogiorno.m3u"]
+    filler_playlists=["media/spots/er_mezzogiorno_filler.m3u","media/spots/er_mezzogiorno_filler.m3u","media/spots/er_mezzogiorno_filler.m3u"]
+    outname="output.ogg"
+    assemble_playlists(playlists,filler_playlists,outname)
 
 if __name__ == '__main__':
     main()  # (this code was run as script)

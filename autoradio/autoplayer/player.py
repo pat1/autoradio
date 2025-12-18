@@ -673,7 +673,9 @@ class Player(object):
     if myaudiosink is None: myaudiosink = "autoaudiosink"
     audiosink = Gst.ElementFactory.make(myaudiosink,None)
     if (myaudiosink == "jackaudiosink" and multi_channel):
-      audiosink.set_property("connect","none")                     # multitrack output
+      audiosink.set_property("connect","auto-forced")                     # multitrack output
+      audiosink.set_property("client_name","autoradio")             # multitrack output
+      audiosink.set_property("port_pattern","multichannel:cinput_*")
     self.player.set_property("audio-sink", audiosink)
 
 #

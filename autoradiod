@@ -25,6 +25,7 @@ import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
 from django.conf import settings
 
+from autoradio.autoradio_config import *
 import autoradio.settings
 import autoradio.autoradio_config
 from autoradio import daemon
@@ -57,7 +58,8 @@ def main():
     django.setup()
 
     import autoradio.autoradio_core
-
+    from autoradio.gest_spot import gest_filler, assemble_playlist_channel
+    
     formatter=logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s",datefmt="%Y-%m-%d %H:%M:%S")
     handler = logging.handlers.RotatingFileHandler(autoradio.autoradio_config.logfile, maxBytes=5000000, backupCount=10)
     handler.setFormatter(formatter)
@@ -166,18 +168,13 @@ def main():
                       if ( abs(emission_done - scheduledatetime) < datetime.timedelta(minutes=180)): 
                           logging.debug(" %s %s %s schedula already done; ignore it !", type,scheduledatetime,emission_done)
                           continue
-
-                      if (autoradio.autoradio_config.multi_channel):
-                          fascia_fillers=gest_filler(now,schedule.mydjobj, playlistdir)
-                          fascia_fillers.make_playlist_fascia()
-                          assemble_playlists_channel(schedule.mydjobj, playlistdir)        
-
+                          
                   if ( type == "playlist" ):
                       # I assume the emission is done if it happen around 3 hours
                       if ( abs(emission_done - scheduledatetime) < datetime.timedelta(minutes=180)): 
                           logging.debug (" %s %s %s schedula already done; ignore it !",type,scheduledatetime,emission_done)
                           continue                      
-
+                      
               delta=( scheduledatetime - now)
               sec=manageplayer.secondi(delta)
               #schedule for the nest minsched minutes starting from minsched minuti forward
@@ -196,6 +193,12 @@ def main():
 
                   #print "ora schedulata", scheduledatetime
                   #print "ora attuale", datetime.now()
+
+                  if ( type == "spot" ):
+                      if (autoradio.autoradio_config.multi_channel):
+                          fascia_fillers=gest_filler(now,schedule.mydjobj, playlistdir)
+                          fascia_fillers.make_playlist_fascia()
+                          assemble_playlist_channel(schedule.mydjobj, playlistdir,schedule.mydjobj.multichannel)
 
                   if (autoradio.autoradio_config.player == "amarok1") :
                       threadschedule=manageplayer.ScheduleProgram(kapp,function,operation,filename,scheduledatetime,obj)

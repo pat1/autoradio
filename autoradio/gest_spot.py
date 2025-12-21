@@ -28,7 +28,7 @@ import mutagen
 import tempfile,shutil
 import calendar
 
-def assemble_playlist_channel(fascia, playlistdir):
+def assemble_playlist_channel(fascia, playlistdir,multichannel=True):
 
     '''
     assemble playlists for one fascia all channel
@@ -48,6 +48,9 @@ def assemble_playlist_channel(fascia, playlistdir):
         playlistname =os.path.join(playlistpath,name)
         playlists.append(playlistname)
 
+        if (not multichannel):
+            break                       # if fascia is not multichannel terminate on first channel
+        
     assemble_playlists(playlists, filler_playlists, multichannelname)
             
 

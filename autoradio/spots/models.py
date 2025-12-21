@@ -148,6 +148,8 @@ class Fascia(models.Model):
                        help_text=gettext_lazy("This is the date and time when the commercial break will be on air"))
     active = models.BooleanField(gettext_lazy("Active"),default=True,\
                        help_text=gettext_lazy("Activate the commercial break for emission"))
+    multichannel = models.BooleanField(gettext_lazy("Multichannel"),default=True,\
+                       help_text=gettext_lazy("If settted in multichannel mode produce one stereo track from channel 1 only for this commercial break"))
     emission_done = models.DateTimeField(gettext_lazy('Emission done'),null=True,blank=True )
 
 

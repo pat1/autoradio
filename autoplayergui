@@ -67,15 +67,19 @@ class Main(object):
               length=self.tl.GetTracksMetadata((id,))[0].get(u'mpris:length',None)
               if position <= length and length != 0:
                   frac = float(position)/float(length)
+                  text=str(int((float(length)-float(position))/1000000))
               else:
                   frac = 0
+                  text=None
               if (self.oldid != id): self.update()
               self.oldid = id
 
           else:
               frac = 0
+              text=None
           self.pbar.set_fraction(frac)
-
+          self.pbar.set_text(text)
+          
       else:
           self.pbar.pulse()
                     
@@ -83,6 +87,7 @@ class Main(object):
 
     self.connected=False
     self.oldid=None
+    self.cursor_path=None
     
     #Connect to player
     DBusGMainLoop(set_as_default=True)
@@ -128,7 +133,7 @@ class Main(object):
     #self.win = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
     self.win = Gtk.Window()
 
-    self.win.set_size_request(400, 600)
+    self.win.set_size_request(800, 800)
     self.win.set_title("AutoPlayer gui")
     self.win.connect("destroy", Gtk.main_quit)
     vbox = Gtk.VBox(homogeneous=False,spacing=0)
@@ -157,6 +162,7 @@ class Main(object):
     self.pbar = Gtk.ProgressBar()
     self.pbar.set_inverted(False)
     self.pbar.set_fraction(.5)
+    self.pbar.set_show_text(True)
     hbox.pack_start(self.pbar, True, True, 0)
     self.pbar.show()
 
@@ -206,6 +212,8 @@ class Main(object):
       while Gtk.events_pending():
           Gtk.main_iteration_do(True)
       #self.treeview.queue_draw()
+      if (self.cursor_path is not None):
+          self.treeview.set_cursor(self.cursor_path,None,False)
       return True
 
     except:
@@ -242,26 +250,30 @@ class Main(object):
 
   def on_play_clicked(self, widget):
       path,column=self.treeview.get_cursor()
-      if (path is not None):
+      self.cursor_path=path
+      print ("on play ckicked",path)
+      if (path is None):
+          self.play.Play()
+      else:
           model=self.treeview.get_model()
           iter = model.get_iter(path)
           print("goto: ",model.get_value(iter, 0))
           self.tl.GoTo(model.get_value(iter, 0))
           new_model = self.make_list()
           self.treeview.set_model(new_model)
-      self.play.Play()
   def on_pause_clicked(self, widget):
     self.play.PlayPause()
   def on_stop_clicked(self, widget):
     self.play.Stop()
 
   def open_file(self, treeview, path, column):
-        model = treeview.get_model()
-        iter = model.get_iter(path)
-        print("goto: ",model.get_value(iter, 0))
-        self.tl.GoTo(model.get_value(iter, 0))
-        new_model = self.make_list()
-        self.treeview.set_model(new_model)
+    model = treeview.get_model()
+    iter = model.get_iter(path)
+    self.cursor_path=path
+    print("goto: ",model.get_value(iter, 0))
+    self.tl.GoTo(model.get_value(iter, 0))
+    new_model = self.make_list()
+    self.treeview.set_model(new_model)
 
   def make_list(self):
     listmodel = Gtk.ListStore(object)

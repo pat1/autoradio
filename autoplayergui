@@ -117,10 +117,12 @@ class Main(object):
       if position is not None:
           try:
               id = self.play.Metadata.get(u'mpris:trackid',None)
+          except  dbus.exceptions.DBusException:
+              raise
           except:
               id = None
 
-          if id is not None:
+          if (id is not None):
               length=self.tl.GetTracksMetadata((id,))[0].get(u'mpris:length',None)
               if position <= length and length != 0:
                   frac = float(position)/float(length)
@@ -219,7 +221,9 @@ class Main(object):
         else:
             self.tl = None
     except  dbus.exceptions.DBusException:
-            self.tl = None
+        raise
+    except:
+        self.tl = None
         
     self.play.PropertiesChanged = self.playhandler
 
@@ -348,8 +352,9 @@ class Main(object):
           self.treeview.set_cursor(self.cursor_path,None,False)
       return True
 
+    except  dbus.exceptions.DBusException:
+      raise
     except:
-      Gtk.main_quit()
       return False
 
   def on_delete_button_clicked(self, button):
@@ -427,9 +432,8 @@ class Main(object):
                 for track in  self.tl.GetTracksMetadata( self.tl.Tracks):
                     listmodel.append([track.get(u'mpris:trackid',"")])
     except:
-        print(traceback.format_exc())
         print("Error getting player playlist")
-        Gtk.main_quit()
+        raise
 
     return listmodel
 
@@ -442,21 +446,31 @@ class Main(object):
         return
     
   def Len(self, column, cell, model, iter, data=None):
-    track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
-    cell.set_property('text', convert_ns(track[0].get(u'mpris:length',"")))
-    return
+      try:
+          track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
+          cell.set_property('text', convert_ns(track[0].get(u'mpris:length',"")))
+          return
+      except:
+          Gtk.main_quit()
 
   def Artist(self, column, cell, model, iter, data=None):
-    track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
-    dir=os.path.dirname(urllib.parse.urlparse(track[0].get(u'xesam:url',"")).path).split('/')[-1]
-    cell.set_property('text', track[0].get(u'xesam:artist', dir))
-    return
+      try:
+          track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
+          dir=os.path.dirname(urllib.parse.urlparse(track[0].get(u'xesam:url',"")).path).split('/')[-1]
+          cell.set_property('text', track[0].get(u'xesam:artist', dir))
+          return
+      except:
+          Gtk.main_quit()
 
   def Title(self, column, cell, model, iter, data=None):
-    track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
-    file=os.path.basename(urllib.parse.urlparse(track[0].get(u'xesam:url',"")).path)
-    cell.set_property('text', track[0].get(u'xesam:title',file))
-    return
+      try:
+          track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
+          file=os.path.basename(urllib.parse.urlparse(track[0].get(u'xesam:url',"")).path)
+          cell.set_property('text', track[0].get(u'xesam:title',file))
+          return
+      except:
+          Gtk.main_quit()
+          
       
 if __name__ == "__main__":
 
@@ -477,4 +491,9 @@ if __name__ == "__main__":
     except KeyboardInterrupt :
         # Clean up
         print('Keyboard Exiting')
+        Gtk.main_quit()
+
+    except :
+        print(traceback.format_exc())
+        # Clean up
         Gtk.main_quit()

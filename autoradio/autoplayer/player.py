@@ -101,7 +101,7 @@ MPRIS2_INTROSPECTION = """<node name="/org/mpris/MediaPlayer2">
       <arg direction="in" name="Offset" type="x"/>
     </method>
     <method name="SetPosition">
-      <arg direction="in" name="TrackId" type="o"/>
+      <arg direction="in" name="TrackId" type="s"/>
       <arg direction="in" name="Position" type="x"/>
     </method>
     <method name="OpenUri">

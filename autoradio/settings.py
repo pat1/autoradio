@@ -89,7 +89,7 @@ configspec['autoradiometatrace']['user']     = "string(default=None)"
 configspec['autoradiometatrace']['group']    = "string(default=None)"
 configspec['autoradiometatrace']['filemetatrace']    = "string(default='metatrace.log')"
 configspec['autoradiometatrace']['icecastapiurl']    = "string(default='https://username:password@server:port/admin/metadata')"
-configspec['autoradiometatrace']['icecastmount']     = "string_list(default='/stream.ogg ,')"
+configspec['autoradiometatrace']['icecastmount']     = "string_list(default=None)"
 
 config    = ConfigObj ('/etc/autoradio/autoradio-site.cfg',file_error=False,configspec=configspec)
 

@@ -20,6 +20,7 @@ import dbus
 import autoradio.settings
 import urllib.parse
 import traceback
+import time
 
 busaddress=autoradio.settings.busaddressplayer
 
@@ -113,8 +114,36 @@ class Main(object):
       playbackstatus = args[1].get("PlaybackStatus",None)
       position = args[1].get("Position",None)
 
-      if playbackstatus is not None:
-          print("PlaybackStatus",playbackstatus)
+      if position is not None:
+          try:
+              id = self.play.Metadata.get(u'mpris:trackid',None)
+          except:
+              id = None
+
+          if id is not None:
+              length=self.tl.GetTracksMetadata((id,))[0].get(u'mpris:length',None)
+              if position <= length and length != 0:
+                  frac = float(position)/float(length)
+                  text=str(convert_ns((float(length)-float(position))))
+              else:
+                  frac = 0
+                  text="0"
+              if (self.oldid != id): self.update()
+              self.oldid = id
+
+          else:
+              frac = 0
+              text= "0"
+      else:
+          frac = 0
+          text= "0"
+
+      self.progress_hscale.handler_block(self.handler_id)
+      self.progress_adj.set_value(frac)
+      self.progress_hscale.handler_unblock(self.handler_id)
+
+      #if playbackstatus is not None:
+      #    print("PlaybackStatus",playbackstatus)
 
       if playbackstatus == "Stopped":
           self.play_button.set_sensitive(True)
@@ -137,32 +166,16 @@ class Main(object):
           self.status_label.set_label("Paused")
           self.status_blue()              
 
-      if position is not None:
-          try:
-              id = self.play.Metadata.get(u'mpris:trackid',None)
-          except:
-              id = None
+      self.remain_label.set_label(text)
 
-          if id is not None:
-              length=self.tl.GetTracksMetadata((id,))[0].get(u'mpris:length',None)
-              if position <= length and length != 0:
-                  frac = float(position)/float(length)
-                  text=str(int((float(length)-float(position))/1000000))
-                  text=str(convert_ns((float(length)-float(position))))
-              else:
-                  frac = 0
-                  text=None
-              if (self.oldid != id): self.update()
-              self.oldid = id
 
-          else:
-              frac = 0
-              text=None
-          self.pbar.set_fraction(frac)
-          self.pbar.set_text(text)
-          
-      else:
-          self.pbar.pulse()
+  def prog_scale_moved(self, event):
+      if ((self.scale_moved_time + 0.5) < time.time()):
+          pos = self.progress_hscale.get_value()
+          id = self.play.Metadata.get(u'mpris:trackid',"None")
+          length = self.play.Metadata.get(u'mpris:length',-1)
+          self.play.SetPosition( id, int(pos*length))
+      self.scale_moved_time=time.time()
 
       
   def __init__(self):
@@ -170,6 +183,7 @@ class Main(object):
     self.connected=False
     self.oldid=None
     self.cursor_path=None
+    self.scale_moved_time=0
     
     #Connect to player
     DBusGMainLoop(set_as_default=True)
@@ -251,12 +265,22 @@ class Main(object):
 #    align.show()
 
 
-    self.pbar = Gtk.ProgressBar()
-    self.pbar.set_inverted(False)
-    self.pbar.set_fraction(.5)
-    self.pbar.set_show_text(True)
-    hbox_player.pack_start(self.pbar, True, True, 0)
-    self.pbar.show()
+    self.remain_label = Gtk.Label()
+    self.remain_label.set_single_line_mode(True)
+    self.remain_label.set_label("0")
+    self.remain_label.set_name("remain_label")        
+    hbox_player.pack_start(self.remain_label, False, False, 1)
+
+    # Create the ProgressBar
+    self.progress_adj = Gtk.Adjustment(value=0, lower=0, upper=1,
+                   step_increment=0.1,
+                   page_increment=0.1,
+                   page_size=0.1)
+    self.progress_hscale = Gtk.Scale(orientation=Gtk.Orientation.HORIZONTAL,
+                                     adjustment=self.progress_adj,
+                                     draw_value=False, digits=0)
+    self.handler_id = self.progress_hscale.connect("value-changed", self.prog_scale_moved)
+    hbox_player.pack_start(self.progress_hscale,True,True,8)
 
     hbox_fs = Gtk.HBox(homogeneous=False,spacing=0)    
     hbox_fs.pack_start(self.load_file, False, True, 0)    
@@ -265,19 +289,16 @@ class Main(object):
     vbox.pack_start(hbox_fs, False, False, 0)
     vbox.pack_start(hbox_player, False, True, 0)
 
-#    vbox.pack_start(self.pbar, True, True, 0)
-#    self.pbar.show()
-#    self.pbar.pulse()
     #separator = Gtk.HSeparator()
     #vbox.pack_start(separator, False, False, 0)
 
-        # create the TreeView
+    # create the TreeView
     column_names = ['ID', 'Len', 'Artist', 'Title']
     cell_data_funcs = (self.get_id, self.Len, self.Artist,self.Title)
 
     self.treeview = Gtk.TreeView()
  
-        # create the TreeViewColumns to display the data
+    # create the TreeViewColumns to display the data
     self.tvcolumn = [None] * len(column_names)
     listmodel = self.make_list()
 
@@ -305,15 +326,18 @@ class Main(object):
   #define the callback for keypress events
   def onKeyPress(self, treeview, event):
       keyname = Gdk.keyval_name(event.keyval)
-      if (keyname == "BackSpace" or keyname == "KP_Insert"):
+      if (keyname == "BackSpace" or keyname == "KP_Insert" or keyname == "KP_0"):
           self.play.Stop()
-      elif (keyname == "Left" or keyname == "KP_Left"):
+      elif (keyname == "Left" or keyname == "KP_Left" or keyname == "KP_4"):
           self.play.Seek(-10000000)
-      elif (keyname == "Right" or keyname == "KP_Right"):
+      elif (keyname == "Right" or keyname == "KP_Right" or keyname == "KP_6"):
           self.play.Seek(10000000)
+      elif (keyname == "period" or keyname == "KP_Decimal" or keyname == "KP_Delete"):
+          self.play.PlayPause()
+          
 
   def update(self, *args, **kw):
-    print("update gtktree")
+    #print("update gtktree")
     try:
       new_model = self.make_list()
       self.treeview.set_model(new_model)
@@ -343,7 +367,7 @@ class Main(object):
       for path in paths:
           iter = model.get_iter(path)
           # Remove the ListStore row referenced by iter
-          print("remove: ",model.get_value(iter, 0))
+          #print("remove: ",model.get_value(iter, 0))
           self.tl.RemoveTrack(model.get_value(iter, 0))
           #model.remove(iter)
 
@@ -353,13 +377,12 @@ class Main(object):
     url=urllib.parse.urlsplit(multimedia_file)
     uri=urllib.parse.urljoin("file://",urllib.parse.unquote(url.path))
     path,column=self.treeview.get_cursor()
-    print(path)
     if (path is None):
         self.tl.AddTrack(uri, self.play.Metadata.get(u'mpris:trackid',""), False)
     else:
         model = self.treeview.get_model()
         iter = model.get_iter(path)
-        print("insert at: ",model.get_value(iter, 0))
+        #print("insert at: ",model.get_value(iter, 0))
         trackid=model.get_value(iter, 0)
         if (trackid is None):
             self.tl.AddTrack(uri, self.play.Metadata.get(u'mpris:trackid',""), False)
@@ -367,17 +390,16 @@ class Main(object):
             self.tl.AddTrack(uri, trackid, False)
     new_model = self.make_list()
     self.treeview.set_model(new_model)
-        
+
   def on_play_clicked(self, widget):
       path,column=self.treeview.get_cursor()
       self.cursor_path=path
-      print ("on play ckicked",path)
       if (path is None):
           self.play.Play()
       else:
           model=self.treeview.get_model()
           iter = model.get_iter(path)
-          print("goto: ",model.get_value(iter, 0))
+          #print("goto: ",model.get_value(iter, 0))
           self.tl.GoTo(model.get_value(iter, 0))
           new_model = self.make_list()
           self.treeview.set_model(new_model)
@@ -390,7 +412,7 @@ class Main(object):
     model = treeview.get_model()
     iter = model.get_iter(path)
     self.cursor_path=path
-    print("goto: ",model.get_value(iter, 0))
+    #print("goto: ",model.get_value(iter, 0))
     self.tl.GoTo(model.get_value(iter, 0))
     new_model = self.make_list()
     self.treeview.set_model(new_model)

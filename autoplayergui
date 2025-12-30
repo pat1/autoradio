@@ -220,8 +220,6 @@ class Main(object):
                 self.tl = None
         else:
             self.tl = None
-    except  dbus.exceptions.DBusException:
-        raise
     except:
         self.tl = None
         
@@ -397,17 +395,21 @@ class Main(object):
     self.treeview.set_model(new_model)
 
   def on_play_clicked(self, widget):
-      path,column=self.treeview.get_cursor()
-      self.cursor_path=path
-      if (path is None):
-          self.play.Play()
-      else:
-          model=self.treeview.get_model()
-          iter = model.get_iter(path)
-          #print("goto: ",model.get_value(iter, 0))
-          self.tl.GoTo(model.get_value(iter, 0))
-          new_model = self.make_list()
-          self.treeview.set_model(new_model)
+      try:
+          path,column=self.treeview.get_cursor()
+          self.cursor_path=path
+          if (path is None):
+              self.play.Play()
+          else:
+              model=self.treeview.get_model()
+              iter = model.get_iter(path)
+              #print("goto: ",model.get_value(iter, 0))
+              self.tl.GoTo(model.get_value(iter, 0))
+              new_model = self.make_list()
+              self.treeview.set_model(new_model)
+      except:
+          Gtk.main_quit()
+          
   def on_pause_clicked(self, widget):
     self.play.PlayPause()
   def on_stop_clicked(self, widget):

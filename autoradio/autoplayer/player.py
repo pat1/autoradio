@@ -507,7 +507,12 @@ class AutoPlayer(dbus.service.Object):
         for id in trackids:
           if id is not None:
             meta={}
-            for key,attr in ("mpris:trackid","id"),("mpris:length","time"),("xesam:title","title"),("xesam:artist","artist"),("xesam:url","path"):
+            for key,attr in ("mpris:trackid","id")\
+                ,("mpris:length","time")\
+                ,("xesam:title","title")\
+                ,("xesam:artist","artist")\
+                ,("xesam:url","path")\
+                ,("autoradio:numberOfTracks","ntracks"):
               try:
                 myattr= getattr(self.player.playlist.get(id,None),attr,None)
               except:

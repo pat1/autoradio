@@ -10,7 +10,7 @@ from xml.sax import make_parser, handler, SAXParseException
 from xml.dom.minidom import Document
 import urllib.request, urllib.parse, urllib.error, urllib.parse
 
-class Track(collections.namedtuple('Track',("path","time","artist","album","title","id"))):
+class Track(collections.namedtuple('Track',("path","time","artist","album","title","id","ntracks"))):
   __slots__ = ()
 
   def get_metadata(self):
@@ -23,6 +23,7 @@ class Track(collections.namedtuple('Track',("path","time","artist","album","titl
     metadata["album"]=None
     metadata["title"]=None
     metadata["id"]=self.id
+    metadata["ntracks"] = 0
 
     try:
 #      m=mutagen.File(self.path[7:].encode(sys.getfilesystemencoding()),easy=True)
@@ -41,6 +42,8 @@ class Track(collections.namedtuple('Track',("path","time","artist","album","titl
       if value:
         metadata["title"]=value[0]#.encode("UTF-8")
 
+      metadata["ntracks"] = m.info.channels
+        
     except:
       logging.error("Could not read info from file: %s ",self.path)
 
@@ -174,7 +177,7 @@ class Playlist(list):
         ele.lower().endswith(".pls") :
           self.read(ele)
         else:
-          track_meta=Track(ele,None,None,None,None,None)
+          track_meta=Track(ele,None,None,None,None,None,None)
         #print track_meta.get_metadata().values()
           tr=Track._make(list(track_meta.get_metadata().values()))
           self.append(tr)
@@ -228,7 +231,7 @@ class Playlist(list):
         else:
           location=urllib.parse.urljoin(u"file://",urllib.parse.unquote(url.path))
 
-        track=Track._make(list(Track(location,None,None,None,None,None).get_metadata().values()))
+        track=Track._make(list(Track(location,None,None,None,None,None,None).get_metadata().values()))
         s.append(track)
 
     else:
@@ -239,7 +242,8 @@ class Playlist(list):
 
       for ele in p.tracks:
         track=Track._make(list(Track(ele.get('location',None),ele.get('time',None),ele.get('creator',None),
-                    ele.get('album',None),ele.get('title',None),ele.get('id',None)).get_metadata().values()))
+                                     ele.get('album',None),ele.get('title',None),ele.get('id',None),
+                                     ele.get('ntracks',None)).get_metadata().values()))
         s.append(track)
 
 
@@ -408,7 +412,7 @@ class Playlist_mpris2(collections.OrderedDict):
 
     for id,track in enumerate(playlist):
       if (remakeid):
-        self[str(id)]=Track._make((track.path,track.time,track.artist,track.album,track.title,str(id)))
+        self[str(id)]=Track._make((track.path,track.time,track.artist,track.album,track.title,str(id),track.ntracks))
       else:
         self[track.id]=track
 
@@ -437,7 +441,7 @@ class Playlist_mpris2(collections.OrderedDict):
     if self.current is not None: 
       return self[self.current]
     else:
-      return Track(None,None,None,None,None,None)
+      return Track(None,None,None,None,None,None,None)
 
   def set_current(self,id):
     if id in list(self.keys()):
@@ -513,7 +517,7 @@ class Playlist_mpris2(collections.OrderedDict):
       if id == aftertrack:
         p=Playlist([uri])
         for id,track in enumerate(p,startnewid):
-          newself[str(id)]=Track._make((track.path,track.time,track.artist,track.album,track.title,str(id)))
+          newself[str(id)]=Track._make((track.path,track.time,track.artist,track.album,track.title,str(id),track.ntracks))
 #          newself[str(newid)]=Track._make(track.get_metadata().values())
 
 

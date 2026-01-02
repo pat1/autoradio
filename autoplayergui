@@ -450,7 +450,11 @@ class Main(object):
   def Len(self, column, cell, model, iter, data=None):
       try:
           track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
-          cell.set_property('text', convert_ns(track[0].get(u'mpris:length',"")))
+          cell.set_property('text', convert_ns(track[0].get(u'mpris:length',0)))
+          if (int(track[0].get(u'autoradio:numberOfTracks',0)) > 2):
+              cell.set_property('cell-background',"orange")
+          else:
+              cell.set_property('cell-background',"lightgreen")              
           return
       except:
           Gtk.main_quit()
@@ -459,7 +463,7 @@ class Main(object):
       try:
           track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
           dir=os.path.dirname(urllib.parse.urlparse(track[0].get(u'xesam:url',"")).path).split('/')[-1]
-          cell.set_property('text', track[0].get(u'xesam:artist', dir))
+          cell.set_property('text', track[0].get(u'autoradio:artist', dir))
           return
       except:
           Gtk.main_quit()

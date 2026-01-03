@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 
-<html lang="en" dir="ltr">
+<html lang="it" dir="ltr">
 <head>
-<title> | Django site admin</title>
+<title> | Amministrazione sito Django</title>
 <link rel="stylesheet" href="http://127.0.0.1:8080/static/admin/css/base.css">
 
   <link rel="stylesheet" href="http://127.0.0.1:8080/static/admin/css/dark_mode.css">
@@ -22,7 +22,7 @@
 
 <body class=""
   data-admin-utc-offset="3600">
-<a href="#content-start" class="skip-to-content-link">Skip to main content</a>
+<a href="#content-start" class="skip-to-content-link">Passa al contenuto principale</a>
 <!-- Container -->
 <div id="container">
 
@@ -33,9 +33,9 @@
         <div id="branding">
         
 
-<a href=http://127.0.0.1:8080/>AutoRadio Home</a> / <a href=../../doc>AutoRadio Documentation</a>
+<a href=http://127.0.0.1:8080/>AutoRadio Home</a> / <a href=../../doc>AutoRadio Documentazione</a>
 
-<h1 id="site-name"><a href="http://127.0.0.1:8080/admin/">Django administration</a></h1>
+<h1 id="site-name"><a href="http://127.0.0.1:8080/admin/">Amministrazione Django</a></h1>
 
         </div>
         
@@ -49,7 +49,7 @@
       <nav aria-label="Breadcrumbs">
         
           <div class="breadcrumbs">
-            <a href="http://127.0.0.1:8080/admin/">Home</a>
+            <a href="http://127.0.0.1:8080/admin/">Pagina iniziale</a>
             
           </div>
         
@@ -84,58 +84,65 @@
 
 
 
-<p>
 
-Lo scheduler è un programma che lanciato separatamente comanda
-all'istante di tempo opportuno il Player per attivare l'emissione
-delle programmazione preimpostata. Svolge anche altre funzioni logiche
-e di controllo quali l'esecuzione del player se non dovesse risultare
-attivo.  Ogni volta che una programmazione è stata inserita con
-successo nella playlist del player nel database di autoradio essa
-risulta come se fosse stata effettivamente messa in onda.Ovviamente se
-sul player vengono fatte operazioni manuali lo scheduler non ne puo
-tenere conto.
 
-</p>
 
-<p>
 
-Vengono estratte tutte le schedule in un intervallo di tempo a cavallo
-tra passato e futuro. Spot e programmi programmati nel passato e non
-ancora emessi vengono programmati immediatamente se il ritardo non è
-eccessivo. Le pubblicità che cadono durante l'emissione di un
-programma vengono anticipare o ritardate a seconda della vicinanza
-temporale all'inizio o alla fine delle parti del programma. I jingles
-che cadono durante l'emissione di programmi o publicità vengono
-eliminati.
 
-</p>
+
+
+
+
+
+
+
+
+
+
 
 <p>
+Autoradio permette l'emissione multicanale.
 
-Lo scheduler provvede anche alla generazione dinamica delle playlist
-delle fasce pubblicitarie per l'eventuale emissione manuale della
-pubblicità.  Queste playlist vengono generate poco prima dell'orario
-programato per l'emissione e si possono trovare nella cartella
-specificata nel file di configurazione (playlistdir).
+  Deve essere attivata tramite due appositi parametri di
+  configurazione, uno per il player e uno per autoradiod.
+  
+  Il player in modalità multichannel non riprodurrà più solo file mono o stereo ma anche multitraccia.
+  I file multitraccia dovranno essere così costituiti:
+
+<ul>  
+  <li>traccia 1 : audio sinistro canale 1</li>
+  <li>traccia 2 : audio destro canale 1</li>
+</ul>
+<ul>  
+  <li>traccia 3 : audio sinistro canale 2</li>
+  <li>traccia 4 : audio destro canale 2</li>
+</ul>
+<ul>    
+  <li>traccia 5 : audio sinistro canale 3</li>
+  <li>traccia 6 : audio destro canale 3</li>
+</ul>	
+e così via.
+
+Il player potrà quindi effettuare una emissione multicanale
+semplicemente mandando in onda i file caricati in autoradio se questi
+saranno multitraccia.
+
+Il player evidenzierà nella colonna dei tempi (Len) con il colore
+arancio i file nella playlist multitraccia.
+
+  Lo scheduler autoradiod attivato da apposito parametro di
+configurazione elaborerà in modo automatico e multichannel gli spots.
+Lo scheduler utilizzerà la tabella "Channels" nella sezione Spots
+che definisce i canali su cui effettuare lo split radiofonico.  Ogni
+fascia pubblicitaria poi ha un attributo che dichiara se tale fascia è
+da gestire in multicanale o singolo canale; se in singolo canale verrà
+generata la pubblicità solo per il primo canale.  Ogni spot poi potrà
+essere associato oltre alle fasce pubblicitarie anche a uno o più
+canali; gli spot non associati a nessun canale saranno utilizzati
+nella modalità monocanale o associati al primo canale nella modalità
+multicanale.
 
 </p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

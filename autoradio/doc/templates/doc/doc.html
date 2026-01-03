@@ -133,6 +133,95 @@ Questi sono i meccanismi di funzionamento principale:
 
 {% endif %}
 
+{% if docitem == "playergui" %}
+
+L'interfaccia grafica di interazione con il player dispone una serie
+di bottoni e icone che possono mostrare degli sti del player e/o
+impartire comandi.
+<ul>
+ <li>Prima riga:
+   <ul>
+     <li>bottone con cartellina: permette l'aggiunta di file o playlist nella
+       posizione del cursore.  E' possibile selezionare un solo file; pper
+       inserire più file alla volta utilizzare una playlist in formato m3u o
+       xspf.</li>
+
+     <li>secondo bottone: mostra lo stato del player; Playing in verde; Paused
+       in azzurro; Stopped in rosso.</li>
+   </ul>
+ </li>
+ <li>Seconda riga:
+   <ul>
+     <li>Bottone play: suona il file dall'inizio</li>
+
+     <li>Bottone pausa: mette in pausa il player o ripremuto riparte dalla
+       pausa</li>
+
+     <li>Bottone stop: mette in stop il player</li>
+
+     <li>Bottone delete: elimina dalla playlist i file selezionati nell'are
+       playlist</li>
+
+     <li>Visualizzazione tempo rimanente del file corrente in minuti:secondi</li>
+
+     <li>Barra di progresso: visualizza e imposta la posizione corrente nel
+     tempo del file corrente.  L'impostazione può essere fatta con il
+       mouse.</li>
+   </ul>
+ </li>
+
+ <li>Tabella playlist: presenta le colonne:
+   <ul>
+     <li>ID: identificativo univoco del file; normalmente a fondo
+       verde, rosso evidenzia il file corrente</li>
+
+     <li>Len: durata in minuti e secondi del file; normalmente verde
+       chiaro, arancio quando il file è "multichannel"</li>
+
+     <li>Artist: artista del brano letto dai metadati o in sua assenza nome
+       della cartella che contiene il file</li>
+
+     <li>Title: Titolo del brano letto dai metadati o in sua assenza nome del
+       file</li>
+
+     <li>Cursore: la posizione del cursore è evidenziata da una riga a fondo
+       blu</li>
+   </ul>
+ </li>
+</ul>
+Azioni:
+
+<ul>
+  <li>Cambio brano in esecuzione: doppio click con il mouse sulla riga
+    del nuovo brano oppure posizionare il cursore sul nuovo brano e
+    usare il bottone Play.</li>
+
+  <li>Cambio posizione di esecuzione del brano corrente: usare il
+    mouse sulla barra di progresso.</li>
+</ul>
+
+Uso della Tastiera: alcuni bottoni sono associati a tasti della
+  tastiera:
+<ul>
+  <li>Bottone Play: tasto "invio",tasto "invio" del tastierino
+  numerico</li>
+
+  <li>Bottone Pause: tasto ".", tasto "canc" del tastierino
+  numerico</li>
+
+  <li>Bottone Stop: tasto "delete", tsto "ins" del tastierino numerico</li>
+
+  <li>Barra di progresso: freccia a sinistra arretra e freccia a
+    destra avanza, di 10 secondi (anche del tastierino numerico)</li>
+
+  <li>Cursore: freccia in basso successivo (da premere ripetutamente
+    per visualizzare il cursore se non già presente) cursore sul brano
+    successivo, freccia in alto cursore sul brano precedente (anche
+    del tastierino numerico)</li>
+</ul>
+
+{% endif %}
+
 {% if docitem == "scheduler" %}
 
 <p>
@@ -460,6 +549,54 @@ amministrazione.
 
 {% endif %}
 
+
+{% if docitem == "multichannel" %}
+
+<p>{% blocktrans %}
+Autoradio permette l'emissione multicanale.
+
+  Deve essere attivata tramite due appositi parametri di
+  configurazione, uno per il player e uno per autoradiod.
+  
+  Il player in modalità multichannel non riprodurrà più solo file mono o stereo ma anche multitraccia.
+  I file multitraccia dovranno essere così costituiti:
+
+<ul>  
+  <li>traccia 1 : audio sinistro canale 1</li>
+  <li>traccia 2 : audio destro canale 1</li>
+</ul>
+<ul>  
+  <li>traccia 3 : audio sinistro canale 2</li>
+  <li>traccia 4 : audio destro canale 2</li>
+</ul>
+<ul>    
+  <li>traccia 5 : audio sinistro canale 3</li>
+  <li>traccia 6 : audio destro canale 3</li>
+</ul>	
+e così via.
+
+Il player potrà quindi effettuare una emissione multicanale
+semplicemente mandando in onda i file caricati in autoradio se questi
+saranno multitraccia.
+
+Il player evidenzierà nella colonna dei tempi (Len) con il colore
+arancio i file nella playlist multitraccia.
+
+  Lo scheduler autoradiod attivato da apposito parametro di
+configurazione elaborerà in modo automatico e multichannel gli spots.
+Lo scheduler utilizzerà la tabella "Channels" nella sezione Spots
+che definisce i canali su cui effettuare lo split radiofonico.  Ogni
+fascia pubblicitaria poi ha un attributo che dichiara se tale fascia è
+da gestire in multicanale o singolo canale; se in singolo canale verrà
+generata la pubblicità solo per il primo canale.  Ogni spot poi potrà
+essere associato oltre alle fasce pubblicitarie anche a uno o più
+canali; gli spot non associati a nessun canale saranno utilizzati
+nella modalità monocanale o associati al primo canale nella modalità
+multicanale.
+
+{% endblocktrans %}</p>
+
+{% endif %}
 </div>
 
 {% endblock %}

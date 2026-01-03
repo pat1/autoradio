@@ -1,29 +1,39 @@
 <!DOCTYPE html>
 
-<html lang="it" >
+<html lang="it" dir="ltr">
 <head>
-<title> | Amministrazione</title>
-<link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/static/admin/css/base.css" />
+<title> | Amministrazione sito Django</title>
+<link rel="stylesheet" href="http://127.0.0.1:8080/static/admin/css/base.css">
+
+  <link rel="stylesheet" href="http://127.0.0.1:8080/static/admin/css/dark_mode.css">
+  <script src="http://127.0.0.1:8080/static/admin/js/theme.js"></script>
 
 
 
-<meta name="robots" content="NONE,NOARCHIVE" />
+
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="http://127.0.0.1:8080/static/admin/css/responsive.css">
+    
+
+<meta name="robots" content="NONE,NOARCHIVE">
 </head>
 
-
 <body class=""
-  data-admin-utc-offset="7200">
-
+  data-admin-utc-offset="3600">
+<a href="#content-start" class="skip-to-content-link">Passa al contenuto principale</a>
 <!-- Container -->
 <div id="container">
 
     
     <!-- Header -->
-    <div id="header">
+    
+      <header id="header">
         <div id="branding">
         
 
-<a href="http://127.0.0.1:8080/">AutoRadio Home</a> / <a href="http://127.0.0.1:8080/doc">AutoRadio Documentazione</a>
+<a href=http://127.0.0.1:8080/>AutoRadio Home</a> / <a href=../../doc>AutoRadio Documentazione</a>
 
 <h1 id="site-name"><a href="http://127.0.0.1:8080/admin/">Amministrazione Django</a></h1>
 
@@ -32,29 +42,39 @@
         
         
         
-    </div>
+      </header>
+    
     <!-- END Header -->
     
-    <div class="breadcrumbs">
-    <a href="http://127.0.0.1:8080/admin/">Pagina iniziale</a>
-    
-    </div>
+      <nav aria-label="Breadcrumbs">
+        
+          <div class="breadcrumbs">
+            <a href="http://127.0.0.1:8080/admin/">Pagina iniziale</a>
+            
+          </div>
+        
+      </nav>
     
     
 
-    
+    <div class="main" id="main">
+      
+      <main id="content-start" class="content" tabindex="-1">
         
-    
+          
+        
+        <!-- Content -->
+        <div id="content" class="colM">
+          
+          
+          
+          
 
-    <!-- Content -->
-    <div id="content" class="colM">
-        
-        
-        
-
-<h1><a href="../index.html">Indice documentazione</a></h1>
+<h1><a href="../index.html">Documentation Home</a></h1>
 
 <div id="content-main">
+
+
 
 
 
@@ -113,51 +133,68 @@ per una emissione periodica ad iniziare da una una data specifica fino
 a una data finale per alcuni giorni della settimana specificati.
 </p>
 
-<p><strong>FeedBurner e iTunes URL</strong></p>
+<p><strong>FeedBurner and iTunes URLs</strong></p>
 
 <p>
-Dopo aver salvato almeno uno show e un episodio prendi in considerazione la possibilità di registrare la URL del tuo flusso a FeedBurner per tener traccia delle iscrizioni al tuo flusso con elaborazioni statistiche. La URL del tuo flusso dovrebbe essere qualche cosa del genere, dove "title-of-show" è lo slug del tuo show:
+After saving at least one show and one episode, consider submitting
+your feed URL to FeedBurner for keeping track of podcast subscriber
+statistics. Your feed URL should be something like, where
+title-of-show is the slug of your show:
 </p>
 
 http://www.example.com/podcasts/title-of-show/feed/
 
 <p>
-Ricordati di spuntare la casella "I'm a podcaster!" La tua nuova URL FeedBurner dovrebbe essere qualche cosa del tipo:
+Remember to check the checkbox for "I'm a podcaster!" Your new
+FeedBurner URL should be something like:
 </p>
 
 http://feeds.feedburner.com/TitleOfShow
 
 <p>
-Puoi tornare all'amministrazione del sito e ricopiare la URL nella casella
- FeedBurner dello show. Per avere ulteriori benefici, invia la tua FeedBurner URL a iTunes Store. La tua iTunes podcast URL dovrebbe essere qualche cosa del genere:
+You can now return to your website's admin and paste this URL into
+your Show's FeedBurner textbox. For bonus points, submit your
+FeedBurner URL to the iTunes Store. Your iTunes podcast URL should
+then be something like:
 </p>
 
 http://phobos.apple.com/WebObjects/MZStore.woa/wa/viewPodcast?id=000000000
 
 <p>
-I vantaggi di inviare la tua FeedBurner URL a iTunes Store permette di accumulare statistiche e di dare la possibilità agli utenti di usare l'interfacci amichevole di ITunes. Ritorna all'amministrazione e incolla la iTunes show URL nella casella iTunes URL dello show.
+The advantage of submitting your FeedBurner URL to the iTunes Store
+allows you to track show statistics while also giving users the
+advantage of using the friendly iTunes interface. Return to the admin
+again and paste the iTunes show URL into the Show's iTunes URL
+textbox.
 </p>
 
 
-<p><strong>Sollecita iTunes per i nuovi contenuti</strong></p>
+<p><strong>Ping iTunes for new content</strong></p>
 
 <p>
-iTunes Store testa i nuovi contenuti quotidianamente, ma tu potresti volere un nuovo episodio disponibile immediatamente nel iTunes Store. Visita la URL di sollecito (ping) del tuo show per rendere quell'episodio disponibile, che dovrebbe assomigliare ad una cosa del genere:
+The iTunes Store checks new content daily but you might want to make a
+new episode available immediately in the iTunes Store. Visit your
+show's ping URL to make that episode available, which would be
+something like:
 </p
 
 https://phobos.apple.com/WebObjects/MZFinance.woa/wa/pingPodcast?id=000000000
 
 <p>
-In alternativa se sei uno sviluppatore evoluto puoi impostare un "cron job" per gestire automaticamente questa cosa, ma non fare il sollecito troppo frequentemente perchè iTunes Store potrebbe procedere con una rimozione.
+Alternatively, if you're a savvy developer, you could set up a cron
+job to handle this, but note that pinging too often could result in a
+removal from the iTunes Store.
 </p
 
 
 
-<p><strong>Registrazione a Yahoo! Media RSS</strong></p>
+<p><strong>Yahoo! Media RSS feed submission</strong></p>
 
 <p>
-D'altro conto considera di registrare il tuo flusso al motore di ricerca Yahoo!, che nello specifico accetta qualsiasi tipo di media (audio, video, immagini, documenti, etc.) pubblicati regolarmente con flussi  RSS 2.0 o Media RSS.
-Il tuo flusso Media RSS dovrebbe essere qualche cosa del genere:
+Likewise, considering submitting your podcast to Yahoo! Search, which
+specifically accepts any kind of regularly published media-based
+(audio, video, image, document, etc.) RSS 2.0 feed or Media RSS feed.
+Your Media RSS feed should be something like:
 </p
 
 http://www.example.com/podcasts/title-of-show/media/
@@ -165,20 +202,22 @@ http://www.example.com/podcasts/title-of-show/media/
 <p><strong>Google video sitemaps</strong></p>
 
 <p>
-Se stai creando un flusso video, puoi inviare un video sitemap a Google Webmaster Tools. Il video sitemap aiuta Google ad incicizzare il video in Google Video.
-La URL del video sitemap dovrebbe essere qualche cosa del genere:
+If you're creating a video podcast, you can submit a video sitemap to
+Google Webmaster Tools. The video sitemap will help Google index
+videos in Google Video. The video sitemap URL should be something like:
 </p
 
 http://www.example.com/podcasts/title-of-show/sitemap.xml
 
 <p>
-In aggiunta puoi inserire la URL del video sitemap nel tuo file robots.txt:
+Additionally, you can add the video sitemap URL to your robots.txt file:
 </p
 
 Sitemap: http://www.example.com/podcasts/title-of-show/sitemap.xml
 
 <p>
-Google permette la registrazione a Google Webmaster Tools di un flusso media RSS invece del sitemap se preferisci.
+Google allows the submission of a media RSS feed instead of the
+sitemap to Google Webmaster Tools if you prefer.
 </p
 
 <h3>La definizione di un Episodio</h3>
@@ -199,10 +238,13 @@ Per ogni episodio è possibile inserire dei metadati utili per
 effettuare un efficiente podcast/mediacast.
 </p
 
-<p><strong>Cosa è il Dublin Core namespace?</strong></p>
+<p><strong>What is the Dublin Core namespace?</strong></p>
 
 <p>
-Il Dublin Core namespace permette ai metadati di essere associati con il contenuto di un flusso RSS. Ulteriori dettagli a <a href="http://homepage.univie.ac.at/horst.prillinger/blog/archives/2005/01/000922.html">Dublin Core or the DC extension.</a>
+The Dublin Core namespace allows for meta data to be associated with
+content contained in an RSS feed. Additional details on
+the <a href="http://homepage.univie.ac.at/horst.prillinger/blog/archives/2005/01/000922.html">Dublin
+Core or the DC extension.</a>
 </p
 
 
@@ -212,17 +254,32 @@ Il Dublin Core namespace permette ai metadati di essere associati con il contenu
 
 
 
+
+
+
+
+
+
 </div>
 
 
-        
-        <br class="clear" />
+          
+          <br class="clear">
+        </div>
+        <!-- END Content -->
+      </main>
     </div>
-    <!-- END Content -->
-
-    <div id="footer"></div>
+    <footer id="footer"></footer>
 </div>
 <!-- END Container -->
+
+<!-- SVGs -->
+<svg xmlns="http://www.w3.org/2000/svg" class="base-svgs">
+  <symbol viewBox="0 0 24 24" width="1.5rem" height="1.5rem" id="icon-auto"><path d="M0 0h24v24H0z" fill="currentColor"/><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2V4a8 8 0 1 0 0 16z"/></symbol>
+  <symbol viewBox="0 0 24 24" width="1.5rem" height="1.5rem" id="icon-moon"><path d="M0 0h24v24H0z" fill="currentColor"/><path d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0 0 10 7zm-6 5a8 8 0 0 0 15.062 3.762A9 9 0 0 1 8.238 4.938 7.999 7.999 0 0 0 4 12z"/></symbol>
+  <symbol viewBox="0 0 24 24" width="1.5rem" height="1.5rem" id="icon-sun"><path d="M0 0h24v24H0z" fill="currentColor"/><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/></symbol>
+</svg>
+<!-- END SVGs -->
 
 </body>
 </html>

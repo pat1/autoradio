@@ -80,81 +80,92 @@
 
 
 
-<p>
-
-Partendo da una playlist è in grado di gestire differenti formati di
-audio digitali per poi inviare il suono o a una scheda audio o a un
-server audio.
-</p>
 
 
-
-Esistono varie possibilità:
+L'interfaccia grafica di interazione con il player dispone una serie
+di bottoni e icone che possono mostrare degli sti del player e/o
+impartire comandi.
 <ul>
-  <li>Autoplayerd: Questo player è basato su gstreamer e quindi
-  disponibile su tutte le nuove distribuzioni.  Il formato dei file
-  audio è determinato dai plugin di gstreamer installati.  Questo
-  player non ha bisogno di un terminale per l'interazione umana.
-  Espone una interfaccia a standard mpris2 su dbus e quindi qualsiasi
-  applicazione che interagisca con questa interfaccia può impartire
-  comandi al player. Autoradio fornisce autoplayergui che ha una
-  interfaccia grafica tramite la quale è possibile eseguire tutte le
-  funzioni elementari quali play, pause, stop etc.  Il vantaggio è che
-  un computer senza terminale quale un server può funzionare e avere
-  questo player in modalità daemon, ossia sempre attiva.  Il player
-  permette l'invio diretto a un server per lo streaming per la
-  realizzazione di web radio.  Questo è il player preferito per
-  l'utilizzo con AutoRadio.</li>
+ <li>Prima riga:
+   <ul>
+     <li>bottone con cartellina: permette l'aggiunta di file o playlist nella
+       posizione del cursore.  E' possibile selezionare un solo file; pper
+       inserire più file alla volta utilizzare una playlist in formato m3u o
+       xspf.</li>
 
-  <li>Audacious2:
-  Questo player è disponibile su tutte le nuove distribuzioni.
-  Permette l'invio diretto a un server per lo streaming per la realizzazione di web radio.
-  </li>
-  <li>Xmms:
-  E' un player “antico” ma molto robusto.
-  Consigliato solo su vecchie distribuzioni</li>
+     <li>secondo bottone: mostra lo stato del player; Playing in verde; Paused
+       in azzurro; Stopped in rosso.</li>
+   </ul>
+ </li>
+ <li>Seconda riga:
+   <ul>
+     <li>Bottone play: suona il file dall'inizio</li>
+
+     <li>Bottone pausa: mette in pausa il player o ripremuto riparte dalla
+       pausa</li>
+
+     <li>Bottone stop: mette in stop il player</li>
+
+     <li>Bottone delete: elimina dalla playlist i file selezionati nell'are
+       playlist</li>
+
+     <li>Visualizzazione tempo rimanente del file corrente in minuti:secondi</li>
+
+     <li>Barra di progresso: visualizza e imposta la posizione corrente nel
+     tempo del file corrente.  L'impostazione può essere fatta con il
+       mouse.</li>
+   </ul>
+ </li>
+
+ <li>Tabella playlist: presenta le colonne:
+   <ul>
+     <li>ID: identificativo univoco del file; normalmente a fondo
+       verde, rosso evidenzia il file corrente</li>
+
+     <li>Len: durata in minuti e secondi del file; normalmente verde
+       chiaro, arancio quando il file è "multichannel"</li>
+
+     <li>Artist: artista del brano letto dai metadati o in sua assenza nome
+       della cartella che contiene il file</li>
+
+     <li>Title: Titolo del brano letto dai metadati o in sua assenza nome del
+       file</li>
+
+     <li>Cursore: la posizione del cursore è evidenziata da una riga a fondo
+       blu</li>
+   </ul>
+ </li>
+</ul>
+Azioni:
+
+<ul>
+  <li>Cambio brano in esecuzione: doppio click con il mouse sulla riga
+    del nuovo brano oppure posizionare il cursore sul nuovo brano e
+    usare il bottone Play.</li>
+
+  <li>Cambio posizione di esecuzione del brano corrente: usare il
+    mouse sulla barra di progresso.</li>
 </ul>
 
-
-
-Questi sono i meccanismi di funzionamento principale:
-
-
+Uso della Tastiera: alcuni bottoni sono associati a tasti della
+  tastiera:
 <ul>
- <li>deve essere sempre presente nel player una playlist di brani
- musicali ciascuno di durata non superiore a 7/8 minuti; brani piu'
- lunghi potrebbero comportare ritardi e cattiva gestione
- dell'emissione automatica. Per mantenere sempre piena la playlist si
- consiglia di prevedere almeno due volte al giorno il caricamento
- automatico di una playlist voluminosa.</li>
+  <li>Bottone Play: tasto "invio",tasto "invio" del tastierino
+  numerico</li>
 
- <li>quando una schedula raggiunge il tempo per cui è stata programmata
- viene inserita nella prima posizione successiva a quella attualmente
- in play, e successiva anche ad ogni file precedentemente inserito da una
- precedente schedula.</li>
+  <li>Bottone Pause: tasto ".", tasto "canc" del tastierino
+  numerico</li>
 
- <li>tutto thread save, ossia le funzioni fatte sul player dalle varie
- schedule saranno sempre consistenti.</li>
+  <li>Bottone Stop: tasto "delete", tsto "ins" del tastierino numerico</li>
 
- <li>le operazioni di inserimento e cancellazione dalla playlist vengono
- fatte solo quando mancano piu' di 10 secondi alla fine del brano per
- non cadere in situazioni critiche e inconsistenti.</li>
+  <li>Barra di progresso: freccia a sinistra arretra e freccia a
+    destra avanza, di 10 secondi (anche del tastierino numerico)</li>
 
- <li>la testa della playlist, che se tutto è programmato correttamente
- tende sempre a crescere, viene tagliata a 10 brani.</li>
-
- <li>la coda della playlist che se tutto è programmato correttamente
- tende sempre a crescere viene tagliata a 500 brani.</li>
-
- <li>il player se in stato "stop" viene sempre rimesso in stato "play".</li>
-
- <li>il player se in stato "pause" rimarrà sempre in "pause" se non ci
- sarà un intervento manuale.</li>
-
- <li>è possibile visualizzare lo stato del player con interfaccia web.</li>
+  <li>Cursore: freccia in basso successivo (da premere ripetutamente
+    per visualizzare il cursore se non già presente) cursore sul brano
+    successivo, freccia in alto cursore sul brano precedente (anche
+    del tastierino numerico)</li>
 </ul>
-
-
 
 
 

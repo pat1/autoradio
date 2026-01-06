@@ -9,6 +9,7 @@ from .gest_spot import *
 from .gest_jingle import *
 from .gest_playlist import *
 from .gest_palimpsest import *
+from .programs import signals
 
 
 class schedule:

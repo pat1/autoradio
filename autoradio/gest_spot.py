@@ -33,7 +33,7 @@ def assemble_playlist_channel(fascia, playlistdir,multichannel=True):
     '''
     assemble playlists for one fascia all channel
     '''
-    multichannelname=os.path.join(os.path.join(settings.MEDIA_ROOT, playlistdir),fascia.name+".ogg")
+    multichannelname=os.path.join(os.path.join(settings.MEDIA_ROOT, playlistdir),fascia.name+".wav")
     playlistpath=os.path.join(settings.MEDIA_ROOT, playlistdir)
     filler_playlists=[]
     playlists=[]

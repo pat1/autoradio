@@ -94,12 +94,24 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname):
     #multitrack = AudioSegment.from_mono_audiosegments(*[tracks[i][:lunghezza] for i in range(NUM_TRACK)], faketrack)
     
     multitrack = AudioSegment.from_mono_audiosegments(*[tracks[i][:lunghezza] for i in range(NUM_TRACK)])
-    multitrack.export( multichannelname, format="ogg")
+    # fast and simple export bi pydub
+    multitrack.export( multichannelname, format="wav")
+
+    # wav export bu ffmpeg
+    #multitrack.export( multichannelname, codec="wav",parameters=["-acodec","pcm_s16le", "-ac", "6", "-ar", "16000"],format="wav")
+
+    #export to ogg
+    # there is a bug exporting to ogg: the last track will be corrupted
+    #multitrack.export( multichannelname, format="ogg",, tags={"title": "The sound", "artist": "Radiohead"})
 
 def main():
+
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+
     playlists=["media/spots/er_mezzogiorno.m3u","media/spots/lo_mezzogiorno.m3u","media/spots/to_mezzogiorno.m3u"]
     filler_playlists=["media/spots/er_mezzogiorno_filler.m3u","media/spots/er_mezzogiorno_filler.m3u","media/spots/er_mezzogiorno_filler.m3u"]
-    outname="output.ogg"
+    outname="output.wav"
     assemble_playlists(playlists,filler_playlists,outname)
 
 if __name__ == '__main__':

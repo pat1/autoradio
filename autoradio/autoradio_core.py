@@ -10,6 +10,8 @@ from .gest_jingle import *
 from .gest_playlist import *
 from .gest_palimpsest import *
 from .programs import signals
+from .spots import signals
+from .jingles import signals
 
 
 class schedule:

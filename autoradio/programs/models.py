@@ -229,6 +229,7 @@ class ChildCategory(models.Model):
         verbose_name = 'category (iTunes child)'
         verbose_name_plural = 'categories (iTunes child)'
 
+        
     def __str__(self):
         if self.name!='':
             return u'%s > %s' % (self.parent, self.name)
@@ -357,6 +358,7 @@ class Show(models.Model):
 
     class Meta(object):
         ordering = ['title']
+        permissions = (("manage_any_show","can manage any enclosure and schedule for any show"),)
 
     def __str__(self):
         return u'%s' % (self.title)
@@ -747,7 +749,14 @@ class Schedule(models.Model):
        def __str__(self):
                return str(self.episode.title)
 
-
+#       class Meta:
+#           constraints = [
+#            models.UniqueConstraint(
+#                fields=['episode', 'emission_date'],
+#                name='unique_episode_emission_date'
+#            ),
+#           ]
+           
 
 class ScheduleDone(models.Model):
 
@@ -762,8 +771,7 @@ class ScheduleDone(models.Model):
 
        def __str__(self):
                return str(self.emission_done)
-
-
+           
 
 class PeriodicSchedule(models.Model):
 

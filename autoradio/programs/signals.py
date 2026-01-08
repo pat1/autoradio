@@ -13,7 +13,7 @@ if not autoradio.settings.require_tags_in_enclosure:
             try:
                 audio = mutagen.File(instance.file.path)
                 if audio:
-                    audio.tags['ARTIST'] = instance.episode.show.title
+                    audio.tags['ARTIST'] = "SHOW: "instance.episode.show.title
                     audio.tags['TITLE'] = instance.episode.title+" / "+instance.title
                     audio.save()
             except:

@@ -396,8 +396,8 @@ class gest_spot_channel(object):
             for spot in spots_channel.get_fascia_spots():
                 self.spotlist.append(spot)
             self.ar_scheduledatetime=spots_channel.ar_scheduledatetime
-            self.ar_url=os.path.join(os.path.join(settings.MEDIA_URL, self.playlistdir),fascia.name+".ogg")
-            self.ar_filename=os.path.join(os.path.join(settings.MEDIA_ROOT, self.playlistdir),fascia.name+".ogg")
+            self.ar_url=os.path.join(os.path.join(settings.MEDIA_URL, self.playlistdir),fascia.name+".wav")
+            self.ar_filename=os.path.join(os.path.join(settings.MEDIA_ROOT, self.playlistdir),fascia.name+".wav")
             self.ar_length=max(self.ar_length,spots_channel.ar_length)
             self.ar_emission_done=spots_channel.ar_emission_done
             self.ar_spots_in_fascia+=spots_channel.ar_spots_in_fascia

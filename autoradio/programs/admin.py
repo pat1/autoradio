@@ -35,11 +35,11 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
                     
                     file = form.cleaned_data.get('file',False)
                     if file:
-                        
+
                         if autoradio.settings.permit_no_playable_files:
                             
                             try:
-                                type = file.content_type in webmime_audio
+                                type = file.content_type in autoradio.mime.webmime_audio
                             except:
                                 #here when the file is not uploaded (modify for example)
                                 return file
@@ -47,32 +47,31 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
                             if not type:
                                 raise forms.ValidationError(gettext_lazy("Browser say that Content-Type is not audio"))
                             
-                            if not os.path.splitext(file.name)[1] in websuffix_audio:
+                            if not os.path.splitext(file.name)[1] in autoradio.mime.websuffix_audio:
                                 raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .mp3, .wav, .ogg, .oga, .flac"))
 
                             try:
                                 mime = ma.file(file.temporary_file_path())
-                                audio = mime in mymime_audio
+                                audio = mime in autoradio.mime.mymime_audio
                             except:
                                 audio=False
                                 
                             if not audio:
                                 raise forms.ValidationError(gettext_lazy("Not a valid audio file"))
                             
-                            if autoradio.settings.require_tags_in_enclosure:
+                            try:
                                 #Check file if it is a known media file. The check is based on mutagen file test.
-                                try:
-                                    audio = not mutagen.File(file.temporary_file_path()) is None
-                                except:
-                                    audio = False
-                                    
-                                if not audio:
-                                    raise forms.ValidationError(gettext_lazy("Not a valid audio file: probably no tags present"))
+                                audio = not mutagen.File(file.temporary_file_path()) is None
+                            except:
+                                audio = False
+                                
+                            if not audio:
+                                raise forms.ValidationError(gettext_lazy("Not a valid audio file: cannot analize"))
 
                         else:
 
                             try:
-                                type = file.content_type in webmime_ogg
+                                type = file.content_type in autoradio.mime.webmime_ogg
                             except:
                                 #here when the file is not uploaded (modify for example)
                                 return file
@@ -80,31 +79,32 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
                             if not type:
                                 raise forms.ValidationError(gettext_lazy("Browser say that Content-Type is not audio ogg vorbis"))
                             
-                            if not os.path.splitext(file.name)[1] in websuffix_ogg:
+                            if not os.path.splitext(file.name)[1] in autoradio.mime.websuffix_ogg:
                                 raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .ogg, .oga"))
 
                             try:
                                 mime = ma.file(file.temporary_file_path())
-                                audio = mime in mymime_ogg
+                                audio = mime in autoradio.mime.mymime_ogg
                             except:
-                                audio=False
+                                raise
+                                #audio=False
 
                             if not audio:
                                 raise forms.ValidationError(gettext_lazy("Not a valid ogg/oga vorbis audio file"))
 
-                            if autoradio.settings.require_tags_in_enclosure:
+                            try:
                                 #Check file if it is a known media file. The check is based on mutagen file test.
-                                try:
-                                    mut=mutagen.File(file.temporary_file_path())
-                                    audio = not mut is None
-                                    sample_rate=mut.info.sample_rate
-                                except:
-                                    audio = False
-                                    sample_rate=0
+                                mut=mutagen.File(file.temporary_file_path())
+                                audio = not mut is None
+                                sample_rate=mut.info.sample_rate
+                            except:
+                                audio = False
+                                sample_rate=0
 
-                                if not audio:
-                                    raise forms.ValidationError(gettext_lazy("Not a valid ogg/oga vorbis audio file: probably no tags present"))
-
+                            if not audio:
+                                raise forms.ValidationError(gettext_lazy("Not a valid ogg/oga vorbis audio file: cannot analize"))
+                           
+                            if autoradio.settings.require_tags_in_enclosure:
                                 if not sample_rate == 44100:
                                     raise forms.ValidationError(gettext_lazy("Sample rate is Not 44100Hz: cannot use it in podcasting web interface"))
             
@@ -149,14 +149,14 @@ class MyEnclosureAdminForm(forms.ModelForm):
             if autoradio.settings.permit_no_playable_files:
 
                 try:
-                    type = file.content_type in webmime_audio
+                    type = file.content_type in autoradio.mime.webmime_audio
                 except:
                     return file
 
                 if not type:
                     raise forms.ValidationError(gettext_lazy("Browser say that Content-Type is not audio"))
                 
-                if not os.path.splitext(file.name)[1] in websuffix_audio:
+                if not os.path.splitext(file.name)[1] in autoradio.mime.websuffix_audio:
                     raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .mp3, .wav, .ogg, .oga, .flac"))
                     #Check file if it is a known media file. The check is based on mutagen file test.
                 try:
@@ -171,19 +171,19 @@ class MyEnclosureAdminForm(forms.ModelForm):
             else:
 
                 try:
-                    type = file.content_type in webmime_ogg
+                    type = file.content_type in autoradio.mime.webmime_ogg
                 except:
                     return file
 
                 if not type:
                     raise forms.ValidationError(gettext_lazy("Browser say that Content-Type is not audio ogg vorbis"))
 
-                if not os.path.splitext(file.name)[1] in websuffix_ogg:
+                if not os.path.splitext(file.name)[1] in autoradio.mime.websuffix_ogg:
                     raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .ogg, .oga"))
 
                 try:
                     mime = ma.file(file.temporary_file_path())
-                    audio = mime in mymime_ogg
+                    audio = mime in autoradio.mime.mymime_ogg
                 except:
                     audio=False
 

@@ -28,7 +28,7 @@ class MySpotAdminForm(forms.ModelForm):
 		    #if file._size > 40*1024*1024:
 			#    raise forms.ValidationError("Audio file too large ( > 4mb )")
                 try:
-                    type = file.content_type in webmime_audio
+                    type = file.content_type in autoradio.mime.webmime_audio
                 except:
                     return file
 
@@ -40,22 +40,21 @@ class MySpotAdminForm(forms.ModelForm):
 
                 try:
                     mime = ma.file(file.temporary_file_path())
-                    audio = mime in mymime_audio
+                    audio = mime in autoradio.mime.mymime_audio
                 except:
                     audio=False
                     
                 if not audio:
                     raise forms.ValidationError(gettext_lazy("Not a valid audio file"))
 
-                if autoradio.settings.require_tags_in_enclosure:
-                    #Check file if it is a known media file. The check is based on mutagen file test.
-                    try:
-                        audio = not (mutagen.File(file.temporary_file_path()) is None)
-                    except:
-                        audio = False
+                #Check file if it is a known media file. The check is based on mutagen file test.
+                try:
+                    audio = not (mutagen.File(file.temporary_file_path()) is None)
+                except:
+                    audio = False
 
-                    if not audio:
-                        raise forms.ValidationError(gettext_lazy("Not a valid audio file: probably no tags present"))
+                if not audio:
+                    raise forms.ValidationError(gettext_lazy("Not a valid audio file: cannot analize"))
 
                 return file
 

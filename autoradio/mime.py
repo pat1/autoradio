@@ -12,8 +12,8 @@
 #    audio/webm: WebM open media format
 
 
-mymime_audio=("application/ogg","audio/mpeg", "audio/mp4", "audio/x-flac", "audio/x-wav") 
-mymime_ogg=("application/ogg",)
+mymime_audio=("audio/ogg","application/ogg","audio/mpeg", "audio/mp4", "audio/x-flac", "audio/x-wav") 
+mymime_ogg=("audio/ogg","application/ogg",)
 
 webmime_audio = ("audio/mpeg","audio/mp3","audio/flac","video/ogg","audio/ogg","audio/oga", \
                      "audio/basic","audio/L24","audio/mp4","audio/vorbis","audio/x-ms-wma2",\

@@ -9,9 +9,81 @@ import autoradio.mime
 import mutagen, os
 #from django.contrib.auth.models import Permission
 import magic
+from datetime import datetime,timedelta
 
 ma = magic.open(magic.MAGIC_MIME_TYPE)
 ma.load()
+
+
+
+class MyScheduleInlineFormset(forms.models.BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+        
+        # get forms that actually have valid data
+        for form in self.forms:
+            try:
+                if form.cleaned_data:
+                    print(form.cleaned_data)
+
+                    episode=form.cleaned_data.get('episode',None)
+                    if not episode:
+                        raise forms.ValidationError(gettext_lazy("Not a valid associated episode"))
+
+                    show=episode.show
+                    print("show: ",show)
+                    
+                    emission_date = form.cleaned_data.get('emission_date',None)
+
+                    if not emission_date:
+                        raise forms.ValidationError(gettext_lazy("Not a valid emission date"))
+
+                    print("emission_date: ",emission_date)
+                    date_min=emission_date-timedelta(seconds=180)
+                    date_max=emission_date+timedelta(seconds=180)
+
+                    ## retrive the right records relative to schedule
+                    for aperiodicschedule in show.aperiodicschedule_set.all():
+                        print("aperiodicschedule: ",aperiodicschedule.emission_date)
+
+                    ok = show.aperiodicschedule_set.filter(emission_date__gte=date_min)\
+                                                          .filter(emission_date__lte=date_max)\
+                                                          .filter(show__active__exact=True)\
+                                                          .count()
+                        
+
+                    # retrive the right records relative to periodicschedule
+                    if (date_min < date_max):
+                        ok += show.periodicschedule=periodicschedule_set\
+                            .filter(Q(start_date__lte=self.dateelab) | Q(start_date__isnull=True))\
+                            .filter(Q(end_date__gte=self.dateelab)   | Q(end_date__isnull=True))\
+                            .filter(time__gte=date_min)\
+                            .filter(time__lte=date_max)\
+                            .filter(giorni__name__exact=giorno)\
+                            .filter(show__active__exact=True)\
+                            .count()
+
+                    else:
+                        # warning here we are around midnight
+                        #            logging.debug("PALIMPSEST: around midnight")
+
+                        day_min = calendar.day_name[date_min.weekday()]
+                        day_max = calendar.day_name[date_max.weekday()]
+
+                        ok += show.periodicschedule=periodicschedule_set\
+                            .filter(Q(start_date__lte=dateelab) | Q(start_date__isnull=True))\
+                            .filter(Q(end_date__gte=dateelab)   | Q(end_date__isnull=True))\
+                            .filter((Q(time__gte=time_min) & Q(giorni__name__exact=day_min)) |\
+                                    (Q(time__lte=times_max) & Q(giorni__name__exact=day_max)))\
+                            .filter(show__active__exact=True)\
+                            .count()
+
+                    print("OK: ",ok)
+                    if (ok == 0 and not form.cleaned_data.get('DELETE',False)):
+                        raise forms.ValidationError(gettext_lazy("Not a valid emission date"))
+                    
+            except:
+                raise
 
 
 class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
@@ -24,12 +96,18 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
             try:
                 if form.cleaned_data:
                     count += 1
+                    print(form.cleaned_data)
+                    schedule = form.cleaned_data.get('emission_date',None)
+                    if (schedule):
+                        print("schedule: ",schedule)
 
-                    episode_title=form.cleaned_data.get('episode',None)
-                    if not episode_title:
+                    episode=form.cleaned_data.get('episode',None)
+                    if not episode:
                         raise forms.ValidationError(gettext_lazy("Not a valid associated episode"))
 
-                    if ((not self.current_user in episode_title.show.author.all()) and not self.current_user.has_perm("programs.manage_any_show") and not self.current_user.is_superuser):
+                    if ((not self.current_user in episode.show.author.all())
+                        and not self.current_user.has_perm("programs.manage_any_show")
+                        and not self.current_user.is_superuser):
                         raise forms.ValidationError(gettext_lazy("You are not a valid user for the associated show"))
 
                     
@@ -133,11 +211,11 @@ class MyEnclosureAdminForm(forms.ModelForm):
 
     def clean_episode(self):
         
-        episode_title=self.cleaned_data.get('episode',None)
-        if not episode_title:
+        episode=self.cleaned_data.get('episode',None)
+        if not episode:
             raise forms.ValidationError(gettext_lazy("Not a valid associated episode"))
 
-        if ((not self.current_user in episode_title.show.author.all()) and not self.current_user.has_perm("programs.manage_any_show") and not self.current_user.is_superuser):
+        if ((not self.current_user in episode.show.author.all()) and not self.current_user.has_perm("programs.manage_any_show") and not self.current_user.is_superuser):
             raise forms.ValidationError(gettext_lazy("You are not a valid user for the associated show"))
 
         
@@ -260,6 +338,8 @@ class ScheduleInline(admin.StackedInline):
     model = Schedule
     extra=2
     max_num=10
+    formset = MyScheduleInlineFormset
+    
 
 class PeriodicScheduleInline(admin.StackedInline):
     model = PeriodicSchedule

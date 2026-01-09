@@ -12,7 +12,7 @@ if not autoradio.settings.require_tags_in_enclosure:
         #if created:     # created is false and 'update_fields': None when file is changed
             try:
                 audio = mutagen.File(instance.file.path)
-                if audio:
+                if audio is not None:
                     audio.tags['ARTIST'] = "JINGLE"
                     audio.tags['TITLE'] = instance.jingle
                     audio.save()

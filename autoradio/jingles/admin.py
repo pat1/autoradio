@@ -34,7 +34,7 @@ class MyJingleAdminForm(forms.ModelForm):
             if not type:
                 raise forms.ValidationError(gettext_lazy("Content-Type is not audio/mpeg or audio/flac or video/ogg"))
 
-            if not os.path.splitext(file.name)[1] in websuffix_audio:
+            if not os.path.splitext(file.name)[1] in autoradio.mime.websuffix_audio:
                 raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .mp3, .wav, .ogg, .oga, .flac"))
 
 

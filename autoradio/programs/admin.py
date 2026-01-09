@@ -10,6 +10,8 @@ import mutagen, os
 #from django.contrib.auth.models import Permission
 import magic
 from datetime import datetime,timedelta
+import calendar
+from django.db.models import Q
 
 ma = magic.open(magic.MAGIC_MIME_TYPE)
 ma.load()
@@ -24,39 +26,44 @@ class MyScheduleInlineFormset(forms.models.BaseInlineFormSet):
         for form in self.forms:
             try:
                 if form.cleaned_data:
-                    print(form.cleaned_data)
-
                     episode=form.cleaned_data.get('episode',None)
                     if not episode:
                         raise forms.ValidationError(gettext_lazy("Not a valid associated episode"))
 
                     show=episode.show
-                    print("show: ",show)
-                    
                     emission_date = form.cleaned_data.get('emission_date',None)
 
                     if not emission_date:
                         raise forms.ValidationError(gettext_lazy("Not a valid emission date"))
 
-                    print("emission_date: ",emission_date)
                     date_min=emission_date-timedelta(seconds=180)
                     date_max=emission_date+timedelta(seconds=180)
 
                     ## retrive the right records relative to schedule
-                    for aperiodicschedule in show.aperiodicschedule_set.all():
-                        print("aperiodicschedule: ",aperiodicschedule.emission_date)
+                    #for aperiodicschedule in show.aperiodicschedule_set.all():
+                    #    print("aperiodicschedule: ",aperiodicschedule.emission_date)
 
                     ok = show.aperiodicschedule_set.filter(emission_date__gte=date_min)\
                                                           .filter(emission_date__lte=date_max)\
                                                           .filter(show__active__exact=True)\
                                                           .count()
                         
-
                     # retrive the right records relative to periodicschedule
                     if (date_min < date_max):
-                        ok += show.periodicschedule=periodicschedule_set\
-                            .filter(Q(start_date__lte=self.dateelab) | Q(start_date__isnull=True))\
-                            .filter(Q(end_date__gte=self.dateelab)   | Q(end_date__isnull=True))\
+                        giorno = calendar.day_name[emission_date.weekday()]
+                        for periodicschedule in show.periodicschedule_set\
+                            .filter(Q(start_date__lte=emission_date) | Q(start_date__isnull=True))\
+                            .filter(Q(end_date__gte=emission_date)   | Q(end_date__isnull=True))\
+                            .filter(time__gte=date_min)\
+                            .filter(time__lte=date_max)\
+                            .filter(giorni__name__exact=giorno)\
+                            .filter(show__active__exact=True):
+                            #for gio in periodicschedule.giorni.all():
+                            #    print("giorno",gio)
+                        
+                        ok += show.periodicschedule_set\
+                            .filter(Q(start_date__lte=emission_date) | Q(start_date__isnull=True))\
+                            .filter(Q(end_date__gte=emission_date)   | Q(end_date__isnull=True))\
                             .filter(time__gte=date_min)\
                             .filter(time__lte=date_max)\
                             .filter(giorni__name__exact=giorno)\
@@ -70,15 +77,14 @@ class MyScheduleInlineFormset(forms.models.BaseInlineFormSet):
                         day_min = calendar.day_name[date_min.weekday()]
                         day_max = calendar.day_name[date_max.weekday()]
 
-                        ok += show.periodicschedule=periodicschedule_set\
-                            .filter(Q(start_date__lte=dateelab) | Q(start_date__isnull=True))\
-                            .filter(Q(end_date__gte=dateelab)   | Q(end_date__isnull=True))\
+                        ok += show.periodicschedule_set\
+                            .filter(Q(start_date__lte=emission_date) | Q(start_date__isnull=True))\
+                            .filter(Q(end_date__gte=emission_date)   | Q(end_date__isnull=True))\
                             .filter((Q(time__gte=time_min) & Q(giorni__name__exact=day_min)) |\
                                     (Q(time__lte=times_max) & Q(giorni__name__exact=day_max)))\
                             .filter(show__active__exact=True)\
                             .count()
 
-                    print("OK: ",ok)
                     if (ok == 0 and not form.cleaned_data.get('DELETE',False)):
                         raise forms.ValidationError(gettext_lazy("Not a valid emission date"))
                     
@@ -96,11 +102,7 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
             try:
                 if form.cleaned_data:
                     count += 1
-                    print(form.cleaned_data)
                     schedule = form.cleaned_data.get('emission_date',None)
-                    if (schedule):
-                        print("schedule: ",schedule)
-
                     episode=form.cleaned_data.get('episode',None)
                     if not episode:
                         raise forms.ValidationError(gettext_lazy("Not a valid associated episode"))

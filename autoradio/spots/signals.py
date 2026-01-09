@@ -9,7 +9,7 @@ if not autoradio.settings.require_tags_in_enclosure:
 
     @receiver(post_save, sender=Spot)
     def post_save__callback(sender, instance, created, **kwargs):
-        #if created:   # created is false and 'update_fields': None when file is changed
+        if created:   # created is false and 'update_fields': None when file is changed
             try:
                 audio = mutagen.File(instance.file.path)
                 if audio is not None:

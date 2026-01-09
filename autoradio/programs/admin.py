@@ -504,17 +504,19 @@ admin.site.register(Schedule, ScheduleAdmin)
 
 
 class PeriodicScheduleAdmin(admin.ModelAdmin):
-    list_display = ('start_date','end_date','time')
-    list_filter = ['start_date','end_date','time','giorni']
+    list_display = ('show','start_date','end_date','time')
+    list_filter = ['show__active','show','giorni']
     search_fields = ['show__title','giorni__name']
     date_hierarchy = 'start_date'
-
+    list_editable = ('start_date','end_date')
 admin.site.register(PeriodicSchedule, PeriodicScheduleAdmin)
 
 class AperiodicScheduleAdmin(admin.ModelAdmin):
-    list_display = ('emission_date','show')
+    list_filter = ['show__active','show']
+    list_display = ('show','emission_date')
     search_fields = ['show__title']
     date_hierarchy = 'emission_date'
+    list_editable = ('emission_date',)
 
 admin.site.register(AperiodicSchedule, AperiodicScheduleAdmin)
 

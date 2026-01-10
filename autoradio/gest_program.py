@@ -53,6 +53,7 @@ class gest_program:
         self.schedules=Schedule.objects.select_related()\
             .filter(emission_date__gte=datesched_min)\
             .filter(emission_date__lte=datesched_max)\
+            .filter(episode__show__active__exact=True)\
             .filter(episode__active__exact=True)\
             .order_by('emission_date')
 #               .filter(emission_done__isnull=True).order_by('emission_date')

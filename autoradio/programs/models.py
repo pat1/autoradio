@@ -553,7 +553,8 @@ class Episode(models.Model):
     # RSS 2.0
     show = models.ForeignKey(Show , on_delete=models.CASCADE)
     title = models.CharField(max_length=255, help_text=gettext_lazy('Make it specific but avoid explicit language. Limit to 100 characters for a Google video sitemap.'))
-    active = models.BooleanField(gettext_lazy("Active"),default=True)
+    active = models.BooleanField(gettext_lazy("Active"),default=True,
+                                 help_text=gettext_lazy("activate/deactivate the episode"))
     date = models.DateTimeField(gettext_lazy('Recording date'),auto_now_add=True)
 
     title_type = models.CharField('Title type', max_length=255, blank=True, default='Plain', choices=TYPE_CHOICES)

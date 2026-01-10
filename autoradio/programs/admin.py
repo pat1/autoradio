@@ -36,36 +36,36 @@ class MyScheduleInlineFormset(forms.models.BaseInlineFormSet):
                     if not emission_date:
                         raise forms.ValidationError(gettext_lazy("Not a valid emission date"))
 
-                    date_min=emission_date-timedelta(seconds=180)
-                    date_max=emission_date+timedelta(seconds=180)
+                    datetime_min=emission_date-timedelta(seconds=180)
+                    datetime_max=emission_date+timedelta(seconds=180)
 
                     ## retrive the right records relative to schedule
                     #for aperiodicschedule in show.aperiodicschedule_set.all():
                     #    print("aperiodicschedule: ",aperiodicschedule.emission_date)
 
-                    ok = show.aperiodicschedule_set.filter(emission_date__gte=date_min)\
-                                                          .filter(emission_date__lte=date_max)\
+                    ok = show.aperiodicschedule_set.filter(emission_date__gte=datetime_min)\
+                                                          .filter(emission_date__lte=datetime_max)\
                                                           .filter(show__active__exact=True)\
                                                           .count()
                         
                     # retrive the right records relative to periodicschedule
-                    if (date_min < date_max):
+                    if (datetime_min.time() < datetime_max.time()):
                         giorno = calendar.day_name[emission_date.weekday()]
-                        for periodicschedule in show.periodicschedule_set\
-                            .filter(Q(start_date__lte=emission_date) | Q(start_date__isnull=True))\
-                            .filter(Q(end_date__gte=emission_date)   | Q(end_date__isnull=True))\
-                            .filter(time__gte=date_min)\
-                            .filter(time__lte=date_max)\
-                            .filter(giorni__name__exact=giorno)\
-                            .filter(show__active__exact=True):
-                            #for gio in periodicschedule.giorni.all():
-                            #    print("giorno",gio)
-                        
+                        #for periodicschedule in show.periodicschedule_set\
+                        #    .filter(Q(start_date__lte=emission_date) | Q(start_date__isnull=True))\
+                        #    .filter(Q(end_date__gte=emission_date)   | Q(end_date__isnull=True))\
+                        #    .filter(time__gte=datetime_min.time())\
+                        #    .filter(time__lte=datetime_max.time())\
+                        #    .filter(giorni__name__exact=giorno)\
+                        #    .filter(show__active__exact=True):
+                        #    for gio in periodicschedule.giorni.all():
+                        #        print("giorno",gio)
+
                         ok += show.periodicschedule_set\
                             .filter(Q(start_date__lte=emission_date) | Q(start_date__isnull=True))\
                             .filter(Q(end_date__gte=emission_date)   | Q(end_date__isnull=True))\
-                            .filter(time__gte=date_min)\
-                            .filter(time__lte=date_max)\
+                            .filter(time__gte=datetime_min.time())\
+                            .filter(time__lte=datetime_max.time())\
                             .filter(giorni__name__exact=giorno)\
                             .filter(show__active__exact=True)\
                             .count()
@@ -74,14 +74,14 @@ class MyScheduleInlineFormset(forms.models.BaseInlineFormSet):
                         # warning here we are around midnight
                         #            logging.debug("PALIMPSEST: around midnight")
 
-                        day_min = calendar.day_name[date_min.weekday()]
-                        day_max = calendar.day_name[date_max.weekday()]
+                        day_min = calendar.day_name[datetime_min.weekday()]
+                        day_max = calendar.day_name[datetime_max.weekday()]
 
                         ok += show.periodicschedule_set\
                             .filter(Q(start_date__lte=emission_date) | Q(start_date__isnull=True))\
                             .filter(Q(end_date__gte=emission_date)   | Q(end_date__isnull=True))\
-                            .filter((Q(time__gte=time_min) & Q(giorni__name__exact=day_min)) |\
-                                    (Q(time__lte=times_max) & Q(giorni__name__exact=day_max)))\
+                            .filter((Q(time__gte=datetime_min.time()) & Q(giorni__name__exact=day_min)) |\
+                                    (Q(time__lte=datetimes_max.time()) & Q(giorni__name__exact=day_max)))\
                             .filter(show__active__exact=True)\
                             .count()
 
@@ -351,38 +351,38 @@ class AperiodicScheduleInline(admin.StackedInline):
     model = AperiodicSchedule
     extra=2
 
-class EpisodeInline(admin.StackedInline):
-    model = Episode
-    extra=1
-
-    # not supported
-    #inline=(ScheduleInline,EnclosureInline,)
-
-    fieldsets = (
-        (None, {
-            'fields': ('show', 'author', 'title_type', 'title', 'slug', 'description_type', 'description')
-        }),
-        ('podcast options', {
-            'classes': ('collapse',),
-            'fields': ('captions', 'category', 'domain', 'frequency', 'priority', 'status')
-        }),
-        ('iTunes options', {
-            'classes': ('collapse',),
-            'fields': ('subtitle', 'summary', ('minutes', 'seconds'), 'keywords', ('explicit', 'block'))
-        }),
-        ('Media RSS options', {
-            'classes': ('collapse',),
-            'fields': ('role', 'media_category', ('standard', 'rating'), 'image', 'text', ('deny', 'restriction'))
-        }),
-        ('Dublin Core options', {
-            'classes': ('collapse',),
-            'fields': (('start', 'end'), 'scheme', 'name')
-        }),
-        ('Google Media options', {
-            'classes': ('collapse',),
-            'fields': ('preview', ('preview_start_mins', 'preview_start_secs'), ('preview_end_mins', 'preview_end_secs'), 'host')
-        }),
-    )
+#class EpisodeInline(admin.StackedInline):
+#    model = Episode
+#    extra=1
+#
+#    # not supported
+#    #inline=(ScheduleInline,EnclosureInline,)
+#
+#    fieldsets = (
+#        (None, {
+#            'fields': ('show', 'author', 'title_type', 'title', 'slug', 'description_type', 'description')
+#        }),
+#        ('podcast options', {
+#            'classes': ('collapse',),
+#            'fields': ('captions', 'category', 'domain', 'frequency', 'priority', 'status')
+#        }),
+#        ('iTunes options', {
+#            'classes': ('collapse',),
+#            'fields': ('subtitle', 'summary', ('minutes', 'seconds'), 'keywords', ('explicit', 'block'))
+#        }),
+#        ('Media RSS options', {
+#            'classes': ('collapse',),
+#            'fields': ('role', 'media_category', ('standard', 'rating'), 'image', 'text', ('deny', 'restriction'))
+#        }),
+#        ('Dublin Core options', {
+#            'classes': ('collapse',),
+#            'fields': (('start', 'end'), 'scheme', 'name')
+#        }),
+#        ('Google Media options', {
+#            'classes': ('collapse',),
+#            'fields': ('preview', ('preview_start_mins', 'preview_start_secs'), ('preview_end_mins', 'preview_end_secs'), 'host')
+#        }),
+#    )
 
 class GiornoAdmin(admin.ModelAdmin):
 	search_fields = ['name']
@@ -455,13 +455,15 @@ class EpisodeAdmin(admin.ModelAdmin):
         ]
     prepopulated_fields = {'slug': ("title",)}
     search_fields = ['title',]
-    list_display = ('title', 'update', 'show')
-    list_filter = ('show', 'update')
-
+    list_display = ('active','show','title', 'update')
+    list_filter = ('active','show__title', 'update')
+    list_display_links=('title')
+    list_editable = ('active',)
+    
     radio_fields = {'title_type': admin.HORIZONTAL, 'description_type': admin.HORIZONTAL, 'status': admin.HORIZONTAL}
     fieldsets = (
         (None, {
-            'fields': ('show', 'author', 'title_type', 'title', 'slug', 'description_type', 'description')
+            'fields': ('active','show', 'author', 'title_type', 'title', 'slug', 'description_type', 'description')
         }),
         ('podcast options', {
             'classes': ('collapse',),

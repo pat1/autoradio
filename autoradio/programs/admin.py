@@ -87,6 +87,18 @@ class MyScheduleInlineFormset(forms.models.BaseInlineFormSet):
 
                     if (ok == 0 and not form.cleaned_data.get('DELETE',False)):
                         raise forms.ValidationError(gettext_lazy("Not a valid emission date"))
+
+
+                    # check other schedule
+                    ok=Schedule.objects.select_related()\
+                                                   .filter(emission_date__gte=datetime_min)\
+                                                   .filter(emission_date__lte=datetime_max)\
+                                                   .filter(episode__show__active__exact=True)\
+                                                   .filter(episode__active__exact=True)\
+                                                   .count()
+
+                    if (ok > 0 and not form.cleaned_data.get('DELETE',False)):
+                        raise forms.ValidationError(gettext_lazy("An other episode is scheduled at the same time!"))
                     
             except:
                 raise

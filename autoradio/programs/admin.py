@@ -215,94 +215,94 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
 
 
 
-class MyEnclosureAdminForm(forms.ModelForm):
-    """
-    Check file if it is a known media file.
-    """
-    class Meta(object):
-        model = Enclosure
-        fields = '__all__'
-
-    def clean_episode(self):
-        
-        episode=self.cleaned_data.get('episode',None)
-        if not episode:
-            raise forms.ValidationError(gettext_lazy("Not a valid associated episode"))
-
-        if ((not self.current_user in episode.show.author.all()) and not self.current_user.has_perm("programs.manage_any_show") and not self.current_user.is_superuser):
-            raise forms.ValidationError(gettext_lazy("You are not a valid user for the associated show"))
-
-        
-    def clean_file(self):
-
-        file = self.cleaned_data.get('file',False)
-        if file:
-
-            if autoradio.settings.permit_no_playable_files:
-
-                try:
-                    type = file.content_type in autoradio.mime.webmime_audio
-                except:
-                    return file
-
-                if not type:
-                    raise forms.ValidationError(gettext_lazy("Browser say that Content-Type is not audio"))
-                
-                if not os.path.splitext(file.name)[1] in autoradio.mime.websuffix_audio:
-                    raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .mp3, .wav, .ogg, .oga, .flac"))
-                    #Check file if it is a known media file. The check is based on mutagen file test.
-                try:
-                    audio = not mutagen.File(file.temporary_file_path()) is None
-                except:
-                    audio = False
-
-                if not audio:
-                    raise forms.ValidationError(gettext_lazy("Not a valid audio file: probably no tags present"))
-                return file
-
-            else:
-
-                try:
-                    type = file.content_type in autoradio.mime.webmime_ogg
-                except:
-                    return file
-
-                if not type:
-                    raise forms.ValidationError(gettext_lazy("Browser say that Content-Type is not audio ogg vorbis"))
-
-                if not os.path.splitext(file.name)[1] in autoradio.mime.websuffix_ogg:
-                    raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .ogg, .oga"))
-
-                try:
-                    mime = ma.file(file.temporary_file_path())
-                    audio = mime in autoradio.mime.mymime_ogg
-                except:
-                    audio=False
-
-                if not audio:
-                    raise forms.ValidationError(gettext_lazy("Not a valid ogg/oga vorbis audio file"))
-
-                if autoradio.settings.require_tags_in_enclosure:
-                    #Check file if it is a known media file. The check is based on mutagen file test.
-                    try:
-                        mut=mutagen.File(file.temporary_file_path())
-                        audio = not mut is None
-                        sample_rate=mut.info.sample_rate
-                        
-                    except:
-                        audio = False
-                        sample_rate=0
-
-                    if not audio:
-                        raise forms.ValidationError(gettext_lazy("Not a valid ogg/oga vorbis audio file: probably no tags present"))
-
-                    if not sample_rate == 44100:
-                        raise forms.ValidationError(gettext_lazy("Sample rate is Not 44100Hz: cannot use it in podcasting web interface"))
-            
-                return file
-            
-        else:
-            raise forms.ValidationError(gettext_lazy("Couldn't read uploaded file"))
+#class MyEnclosureAdminForm(forms.ModelForm):
+#    """
+#    Check file if it is a known media file.
+#    """
+#    class Meta(object):
+#        model = Enclosure
+#        fields = '__all__'
+#
+#    def clean_episode(self):
+#        
+#        episode=self.cleaned_data.get('episode',None)
+#        if not episode:
+#            raise forms.ValidationError(gettext_lazy("Not a valid associated episode"))
+#
+#        if ((not self.current_user in episode.show.author.all()) and not self.current_user.has_perm("programs.manage_any_show") and not self.current_user.is_superuser):
+#            raise forms.ValidationError(gettext_lazy("You are not a valid user for the associated show"))
+#
+#        
+#    def clean_file(self):
+#
+#        file = self.cleaned_data.get('file',False)
+#        if file:
+#
+#            if autoradio.settings.permit_no_playable_files:
+#
+#                try:
+#                    type = file.content_type in autoradio.mime.webmime_audio
+#                except:
+#                    return file
+#
+#                if not type:
+#                    raise forms.ValidationError(gettext_lazy("Browser say that Content-Type is not audio"))
+#                
+#                if not os.path.splitext(file.name)[1] in autoradio.mime.websuffix_audio:
+#                    raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .mp3, .wav, .ogg, .oga, .flac"))
+#                    #Check file if it is a known media file. The check is based on mutagen file test.
+#                try:
+#                    audio = not mutagen.File(file.temporary_file_path()) is None
+#                except:
+#                    audio = False
+#
+#                if not audio:
+#                    raise forms.ValidationError(gettext_lazy("Not a valid audio file: probably no tags present"))
+#                return file
+#
+#            else:
+#
+#                try:
+#                    type = file.content_type in autoradio.mime.webmime_ogg
+#                except:
+#                    return file
+#
+#                if not type:
+#                    raise forms.ValidationError(gettext_lazy("Browser say that Content-Type is not audio ogg vorbis"))
+#
+#                if not os.path.splitext(file.name)[1] in autoradio.mime.websuffix_ogg:
+#                    raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .ogg, .oga"))
+#
+#                try:
+#                    mime = ma.file(file.temporary_file_path())
+#                    audio = mime in autoradio.mime.mymime_ogg
+#                except:
+#                    audio=False
+#
+#                if not audio:
+#                    raise forms.ValidationError(gettext_lazy("Not a valid ogg/oga vorbis audio file"))
+#
+#                if autoradio.settings.require_tags_in_enclosure:
+#                    #Check file if it is a known media file. The check is based on mutagen file test.
+#                    try:
+#                        mut=mutagen.File(file.temporary_file_path())
+#                        audio = not mut is None
+#                        sample_rate=mut.info.sample_rate
+#                        
+#                    except:
+#                        audio = False
+#                        sample_rate=0
+#
+#                    if not audio:
+#                        raise forms.ValidationError(gettext_lazy("Not a valid ogg/oga vorbis audio file: probably no tags present"))
+#
+#                    if not sample_rate == 44100:
+#                        raise forms.ValidationError(gettext_lazy("Sample rate is Not 44100Hz: cannot use it in podcasting web interface"))
+#            
+#                return file
+#            
+#        else:
+#            raise forms.ValidationError(gettext_lazy("Couldn't read uploaded file"))
 
 
 class CategoryInline(admin.StackedInline):
@@ -350,7 +350,7 @@ class EnclosureInline(admin.StackedInline):
 class ScheduleInline(admin.StackedInline):
 #class ScheduleInline(admin.TabularInline):
     model = Schedule
-    extra=2
+    extra=1
     max_num=10
     formset = MyScheduleInlineFormset
     
@@ -506,15 +506,15 @@ admin.site.register(Episode, EpisodeAdmin)
 
 
 
-class ScheduleAdmin(admin.ModelAdmin):
-
-    list_display = ('episode', 'emission_date'\
-                        ,'was_scheduled_today')
-    list_filter = ['emission_date']
-    search_fields = ['episode__title','emission_date']
-    date_hierarchy = 'emission_date'
-
-admin.site.register(Schedule, ScheduleAdmin)
+#class ScheduleAdmin(admin.ModelAdmin):
+#
+#    list_display = ('episode', 'emission_date'\
+#                        ,'was_scheduled_today')
+#    list_filter = ['emission_date']
+#    search_fields = ['episode__title','emission_date']
+#    date_hierarchy = 'emission_date'
+#
+#admin.site.register(Schedule, ScheduleAdmin)
 
 
 class PeriodicScheduleAdmin(admin.ModelAdmin):
@@ -542,28 +542,28 @@ class ScheduleDoneAdmin(admin.ModelAdmin):
 admin.site.register(ScheduleDone, ScheduleDoneAdmin)
 
 
-class EnclosureAdmin(admin.ModelAdmin):
-
-    list_display = ('episode','title',)
-    list_filter = ['medium','mime','bitrate']
-    search_fields = ['title','file']
-
-    fieldsets = (
-        (None, {
-                'fields': ('episode','title', 'file',)
-                }),
-        ('Podcast options', {
-                'classes': ('collapse',),
-                'fields': ('mime', 'medium','expression','frame','bitrate',\
-                               'sample','channel','algo','hash','player','embed','width','height')
-                }),
-        )
-
-    form = MyEnclosureAdminForm
-
-    def get_form(self, request, *args, **kwargs):
-        form = super(EnclosureAdmin, self).get_form(request, *args, **kwargs)
-        form.current_user = request.user
-        return form
-
-admin.site.register(Enclosure, EnclosureAdmin)
+#class EnclosureAdmin(admin.ModelAdmin):
+#
+#    list_display = ('episode','title',)
+#    list_filter = ['medium','mime','bitrate']
+#    search_fields = ['title','file']
+#
+#    fieldsets = (
+#        (None, {
+#                'fields': ('episode','title', 'file',)
+#                }),
+#        ('Podcast options', {
+#                'classes': ('collapse',),
+#                'fields': ('mime', 'medium','expression','frame','bitrate',\
+#                               'sample','channel','algo','hash','player','embed','width','height')
+#                }),
+#        )
+#
+#    form = MyEnclosureAdminForm
+#
+#    def get_form(self, request, *args, **kwargs):
+#        form = super(EnclosureAdmin, self).get_form(request, *args, **kwargs)
+#        form.current_user = request.user
+#        return form
+#
+#admin.site.register(Enclosure, EnclosureAdmin)

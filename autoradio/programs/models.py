@@ -703,9 +703,10 @@ class Enclosure(models.Model):
     width = models.PositiveIntegerField(blank=True, null=True, help_text=gettext_lazy("Width of the browser window in <br />which the URL should be opened. <br />YouTube's default is 425."))
     height = models.PositiveIntegerField(blank=True, null=True, help_text=gettext_lazy("Height of the browser window in <br />which the URL should be opened. <br />YouTube's default is 344."))
     episode = models.ForeignKey(Episode, help_text=gettext_lazy('Include any number of media files; for example, perhaps include an iPhone-optimized, AppleTV-optimized and Flash Video set of video files. Note that the iTunes feed only accepts the first file. More uploading is available after clicking "Save and continue editing."'), on_delete=models.CASCADE)
-
+    ordinal = models.PositiveIntegerField('Ordinal', help_text=gettext_lazy('Sequence number, emission order (1,2,3...).'), blank=False, null=False, editable=False)
+    
     class Meta(object):
-        ordering = ['mime', 'file']
+        ordering = ['ordinal']
 
 
     def save(self, *args, **kwargs):
@@ -715,6 +716,7 @@ class Enclosure(models.Model):
         """
         if  self.title == "":
             self.title = "Part "+str(Enclosure.objects.filter(Q(episode=self.episode)).all().count()+1)
+            self.ordinal = Enclosure.objects.filter(Q(episode=self.episode)).all().count()+1
         super(Enclosure, self).save(*args, **kwargs)
 
 

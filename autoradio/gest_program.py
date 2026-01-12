@@ -68,7 +68,7 @@ class gest_program:
                               ,  schedule.emission_date.isoformat())
 
             firth=True
-            for enclosure in schedule.episode.enclosure_set.order_by('id'):
+            for enclosure in schedule.episode.enclosure_set.order_by('ordinal'):
                 logging.debug("PROGRAM: files: %s", enclosure.file.path)
                 ar_filename=enclosure.file.path
                 ar_url=enclosure.file.url

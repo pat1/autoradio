@@ -51,16 +51,6 @@ class MyScheduleInlineFormset(forms.models.BaseInlineFormSet):
                     # retrive the right records relative to periodicschedule
                     if (datetime_min.time() < datetime_max.time()):
                         giorno = calendar.day_name[emission_date.weekday()]
-                        #for periodicschedule in show.periodicschedule_set\
-                        #    .filter(Q(start_date__lte=emission_date) | Q(start_date__isnull=True))\
-                        #    .filter(Q(end_date__gte=emission_date)   | Q(end_date__isnull=True))\
-                        #    .filter(time__gte=datetime_min.time())\
-                        #    .filter(time__lte=datetime_max.time())\
-                        #    .filter(giorni__name__exact=giorno)\
-                        #    .filter(show__active__exact=True):
-                        #    for gio in periodicschedule.giorni.all():
-                        #        print("giorno",gio)
-
                         ok += show.periodicschedule_set\
                             .filter(Q(start_date__lte=emission_date) | Q(start_date__isnull=True))\
                             .filter(Q(end_date__gte=emission_date)   | Q(end_date__isnull=True))\
@@ -89,12 +79,13 @@ class MyScheduleInlineFormset(forms.models.BaseInlineFormSet):
                         raise forms.ValidationError(gettext_lazy("Not a valid emission date"))
 
 
-                    # check other schedule
+                    # check other schedule;    esclude self ( is an update )
                     ok=Schedule.objects.select_related()\
                                                    .filter(emission_date__gte=datetime_min)\
                                                    .filter(emission_date__lte=datetime_max)\
                                                    .filter(episode__show__active__exact=True)\
                                                    .filter(episode__active__exact=True)\
+                                                   .exclude(episode__pk=episode.pk)\
                                                    .count()
 
                     if (ok > 0 and not form.cleaned_data.get('DELETE',False)):
@@ -469,7 +460,7 @@ class EpisodeAdmin(admin.ModelAdmin):
     search_fields = ['title',]
     list_display = ('active','show','title', 'update')
     list_filter = ('active','show__title', 'update')
-    list_display_links=('title')
+    list_display_links=('title',)
     list_editable = ('active',)
     
     radio_fields = {'title_type': admin.HORIZONTAL, 'description_type': admin.HORIZONTAL, 'status': admin.HORIZONTAL}

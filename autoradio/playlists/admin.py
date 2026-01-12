@@ -31,13 +31,15 @@ admin.site.register(Configure, ConfigureAdmin)
 
 class PlaylistAdmin(admin.ModelAdmin):
     fieldsets = (
-        (None, {'fields': ('playlist','file')}),
-        ('Date information', {'fields': ('rec_date','active',)}),
+        (None, {'fields': ('active','playlist','file')}),
+        ('Date information', {'fields': ('rec_date',)}),
         )
-    list_display = ('playlist','rec_date','was_recorded_today','active')
+    list_display = ('active','playlist','rec_date','was_recorded_today')
     search_fields = ['playlist','file']
     date_hierarchy = 'rec_date'
-    list_filter = ['rec_date','active']
+    list_filter = ['active','rec_date']
+    list_editable = ('active',)
+    list_display_links = ('playlist',)
     inlines = [
         ScheduleInline,PeriodicScheduleInline,
         ]
@@ -47,11 +49,12 @@ admin.site.register(Playlist, PlaylistAdmin)
 
 
 class ScheduleAdmin(admin.ModelAdmin):
-        list_display = ('file', 'shuffle','length','emission_date','emission_done'\
+    list_display = ('file', 'shuffle','length','emission_date','emission_done'\
 				,'was_scheduled_today')
-        list_filter = ['emission_date','emission_done']
-        search_fields = ['playlist','emission_date']
-        date_hierarchy = 'emission_date'
+    list_filter = ['emission_date','emission_done']
+    search_fields = ['playlist','emission_date']
+    date_hierarchy = 'emission_date'
+    list_editable = ('shuffle','length')
 
 admin.site.register(Schedule, ScheduleAdmin)
 
@@ -61,8 +64,9 @@ class PeriodicScheduleAdmin(admin.ModelAdmin):
     list_display = ('file', 'shuffle','length','start_date','end_date','time'\
 				,'emission_done')
     list_filter = ['start_date','end_date','time','giorni','emission_done']
-    search_fields = ['playlist','giorni']
+    search_fields = ['playlist','giorni__name']
     date_hierarchy = 'start_date'
+    list_editable = ('shuffle','length')
 
 
 admin.site.register(PeriodicSchedule, PeriodicScheduleAdmin)

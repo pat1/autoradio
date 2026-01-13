@@ -718,7 +718,11 @@ class Enclosure(models.Model):
         
         if (self.ordinal is None):
             # find max ordinal and increment
-            self.ordinal = Enclosure.objects.filter(Q(episode=self.episode)).aggregate(max_ordinal=Max('ordinal', default=0))["max_ordinal"]+1
+            max_ordinal = Enclosure.objects.filter(Q(episode=self.episode)).aggregate(max_ordinal=Max('ordinal', default=0)).get("max_ordinal",0)
+            # on django 3 seems default do not work and get() return Nonetype
+            if max_ordinal is None:
+                max_ordinal=0
+            self.ordinal = max_ordinal+1
         
         if  self.title == "":
             # set default title

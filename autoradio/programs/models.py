@@ -6,6 +6,7 @@ from autoradio.programs.managers import EpisodeManager
 import datetime
 import calendar
 from django.db.models import Q
+from django.db.models import Max
 
 from  django import VERSION as djversion
 
@@ -714,9 +715,15 @@ class Enclosure(models.Model):
         Return a default title numbered by enclosure number
         a missing title is not a good idea for rss and web interface
         """
+        
+        if (self.ordinal is None):
+            # find max ordinal and increment
+            self.ordinal = Enclosure.objects.filter(Q(episode=self.episode)).aggregate(max_ordinal=Max('ordinal', default=0))["max_ordinal"]+1
+        
         if  self.title == "":
-            self.title = "Part "+str(Enclosure.objects.filter(Q(episode=self.episode)).all().count()+1)
-            self.ordinal = Enclosure.objects.filter(Q(episode=self.episode)).all().count()+1
+            # set default title
+            self.title = "Part "+str(self.ordinal)
+
         super(Enclosure, self).save(*args, **kwargs)
 
 

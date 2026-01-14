@@ -71,7 +71,7 @@ class MyScheduleInlineFormset(forms.models.BaseInlineFormSet):
                             .filter(Q(start_date__lte=emission_date) | Q(start_date__isnull=True))\
                             .filter(Q(end_date__gte=emission_date)   | Q(end_date__isnull=True))\
                             .filter((Q(time__gte=datetime_min.time()) & Q(giorni__name__exact=day_min)) |\
-                                    (Q(time__lte=datetimes_max.time()) & Q(giorni__name__exact=day_max)))\
+                                    (Q(time__lte=datetime_max.time()) & Q(giorni__name__exact=day_max)))\
                             .filter(show__active__exact=True)\
                             .count()
 

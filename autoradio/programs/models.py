@@ -689,7 +689,7 @@ class Enclosure(models.Model):
         )
 
     title = models.CharField(max_length=255, blank=True, default=None, help_text=gettext_lazy('Title is generally only useful with multiple enclosures.'))
-    file = DeletingFileField(upload_to='podcasts/episodes/files/', help_text=gettext_lazy('Either upload or use the "Player" text box below. If uploading, file must be less than or equal to 30 MB for a Google video sitemap.'),blank=False, null=False,max_length=255)
+    file = DeletingFileField(upload_to='podcasts/episodes/files/', help_text=gettext_lazy('File to upload; will be better a file size less than 30 MB.'),blank=False, null=False,max_length=255)
     mime = models.CharField('Format', max_length=255, choices=MIME_CHOICES, blank=True)
     medium = models.CharField(max_length=255, blank=True, choices=MEDIUM_CHOICES)
     expression = models.CharField(max_length=25, choices=EXPRESSION_CHOICES, blank=True)

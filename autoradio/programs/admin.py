@@ -154,7 +154,7 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
                         else:
 
                             try:
-                                type = file.content_type in autoradio.mime.webmime_ogg
+                                type = file.content_type in autoradio.mime.webmime_oggflac
                             except:
                                 #here when the file is not uploaded (modify for example)
                                 return file
@@ -162,12 +162,13 @@ class MyEnclosureInlineFormset(forms.models.BaseInlineFormSet):
                             if not type:
                                 raise forms.ValidationError(gettext_lazy("Browser say that Content-Type is not audio ogg vorbis"))
                             
-                            if not os.path.splitext(file.name)[1] in autoradio.mime.websuffix_ogg:
-                                raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .ogg, .oga"))
+                            if not os.path.splitext(file.name)[1] in autoradio.mime.websuffix_oggflac:
+                                raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .ogg, .oga, .flac"))
 
                             try:
                                 mime = ma.file(file.temporary_file_path())
-                                audio = mime in autoradio.mime.mymime_ogg
+                                print(mime)
+                                audio = mime in autoradio.mime.mymime_oggflac
                             except:
                                 raise
                                 #audio=False

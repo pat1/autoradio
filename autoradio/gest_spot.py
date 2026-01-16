@@ -33,7 +33,7 @@ def assemble_playlist_channel(fascia, playlistdir,multichannel=True):
     '''
     assemble playlists for one fascia all channel
     '''
-    multichannelname=os.path.join(os.path.join(settings.MEDIA_ROOT, playlistdir),fascia.name+".wav")
+    multichannelname=os.path.join(os.path.join(settings.MEDIA_ROOT, playlistdir),fascia.name+".flac")
     playlistpath=os.path.join(settings.MEDIA_ROOT, playlistdir)
     filler_playlists=[]
     playlists=[]
@@ -51,7 +51,7 @@ def assemble_playlist_channel(fascia, playlistdir,multichannel=True):
         if (not multichannel):
             break                       # if fascia is not multichannel terminate on first channel
         
-    assemble_playlists(playlists, filler_playlists, multichannelname)
+    assemble_playlists(playlists, filler_playlists, multichannelname,artist="SPOT",title=fascia.name)
             
 
 class gest_filler(object):
@@ -396,8 +396,8 @@ class gest_spot_channel(object):
             for spot in spots_channel.get_fascia_spots():
                 self.spotlist.append(spot)
             self.ar_scheduledatetime=spots_channel.ar_scheduledatetime
-            self.ar_url=os.path.join(os.path.join(settings.MEDIA_URL, self.playlistdir),fascia.name+".wav")
-            self.ar_filename=os.path.join(os.path.join(settings.MEDIA_ROOT, self.playlistdir),fascia.name+".wav")
+            self.ar_url=os.path.join(os.path.join(settings.MEDIA_URL, self.playlistdir),fascia.name+".flac")
+            self.ar_filename=os.path.join(os.path.join(settings.MEDIA_ROOT, self.playlistdir),fascia.name+".flac")
             self.ar_length=max(self.ar_length,spots_channel.ar_length)
             self.ar_emission_done=spots_channel.ar_emission_done
             self.ar_spots_in_fascia+=spots_channel.ar_spots_in_fascia

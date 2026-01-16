@@ -4,7 +4,7 @@ from .autoplayer.playlist import *
 
 SILENCE_MS =6000
 
-def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname):
+def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,artist=None,title=None):
 
     NUM_CHANNEL=len(playlistnames)
     NUM_TRACK=NUM_CHANNEL*2
@@ -94,16 +94,26 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname):
     #multitrack = AudioSegment.from_mono_audiosegments(*[tracks[i][:lunghezza] for i in range(NUM_TRACK)], faketrack)
     
     multitrack = AudioSegment.from_mono_audiosegments(*[tracks[i][:lunghezza] for i in range(NUM_TRACK)])
-    # fast and simple export bi pydub
-    multitrack.export( multichannelname, format="wav")
+    tags={}
+    if artist:
+        tags["artist"]=artist
+    if title:
+        tags["title"]=title
 
-    # wav export bu ffmpeg
+    # fast and simple export bi pydub
+    #multitrack.export( multichannelname, format="wav")
+
+    # wav export by ffmpeg
     #multitrack.export( multichannelname, codec="wav",parameters=["-acodec","pcm_s16le", "-ac", "6", "-ar", "16000"],format="wav")
 
     #export to ogg
     # there is a bug exporting to ogg: the last track will be corrupted
-    #multitrack.export( multichannelname, format="ogg",, tags={"title": "The sound", "artist": "Radiohead"})
+    #multitrack.export( multichannelname, format="ogg", tags=tags)
 
+    #export to flac
+    multitrack.export( multichannelname, format="flac", tags=tags)
+
+    
 def main():
 
     import logging

@@ -192,8 +192,8 @@ def main():
                                 play = Player(dbus_interface_info={'dbus_uri': uri,'dbus_session':bus})
 
                 else:
-                    title=program_title
-                    artist=note
+                    title=note
+                    artist=program_title
                     # if description is missed set it from program subtype
                     if (artist is None or artist == ""): artist = subtype
                     onair="program"

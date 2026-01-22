@@ -1,10 +1,11 @@
 from pydub import AudioSegment
 import logging
 from .autoplayer.playlist import *
+import os
 
 SILENCE_MS =6000
 
-def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,artist=None,title=None):
+def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,artist=None,title=None,oggremap=False):
 
     NUM_CHANNEL=len(playlistnames)
     NUM_TRACK=NUM_CHANNEL*2
@@ -84,16 +85,19 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,art
 
     #faketrack = AudioSegment.silent(duration = lunghezza, frame_rate=44100)
     #tracks.append(faketrack)
-    #if (NUM_CHANNEL == 6):
-    #    remap=(0,2,1,5,6,4)
-    #elif (NUM_CHANNEL == 7):
-    #remap=(0,2,1,6,5,3,4)
-    #else:
-    #remap=tuple((i) for i in range(NUM_TRACK+1))
-    #multitrack = AudioSegment.from_mono_audiosegments(*[tracks[remap[i]][:lunghezza] for i in range(NUM_TRACK+1)]) #,faketrack)
-    #multitrack = AudioSegment.from_mono_audiosegments(*[tracks[i][:lunghezza] for i in range(NUM_TRACK)], faketrack)
-    
-    multitrack = AudioSegment.from_mono_audiosegments(*[tracks[i][:lunghezza] for i in range(NUM_TRACK)])
+        
+    if (oggremap):
+
+        if (NUM_TRACK == 6):
+            remap=(0,2,1,4,3,5)
+        #elif (NUM_CHANNEL == 7):
+        #    remap=(0,2,1,6,5,3,4)
+        else:
+            remap=tuple((i) for i in range(NUM_TRACK))
+
+        multitrack = AudioSegment.from_mono_audiosegments(*[tracks[remap[i]][:lunghezza] for i in range(NUM_TRACK)])
+    else:
+        multitrack = AudioSegment.from_mono_audiosegments(*[tracks[i][:lunghezza] for i in range(NUM_TRACK)])
     tags={}
     if artist:
         tags["artist"]=artist
@@ -106,8 +110,12 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,art
     # wav export by ffmpeg
     #multitrack.export( multichannelname, codec="wav",parameters=["-acodec","pcm_s16le", "-ac", "6", "-ar", "16000"],format="wav")
 
-    #export to ogg
-    # there is a bug exporting to ogg: the last track will be corrupted
+    # export to ogg
+    # this is a problem : export to ogg use  channel coupling for multichannel encoding.
+    # At present, the encoder will normally use channel coupling to further increase compression with stereo and 5.1
+    # inputs  using  lossy or lossless coupling.
+    # so the last track will be corrupted
+    # if is not enofh the channel order will be exchanged
     #multitrack.export( multichannelname, format="ogg", tags=tags)
 
     #export to flac

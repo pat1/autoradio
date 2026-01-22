@@ -330,13 +330,17 @@ class Main(object):
       keyname = Gdk.keyval_name(event.keyval)
       if (keyname == "BackSpace" or keyname == "KP_Insert" or keyname == "KP_0"):
           self.play.Stop()
+          return True    # https://stackoverflow.com/questions/14441670/how-to-disable-all-default-keystrokes-on-gtk
       elif (keyname == "Left" or keyname == "KP_Left" or keyname == "KP_4"):
           self.play.Seek(-10000000)
+          return True    # https://stackoverflow.com/questions/14441670/how-to-disable-all-default-keystrokes-on-gtk
       elif (keyname == "Right" or keyname == "KP_Right" or keyname == "KP_6"):
           self.play.Seek(10000000)
+          return True    # this do not work in Range widget
+                         # https://stackoverflow.com/questions/14441670/how-to-disable-all-default-keystrokes-on-gtk
       elif (keyname == "period" or keyname == "KP_Decimal" or keyname == "KP_Delete"):
           self.play.PlayPause()
-          
+          return True
 
   def update(self, *args, **kw):
     #print("update gtktree")

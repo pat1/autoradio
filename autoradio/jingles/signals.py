@@ -19,5 +19,10 @@ if not autoradio.settings.require_tags_in_enclosure:
             except:
                 logging.error("Jingle: error saving metadata Artist and Title")
 
+            try:
+                subprocess.check_call(["/usr/bin/rsgain","custom","-l","-30","-c","a","-s","i",instance.file.path])
+            except:
+                logging.error("Jingle: error applying rplaygain")
+            
 
             

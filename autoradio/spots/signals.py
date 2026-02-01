@@ -20,4 +20,9 @@ if not autoradio.settings.require_tags_in_enclosure:
                 logging.error("Spot: error saving metadata Artist and Title")
 
 
+            try:
+                subprocess.check_call(["/usr/bin/rsgain","custom","-l","-30","-c","a","-s","i",instance.file.path])
+            except:
+                logging.error("Spot: error applying rplaygain")
+            
             

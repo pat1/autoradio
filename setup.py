@@ -145,6 +145,8 @@ class createmanpages(Command):
             subprocess.check_call(["gzip", "-f","man/man1/autoplayergui.1"])
             subprocess.check_call(["help2man","-n","autoradio metadata tracer daemon","-N","-o","man/man1/autometatraced.1","./autometatraced"])
             subprocess.check_call(["gzip", "-f","man/man1/autometatraced.1"])
+            subprocess.check_call(["help2man","-n","autoradio multichannel assembler","-N","-o","man/man1/autochannel_assembler.1","./autochannel_assembler"])
+            subprocess.check_call(["gzip", "-f","man/man1/autochannel_assembler.1"])
 
         except:
             pass
@@ -340,7 +342,7 @@ setup(name='autoradio',
           'autoradio':['global_static/*'],
       },
       scripts=['autoradiod','autoradioweb','autoradioctrl',
-               'autoplayerd','autoplayergui','autoradiodbusd','jackdaemon','autometatraced'],
+               'autoplayerd','autoplayergui','autoradiodbusd','jackdaemon','autometatraced','autochannel_assembler'],
       data_files = data_files,
       license = "GNU GPL v2",
       requires= [ "mutagen","django","reportlab","configobj"],

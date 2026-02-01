@@ -4,6 +4,7 @@ from .models import Enclosure
 import mutagen
 import logging
 import autoradio.settings
+import subprocess
 
 if not autoradio.settings.require_tags_in_enclosure:
 
@@ -19,5 +20,8 @@ if not autoradio.settings.require_tags_in_enclosure:
             except:
                 logging.error("Enclosure: error saving metadata Artist and Title")
 
-
+            try:
+                subprocess.check_call(["/usr/bin/rsgain","custom","-l","-30","-c","a","-s","i",instance.file.path])
+            except:
+                logging.error("Enclosure: error applying rplaygain")
             

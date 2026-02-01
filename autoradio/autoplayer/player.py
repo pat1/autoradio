@@ -1,3 +1,14 @@
+# pad fantasma (IMPORTANTISSIMO)
+sink_pad = rglimiter.get_static_pad("sink")
+ghost_sink = Gst.GhostPad.new("sink", sink_pad)
+abin.add_pad(ghost_sink)
+
+src_pad = rgvolume.get_static_pad("src")
+ghost_src = Gst.GhostPad.new("src", src_pad)
+abin.add_pad(ghost_src)
+
+
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # GPL. (C) 2013 Paolo Patruno.
@@ -548,11 +559,13 @@ class Player(object):
     #self.player = gst.element_factory_make("playbin2", "playbin2")
     Gst.init(None)
     self.player = Gst.ElementFactory.make("playbin", None)
-    try:
-      self.rgvolume = Gst.ElementFactory.make("rgvolume", "rgvolume")
-      self.player.set_property('audio-filter', self.rgvolume)
-    except:
-      logging.error( "setting replaygain player plugin")
+
+    # this work but without limiter
+    #try:
+    #  self.rgvolume = Gst.ElementFactory.make("rgvolume", "rgvolume")
+    #  self.player.set_property('audio-filter', self.rgvolume)
+    #except:
+    #  logging.error( "setting replaygain player plugin")
 
     self.playmode = "Stopped"
     self.recoverplaymode = "Stopped"
@@ -612,72 +625,37 @@ class Player(object):
 
 
     # ReplayGain
-    #if (Gst.ElementFactory.find('rgvolume') and
-    #    Gst.ElementFactory.find('rglimiter')):
-    #  self.audioconvert = Gst.ElementFactory.make('audioconvert',None)
-    #
-    #  self.rgvolume = Gst.ElementFactory.make('rgvolume',None)
-    #  self.rgvolume.set_property('album-mode', False)
-    #  self.rgvolume.set_property('pre-amp', 0)
-    #  self.rgvolume.set_property('fallback-gain', 0)
-    #
-    #  self.rgvolume.set_property('headroom',0)
-    #  self.rgvolume.set_property('pre-amp',0)
-    #
-    #  self.rglimiter = Gst.ElementFactory.make('rglimiter',None)
-    #  self.rglimiter.set_property('enabled', True)
-    #
-    #  self.rgfilter = Gst.Bin()
-    #  self.rgfilter.add(self.rgvolume)
-    #  self.rgfilter.add(self.rglimiter)
-    #  self.rgvolume.link(self.rglimiter)
-    #  self.rgfilter.add_pad(Gst.GhostPad.new('sink',
-    #            self.rgvolume.get_static_pad('sink')))
-    #  self.rgfilter.add_pad(Gst.GhostPad.new('src',
-    #            self.rglimiter.get_static_pad('src')))
-    #  try:
-    #    self.player.set_property('audio-filter', self.rgfilter)
-    #  except:
-    #    logging.error( "setting replaygain player")
-    #    #raise Exception("cannot manage replaygain!")
+    if (Gst.ElementFactory.find('rgvolume') and
+        Gst.ElementFactory.find('rglimiter')):
+    
+      self.rgvolume = Gst.ElementFactory.make('rgvolume',None)
+      self.rgvolume.set_property('album-mode', False)
+      self.rgvolume.set_property('pre-amp', 0)
+      self.rgvolume.set_property('fallback-gain', 0)    
+      self.rgvolume.set_property('headroom',0)
+      self.rgvolume.set_property('pre-amp',0)
+    
+      self.rglimiter = Gst.ElementFactory.make('rglimiter',None)
+      self.rglimiter.set_property('enabled', True)
+      
+      self.rgfilter = Gst.Bin()
+      self.rgfilter.add(self.rgvolume)
+      self.rgfilter.add(self.rglimiter)
+      self.rgvolume.link(self.rglimiter)
+      self.rgfilter.add_pad(Gst.GhostPad.new('sink',
+                self.rgvolume.get_static_pad('sink')))
+      self.rgfilter.add_pad(Gst.GhostPad.new('src',
+                self.rglimiter.get_static_pad('src')))
+      try:
+        self.player.set_property('audio-filter', self.rgfilter)
+      except:
+        logging.error( "setting replaygain and limiter in player")
+        #raise Exception("cannot manage replaygain!")
         
-
-#    TODO replaygain
-#+++++++
-#
-#Example 40
-#
-#From project rhythmbox-multiple-libraries, under directory plugins/replaygain/replaygain, in source file player.py.
-#
-#def setup_playbin2_mode(self):
-#		print "using output filter for rgvolume and rglimiter"
-#		self.rgvolume = gst.element_factory_make("rgvolume")
-#		self.rgvolume.connect("notify::target-gain", self.playbin2_target_gain_cb)
-#		self.rglimiter = gst.element_factory_make("rglimiter")
-#
-#		# on track changes, we need to reset the rgvolume state, otherwise it
-#		# carries over the tags from the previous track
-#		self.pec_id = self.shell_player.connect('playing-song-changed', self.playing_entry_changed)
-#
-#		# watch playbin2's uri property to see when a new track is opened
-#		playbin = self.player.props.playbin
-#		if playbin is None:
-#			self.player.connect("notify::playbin", self.playbin2_notify_cb)
-#		else:
-#			playbin.connect("notify::uri", self.playbin2_uri_notify_cb)
-#
-#		self.rgfilter = gst.Bin()
-#		self.rgfilter.add(self.rgvolume, self.rglimiter)
-#		self.rgvolume.link(self.rglimiter)
-#		self.rgfilter.add_pad(gst.GhostPad("sink", self.rgvolume.get_static_pad("sink")))
-#		self.rgfilter.add_pad(gst.GhostPad("src", self.rglimiter.get_static_pad("src")))
-#		self.player.add_filter(self.rgfilter)
-#
-#+++++++++
-
     if myaudiosink is None: myaudiosink = "autoaudiosink"
     audiosink = Gst.ElementFactory.make(myaudiosink,None)
     if (myaudiosink == "jackaudiosink" and multi_channel):
+      # setup for multichannel output
       audiosink.set_property("connect","auto-forced")                     # multitrack output
       audiosink.set_property("client_name","autoradio")             # multitrack output
       audiosink.set_property("port_pattern","multichannel:cinput_*")

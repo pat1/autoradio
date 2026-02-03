@@ -27,8 +27,9 @@ if not autoradio.settings.require_tags_in_enclosure:
                     tmppath = os.path.join(tmp, 'soxoutput'+extension)
 
                     # sox with output on tmp file
-                    subprocess.check_call(["/usr/bin/sox","--norm"
+                    subprocess.check_call(["/usr/bin/sox"
                                        ,instance.file.path, tmppath
+                                       ,"norm","0"
                                        ,"compand", "0.005,3","6:-100,-50,-60,-30,-9","-3","-90","0.2"])
 
                     # atomic file substitution

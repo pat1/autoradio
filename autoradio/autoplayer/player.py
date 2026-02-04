@@ -619,11 +619,10 @@ class Player(object):
     
       self.rgvolume = Gst.ElementFactory.make('rgvolume',None)
       self.rgvolume.set_property('album-mode', False)
-      self.rgvolume.set_property('pre-amp', 0)
+      self.rgvolume.set_property('pre-amp', 6)
       self.rgvolume.set_property('fallback-gain', 0)    
-      self.rgvolume.set_property('headroom',0)
-      self.rgvolume.set_property('pre-amp',0)
-    
+      self.rgvolume.set_property('headroom', 9)
+
       self.rglimiter = Gst.ElementFactory.make('rglimiter',None)
       self.rglimiter.set_property('enabled', True)
       

@@ -1,14 +1,3 @@
-# pad fantasma (IMPORTANTISSIMO)
-sink_pad = rglimiter.get_static_pad("sink")
-ghost_sink = Gst.GhostPad.new("sink", sink_pad)
-abin.add_pad(ghost_sink)
-
-src_pad = rgvolume.get_static_pad("src")
-ghost_src = Gst.GhostPad.new("src", src_pad)
-abin.add_pad(ghost_src)
-
-
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # GPL. (C) 2013 Paolo Patruno.

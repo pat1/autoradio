@@ -22,7 +22,7 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,art
         for element in pl:
             metadata=element.get_metadata()
             #print (metadata)
-            audiosegment+=AudioSegment.from_file(metadata["path"][6:])
+            audiosegment+=AudioSegment.from_file(metadata["path"][6:],parameters=["-af","volume=replaygain=track"])
         stereotracks.append(audiosegment.set_channels(2).set_frame_rate(44100))
         #print("playlist read")
 
@@ -38,7 +38,7 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,art
         for element in pl:
             metadata=element.get_metadata()
             #print (metadata)
-            audiosegment+=AudioSegment.from_file(metadata["path"][6:])
+            audiosegment+=AudioSegment.from_file(metadata["path"][6:],parameters=["-af","volume=replaygain=track"])
         stereotracks_fillers.append(audiosegment.set_channels(2).set_frame_rate(44100))
         #print("playlist filler read")
     

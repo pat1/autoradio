@@ -24,6 +24,8 @@ import subprocess,tempfile,os
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk,Gdk, GLib, Gio
+from autoradio.autoplayer.playlist import Playlist
+
 outname=None
 f1=None
 f2=None
@@ -141,6 +143,25 @@ class FileChooserWindow(Gtk.Window):
             playlists=[f1,f2,f3]
             filler_playlists=[ff1,ff2,ff3]
 
+
+            # apply replaygain to playlist
+            p=[]
+            for playlistname in playlists:
+                p.append(Playlist([playlistname]))
+            for pl in p:
+                for element in pl:
+                    metadata=element.get_metadata()
+                    subprocess.check_call(["/usr/bin/rsgain","custom","-s","i",metadata["path"][6:]])
+            
+            # apply replaygain to filler
+            p=[]
+            for playlistname in filler_playlists:
+                p.append(Playlist([playlistname]))
+            for pl in p:
+                for element in pl:
+                    metadata=element.get_metadata()
+                    subprocess.check_call(["/usr/bin/rsgain","custom","-s","i",metadata["path"][6:]])
+            
             filename, extension = os.path.splitext(outname)
 
             if extension in (".ogg",".oga",".Ogg",".Oga",".OGG",".OGA"):

@@ -31,7 +31,7 @@ if not autoradio.settings.require_tags_in_enclosure:
                                        ,instance.file.path, tmppath
                                        ,"norm","0"
                                        ,"compand", "0.005,3","6:-100,-50,-60,-30,-9","-3","-90","0.2"])
-
+                
                     # atomic file substitution
                     try:
                         os.replace(tmppath,instance.file.path)
@@ -48,7 +48,7 @@ if not autoradio.settings.require_tags_in_enclosure:
             except:
                 logging.error("Enclosure: error applying sox normalization and compander effect")
             try:
-                subprocess.check_call(["/usr/bin/rsgain","custom","-l","-30","-c","a","-s","i",instance.file.path])
+                subprocess.check_call(["/usr/bin/rsgain","custom","-s","i",instance.file.path])
             except:
-                logging.error("Enclosure: error applying rplaygain")
+                logging.error("Enclosure: error applying replaygain (rsgain)")
             

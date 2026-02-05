@@ -2,6 +2,7 @@ from pydub import AudioSegment
 import logging
 from .autoplayer.playlist import *
 import os
+import subprocess
 
 SILENCE_MS =6000
 
@@ -121,6 +122,12 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,art
     #export to flac
     multitrack.export( multichannelname, format="flac", tags=tags)
 
+    try:
+        subprocess.check_call(["/usr/bin/rsgain","custom","-s","i",multichannelname])
+    except:
+        logging.error("Multitrack assemble playlist: error applying replaygain (rsgain)")
+            
+    
     
 def main():
 

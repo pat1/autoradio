@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
-Version: 4.0.16
-Release: 4
+Version: 4.0.17
+Release: 1
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf

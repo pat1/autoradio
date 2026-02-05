@@ -21,7 +21,7 @@ if not autoradio.settings.require_tags_in_enclosure:
 
 
             try:
-                subprocess.check_call(["/usr/bin/rsgain","custom","-l","-30","-c","a","-s","i",instance.file.path])
+                subprocess.check_call(["/usr/bin/rsgain","custom","-s","i",instance.file.path])
             except:
                 logging.error("Spot: error applying rplaygain")
             

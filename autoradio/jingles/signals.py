@@ -4,25 +4,26 @@ from .models import Jingle
 import mutagen
 import logging
 import autoradio.settings
+import subprocess
 
 if not autoradio.settings.require_tags_in_enclosure:
 
     @receiver(post_save, sender=Jingle)
     def post_save__callback(sender, instance, created, **kwargs):
-        if created:     # created is false and 'update_fields': None when file is changed
-            try:
-                audio = mutagen.File(instance.file.path)
-                if audio is not None:
-                    audio.tags['ARTIST'] = "JINGLE"
-                    audio.tags['TITLE'] = instance.jingle
-                    audio.save()
-            except:
-                logging.error("Jingle: error saving metadata Artist and Title")
+        #if created:     # created is false and 'update_fields': None when file is changed
+        try:
+            audio = mutagen.File(instance.file.path)
+            if audio is not None:
+                audio.tags['ARTIST'] = "JINGLE"
+                audio.tags['TITLE'] = instance.jingle
+                audio.save()
+        except:
+            logging.error("Jingle: error saving metadata Artist and Title")
 
-            try:
-                subprocess.check_call(["/usr/bin/rsgain","-s","i",instance.file.path])
-            except:
-                logging.error("Jingle: error applying rplaygain")
-            
+        try:
+            subprocess.check_call(["/usr/bin/rsgain","custom","-s","i",instance.file.path])
+        except:
+            logging.error("Jingle: error applying rsgain")
+
 
             

@@ -616,22 +616,41 @@ class Player(object):
     # ReplayGain
     if (Gst.ElementFactory.find('rgvolume') and
         Gst.ElementFactory.find('rglimiter')):
-    
+
+      # audioconvert used to be shure the format will be F32
+      self.audioconvert = Gst.ElementFactory.make('audioconvert',None)
+      # Crea il filtro caps per impostare il formato F32LE
+      self.caps = Gst.Caps.from_string("audio/x-raw,format=F32LE")
+      self.capsfilter = Gst.ElementFactory.make("capsfilter", "capsfilter")
+      self.capsfilter.set_property("caps", self.caps)
+
       self.rgvolume = Gst.ElementFactory.make('rgvolume',None)
       self.rgvolume.set_property('album-mode', False)
-      self.rgvolume.set_property('pre-amp', 6)
+      self.rgvolume.set_property('pre-amp', 3)
       self.rgvolume.set_property('fallback-gain', 0)    
-      self.rgvolume.set_property('headroom', 9)
-
+      self.rgvolume.set_property('headroom', 6)
+      # headroom element internally uses a volume element, which also
+      # supports operating on integer audio formats. These formats do
+      # not allow exceeding digital full scale. If extra headroom is
+      # used, make sure that the raw audio data format is floating
+      # point (F32). Otherwise, clipping distortion might be introduced
+      # as part of the volume adjustment itself.
+      
       self.rglimiter = Gst.ElementFactory.make('rglimiter',None)
       self.rglimiter.set_property('enabled', True)
       
       self.rgfilter = Gst.Bin()
+      self.rgfilter.add(self.audioconvert)
+      self.rgfilter.add(self.capsfilter)
       self.rgfilter.add(self.rgvolume)
       self.rgfilter.add(self.rglimiter)
+
+      self.audioconvert.link(self.capsfilter)
+      self.capsfilter.link(self.rgvolume)
       self.rgvolume.link(self.rglimiter)
+
       self.rgfilter.add_pad(Gst.GhostPad.new('sink',
-                self.rgvolume.get_static_pad('sink')))
+                self.audioconvert.get_static_pad('sink')))
       self.rgfilter.add_pad(Gst.GhostPad.new('src',
                 self.rglimiter.get_static_pad('src')))
       try:
@@ -826,13 +845,13 @@ class Player(object):
         logging.error( "in setposition")
 
   def loaduri(self):
-    logging.info( "loaduri")
 
     if self.playlist.current is None:
       if len(list(self.playlist.keys())) > 0:
         self.playlist.set_current(list(self.playlist.keys())[0])
 
     uri = self.playlist.get_current().path
+    logging.info( f"loaduri: {uri}")
     if uri is not None:
       self.player.set_property("uri", uri)
 

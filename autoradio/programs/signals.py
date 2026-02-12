@@ -11,16 +11,23 @@ if not autoradio.settings.require_tags_in_enclosure:
 
     @receiver(post_save, sender=Enclosure)
     def post_save__callback(sender, instance, created, **kwargs):
-        if created:    # created is false and 'update_fields': None when file is changed
-            try:
-                audio = mutagen.File(instance.file.path)
-                if audio is not None:
-                    audio.tags['ARTIST'] = "SHOW: "+instance.episode.show.title
-                    audio.tags['TITLE'] = instance.episode.title+" / "+instance.title
-                    audio.save()
-            except:
-                logging.error("Enclosure: error saving metadata Artist and Title")
 
+        companderdone=False
+        try:
+            audio = mutagen.File(instance.file.path)
+            if audio is not None:
+                logging.info(f"Enclosure: {instance.file.path} apply tags")
+                audio.tags['ARTIST'] = "SHOW: "+instance.episode.show.title
+                audio.tags['TITLE'] = instance.episode.title+" / "+instance.title
+                companderdone=audio.tags.get('COMPANDER',"not done")[0] =="done"
+                audio.save()
+        except:
+            logging.error(f"Enclosure: {instance.file.path} error saving metadata Artist and Title")
+
+        # compander is not reversible so I check if is already done by tag
+
+        if (created or not companderdone):    # created is false and 'update_fields': None when file is changed
+            logging.info(f"Enclosure: {instance.file.path} apply compander")
             try:
                 filename, extension = os.path.splitext(instance.file.path)
                 with tempfile.TemporaryDirectory() as tmp:
@@ -46,9 +53,19 @@ if not autoradio.settings.require_tags_in_enclosure:
                     #subprocess.check_call(["/usr/bin/mv","-f",tmppath,instance.file.path])
                     #os.rename(tmppath,instance.file.path)
             except:
-                logging.error("Enclosure: error applying sox normalization and compander effect")
+                logging.error(f"Enclosure: {instance.file.path} applying sox normalization and compander effect")
+                
             try:
+                logging.info(f"Enclosure: {instance.file.path} apply rsgain")
                 subprocess.check_call(["/usr/bin/rsgain","custom","-s","i",instance.file.path])
             except:
-                logging.error("Enclosure: error applying replaygain (rsgain)")
+                logging.error(f"Enclosure: {instance.file.path}  error applying replaygain (rsgain)")
             
+            try:
+                audio = mutagen.File(instance.file.path)
+                if audio is not None:
+                    logging.info(f"Enclosure: {instance.file.path} apply tag COMPANDER")
+                    audio.tags['COMPANDER'] = "done"
+                    audio.save()
+            except:
+                logging.error(f"Enclosure: {instance.file.path} error saving metadata COMPANDER done")

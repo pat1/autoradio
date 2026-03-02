@@ -23,7 +23,7 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,art
         for element in pl:
             metadata=element.get_metadata()
             #print (metadata)
-            audiosegment+=AudioSegment.from_file(metadata["path"][6:],parameters=["-af","volume=replaygain=track:replaygain_preamp=6:replaygain_noclip=0"])
+            audiosegment+=AudioSegment.from_file(metadata["path"][6:],parameters=["-af","volume=replaygain=track:replaygain_preamp=6:replaygain_noclip=1"])
         stereotracks.append(audiosegment.set_channels(2).set_frame_rate(44100))
         #print("playlist read")
 
@@ -123,8 +123,7 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,art
     multitrack.export( multichannelname, format="flac", tags=tags)
 
     try:
-        # we do not known how rsgain work with multitrack; we set -l -15 by empiric way to have behaviour as standard  -l -18db
-        subprocess.check_call(["/usr/bin/rsgain","custom","-s","i","-l","-15",multichannelname])
+        subprocess.check_call(["/usr/bin/rsgain","custom","-s","i",multichannelname])
     except:
         logging.error("Multitrack assemble playlist: error applying replaygain (rsgain)")
             

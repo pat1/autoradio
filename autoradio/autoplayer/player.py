@@ -626,8 +626,8 @@ class Player(object):
 
       self.rgvolume = Gst.ElementFactory.make('rgvolume',None)
       self.rgvolume.set_property('album-mode', False)
-      self.rgvolume.set_property('pre-amp', 3)
-      self.rgvolume.set_property('fallback-gain', 0)    
+      self.rgvolume.set_property('pre-amp', 4.5)
+      self.rgvolume.set_property('fallback-gain', -4.5)    
       self.rgvolume.set_property('headroom', 6)
       # headroom element internally uses a volume element, which also
       # supports operating on integer audio formats. These formats do
@@ -635,6 +635,18 @@ class Player(object):
       # used, make sure that the raw audio data format is floating
       # point (F32). Otherwise, clipping distortion might be introduced
       # as part of the volume adjustment itself.
+
+      # this is the rglimiter math
+      # #define LIMIT 1.0
+      # #define THRES 0.5               /* ca. -6 dB */
+      # #define COMPL 0.5               /* LIMIT - THRESH */
+      #
+      # if (*input > THRES)
+      #   *input = tanhf ((*input - THRES) / COMPL) * COMPL + THRES;
+      # else if (*input < -THRES)
+      #   *input = tanhf ((*input + THRES) / COMPL) * COMPL - THRES;
+      #   input++;
+      # }
       
       self.rglimiter = Gst.ElementFactory.make('rglimiter',None)
       self.rglimiter.set_property('enabled', True)

@@ -151,6 +151,7 @@ def ManagePlayer (player,session,schedule):
 
       finally:
          #signal.alarm(0)
+         time.sleep(10)   # get time to wait the player dbus to be in sync with player status 
          lock.release()
 
          # here we have a problem ... sometime the player is not ready when the file is deleted !

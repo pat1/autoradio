@@ -133,7 +133,7 @@ class mediaplayer(object):
         '''
         try:
  
-            self.play_ifnot()   #force to play
+            #self.play_ifnot()   #force to play
 
             mintimed=datetime.timedelta(seconds=securesec)
             toend=datetime.timedelta(seconds=0)
@@ -175,7 +175,7 @@ class mediaplayer(object):
         "atlast" numer of song are retained
         '''
         try:
-            self.play_ifnot()   #force to play
+            #self.play_ifnot()   #force to play
 
             # take the current position (if error set pos=0)
             pos=self.get_playlist_securepos()
@@ -205,7 +205,7 @@ class mediaplayer(object):
         "atlast" numer of song are retained for future play
         '''
         try:
-            self.play_ifnot()   #force to play
+            #self.play_ifnot()   #force to play
 
            # take the current position (if error set pos=0)
             pos=self.get_playlist_securepos()

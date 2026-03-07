@@ -27,35 +27,34 @@ class MyJingleAdminForm(forms.ModelForm):
             #if file._size > 40*1024*1024:
             #    raise forms.ValidationError("Audio file too large ( > 4mb )")
             try:
-                type = file.content_type in webmime_audio
+                type = file.content_type in autoradio.mime.webmime_audio
             except:
                 return file
 
             if not type:
                 raise forms.ValidationError(gettext_lazy("Content-Type is not audio/mpeg or audio/flac or video/ogg"))
 
-            if not os.path.splitext(file.name)[1] in websuffix_audio:
+            if not os.path.splitext(file.name)[1] in autoradio.mime.websuffix_audio:
                 raise forms.ValidationError(gettext_lazy("Doesn't have proper extension: .mp3, .wav, .ogg, .oga, .flac"))
 
 
             try:
                 mime = ma.file(file.temporary_file_path())
-                audio = mime in mymime_audio
+                audio = mime in autoradio.mime.mymime_audio
             except:
                 audio=False
                     
             if not audio:
                 raise forms.ValidationError(gettext_lazy("Not a valid audio file"))
 
-            if autoradio.settings.require_tags_in_enclosure:
+            try:
                 #Check file if it is a known media file. The check is based on mutagen file test.
-                try:
-                    audio = not (mutagen.File(file.temporary_file_path()) is None)
-                except:
-                    audio = False
-
-                if not audio:
-                    raise forms.ValidationError(gettext_lazy("Not a valid audio file: probably no tags present"))
+                audio = not (mutagen.File(file.temporary_file_path()) is None)
+            except:
+                audio = False
+                
+            if not audio:
+                raise forms.ValidationError(gettext_lazy("Not a valid audio file: cannot analize"))
 
             return file
 

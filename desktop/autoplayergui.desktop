@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Autoradio Player
+Exec=autoplayergui
+Type=Application
+Icon=autoplayergui
+Terminal=false
+Categories=AudioVideo;

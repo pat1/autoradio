@@ -14,6 +14,8 @@ recursive-include templates *
 recursive-include global_static *
 recursive-include centos *
 recursive-include fedora *
+recursive-include logo *
+recursive-include desktop *
 prune static
 prune amarok 
 prune media 

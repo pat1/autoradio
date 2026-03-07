@@ -6,6 +6,7 @@ from autoradio.programs.managers import EpisodeManager
 import datetime
 import calendar
 from django.db.models import Q
+from django.db.models import Max
 
 from  django import VERSION as djversion
 
@@ -229,6 +230,7 @@ class ChildCategory(models.Model):
         verbose_name = 'category (iTunes child)'
         verbose_name_plural = 'categories (iTunes child)'
 
+        
     def __str__(self):
         if self.name!='':
             return u'%s > %s' % (self.parent, self.name)
@@ -357,6 +359,7 @@ class Show(models.Model):
 
     class Meta(object):
         ordering = ['title']
+        permissions = (("manage_any_show","can manage any enclosure and schedule for any show"),)
 
     def __str__(self):
         return u'%s' % (self.title)
@@ -551,7 +554,8 @@ class Episode(models.Model):
     # RSS 2.0
     show = models.ForeignKey(Show , on_delete=models.CASCADE)
     title = models.CharField(max_length=255, help_text=gettext_lazy('Make it specific but avoid explicit language. Limit to 100 characters for a Google video sitemap.'))
-    active = models.BooleanField(gettext_lazy("Active"),default=True)
+    active = models.BooleanField(gettext_lazy("Active"),default=True,
+                                 help_text=gettext_lazy("activate/deactivate the episode"))
     date = models.DateTimeField(gettext_lazy('Recording date'),auto_now_add=True)
 
     title_type = models.CharField('Title type', max_length=255, blank=True, default='Plain', choices=TYPE_CHOICES)
@@ -685,7 +689,7 @@ class Enclosure(models.Model):
         )
 
     title = models.CharField(max_length=255, blank=True, default=None, help_text=gettext_lazy('Title is generally only useful with multiple enclosures.'))
-    file = DeletingFileField(upload_to='podcasts/episodes/files/', help_text=gettext_lazy('Either upload or use the "Player" text box below. If uploading, file must be less than or equal to 30 MB for a Google video sitemap.'),blank=False, null=False,max_length=255)
+    file = DeletingFileField(upload_to='podcasts/episodes/files/', help_text=gettext_lazy('File to upload; will be better a file size less than 30 MB.'),blank=False, null=False,max_length=255)
     mime = models.CharField('Format', max_length=255, choices=MIME_CHOICES, blank=True)
     medium = models.CharField(max_length=255, blank=True, choices=MEDIUM_CHOICES)
     expression = models.CharField(max_length=25, choices=EXPRESSION_CHOICES, blank=True)
@@ -700,9 +704,10 @@ class Enclosure(models.Model):
     width = models.PositiveIntegerField(blank=True, null=True, help_text=gettext_lazy("Width of the browser window in <br />which the URL should be opened. <br />YouTube's default is 425."))
     height = models.PositiveIntegerField(blank=True, null=True, help_text=gettext_lazy("Height of the browser window in <br />which the URL should be opened. <br />YouTube's default is 344."))
     episode = models.ForeignKey(Episode, help_text=gettext_lazy('Include any number of media files; for example, perhaps include an iPhone-optimized, AppleTV-optimized and Flash Video set of video files. Note that the iTunes feed only accepts the first file. More uploading is available after clicking "Save and continue editing."'), on_delete=models.CASCADE)
-
+    ordinal = models.PositiveIntegerField('Ordinal', help_text=gettext_lazy('Sequence number, emission order (1,2,3...).'), blank=False, null=False, editable=False)
+    
     class Meta(object):
-        ordering = ['mime', 'file']
+        ordering = ['ordinal']
 
 
     def save(self, *args, **kwargs):
@@ -710,8 +715,19 @@ class Enclosure(models.Model):
         Return a default title numbered by enclosure number
         a missing title is not a good idea for rss and web interface
         """
+        
+        if (self.ordinal is None):
+            # find max ordinal and increment
+            max_ordinal = Enclosure.objects.filter(Q(episode=self.episode)).aggregate(max_ordinal=Max('ordinal', default=0)).get("max_ordinal",0)
+            # on django 3 seems default do not work and get() return Nonetype
+            if max_ordinal is None:
+                max_ordinal=0
+            self.ordinal = max_ordinal+1
+        
         if  self.title == "":
-            self.title = "Part "+str(Enclosure.objects.filter(Q(episode=self.episode)).all().count()+1)
+            # set default title
+            self.title = "Part "+str(self.ordinal)
+
         super(Enclosure, self).save(*args, **kwargs)
 
 
@@ -747,7 +763,14 @@ class Schedule(models.Model):
        def __str__(self):
                return str(self.episode.title)
 
-
+#       class Meta:
+#           constraints = [
+#            models.UniqueConstraint(
+#                fields=['episode', 'emission_date'],
+#                name='unique_episode_emission_date'
+#            ),
+#           ]
+           
 
 class ScheduleDone(models.Model):
 
@@ -762,8 +785,7 @@ class ScheduleDone(models.Model):
 
        def __str__(self):
                return str(self.emission_done)
-
-
+           
 
 class PeriodicSchedule(models.Model):
 

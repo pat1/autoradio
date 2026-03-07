@@ -101,7 +101,7 @@ MPRIS2_INTROSPECTION = """<node name="/org/mpris/MediaPlayer2">
       <arg direction="in" name="Offset" type="x"/>
     </method>
     <method name="SetPosition">
-      <arg direction="in" name="TrackId" type="o"/>
+      <arg direction="in" name="TrackId" type="s"/>
       <arg direction="in" name="Position" type="x"/>
     </method>
     <method name="OpenUri">
@@ -507,7 +507,12 @@ class AutoPlayer(dbus.service.Object):
         for id in trackids:
           if id is not None:
             meta={}
-            for key,attr in ("mpris:trackid","id"),("mpris:length","time"),("xesam:title","title"),("xesam:artist","artist"),("xesam:url","path"):
+            for key,attr in ("mpris:trackid","id")\
+                ,("mpris:length","time")\
+                ,("xesam:title","title")\
+                ,("xesam:artist","artist")\
+                ,("xesam:url","path")\
+                ,("autoradio:numberOfTracks","ntracks"):
               try:
                 myattr= getattr(self.player.playlist.get(id,None),attr,None)
               except:
@@ -538,16 +543,18 @@ class AutoPlayer(dbus.service.Object):
 
 class Player(object):
 	
-  def __init__(self,myplaylist=None,loop=None,starttoplay=False,myaudiosink=None):
+  def __init__(self,myplaylist=None,loop=None,starttoplay=False,myaudiosink=None,multi_channel=False):
     self.playlist=myplaylist
     #self.player = gst.element_factory_make("playbin2", "playbin2")
     Gst.init(None)
     self.player = Gst.ElementFactory.make("playbin", None)
-    try:
-      self.rgvolume = Gst.ElementFactory.make("rgvolume", "rgvolume")
-      self.player.set_property('audio-filter', self.rgvolume)
-    except:
-      logging.error( "setting replaygain player plugin")
+
+    # this work but without limiter
+    #try:
+    #  self.rgvolume = Gst.ElementFactory.make("rgvolume", "rgvolume")
+    #  self.player.set_property('audio-filter', self.rgvolume)
+    #except:
+    #  logging.error( "setting replaygain player plugin")
 
     self.playmode = "Stopped"
     self.recoverplaymode = "Stopped"
@@ -607,71 +614,70 @@ class Player(object):
 
 
     # ReplayGain
-    #if (Gst.ElementFactory.find('rgvolume') and
-    #    Gst.ElementFactory.find('rglimiter')):
-    #  self.audioconvert = Gst.ElementFactory.make('audioconvert',None)
-    #
-    #  self.rgvolume = Gst.ElementFactory.make('rgvolume',None)
-    #  self.rgvolume.set_property('album-mode', False)
-    #  self.rgvolume.set_property('pre-amp', 0)
-    #  self.rgvolume.set_property('fallback-gain', 0)
-    #
-    #  self.rgvolume.set_property('headroom',0)
-    #  self.rgvolume.set_property('pre-amp',0)
-    #
-    #  self.rglimiter = Gst.ElementFactory.make('rglimiter',None)
-    #  self.rglimiter.set_property('enabled', True)
-    #
-    #  self.rgfilter = Gst.Bin()
-    #  self.rgfilter.add(self.rgvolume)
-    #  self.rgfilter.add(self.rglimiter)
-    #  self.rgvolume.link(self.rglimiter)
-    #  self.rgfilter.add_pad(Gst.GhostPad.new('sink',
-    #            self.rgvolume.get_static_pad('sink')))
-    #  self.rgfilter.add_pad(Gst.GhostPad.new('src',
-    #            self.rglimiter.get_static_pad('src')))
-    #  try:
-    #    self.player.set_property('audio-filter', self.rgfilter)
-    #  except:
-    #    logging.error( "setting replaygain player")
-    #    #raise Exception("cannot manage replaygain!")
+    if (Gst.ElementFactory.find('rgvolume') and
+        Gst.ElementFactory.find('rglimiter')):
+
+      # audioconvert used to be shure the format will be F32
+      self.audioconvert = Gst.ElementFactory.make('audioconvert',None)
+      # Crea il filtro caps per impostare il formato F32LE
+      self.caps = Gst.Caps.from_string("audio/x-raw,format=F32LE")
+      self.capsfilter = Gst.ElementFactory.make("capsfilter", "capsfilter")
+      self.capsfilter.set_property("caps", self.caps)
+
+      self.rgvolume = Gst.ElementFactory.make('rgvolume',None)
+      self.rgvolume.set_property('album-mode', False)
+      self.rgvolume.set_property('pre-amp', 4.5)
+      self.rgvolume.set_property('fallback-gain', -4.5)    
+      self.rgvolume.set_property('headroom', 6)
+      # headroom element internally uses a volume element, which also
+      # supports operating on integer audio formats. These formats do
+      # not allow exceeding digital full scale. If extra headroom is
+      # used, make sure that the raw audio data format is floating
+      # point (F32). Otherwise, clipping distortion might be introduced
+      # as part of the volume adjustment itself.
+
+      # this is the rglimiter math
+      # #define LIMIT 1.0
+      # #define THRES 0.5               /* ca. -6 dB */
+      # #define COMPL 0.5               /* LIMIT - THRESH */
+      #
+      # if (*input > THRES)
+      #   *input = tanhf ((*input - THRES) / COMPL) * COMPL + THRES;
+      # else if (*input < -THRES)
+      #   *input = tanhf ((*input + THRES) / COMPL) * COMPL - THRES;
+      #   input++;
+      # }
+      
+      self.rglimiter = Gst.ElementFactory.make('rglimiter',None)
+      self.rglimiter.set_property('enabled', True)
+      
+      self.rgfilter = Gst.Bin()
+      self.rgfilter.add(self.audioconvert)
+      self.rgfilter.add(self.capsfilter)
+      self.rgfilter.add(self.rgvolume)
+      self.rgfilter.add(self.rglimiter)
+
+      self.audioconvert.link(self.capsfilter)
+      self.capsfilter.link(self.rgvolume)
+      self.rgvolume.link(self.rglimiter)
+
+      self.rgfilter.add_pad(Gst.GhostPad.new('sink',
+                self.audioconvert.get_static_pad('sink')))
+      self.rgfilter.add_pad(Gst.GhostPad.new('src',
+                self.rglimiter.get_static_pad('src')))
+      try:
+        self.player.set_property('audio-filter', self.rgfilter)
+      except:
+        logging.error( "setting replaygain and limiter in player")
+        #raise Exception("cannot manage replaygain!")
         
-
-#    TODO replaygain
-#+++++++
-#
-#Example 40
-#
-#From project rhythmbox-multiple-libraries, under directory plugins/replaygain/replaygain, in source file player.py.
-#
-#def setup_playbin2_mode(self):
-#		print "using output filter for rgvolume and rglimiter"
-#		self.rgvolume = gst.element_factory_make("rgvolume")
-#		self.rgvolume.connect("notify::target-gain", self.playbin2_target_gain_cb)
-#		self.rglimiter = gst.element_factory_make("rglimiter")
-#
-#		# on track changes, we need to reset the rgvolume state, otherwise it
-#		# carries over the tags from the previous track
-#		self.pec_id = self.shell_player.connect('playing-song-changed', self.playing_entry_changed)
-#
-#		# watch playbin2's uri property to see when a new track is opened
-#		playbin = self.player.props.playbin
-#		if playbin is None:
-#			self.player.connect("notify::playbin", self.playbin2_notify_cb)
-#		else:
-#			playbin.connect("notify::uri", self.playbin2_uri_notify_cb)
-#
-#		self.rgfilter = gst.Bin()
-#		self.rgfilter.add(self.rgvolume, self.rglimiter)
-#		self.rgvolume.link(self.rglimiter)
-#		self.rgfilter.add_pad(gst.GhostPad("sink", self.rgvolume.get_static_pad("sink")))
-#		self.rgfilter.add_pad(gst.GhostPad("src", self.rglimiter.get_static_pad("src")))
-#		self.player.add_filter(self.rgfilter)
-#
-#+++++++++
-
     if myaudiosink is None: myaudiosink = "autoaudiosink"
     audiosink = Gst.ElementFactory.make(myaudiosink,None)
+    if (myaudiosink == "jackaudiosink" and multi_channel):
+      # setup for multichannel output
+      audiosink.set_property("connect","auto-forced")                     # multitrack output
+      audiosink.set_property("client_name","autoradio")             # multitrack output
+      audiosink.set_property("port_pattern","multichannel:cinput_*")
     self.player.set_property("audio-sink", audiosink)
 
 #
@@ -851,13 +857,13 @@ class Player(object):
         logging.error( "in setposition")
 
   def loaduri(self):
-    logging.info( "loaduri")
 
     if self.playlist.current is None:
       if len(list(self.playlist.keys())) > 0:
         self.playlist.set_current(list(self.playlist.keys())[0])
 
     uri = self.playlist.get_current().path
+    logging.info( f"loaduri: {uri}")
     if uri is not None:
       self.player.set_property("uri", uri)
 
@@ -1033,7 +1039,7 @@ class Player(object):
     self.loop.quit()
 
 
-def main(busaddress=None,myaudiosink=None):  
+def main(busaddress=None,myaudiosink=None,multi_channel=False):  
 
   # Use logging for ouput at different *levels*.
   #
@@ -1069,7 +1075,7 @@ def main(busaddress=None,myaudiosink=None):
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
     #loop = gobject.MainLoop()
     loop=GObject.MainLoop()
-    mp = Player(plmpris,loop=loop,starttoplay=True,myaudiosink=myaudiosink)
+    mp = Player(plmpris,loop=loop,starttoplay=True,myaudiosink=myaudiosink,multi_channel=multi_channel)
 
     # Export our DBUS service
     #if not dbus_service:

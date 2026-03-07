@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html lang="it" dir="ltr">
+<head>
+<title> | Amministrazione sito Django</title>
+<link rel="stylesheet" href="http://127.0.0.1:8080/static/admin/css/base.css">
+
+  <link rel="stylesheet" href="http://127.0.0.1:8080/static/admin/css/dark_mode.css">
+  <script src="http://127.0.0.1:8080/static/admin/js/theme.js"></script>
+
+
+
+
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="http://127.0.0.1:8080/static/admin/css/responsive.css">
+    
+
+<meta name="robots" content="NONE,NOARCHIVE">
+</head>
+
+<body class=""
+  data-admin-utc-offset="3600">
+<a href="#content-start" class="skip-to-content-link">Passa al contenuto principale</a>
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    
+      <header id="header">
+        <div id="branding">
+        
+
+<a href=http://127.0.0.1:8080/>AutoRadio Home</a> / <a href=../../doc>AutoRadio Documentazione</a>
+
+<h1 id="site-name"><a href="http://127.0.0.1:8080/admin/">Amministrazione Django</a></h1>
+
+        </div>
+        
+        
+        
+        
+      </header>
+    
+    <!-- END Header -->
+    
+      <nav aria-label="Breadcrumbs">
+        
+          <div class="breadcrumbs">
+            <a href="http://127.0.0.1:8080/admin/">Pagina iniziale</a>
+            
+          </div>
+        
+      </nav>
+    
+    
+
+    <div class="main" id="main">
+      
+      <main id="content-start" class="content" tabindex="-1">
+        
+          
+        
+        <!-- Content -->
+        <div id="content" class="colM">
+          
+          
+          
+          
+
+<h1><a href="../index.html">Documentation Home</a></h1>
+
+<div id="content-main">
+
+
+
+
+
+
+
+
+
+L'interfaccia grafica di interazione con il player dispone una serie
+di bottoni e icone che possono mostrare degli sti del player e/o
+impartire comandi.
+<ul>
+ <li>Prima riga:
+   <ul>
+     <li>bottone con cartellina: permette l'aggiunta di file o playlist nella
+       posizione del cursore.  E' possibile selezionare un solo file; pper
+       inserire più file alla volta utilizzare una playlist in formato m3u o
+       xspf.</li>
+
+     <li>secondo bottone: mostra lo stato del player; Playing in verde; Paused
+       in azzurro; Stopped in rosso.</li>
+   </ul>
+ </li>
+ <li>Seconda riga:
+   <ul>
+     <li>Bottone play: suona il file dall'inizio</li>
+
+     <li>Bottone pausa: mette in pausa il player o ripremuto riparte dalla
+       pausa</li>
+
+     <li>Bottone stop: mette in stop il player</li>
+
+     <li>Bottone delete: elimina dalla playlist i file selezionati nell'are
+       playlist</li>
+
+     <li>Visualizzazione tempo rimanente del file corrente in minuti:secondi</li>
+
+     <li>Barra di progresso: visualizza e imposta la posizione corrente nel
+     tempo del file corrente.  L'impostazione può essere fatta con il
+       mouse.</li>
+   </ul>
+ </li>
+
+ <li>Tabella playlist: presenta le colonne:
+   <ul>
+     <li>ID: identificativo univoco del file; normalmente a fondo
+       verde, rosso evidenzia il file corrente</li>
+
+     <li>Len: durata in minuti e secondi del file; normalmente verde
+       chiaro, arancio quando il file è "multichannel"</li>
+
+     <li>Artist: artista del brano letto dai metadati o in sua assenza nome
+       della cartella che contiene il file</li>
+
+     <li>Title: Titolo del brano letto dai metadati o in sua assenza nome del
+       file</li>
+
+     <li>Cursore: la posizione del cursore è evidenziata da una riga a fondo
+       blu</li>
+   </ul>
+ </li>
+</ul>
+Azioni:
+
+<ul>
+  <li>Cambio brano in esecuzione: doppio click con il mouse sulla riga
+    del nuovo brano oppure posizionare il cursore sul nuovo brano e
+    usare il bottone Play.</li>
+
+  <li>Cambio posizione di esecuzione del brano corrente: usare il
+    mouse sulla barra di progresso.</li>
+</ul>
+
+Uso della Tastiera: alcuni bottoni sono associati a tasti della
+  tastiera:
+<ul>
+  <li>Bottone Play: tasto "invio",tasto "invio" del tastierino
+  numerico</li>
+
+  <li>Bottone Pause: tasto ".", tasto "canc" del tastierino
+  numerico</li>
+
+  <li>Bottone Stop: tasto "delete", tsto "ins" del tastierino numerico</li>
+
+  <li>Barra di progresso: freccia a sinistra arretra e freccia a
+    destra avanza, di 10 secondi (anche del tastierino numerico)</li>
+
+  <li>Cursore: freccia in basso successivo (da premere ripetutamente
+    per visualizzare il cursore se non già presente) cursore sul brano
+    successivo, freccia in alto cursore sul brano precedente (anche
+    del tastierino numerico)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+          
+          <br class="clear">
+        </div>
+        <!-- END Content -->
+      </main>
+    </div>
+    <footer id="footer"></footer>
+</div>
+<!-- END Container -->
+
+<!-- SVGs -->
+<svg xmlns="http://www.w3.org/2000/svg" class="base-svgs">
+  <symbol viewBox="0 0 24 24" width="1.5rem" height="1.5rem" id="icon-auto"><path d="M0 0h24v24H0z" fill="currentColor"/><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2V4a8 8 0 1 0 0 16z"/></symbol>
+  <symbol viewBox="0 0 24 24" width="1.5rem" height="1.5rem" id="icon-moon"><path d="M0 0h24v24H0z" fill="currentColor"/><path d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0 0 10 7zm-6 5a8 8 0 0 0 15.062 3.762A9 9 0 0 1 8.238 4.938 7.999 7.999 0 0 0 4 12z"/></symbol>
+  <symbol viewBox="0 0 24 24" width="1.5rem" height="1.5rem" id="icon-sun"><path d="M0 0h24v24H0z" fill="currentColor"/><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/></symbol>
+</svg>
+<!-- END SVGs -->
+
+</body>
+</html>

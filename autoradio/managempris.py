@@ -6,6 +6,7 @@ import dbus
 from . import autompris
 from . import autompris2
 from datetime import *
+from time import sleep
 from threading import *
 import os
 from . import autoradio_config
@@ -136,7 +137,7 @@ def ManagePlayer (player,session,schedule):
 
          # inserisco il file nella playlist
          if pos is None:
-            raise PlayerError("Managempris: ERROR in xmms.control.get_playlist_posauto")
+            raise PlayerError("Managempris: ERROR in get_playlist_posauto")
 
          logging.info( "Managempris: insert media: %s at position %d",media,pos)
          aud.playlist_add_atpos("file://"+media,pos)
@@ -151,6 +152,7 @@ def ManagePlayer (player,session,schedule):
 
       finally:
          #signal.alarm(0)
+         sleep(10)   # get time to wait the player dbus to be in sync with player status 
          lock.release()
 
          # here we have a problem ... sometime the player is not ready when the file is deleted !
@@ -162,7 +164,7 @@ def ManagePlayer (player,session,schedule):
       ar_emitted(schedule.djobj)
       logging.info( "Managempris: written in django: %s",schedule.djobj)
 
-      aud.play_ifnot()
+      #aud.play_ifnot()
 
    except PlayerError as e:
       logging.error(e)
@@ -226,8 +228,7 @@ def player_watchdog(player,session):
                except:
                   logging.error("player_watchdog: error launching "+player+"2")
 
-      import time
-      time.sleep(5)
+      sleep(5)
       logging.info("player_watchdog: player executed")
 
       try:
@@ -239,16 +240,43 @@ def player_watchdog(player,session):
       except:
          logging.error("player_watchdog serious problem: player do not comunicate on d-bus")
 
-   try:
-      aud.play_ifnot()
-      logging.debug("player_watchdog: start playing if not")
-
-   except:
-      logging.error("player_watchdog: cannot start playing if not")
+   if (not autoradio_config.multi_channel):     # start to play if not in multi channel mode
+      try:
+         aud.play_ifnot()
+         logging.debug("player_watchdog: start playing if not")
+   
+      except:
+         logging.error("player_watchdog: cannot start playing if not")
 
    aud.close()
    return True
 
+
+def player_start_play(player,session):
+
+   logging.debug( "player_start_play: play if not" )
+
+   try:
+
+      if  player == "vlc" or player == "AutoPlayer":
+         aud = autompris2.mediaplayer(player=player,session=session)
+      else:
+         aud = autompris.mediaplayer(player=player,session=session)
+
+   except:
+      logging.error("player_start_play: player do not communicate on d-bus")
+      return False
+
+   try:
+      aud.play_ifnot()
+      logging.debug("player_watchdog: start playing if not")
+   
+   except:
+      logging.error("player_watchdog: cannot start playing if not")
+      return False
+
+   aud.close()
+   return True
 
 def save_status(session):
    """

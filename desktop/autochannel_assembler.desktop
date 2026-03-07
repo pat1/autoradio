@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Autoradio Channel Assembler
+Exec=autochannel_assembler
+Type=Application
+Icon=autochannel_assembler
+Terminal=true
+Categories=AudioVideo;

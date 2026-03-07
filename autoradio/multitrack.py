@@ -1,0 +1,144 @@
+from pydub import AudioSegment
+import logging
+from .autoplayer.playlist import *
+import os
+import subprocess
+
+SILENCE_MS =6000
+
+def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,artist=None,title=None,oggremap=False):
+
+    NUM_CHANNEL=len(playlistnames)
+    NUM_TRACK=NUM_CHANNEL*2
+
+    # read all playlists
+    p=[]
+    for playlistname in playlistnames:
+        p.append(Playlist([playlistname]))
+        #print("playlist:",playlistname)
+
+    stereotracks= []    
+    for pl in p:
+        audiosegment=AudioSegment.empty()
+        for element in pl:
+            metadata=element.get_metadata()
+            #print (metadata)
+            audiosegment+=AudioSegment.from_file(metadata["path"][6:],parameters=["-af","volume=replaygain=track:replaygain_preamp=6:replaygain_noclip=1"])
+        stereotracks.append(audiosegment.set_channels(2).set_frame_rate(44100))
+        #print("playlist read")
+
+    # read all filler playlist
+    pf=[]
+    for playlistname in playlistnames_fillers:
+        pf.append(Playlist([playlistname]))
+        #print("playlist filler:",playlistname)
+
+    stereotracks_fillers= []    
+    for pl in pf:
+        audiosegment=AudioSegment.empty()
+        for element in pl:
+            metadata=element.get_metadata()
+            #print (metadata)
+            audiosegment+=AudioSegment.from_file(metadata["path"][6:],parameters=["-af","volume=replaygain=track"])
+        stereotracks_fillers.append(audiosegment.set_channels(2).set_frame_rate(44100))
+        #print("playlist filler read")
+    
+    tracks=[]
+    tracks_fillers=[]
+    for i in range(NUM_TRACK):
+        tracks.append(None)
+        tracks_fillers.append(None)
+
+    for i in range(0,NUM_TRACK,2):
+        #print (i)
+        tracks[i],tracks[i+1]=stereotracks[int(i/2)].split_to_mono()
+        tracks_fillers[i],tracks_fillers[i+1]=stereotracks_fillers[int(i/2)].split_to_mono()
+
+    #print ([len(tracks[i]) for i in range(NUM_TRACK)],"//",[len(tracks_fillers[i]) for i in range(NUM_TRACK)] )
+
+    lunghezza = max([len(tracks[i]) for i in range(NUM_TRACK)])
+    #print (f"lunghezza: {lunghezza}")
+
+    for i in range(NUM_TRACK):
+        cortezza = len(tracks[i])
+        #print (f"cortezza: {cortezza}",tracks[i].frame_rate)
+
+        if ((lunghezza-cortezza) > SILENCE_MS and len(tracks_fillers[i]) >0):
+            fillernumber = int((lunghezza-cortezza) / len(tracks_fillers[i])) +1
+        else:
+            fillernumber = 0
+        #print(f"filler number: {fillernumber}")
+
+        if (fillernumber >= 2) :
+            tracks_fillers[i]=tracks_fillers[i] * fillernumber
+
+        if (lunghezza != len(tracks[i])):
+            if ((lunghezza - len(tracks[i])) <= SILENCE_MS or len(tracks_fillers[i]) == 0):
+                #print("put silence")
+                tracks[i] = tracks[i].append(AudioSegment.silent(duration = lunghezza - len(tracks[i]), frame_rate=44100), crossfade=0)
+                #print("LEN", len(tracks[i]))
+            else:
+                #print("put fillers")
+                tracks[i] = tracks[i].append(tracks_fillers[i][:lunghezza - len(tracks[i])], crossfade=0)
+                tracks[i] = tracks[i][:lunghezza].fade_out(duration=1000)
+
+    #print ([len(tracks[i]) for i in range(NUM_TRACK)])
+
+    #faketrack = AudioSegment.silent(duration = lunghezza, frame_rate=44100)
+    #tracks.append(faketrack)
+        
+    if (oggremap):
+
+        if (NUM_TRACK == 6):
+            remap=(0,2,1,4,3,5)
+        #elif (NUM_CHANNEL == 7):
+        #    remap=(0,2,1,6,5,3,4)
+        else:
+            remap=tuple((i) for i in range(NUM_TRACK))
+
+        multitrack = AudioSegment.from_mono_audiosegments(*[tracks[remap[i]][:lunghezza] for i in range(NUM_TRACK)])
+    else:
+        multitrack = AudioSegment.from_mono_audiosegments(*[tracks[i][:lunghezza] for i in range(NUM_TRACK)])
+    tags={}
+    if artist:
+        tags["artist"]=artist
+    if title:
+        tags["title"]=title
+
+    # fast and simple export bi pydub
+    #multitrack.export( multichannelname, format="wav")
+
+    # wav export by ffmpeg
+    #multitrack.export( multichannelname, codec="wav",parameters=["-acodec","pcm_s16le", "-ac", "6", "-ar", "16000"],format="wav")
+
+    # export to ogg
+    # this is a problem : export to ogg use  channel coupling for multichannel encoding.
+    # At present, the encoder will normally use channel coupling to further increase compression with stereo and 5.1
+    # inputs  using  lossy or lossless coupling.
+    # so the last track will be corrupted
+    # if is not enofh the channel order will be exchanged
+    #multitrack.export( multichannelname, format="ogg", tags=tags)
+
+    #export to flac
+    multitrack.export( multichannelname, format="flac", tags=tags)
+
+    try:
+        subprocess.check_call(["/usr/bin/rsgain","custom","-s","i",multichannelname])
+    except:
+        logging.error("Multitrack assemble playlist: error applying replaygain (rsgain)")
+            
+    
+    
+def main():
+
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+
+    playlists=["media/spots/er_mezzogiorno.m3u","media/spots/lo_mezzogiorno.m3u","media/spots/to_mezzogiorno.m3u"]
+    filler_playlists=["media/spots/er_mezzogiorno_filler.m3u","media/spots/er_mezzogiorno_filler.m3u","media/spots/er_mezzogiorno_filler.m3u"]
+    outname="output.wav"
+    assemble_playlists(playlists,filler_playlists,outname)
+
+if __name__ == '__main__':
+    main()  # (this code was run as script)
+    

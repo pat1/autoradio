@@ -12,15 +12,17 @@
 #    audio/webm: WebM open media format
 
 
-mymime_audio=("application/ogg","audio/mpeg", "audio/mp4", "audio/x-flac", "audio/x-wav") 
-mymime_ogg=("application/ogg",)
+mymime_audio=("audio/ogg","application/ogg","audio/mpeg", "audio/mp4", "audio/x-flac", "audio/flac", "audio/x-wav") 
+mymime_ogg=("audio/ogg","application/ogg",)
+mymime_oggflac=("audio/ogg","application/ogg","audio/x-flac", "audio/flac")
 
 webmime_audio = ("audio/mpeg","audio/mp3","audio/flac","video/ogg","audio/ogg","audio/oga", \
                      "audio/basic","audio/L24","audio/mp4","audio/vorbis","audio/x-ms-wma2",\
                      "audio/x-ms-wax","audio/vnd.rn-realaudio","audio/vnd.wave","audio/webm",\
                      "application/ogg","audio/wav")
+webmime_ogg = ("video/ogg","audio/oga","audio/ogg","audio/oga","audio/vorbis","application/ogg")
+webmime_oggflac = ("video/ogg","audio/oga","audio/ogg","audio/oga","audio/vorbis","application/ogg","audio/flac")
 
 websuffix_audio = (".mp3",".wav",".ogg",".oga",".flac",".Mp3",".Wav",".Ogg",".Oga",".Flac",".MP3",".WAV",".OGG",".OGA",".FLAC" )
-
-webmime_ogg = ("video/ogg","audio/oga","audio/ogg","audio/oga","audio/vorbis","application/ogg")
 websuffix_ogg = (".ogg",".oga",".Ogg",".Oga",".OGG")
+websuffix_oggflac = (".ogg",".oga",".Ogg",".Oga",".OGG",".flac",".Flac",".FLAC")

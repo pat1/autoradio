@@ -12,7 +12,7 @@ from autoradio.mpris2.utils import get_session
 from dbus.mainloop.glib import DBusGMainLoop
 import gi
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk
+from gi.repository import Gtk ,Gdk
 
 import os,stat,time,urllib.parse,urllib.request,urllib.parse,urllib.error,optparse,sys
 from gi.repository import GObject
@@ -20,6 +20,7 @@ import dbus
 import autoradio.settings
 import urllib.parse
 import traceback
+import time
 
 busaddress=autoradio.settings.busaddressplayer
 
@@ -36,53 +37,155 @@ def convert_ns(t):
 
 class Main(object):
 
+  def status_none(self):
+      # Impostare il CSS
+      style_provider = Gtk.CssProvider()
+      style_provider.load_from_data(b'''
+      #status_label {
+      font-weight: bold;
+      font-size: 3em;
+      background: #fff;
+      border-radius: 15px;
+      border-width: 2px;
+      border-style: outset;
+      }
+
+      button {
+      border-radius: 10px;
+      border-width: 2px;
+      border-style: outset;}
+
+      button:hover {
+      background: #fff;
+      border-color: #000; }
+      '''
+                                    )
+      # Applicare lo stile
+      Gtk.StyleContext.add_provider_for_screen(
+          Gdk.Screen.get_default(),
+          style_provider,
+          Gtk.STYLE_PROVIDER_PRIORITY_USER
+      )
+
+  def status_red(self):
+      # Impostare il CSS
+      style_provider = Gtk.CssProvider()
+      style_provider.load_from_data(b'''
+      #status_label { background: #f55; }
+      '''
+                                    )
+      # Applicare lo stile
+      Gtk.StyleContext.add_provider_for_screen(
+          Gdk.Screen.get_default(),
+          style_provider,
+          Gtk.STYLE_PROVIDER_PRIORITY_USER
+      )
+
+
+  def status_green(self):
+      # Impostare il CSS
+      style_provider = Gtk.CssProvider()
+      style_provider.load_from_data(b'''
+      #status_label { background: #afa; }
+      '''
+                                    )
+      # Applicare lo stile
+      Gtk.StyleContext.add_provider_for_screen(
+          Gdk.Screen.get_default(),
+          style_provider,
+          Gtk.STYLE_PROVIDER_PRIORITY_USER
+      )
+
+  def status_blue(self):
+      # Impostare il CSS
+      style_provider = Gtk.CssProvider()
+      style_provider.load_from_data(b'''
+      #status_label { background: #aaf; }
+      '''
+                                    )
+      # Applicare lo stile
+      Gtk.StyleContext.add_provider_for_screen(
+          Gdk.Screen.get_default(),
+          style_provider,
+          Gtk.STYLE_PROVIDER_PRIORITY_USER
+      )
+      
   def playhandler(self, *args, **kw):
       playbackstatus = args[1].get("PlaybackStatus",None)
       position = args[1].get("Position",None)
 
-      if playbackstatus is not None:
-          print("PlaybackStatus",playbackstatus)
-
-      if playbackstatus == "Stopped":
-          self.play_button.set_sensitive(True)
-          self.pause_button.set_sensitive(False)
-          self.stop_button.set_sensitive(False)
-      elif playbackstatus == "Playing":
-          self.play_button.set_sensitive(True)
-          self.pause_button.set_sensitive(True)
-          self.stop_button.set_sensitive(True)
-      elif playbackstatus == "Paused":
-          self.play_button.set_sensitive(True)
-          self.pause_button.set_sensitive(True)
-          self.stop_button.set_sensitive(True)
-
-
       if position is not None:
           try:
               id = self.play.Metadata.get(u'mpris:trackid',None)
+          except  dbus.exceptions.DBusException:
+              raise
           except:
               id = None
 
-          if id is not None:
+          if (id is not None):
               length=self.tl.GetTracksMetadata((id,))[0].get(u'mpris:length',None)
               if position <= length and length != 0:
                   frac = float(position)/float(length)
+                  text=str(convert_ns((float(length)-float(position))))
               else:
                   frac = 0
+                  text="0"
               if (self.oldid != id): self.update()
               self.oldid = id
 
           else:
               frac = 0
-          self.pbar.set_fraction(frac)
-
+              text= "0"
       else:
-          self.pbar.pulse()
-                    
+          frac = 0
+          text= "0"
+
+      self.progress_hscale.handler_block(self.handler_id)
+      self.progress_adj.set_value(frac)
+      self.progress_hscale.handler_unblock(self.handler_id)
+
+      #if playbackstatus is not None:
+      #    print("PlaybackStatus",playbackstatus)
+
+      if playbackstatus == "Stopped":
+          self.play_button.set_sensitive(True)
+          self.pause_button.set_sensitive(False)
+          self.stop_button.set_sensitive(False)
+          self.status_label.set_label("Stopped")
+          self.status_red()              
+
+      elif playbackstatus == "Playing":
+          self.play_button.set_sensitive(True)
+          self.pause_button.set_sensitive(True)
+          self.stop_button.set_sensitive(True)
+          self.status_label.set_label("Playing")
+          self.status_green()              
+
+      elif playbackstatus == "Paused":
+          self.play_button.set_sensitive(True)
+          self.pause_button.set_sensitive(True)
+          self.stop_button.set_sensitive(True)
+          self.status_label.set_label("Paused")
+          self.status_blue()              
+
+      self.remain_label.set_label(text)
+
+
+  def prog_scale_moved(self, event):
+      if ((self.scale_moved_time + 0.5) < time.time()):
+          pos = self.progress_hscale.get_value()
+          id = self.play.Metadata.get(u'mpris:trackid',"None")
+          length = self.play.Metadata.get(u'mpris:length',-1)
+          self.play.SetPosition( id, int(pos*length))
+      self.scale_moved_time=time.time()
+
+      
   def __init__(self):
 
     self.connected=False
     self.oldid=None
+    self.cursor_path=None
+    self.scale_moved_time=0
     
     #Connect to player
     DBusGMainLoop(set_as_default=True)
@@ -117,8 +220,8 @@ class Main(object):
                 self.tl = None
         else:
             self.tl = None
-    except  dbus.exceptions.DBusException:
-            self.tl = None
+    except:
+        self.tl = None
         
     self.play.PropertiesChanged = self.playhandler
 
@@ -128,11 +231,19 @@ class Main(object):
     #self.win = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
     self.win = Gtk.Window()
 
-    self.win.set_size_request(400, 600)
+    self.win.set_size_request(800, 800)
     self.win.set_title("AutoPlayer gui")
     self.win.connect("destroy", Gtk.main_quit)
+    self.win.connect("key-press-event", self.onKeyPress)      
+
     vbox = Gtk.VBox(homogeneous=False,spacing=0)
-    hbox = Gtk.HBox(homogeneous=False,spacing=0)
+    hbox_player = Gtk.HBox(homogeneous=False,spacing=0)
+
+    self.status_label = Gtk.Label()
+    self.status_label.set_single_line_mode(True)
+    self.status_label.set_label("Status")
+    self.status_label.set_name("status_label")        
+    self.status_none()              
     self.load_file = Gtk.FileChooserButton(homogeneous="Choose Audio File")
     self.play_button = Gtk.ToolButton( stock_id=Gtk.STOCK_MEDIA_PLAY)
     self.pause_button = Gtk.ToolButton( stock_id=Gtk.STOCK_MEDIA_PAUSE)
@@ -143,39 +254,53 @@ class Main(object):
     self.play_button.connect("clicked", self.on_play_clicked)
     self.pause_button.connect("clicked", self.on_pause_clicked)
     self.stop_button.connect("clicked", self.on_stop_clicked)
-    hbox.pack_start(self.play_button, False, True, 0)
-    hbox.pack_start(self.pause_button, False, True, 0)
-    hbox.pack_start(self.stop_button, False, True, 0)
-    hbox.pack_start(self.delete_button, False, False, 1)
+    self.stop_button.set_name("stop_button")
+
+    
+    hbox_player.pack_start(self.play_button, False, True, 0)
+    hbox_player.pack_start(self.pause_button, False, True, 0)
+    hbox_player.pack_start(self.stop_button, False, False, 0)
+    hbox_player.pack_start(self.delete_button, False, False, 1)
 #        # Create a centering alignment object
 #    align = Gtk.Alignment.new(0.5, 0.5, 0, 0)
 #    vbox.pack_start(align, False, False, 5)
 #    align.show()
 
 
+    self.remain_label = Gtk.Label()
+    self.remain_label.set_single_line_mode(True)
+    self.remain_label.set_label("0")
+    self.remain_label.set_name("remain_label")        
+    hbox_player.pack_start(self.remain_label, False, False, 1)
+
     # Create the ProgressBar
-    self.pbar = Gtk.ProgressBar()
-    self.pbar.set_inverted(False)
-    self.pbar.set_fraction(.5)
-    hbox.pack_start(self.pbar, True, True, 0)
-    self.pbar.show()
+    self.progress_adj = Gtk.Adjustment(value=0, lower=0, upper=1,
+                   step_increment=0.1,
+                   page_increment=0.1,
+                   page_size=0.1)
+    self.progress_hscale = Gtk.Scale(orientation=Gtk.Orientation.HORIZONTAL,
+                                     adjustment=self.progress_adj,
+                                     draw_value=False, digits=0)
+    self.handler_id = self.progress_hscale.connect("value-changed", self.prog_scale_moved)
+    hbox_player.pack_start(self.progress_hscale,True,True,8)
 
-    vbox.pack_start(self.load_file, False, True, 0)
-    vbox.pack_start(hbox, False, True, 0)
+    hbox_fs = Gtk.HBox(homogeneous=False,spacing=0)    
+    hbox_fs.pack_start(self.load_file, False, True, 0)    
+    hbox_fs.pack_start(self.status_label, True, True, 0)
 
-#    vbox.pack_start(self.pbar, True, True, 0)
-#    self.pbar.show()
-#    self.pbar.pulse()
+    vbox.pack_start(hbox_fs, False, False, 0)
+    vbox.pack_start(hbox_player, False, True, 0)
+
     #separator = Gtk.HSeparator()
     #vbox.pack_start(separator, False, False, 0)
 
-        # create the TreeView
+    # create the TreeView
     column_names = ['ID', 'Len', 'Artist', 'Title']
     cell_data_funcs = (self.get_id, self.Len, self.Artist,self.Title)
 
     self.treeview = Gtk.TreeView()
  
-        # create the TreeViewColumns to display the data
+    # create the TreeViewColumns to display the data
     self.tvcolumn = [None] * len(column_names)
     listmodel = self.make_list()
 
@@ -195,21 +320,43 @@ class Main(object):
     self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
     self.win.add(vbox)
     self.win.show_all()
-
     #GObject.timeout_add(6000,self.update)
 
+    self.playhandler(None,{"PlaybackStatus":self.play.PlaybackStatus})
+    
+
+  #define the callback for keypress events
+  def onKeyPress(self, treeview, event):
+      keyname = Gdk.keyval_name(event.keyval)
+      if (keyname == "BackSpace" or keyname == "KP_Insert" or keyname == "KP_0"):
+          self.play.Stop()
+          return True    # https://stackoverflow.com/questions/14441670/how-to-disable-all-default-keystrokes-on-gtk
+      elif (keyname == "Left" or keyname == "KP_Left" or keyname == "KP_4"):
+          self.play.Seek(-10000000)
+          return True    # https://stackoverflow.com/questions/14441670/how-to-disable-all-default-keystrokes-on-gtk
+      elif (keyname == "Right" or keyname == "KP_Right" or keyname == "KP_6"):
+          self.play.Seek(10000000)
+          return True    # this do not work in Range widget
+                         # https://stackoverflow.com/questions/14441670/how-to-disable-all-default-keystrokes-on-gtk
+      elif (keyname == "period" or keyname == "KP_Decimal" or keyname == "KP_Delete"):
+          self.play.PlayPause()
+          return True
+
   def update(self, *args, **kw):
-    print("update gtktree")
+    #print("update gtktree")
     try:
       new_model = self.make_list()
       self.treeview.set_model(new_model)
       while Gtk.events_pending():
           Gtk.main_iteration_do(True)
       #self.treeview.queue_draw()
+      if (self.cursor_path is not None):
+          self.treeview.set_cursor(self.cursor_path,None,False)
       return True
 
+    except  dbus.exceptions.DBusException:
+      raise
     except:
-      Gtk.main_quit()
       return False
 
   def on_delete_button_clicked(self, button):
@@ -227,7 +374,7 @@ class Main(object):
       for path in paths:
           iter = model.get_iter(path)
           # Remove the ListStore row referenced by iter
-          print("remove: ",model.get_value(iter, 0))
+          #print("remove: ",model.get_value(iter, 0))
           self.tl.RemoveTrack(model.get_value(iter, 0))
           #model.remove(iter)
 
@@ -236,24 +383,50 @@ class Main(object):
     multimedia_file = self.load_file.get_filename()
     url=urllib.parse.urlsplit(multimedia_file)
     uri=urllib.parse.urljoin("file://",urllib.parse.unquote(url.path))
+    path,column=self.treeview.get_cursor()
+    if (path is None):
+        self.tl.AddTrack(uri, self.play.Metadata.get(u'mpris:trackid',""), False)
+    else:
+        model = self.treeview.get_model()
+        iter = model.get_iter(path)
+        #print("insert at: ",model.get_value(iter, 0))
+        trackid=model.get_value(iter, 0)
+        if (trackid is None):
+            self.tl.AddTrack(uri, self.play.Metadata.get(u'mpris:trackid',""), False)
+        else:
+            self.tl.AddTrack(uri, trackid, False)
     new_model = self.make_list()
     self.treeview.set_model(new_model)
-    self.tl.AddTrack(uri, self.play.Metadata.get(u'mpris:trackid',""), False)
 
   def on_play_clicked(self, widget):
-      self.play.Play()
+      try:
+          path,column=self.treeview.get_cursor()
+          self.cursor_path=path
+          if (path is None):
+              self.play.Play()
+          else:
+              model=self.treeview.get_model()
+              iter = model.get_iter(path)
+              #print("goto: ",model.get_value(iter, 0))
+              self.tl.GoTo(model.get_value(iter, 0))
+              new_model = self.make_list()
+              self.treeview.set_model(new_model)
+      except:
+          Gtk.main_quit()
+          
   def on_pause_clicked(self, widget):
     self.play.PlayPause()
   def on_stop_clicked(self, widget):
     self.play.Stop()
 
   def open_file(self, treeview, path, column):
-        model = treeview.get_model()
-        iter = model.get_iter(path)
-        print("goto: ",model.get_value(iter, 0))
-        self.tl.GoTo(model.get_value(iter, 0))
-        new_model = self.make_list()
-        self.treeview.set_model(new_model)
+    model = treeview.get_model()
+    iter = model.get_iter(path)
+    self.cursor_path=path
+    #print("goto: ",model.get_value(iter, 0))
+    self.tl.GoTo(model.get_value(iter, 0))
+    new_model = self.make_list()
+    self.treeview.set_model(new_model)
 
   def make_list(self):
     listmodel = Gtk.ListStore(object)
@@ -265,9 +438,8 @@ class Main(object):
                 for track in  self.tl.GetTracksMetadata( self.tl.Tracks):
                     listmodel.append([track.get(u'mpris:trackid',"")])
     except:
-        print(traceback.format_exc())
         print("Error getting player playlist")
-        Gtk.main_quit()
+        raise
 
     return listmodel
 
@@ -280,21 +452,35 @@ class Main(object):
         return
     
   def Len(self, column, cell, model, iter, data=None):
-    track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
-    cell.set_property('text', convert_ns(track[0].get(u'mpris:length',"")))
-    return
+      try:
+          track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
+          cell.set_property('text', convert_ns(track[0].get(u'mpris:length',0)))
+          if (int(track[0].get(u'autoradio:numberOfTracks',0)) > 2):
+              cell.set_property('cell-background',"orange")
+          else:
+              cell.set_property('cell-background',"lightgreen")              
+          return
+      except:
+          Gtk.main_quit()
 
   def Artist(self, column, cell, model, iter, data=None):
-    track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
-    dir=os.path.dirname(urllib.parse.urlparse(track[0].get(u'xesam:url',"")).path).split('/')[-1]
-    cell.set_property('text', track[0].get(u'xesam:artist', dir))
-    return
+      try:
+          track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
+          dir=os.path.dirname(urllib.parse.urlparse(track[0].get(u'xesam:url',"")).path).split('/')[-1]
+          cell.set_property('text', track[0].get(u'xesam:artist', dir))
+          return
+      except:
+          Gtk.main_quit()
 
   def Title(self, column, cell, model, iter, data=None):
-    track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
-    file=os.path.basename(urllib.parse.urlparse(track[0].get(u'xesam:url',"")).path)
-    cell.set_property('text', track[0].get(u'xesam:title',file))
-    return
+      try:
+          track=self.tl.GetTracksMetadata((model.get_value(iter, 0),))
+          file=os.path.basename(urllib.parse.urlparse(track[0].get(u'xesam:url',"")).path)
+          cell.set_property('text', track[0].get(u'xesam:title',file))
+          return
+      except:
+          Gtk.main_quit()
+          
       
 if __name__ == "__main__":
 
@@ -315,4 +501,9 @@ if __name__ == "__main__":
     except KeyboardInterrupt :
         # Clean up
         print('Keyboard Exiting')
+        Gtk.main_quit()
+
+    except :
+        print(traceback.format_exc())
+        # Clean up
         Gtk.main_quit()

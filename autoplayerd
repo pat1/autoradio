@@ -53,7 +53,7 @@ def main ():
         logging.info('try to use old gstreamer0')
         from autoradio.autoplayer import player_gstreamer0 as player
 
-    player.main(autoradio.settings.busaddressplayer,autoradio.settings.audiosinkplayer)
+    player.main(autoradio.settings.busaddressplayer,autoradio.settings.audiosinkplayer,autoradio.settings.player_multi_channel)
 
 
 if __name__ == '__main__':

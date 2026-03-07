@@ -29,7 +29,6 @@ configspec['django']['STATIC_ROOT'] = "string(default='%s/static/')" % os.getcwd
 configspec['django']['STATIC_URL']="string(default='/static/')"
 configspec['django']['SERVE_STATIC']="boolean(default=True)"
 
-
 configspec['autoradioweb']={}
 
 configspec['autoradioweb']['logfile']  = "string(default='/tmp/autoradioweb.log')"
@@ -59,8 +58,9 @@ configspec['autoplayer']['errfile']  = "string(default='/tmp/autoplayer.err')"
 configspec['autoplayer']['lockfile'] = "string(default='/tmp/autoplayer.lock')"
 configspec['autoplayer']['user']     = "string(default=None)"
 configspec['autoplayer']['group']    = "string(default=None)"
-configspec['autoplayer']['busaddress']    = "string(default=None)"
+configspec['autoplayer']['busaddress']   = "string(default=None)"
 configspec['autoplayer']['audiosink']    = "string(default=None)"
+configspec['autoplayer']['multi_channel']="boolean(default=False)"
 
 configspec['autoradiodbus']={}
 
@@ -89,9 +89,7 @@ configspec['autoradiometatrace']['user']     = "string(default=None)"
 configspec['autoradiometatrace']['group']    = "string(default=None)"
 configspec['autoradiometatrace']['filemetatrace']    = "string(default='metatrace.log')"
 configspec['autoradiometatrace']['icecastapiurl']    = "string(default='https://username:password@server:port/admin/metadata')"
-configspec['autoradiometatrace']['icecastmount']     = "string(default='/stream.ogg')"
-configspec['autoradiometatrace']['icecastapiurl_2']  = "string(default=None)"
-configspec['autoradiometatrace']['icecastmount_2']   = "string(default=None)"
+configspec['autoradiometatrace']['icecastmount']     = "string_list(default=None)"
 
 config    = ConfigObj ('/etc/autoradio/autoradio-site.cfg',file_error=False,configspec=configspec)
 
@@ -167,6 +165,7 @@ userplayer                 = config['autoplayer']['user']
 groupplayer                = config['autoplayer']['group']
 busaddressplayer           = config['autoplayer']['busaddress']
 audiosinkplayer            = config['autoplayer']['audiosink']
+player_multi_channel       = config['autoplayer']['multi_channel']
 
 # section autoradiodbus
 logfiledbus              = config['autoradiodbus']['logfile']
@@ -192,8 +191,6 @@ groupautoradiometatrace                = config['autoradiometatrace']['group']
 fileautoradiometatrace                 = config['autoradiometatrace']['filemetatrace']
 icecastapiurlautoradiometatrace        = config['autoradiometatrace']['icecastapiurl']
 icecastmountautoradiometatrace         = config['autoradiometatrace']['icecastmount']
-icecastapiurlautoradiometatrace_2      = config['autoradiometatrace']['icecastapiurl_2']
-icecastmountautoradiometatrace_2       = config['autoradiometatrace']['icecastmount_2']
 
 if DATABASE_ENGINE == "mysql":
     # Recommended for MySQL. See http://code.djangoproject.com/ticket/13906 

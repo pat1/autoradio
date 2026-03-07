@@ -1,6 +1,6 @@
 Summary: radio automation software
 Name: autoradio
-Version: 3.8.4
+Version: 4.0.17
 Release: 1
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
@@ -13,14 +13,19 @@ BuildArch: noarch
 Vendor: Paolo Patruno <p.patruno@iperbole.bologna.it>
 Url: https://github.com/pat1/autoradio
 
-BuildRequires: python3-devel, python3-setuptools, gettext, python3-configobj, python3-file-magic , help2man
+BuildRequires: python3-devel, python3-setuptools, gettext
+BuildRequires: python3-configobj, python3-file-magic , help2man
+BuildRequires: python3-mutagen
+BuildRequires:  desktop-file-utils
 %if 0%{?fedora}
 BuildRequires: python3-django
 %else
 BuildRequires: python3-django3
 %endif
 
-Requires:python3-mutagen >= 1.17, python3-configobj, python3-cherrypy, python3-reportlab >= 2.0,  python3-docutils, sqlite >= 3.6.22, speex-tools, python3-file-magic, python3-pillow
+Requires:python3-mutagen >= 1.17, python3-configobj, python3-cherrypy, python3-reportlab >= 2.0,  python3-docutils, sqlite >= 3.6.22, speex-tools, python3-file-magic, python3-pillow, pydub >= 0.25.2
+Requires:rsgain,sox
+
 %if 0%{?fedora}
 Requires: python3-django
 %else
@@ -79,6 +84,19 @@ mkdir -p %{buildroot}%{_sysconfdir}/tmpfiles.d
 %{__install} -m 0644 %{name}-tmpfiles.conf %{buildroot}%{_sysconfdir}/tmpfiles.d/%{name}.conf
 
 
+%{__install} -d %{buildroot}%{_datadir}/pixmaps/
+%{__install} logo/autochannel_assembler.png %{buildroot}%{_datadir}/pixmaps/
+%{__install} logo/autoplayergui.png %{buildroot}%{_datadir}/pixmaps/
+desktop-file-install \
+    --add-category="AudioVideo" \
+    --dir=%{buildroot}%{_datadir}/applications \
+    desktop/autochannel_assembler.desktop
+desktop-file-install \
+    --add-category="AudioVideo" \
+    --dir=%{buildroot}%{_datadir}/applications \
+    desktop/autoplayergui.desktop
+
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -96,6 +114,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/%{name}.conf
 
+%{_datadir}/applications/autochannel_assembler.desktop
+%{_datadir}/pixmaps/autochannel_assembler.png
+%{_datadir}/applications/autoplayergui.desktop
+%{_datadir}/pixmaps/autoplayergui.png
+
 #%%{_datadir}/autoradio/*
 %{_bindir}/autoradiod
 %{_bindir}/autoradioweb
@@ -105,13 +128,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/autoradiodbusd
 %{_bindir}/jackdaemon
 %{_bindir}/autometatraced
+%{_bindir}/autochannel_assembler
 
 %attr(-,autoradio,autoradio) %dir %{_datadir}/autoradio
 %attr(-,autoradio,autoradio) %{_datadir}/%{name}/*
 
 %attr(-,autoradio,autoradio) %dir %{_var}/log/%{name}/
 %attr(-,autoradio,autoradio) %dir %{_var}/run/%{name}/
-
 
 %pre
 

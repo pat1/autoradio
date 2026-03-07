@@ -4,6 +4,11 @@
 
 import os, sys
 os.environ['DJANGO_SETTINGS_MODULE'] = 'autoradio.settings'
+
+# uncomment for local test
+#import django
+#django.setup()
+
 from django.conf import settings
 
 import logging
@@ -14,22 +19,125 @@ from .spots.models import Configure
 from .spots.models import Spot
 from .spots.models import Fascia
 from .spots.models import Giorno
+from .spots.models import Channel
 import time
+from .multitrack import assemble_playlists
 
 #used to get metadata from audio files
 import mutagen
 import tempfile,shutil
+import calendar
+
+def assemble_playlist_channel(fascia, playlistdir,multichannel=True):
+
+    '''
+    assemble playlists for one fascia all channel
+    '''
+    multichannelname=os.path.join(os.path.join(settings.MEDIA_ROOT, playlistdir),fascia.name+".flac")
+    playlistpath=os.path.join(settings.MEDIA_ROOT, playlistdir)
+    filler_playlists=[]
+    playlists=[]
+
+    for channel in Channel.objects.filter(active=True):
+                
+        name=channel.tag+"_"+fascia.name+"_filler.m3u"
+        playlistname =os.path.join(playlistpath,name)
+        filler_playlists.append(playlistname)
+            
+        name=channel.tag+"_"+fascia.name+".m3u"
+        playlistname =os.path.join(playlistpath,name)
+        playlists.append(playlistname)
+
+        if (not multichannel):
+            break                       # if fascia is not multichannel terminate on first channel
+        
+    assemble_playlists(playlists, filler_playlists, multichannelname,artist="SPOT",title=fascia.name)
+            
+
+class gest_filler(object):
+
+    def __init__ (self,now,fascia,playlistdir):
+        """init of filler application:
+        now : currenti datetime
+        minelab: minutes to elaborate 
+        execute the right data retrival to get the schedued filler"""
+
+        self.now=now
+        ora=self.now.time()
+        self.oggi=self.now.date()
+        self.giorno=calendar.day_name[self.now.weekday()]
+
+        self.fascia=fascia
+        self.playlistpath=os.path.join(settings.MEDIA_ROOT, playlistdir)
+        
+    def count_fillers(self,channel_tag=None):
+
+        return self.fascia.filler_set.filter(Q(channels__tag__exact = channel_tag),\
+                                    Q(active__exact = True),\
+                                    Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
+                                    Q(end_date__gte=self.now) | Q(end_date__isnull=True),\
+                                    Q(giorni__name__exact=self.giorno)).count()
+
+        
+    def get_fillers(self,channel_tag=None):
+
+        fillers=self.fascia.filler_set.filter(Q(channels__tag__exact = channel_tag),\
+                                    Q(active__exact = True),\
+                                    Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
+                                    Q(end_date__gte=self.now) | Q(end_date__isnull=True),\
+                                    Q(giorni__name__exact=self.giorno)).order_by('priorita')
+
+        for filler in fillers:
+            logging.debug('FILLER: filler: %s',filler)
+            yield filler
 
 
+            
+    def make_playlist_fascia(self):
+        for channel in Channel.objects.filter(active=True):
+            self.make_playlists(channel_tag=channel.tag)
+            
+            
+    def make_playlists(self,channel_tag=None):
+
+        fd,tmpfile=tempfile.mkstemp()
+        f=os.fdopen(fd,"w")
+
+        for filler in self.get_fillers(channel_tag=channel_tag):
+            filename=filler.file.path
+            logging.debug( "FILLER: include %s", filename)
+
+            f.write(filename)
+            f.write("\n")
+
+        f.close()
+        os.chmod(tmpfile,0o644)
+
+        name=channel_tag+"_"+self.fascia.name+"_filler.m3u"
+        playlistname =os.path.join(self.playlistpath,name)
+        
+        while True:
+            try:
+                shutil.move(tmpfile,playlistname)
+                logging.debug("FILLER: moved the playlist %s in %s",tmpfile,playlistname) 
+                break
+            except:
+                logging.warning("FILLER: error moving the playlist %s in %s",tmpfile,playlistname) 
+                ntry +=1
+                if ntry > 5:
+                    logging.error("FILLER: cannot move the playlist %s in %s",tmpfile,playlistname)
+                    break
+                time.sleep(1)
+
+
+            
 class gest_spot(object):
 
-    def __init__ (self,now,minelab,playlistdir):
+    def __init__ (self,now,minelab,playlistdir,channel_tag=None):
         """init of spot application:
         now : currenti datetime
         minelab: minutes to elaborate 
         execute the right data retrival to get the schedued spots"""
-
-        import calendar
 
         playlistpath=os.path.join(settings.MEDIA_ROOT, playlistdir)
 
@@ -47,6 +155,8 @@ class gest_spot(object):
         self.oggi=self.now.date()
         self.giorno=calendar.day_name[self.now.weekday()]
 
+        self.channel_tag=channel_tag
+        
         datesched_min=self.now - datetime.timedelta( seconds=60*self.minelab)
         datesched_max=self.now + datetime.timedelta( milliseconds=60000*self.minelab-1) # 1 millisec tollerance
         logging.debug( "SPOT: elaborate from %s to %s",datesched_min, datesched_max)
@@ -79,33 +189,35 @@ class gest_spot(object):
 
         
     def get_fasce(self,genfile=True):
-
         for fascia in self.fasce:
-
-            self.fascia=fascia
-
-            # count the spots
-            self.ar_spots_in_fascia=self.count_spots()
-            self.ar_filename,self.ar_url=self.get_fascia_playlist_media(genfile)
-
-            self.ar_scheduledatetime=datetime.datetime.combine(self.oggi, fascia.emission_time,tzinfo=None)
-
-            # if we are around midnight we have to check the correct date (today, iesterday, tomorrow)
-            datesched_min=self.now - datetime.timedelta( seconds=60*self.minelab)
-            datesched_max=self.now + datetime.timedelta( seconds=60*self.minelab)
-            if not (datesched_min <= self.ar_scheduledatetime and  self.ar_scheduledatetime <= datesched_max  ):
-                if self.now.time() < datetime.time(12):
-                    self.ar_scheduledatetime=datetime.datetime.combine(datesched_min.date(), fascia.emission_time,tzinfo=None)
-                else:
-                    self.ar_scheduledatetime=datetime.datetime.combine(datesched_max.date(), fascia.emission_time,tzinfo=None)
-
-            self.ar_emission_done=fascia.emission_done
+            self.get_fascia(fascia,genfile=genfile)
             yield fascia
+        
+    def get_fascia(self,fascia,genfile=True):
+        self.fascia=fascia
+
+        # count the spots
+        self.ar_spots_in_fascia=self.count_spots()
+        self.ar_filename,self.ar_url=self.get_fascia_playlist_media(genfile)
+
+        self.ar_scheduledatetime=datetime.datetime.combine(self.oggi, fascia.emission_time,tzinfo=None)
+
+        # if we are around midnight we have to check the correct date (today, iesterday, tomorrow)
+        datesched_min=self.now - datetime.timedelta( seconds=60*self.minelab)
+        datesched_max=self.now + datetime.timedelta( seconds=60*self.minelab)
+        if not (datesched_min <= self.ar_scheduledatetime and  self.ar_scheduledatetime <= datesched_max  ):
+            if self.now.time() < datetime.time(12):
+                self.ar_scheduledatetime=datetime.datetime.combine(datesched_min.date(), fascia.emission_time,tzinfo=None)
+            else:
+                self.ar_scheduledatetime=datetime.datetime.combine(datesched_max.date(), fascia.emission_time,tzinfo=None)
+
+        self.ar_emission_done=fascia.emission_done
 
 
     def get_prologhi(self):
 
-        prologhi= self.fascia.spot_set.filter(Q(active__exact = True),\
+        prologhi= self.fascia.spot_set.filter(Q(channels__tag__exact = self.channel_tag) | Q(channels__tag__exact = None),\
+                                    Q(active__exact = True),\
                                     Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
                                     Q(end_date__gte=self.now) | Q(end_date__isnull=True),\
                                     Q(giorni__name__exact=self.giorno) , Q(prologo__exact=True)).order_by('priorita')
@@ -118,7 +230,8 @@ class gest_spot(object):
 
     def count_spots(self):
 
-        return self.fascia.spot_set.filter(Q(active__exact = True),\
+        return self.fascia.spot_set.filter(Q(channels__tag__exact = self.channel_tag) | Q(channels__tag__exact = None),\
+                                    Q(active__exact = True),\
                                     Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
                                     Q(end_date__gte=self.now) | Q(end_date__isnull=True),\
                                     Q(giorni__name__exact=self.giorno)).exclude(prologo__exact=True)\
@@ -128,7 +241,8 @@ class gest_spot(object):
 
     def get_spots(self):
 
-        spots=self.fascia.spot_set.filter(Q(active__exact = True),\
+        spots=self.fascia.spot_set.filter(Q(channels__tag__exact = self.channel_tag) | Q(channels__tag__exact = None),\
+                                    Q(active__exact = True),\
                                     Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
                                     Q(end_date__gte=self.now) | Q(end_date__isnull=True),\
                                     Q(giorni__name__exact=self.giorno)).exclude(prologo__exact=True)\
@@ -142,7 +256,8 @@ class gest_spot(object):
 
     def get_epiloghi(self):
 
-        epiloghi=self.fascia.spot_set.filter(Q(active__exact = True),\
+        epiloghi=self.fascia.spot_set.filter(Q(channels__tag__exact = self.channel_tag) | Q(channels__tag__exact = None),\
+                                    Q(active__exact = True),\
                                     Q(start_date__lte=self.now) | Q(start_date__isnull=True),\
                                     Q(end_date__gte=self.now) | Q(end_date__isnull=True),\
                                     Q(giorni__name__exact=self.giorno) , Q(epilogo__exact=True)).order_by('priorita')
@@ -169,7 +284,11 @@ class gest_spot(object):
 
     def get_fascia_playlist_media(self,genfile=True):
 
-        name=self.fascia.name+".m3u"
+        if (self.channel_tag is None):
+            name=self.fascia.name+".m3u"
+        else:
+            name=self.channel_tag+"_"+self.fascia.name+".m3u"
+            
         url=os.path.join(os.path.join(settings.MEDIA_URL, playlistdir),name)
         playlistname =os.path.join(self.playlistpath,name)
 
@@ -243,26 +362,108 @@ class gest_spot(object):
 
         return playlistname,url
 
+class gest_spot_channel(object):
 
+    def __init__ (self,now,minelab,playlistdir):
+
+        self.now=now
+        self.minelab=minelab
+        self.playlistdir=playlistdir
+        self.playlistpath=os.path.join(settings.MEDIA_ROOT, playlistdir)
+        
+    def get_fasce(self,genfile=True):
+
+        spots=gest_spot(self.now,self.minelab,self.playlistdir)
+        for fascia in spots.get_fasce(genfile=False):        
+            self.get_fascia(fascia,genfile=genfile)
+            yield fascia
+            
+    def get_fascia(self,fascia,genfile=True):
+
+        self.spotlist=[]
+        self.ar_spots_in_fascia=0
+        self.ar_length=0
+        self.ar_url=None
+        self.ar_filename=None
+        self.ar_scheduledatetime=None
+        self.ar_emission_done=None
+              
+        for channel in Channel.objects.filter(active=True):
+
+            spots_channel=gest_spot(self.now,self.minelab,self.playlistdir,channel.tag)
+            spots_channel.get_fascia(fascia,genfile=genfile)
+
+            for spot in spots_channel.get_fascia_spots():
+                self.spotlist.append(spot)
+            self.ar_scheduledatetime=spots_channel.ar_scheduledatetime
+            self.ar_url=os.path.join(os.path.join(settings.MEDIA_URL, self.playlistdir),fascia.name+".flac")
+            self.ar_filename=os.path.join(os.path.join(settings.MEDIA_ROOT, self.playlistdir),fascia.name+".flac")
+            self.ar_length=max(self.ar_length,spots_channel.ar_length)
+            self.ar_emission_done=spots_channel.ar_emission_done
+            self.ar_spots_in_fascia+=spots_channel.ar_spots_in_fascia
+            
+    def get_fascia_spots(self):
+
+        for spot in self.spotlist:
+            yield spot
+
+
+    def assemble_playlists_channel(self):
+        '''
+        assemble playlists for all fascias and channels
+        '''
+        spots=gest_spot(self.now,self.minelab,self.playlistdir)
+        playlists=[]
+        filler_playlists=[]
+        for fascia in spots.get_fasce(genfile=False):
+            assemble_playlist_channel(fascia,playlistdir)
+
+            
 def main():
 
     logging.basicConfig(level=logging.DEBUG,)
     now=datetime.datetime.now()
 
+    print("working without channels")
     spots=gest_spot(now,minelab,"/tmp/")
-
+    
     for fascia in spots.get_fasce(genfile=True):
-        #print "elaborate fascia >>",fascia
+        print ("elaborate fascia >>",fascia)
 
-        for spot in spots.get_fascia_spots():
-            pass
-            #print "fascia and spot ->",spots.fascia,spot
-
-        print(spots.ar_filename)
         print(spots.ar_scheduledatetime)
+        print(spots.ar_url)
+        print(spots.ar_filename)
         print(spots.ar_length)
+        print(spots.ar_emission_done)
         print(spots.ar_spots_in_fascia)
 
+        for spot in spots.get_fascia_spots():
+            print ("fascia and spot ->",spots.fascia,spot)
 
+
+    print("working with channel")
+
+
+    spots=gest_spot_channel(now,minelab,"/tmp/")
+
+    for fascia in spots.get_fasce(genfile=True):
+        print ("elaborate fascia >>",fascia)
+
+        print(spots.ar_scheduledatetime)
+        print(spots.ar_url)
+        print(spots.ar_filename)
+        print(spots.ar_length)
+        print(spots.ar_emission_done)
+        print(spots.ar_spots_in_fascia)
+        
+        for spot in spots.get_fascia_spots():
+            print ("fascia and spot ->",fascia,spot)
+
+        filler=gest_filler(now,fascia,playlistdir)
+        filler.make_playlist_fascia()
+
+        assemble_playlist_channel(fascia, playlistdir)
+
+        
 if __name__ == '__main__':
     main()  # (this code was run as script)

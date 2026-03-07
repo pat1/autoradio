@@ -44,7 +44,8 @@ class Metadata_Map(dict):
     URL = 'xesam:url'
     USE_COUNT = 'xesam:useCount'
     USER_RATING = 'xesam:userRating'
-
+    NUMBER_OF_TRACKS = 'autoradio:numberOfTracks'
+    
     def __init__(self, metadata):
         super(Metadata_Map, self).__init__(**metadata)
 

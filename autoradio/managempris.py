@@ -6,6 +6,7 @@ import dbus
 from . import autompris
 from . import autompris2
 from datetime import *
+from time import sleep
 from threading import *
 import os
 from . import autoradio_config
@@ -151,7 +152,7 @@ def ManagePlayer (player,session,schedule):
 
       finally:
          #signal.alarm(0)
-         time.sleep(10)   # get time to wait the player dbus to be in sync with player status 
+         sleep(10)   # get time to wait the player dbus to be in sync with player status 
          lock.release()
 
          # here we have a problem ... sometime the player is not ready when the file is deleted !
@@ -227,8 +228,7 @@ def player_watchdog(player,session):
                except:
                   logging.error("player_watchdog: error launching "+player+"2")
 
-      import time
-      time.sleep(5)
+      sleep(5)
       logging.info("player_watchdog: player executed")
 
       try:

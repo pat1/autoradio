@@ -13,6 +13,8 @@ import os
 #from django.forms.extras.widgets import SelectDateWidget
 from .widgets import MySelectDateWidget
 from django.utils.translation import gettext_lazy
+from django.forms import ModelChoiceField
+from autoradio.spots.models import Channel
 
 #----------------------------------------------------
 # section for programs
@@ -161,6 +163,9 @@ class ExtremeForm(forms.Form):
     datetime_start = forms.DateTimeField(required=True,initial=initial_start,widget=MySelectDateWidget(),label=gettext_lazy("Starting date & time"),help_text=gettext_lazy("Elaborate palimpsest starting from this date and time"))
     datetime_end = forms.DateTimeField(required=True,initial=initial_end,widget=MySelectDateWidget(),label=gettext_lazy("Ending date & time"),help_text=gettext_lazy("Elaborate palimpsest ending to this date and time"))
 
+    if (autoradio.autoradio_config.multi_channel):
+        channel = forms.ModelChoiceField(queryset=Channel.objects.filter(active=True),to_field_name="tag")
+    
 def programsbook(request):
 
     from reportlab.lib.styles import getSampleStyleSheet
@@ -187,7 +192,11 @@ def programsbook(request):
 
             datetime_start=form.cleaned_data['datetime_start']
             datetime_end=form.cleaned_data['datetime_end']
-
+            if (autoradio.autoradio_config.multi_channel):
+                channel_tag=form.cleaned_data['channel'].tag
+            else:
+                channel_tag=None
+            
             datetime_start = datetime.combine(datetime_start.date(),time(00),tzinfo=None)
             datetime_end = datetime.combine(datetime_end.date(),time(23,59),tzinfo=None)
 
@@ -244,7 +253,7 @@ def programsbook(request):
 
             pali=autoradio.autoradio_core.palimpsests([])
 
-            for title,pdatetime_start,pdatetime_end,code,type,subtype,production,note in pali.get_palimpsest(datetime_start,datetime_end):
+            for title,pdatetime_start,pdatetime_end,code,type,subtype,production,note in pali.get_palimpsest(datetime_start,datetime_end,channel_tag):
 
                 # if you want extensive text comment this line
                 type,subtype=decode(code)

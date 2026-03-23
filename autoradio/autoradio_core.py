@@ -612,7 +612,7 @@ class dates(object):
 class palimpsests(list):
 
 
-    def get_palimpsest(self,datetime_start,datetime_end):
+    def get_palimpsest(self,datetime_start,datetime_end,channel_tag=None):
 
         step=timedelta(minutes=minelab*2) 
 
@@ -709,7 +709,11 @@ class palimpsests(list):
         for datetimeelab in dates(datetime_start, datetime_end, step):
 
             #print datetimeelab,minelab
-            spots=gest_spot(datetimeelab,minelab,playlistdir)
+            if (multi_channel):
+                spots=gest_spot(datetimeelab,minelab,playlistdir,channel_tag)
+            #    spots=gest_spot_channel(datetimeelab,minelab,playlistdir)
+            else:
+                spots=gest_spot(datetimeelab,minelab,playlistdir)
 
             for fascia in spots.get_fasce(genfile=False):
 

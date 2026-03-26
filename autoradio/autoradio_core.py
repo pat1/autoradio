@@ -722,7 +722,7 @@ class palimpsests(list):
                 pdatetime_start=spots.ar_scheduledatetime
                 number=spots.ar_spots_in_fascia
                 #title=str(fascia)
-                title="Pubblicità"
+                title="Pubblicità "+fascia.name
                 pdatetime_end=pdatetime_start+timedelta(seconds=length)
                 type="5"
                 subtype="5a"

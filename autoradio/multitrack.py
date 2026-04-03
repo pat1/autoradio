@@ -79,7 +79,7 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,art
                 #print("LEN", len(tracks[i]))
             else:
                 #print("put fillers")
-                tracks[i] = tracks[i].append(tracks_fillers[i][:lunghezza - len(tracks[i])], crossfade=0)
+                tracks[i] = tracks[i].append(tracks_fillers[i], crossfade=0)
                 tracks[i] = tracks[i][:lunghezza].fade_out(duration=1000)
 
     #print ([len(tracks[i]) for i in range(NUM_TRACK)])
@@ -104,7 +104,9 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,art
         tags["artist"]=artist
     if title:
         tags["title"]=title
-
+        
+    tags["COMPANDER"]="done"  # disable compander by sox on upload as enclosure that is a problem in ogg for channel coupling (sox ever enabled)
+        
     # fast and simple export bi pydub
     #multitrack.export( multichannelname, format="wav")
 

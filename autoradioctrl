@@ -31,13 +31,21 @@ def initdb(cwd):
     p = optparse.OptionParser(usage="usage: %prog [options]",version="%prog "+_version_)
     p.add_option("--syncdb", action="store_true",dest="syncdb", help="initialize autoradio DB (default %default)", default=False)
     p.add_option("--changeuser", action="store_true",dest="changeuser", help="change user to the user in config file (default %default)", default=False)
+    p.add_option("--purgeenclosure", action="store_true",dest="purgeenclosure", help="remove orphaned files from enclosure(default %default) see --realrun", default=False)
+    p.add_option("--purgespot", action="store_true",dest="purgespot", help="remove orphaned files from spot (default %default) see --realrun", default=False)
+    p.add_option("--purgejingle", action="store_true",dest="purgejingle", help="remove orphaned files from jingle (default %default) see --realrun", default=False)
+    p.add_option("--realrun", action="store_true",dest="realrun", help="triggers the actual execution of the command that deletes the files without further confirmation (default %default)", default=False)
     (options, args) = p.parse_args()
 
 
     import django
     django.setup()
 
-    if (not options.syncdb):
+    from autoradio.programs.models import Enclosure
+    from autoradio.spots.models import Spot
+    from autoradio.jingles.models import Jingle
+    
+    if (not options.syncdb and not options.purgeenclosure and not options.purgespot and not options.purgejingle):
         p.print_help()
 
 
@@ -50,7 +58,72 @@ def initdb(cwd):
         #management.call_command("migrate",no_initial_data=True )
         management.call_command("migrate" )
 
+    if (options.purgeenclosure):
+        import os
+        dir=autoradio.settings.MEDIA_ROOT+"podcasts/episodes/files/"
+        nremoved=0
+        files = os.listdir(dir)
+        for file in files:
+            file=dir+file
+            #print ("cerca:",file)
+            found = False
+            for enclosure in Enclosure.objects.all():
+                #print(enclosure.file.path)
+                if file==enclosure.file.path:
+                    found=True
+            #print("found", found)
+            if not found:
+                print ("remove: ",file)
+                nremoved+=1
+                if options.realrun: os.remove(file)
+            else:
+                print ("OK    : ",file)
+        print("orphaned files:",nremoved)
 
+    if (options.purgespot):
+        import os
+        dir=autoradio.settings.MEDIA_ROOT+"spots/"
+        nremoved=0
+        files = os.listdir(dir)
+        for file in files:
+            file=dir+file
+            #print ("cerca:",file)
+            found = False
+            for spot in Spot.objects.all():
+                #print(spot.file.path)
+                if file==spot.file.path:
+                    found=True
+            #print("found", found)
+            if not found:
+                print ("remove: ",file)
+                nremoved+=1
+                if options.realrun: os.remove(file)
+            else:
+                print ("OK    : ",file)
+        print("orphaned files:",nremoved)
+
+    if (options.purgejingle):
+        import os
+        dir=autoradio.settings.MEDIA_ROOT+"jingles/"
+        nremoved=0
+        files = os.listdir(dir)
+        for file in files:
+            file=dir+file
+            #print ("cerca:",file)
+            found = False
+            for jingle in Jingle.objects.all():
+                #print(jingle.file.path)
+                if file==jingle.file.path:
+                    found=True
+            #print("found", found)
+            if not found:
+                print ("remove: ",file)
+                nremoved+=1
+                if options.realrun: os.remove(file)
+            else:
+                print ("OK    : ",file)
+        print("orphaned files:",nremoved)
+        
 if __name__ == '__main__':
 
     cwd=os.getcwd()

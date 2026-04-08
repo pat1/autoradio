@@ -43,6 +43,7 @@ def initdb(cwd):
 
     from autoradio.programs.models import Enclosure
     from autoradio.spots.models import Spot
+    from autoradio.spots.models import Filler
     from autoradio.jingles.models import Jingle
     
     if (not options.syncdb and not options.purgeenclosure and not options.purgespot and not options.purgejingle):
@@ -80,6 +81,10 @@ def initdb(cwd):
                 print ("OK    : ",file)
         print("orphaned files:",nremoved)
 
+        for enclosure in Enclosure.objects.all():
+            if (not os.path.exists(enclosure.file.path)):
+                print ("error enclosure missed file:", enclosure, enclosure.file.path)
+
     if (options.purgespot):
         import os
         dir=autoradio.settings.MEDIA_ROOT+"spots/"
@@ -93,6 +98,10 @@ def initdb(cwd):
                 #print(spot.file.path)
                 if file==spot.file.path:
                     found=True
+            for filler in Filler.objects.all():
+                #print(filler.file.path)
+                if file==filler.file.path:
+                    found=True
             #print("found", found)
             if not found:
                 print ("remove: ",file)
@@ -102,6 +111,14 @@ def initdb(cwd):
                 print ("OK    : ",file)
         print("orphaned files:",nremoved)
 
+        for spot in Spot.objects.all():
+            if (not os.path.exists(spot.file.path)):
+                print ("error spot missed file:", spot, spot.file.path)
+
+        for filler in Filler.objects.all():
+            if (not os.path.exists(filler.file.path)):
+                print ("error filler missed file:", filler, filler.file.path)
+        
     if (options.purgejingle):
         import os
         dir=autoradio.settings.MEDIA_ROOT+"jingles/"
@@ -123,6 +140,10 @@ def initdb(cwd):
             else:
                 print ("OK    : ",file)
         print("orphaned files:",nremoved)
+
+        for jingle in Jingle.objects.all():
+            if (not os.path.exists(jingle.file.path)):
+                print ("error jingle missed file:", jingle, jingle.file.path)
         
 if __name__ == '__main__':
 

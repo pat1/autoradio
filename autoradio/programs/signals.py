@@ -19,14 +19,14 @@ if not autoradio.settings.require_tags_in_enclosure:
                 logging.info(f"Enclosure: {instance.file.path} apply tags")
                 audio.tags['ARTIST'] = "SHOW: "+instance.episode.show.title
                 audio.tags['TITLE'] = instance.episode.title+" / "+instance.title
-                companderdone=audio.tags.get('COMPANDER',"not done")[0] =="done"
+                companderdone=audio.tags.get('COMPANDER',["not done",])[0] =="done"
                 audio.save()
         except:
             logging.error(f"Enclosure: {instance.file.path} error saving metadata Artist and Title")
 
         # compander is not reversible so I check if is already done by tag
 
-        if (created or not companderdone):    # created is false and 'update_fields': None when file is changed
+        if (created and not companderdone):    # created is false and 'update_fields': None when file is changed
             logging.info(f"Enclosure: {instance.file.path} apply compander")
             try:
                 filename, extension = os.path.splitext(instance.file.path)

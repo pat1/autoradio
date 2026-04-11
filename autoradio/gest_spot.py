@@ -55,7 +55,7 @@ def assemble_playlist_channel(fascia, playlistdir,multichannel=True):
     assemble_playlists(playlists, filler_playlists, multichannelname,artist="SPOT",title=fascia.name)
     #with tempfile.TemporaryDirectory() as tmp:
         #path = os.path.join(tmp, 'spot.flac')
-        #assemble_playlists(playlists, filler_playlists, path,artist="SPOT",title=fascia.name, oggremap=True)
+        #assemble_playlists(playlists, filler_playlists, path,artist="SPOT",title=fascia.name)
         #subprocess.check_call(["/usr/bin/oggenc", "--advanced-encode-option", "disable_coupling", "-o", multichannelname, path])
 
 class gest_filler(object):

@@ -25,6 +25,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk,Gdk, GLib, Gio
 from autoradio.autoplayer.playlist import Playlist
+import logging
 
 outname=None
 f1=None
@@ -165,17 +166,20 @@ class FileChooserWindow(Gtk.Window):
             filename, extension = os.path.splitext(outname)
 
             if extension in (".ogg",".oga",".Ogg",".Oga",".OGG",".OGA"):
-            
+
                 with tempfile.TemporaryDirectory() as tmp:
                     path = os.path.join(tmp, 'assembler.flac')
-                    multitrack.assemble_playlists(playlists,filler_playlists,path,artist="assemblatore",title="3 canali",oggremap=True)
+                    multitrack.assemble_playlists(playlists,filler_playlists,path,artist="assemblatore",title="3 canali")
                     ## sox output.wav -b 16 output1.wav mcompand "0.005,0.1 -47,-40,-34,-34,-17,-33" 100 "0.003,0.05 -47,-40,-34,-34,-17,-33" 400 "0.000625,0.0125 -47,-40,-34,-34,-15,-33" 1600 "0.0001,0.025 -47,-40,-34,-34,-31,-31,-0,-30" 6400 "0,0.025 -38,-31,-28,-28,-0,-25"
                     ## sox output.wav -b 16 output1.wav compand 0.3,1 6:-70,-60,-20 -5 -90 0.2
                     ## oggenc  --advanced-encode-option disable_coupling -o outname path
                     subprocess.check_call(["/usr/bin/oggenc","--advanced-encode-option","disable_coupling","-o",outname,path])
-            else:
+            elif extension in (".flac",".Flac",".FLAC"):
                 multitrack.assemble_playlists(playlists,filler_playlists,outname,artist="assemblatore",title="3 canali")
-                
+            else:
+                logging.error("output file extension is not supported")
+                raise RuntimeError("output file extension is not supported")
+                  
         except:
 
             widget.set_label("Errore")

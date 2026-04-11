@@ -1,6 +1,6 @@
 Summary: radio automation software
 Name: autoradio
-Version: 4.0.17
+Version: 4.2
 Release: 1
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
@@ -20,7 +20,7 @@ BuildRequires:  desktop-file-utils
 %if 0%{?fedora}
 BuildRequires: python3-django
 %else
-BuildRequires: python3-django3
+BuildRequires: python3-django4.2
 %endif
 
 Requires:python3-mutagen >= 1.17, python3-configobj, python3-cherrypy, python3-reportlab >= 2.0,  python3-docutils, sqlite >= 3.6.22, speex-tools, python3-file-magic, python3-pillow, pydub >= 0.25.2
@@ -29,7 +29,7 @@ Requires:rsgain,sox
 %if 0%{?fedora}
 Requires: python3-django
 %else
-Requires: python3-django3
+Requires: python3-django4.2
 %endif
 
 #, python-django-extensions

@@ -87,18 +87,15 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,art
     #faketrack = AudioSegment.silent(duration = lunghezza, frame_rate=44100)
     #tracks.append(faketrack)
         
+    remap=tuple((i) for i in range(NUM_TRACK))
     if (oggremap):
-
         if (NUM_TRACK == 6):
             remap=(0,2,1,4,3,5)
-        #elif (NUM_CHANNEL == 7):
-        #    remap=(0,2,1,6,5,3,4)
-        else:
-            remap=tuple((i) for i in range(NUM_TRACK))
+        elif (NUM_CHANNEL == 7):
+            remap=(0,2,1,6,5,3,4)
 
-        multitrack = AudioSegment.from_mono_audiosegments(*[tracks[remap[i]][:lunghezza] for i in range(NUM_TRACK)])
-    else:
-        multitrack = AudioSegment.from_mono_audiosegments(*[tracks[i][:lunghezza] for i in range(NUM_TRACK)])
+    multitrack = AudioSegment.from_mono_audiosegments(*[tracks[remap[i]][:lunghezza] for i in range(NUM_TRACK)])
+
     tags={}
     if artist:
         tags["artist"]=artist
@@ -118,7 +115,7 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,art
     # At present, the encoder will normally use channel coupling to further increase compression with stereo and 5.1
     # inputs  using  lossy or lossless coupling.
     # so the last track will be corrupted
-    # if is not enofh the channel order will be exchanged
+    # if it is not enough the channel order will be exchanged
     #multitrack.export( multichannelname, format="ogg", tags=tags)
 
     #export to flac
@@ -128,7 +125,7 @@ def assemble_playlists(playlistnames,playlistnames_fillers, multichannelname,art
         subprocess.check_call(["/usr/bin/rsgain","custom","-s","i",multichannelname])
     except:
         logging.error("Multitrack assemble playlist: error applying replaygain (rsgain)")
-            
+
     
     
 def main():
@@ -138,8 +135,8 @@ def main():
 
     playlists=["media/spots/er_mezzogiorno.m3u","media/spots/lo_mezzogiorno.m3u","media/spots/to_mezzogiorno.m3u"]
     filler_playlists=["media/spots/er_mezzogiorno_filler.m3u","media/spots/er_mezzogiorno_filler.m3u","media/spots/er_mezzogiorno_filler.m3u"]
-    outname="output.wav"
-    assemble_playlists(playlists,filler_playlists,outname)
+    outname="output.flac"
+    assemble_playlists(playlists,filler_playlists,outname,oggremap=True)
 
 if __name__ == '__main__':
     main()  # (this code was run as script)

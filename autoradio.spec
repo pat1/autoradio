@@ -1,6 +1,6 @@
 Summary: radio automation software
 Name: autoradio
-Version: 4.2
+Version: 4.2.1
 Release: 1
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
@@ -211,6 +211,101 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Sat Apr 11 2026 Paolo Patruno <p.patruno@iperbole.bologna.it> 4.2.1-1
+- 4.2.1 release (p.patruno@iperbole.bologna.it)
+- bug in multichannel ogg channel reorder (p.patruno@iperbole.bologna.it)
+- bug to apply sox on enclosure (wrong check on tags)
+  (p.patruno@iperbole.bologna.it)
+- bug in autoradioctrl (p.patruno@iperbole.bologna.it)
+- added options to autoradioctrl to remove orphaned files
+  (p.patruno@iperbole.bologna.it)
+- bugs in multichannel gest_spot and do not use sox in multichannel enclosure
+  (p.patruno@iperbole.bologna.it)
+- more verbose in palimpsest with spots title (p.patruno@iperbole.bologna.it)
+- palimpsest book for multichannel (p.patruno@iperbole.bologna.it)
+- 4.1 release (p.patruno@iperbole.bologna.it)
+- bug in autoradiod (p.patruno@iperbole.bologna.it)
+- added a delay to be sure the insert in the autoplayer playlist to be atomic
+  (p.patruno@iperbole.bologna.it)
+- do not remap writing ogg multichannel because autoplayer remap 5.1 in any
+  case (p.patruno@iperbole.bologna.it)
+- release 4.0.19 (p.patruno@iperbole.bologna.it)
+- replaygain tuning (p.patruno@iperbole.bologna.it)
+- release 4.0.18 (p.patruno@iperbole.bologna.it)
+- new levels for multitrack files (p.patruno@iperbole.bologna.it)
+- handle replaygain with change programs and not with create only; added tags
+  to recognize whe sox is applyed (p.patruno@iperbole.bologna.it)
+- handle replaygain with change jingles and spots and not with create only
+  (p.patruno@iperbole.bologna.it)
+- added audioconvert to gstreamer chain to work better with replaygain
+  (p.patruno@iperbole.bologna.it)
+- bugs in replaygain implementation; new release
+  (p.patruno@iperbole.bologna.it)
+- bug in replaygain for programs (p.patruno@iperbole.bologna.it)
+- headroom=9 pre-amp=6 in gstreamer rgvolume for more volume to output
+  (p.patruno@iperbole.bologna.it)
+- implemented replaygain in mutichannel chain (p.patruno@iperbole.bologna.it)
+- better sox command (p.patruno@iperbole.bologna.it)
+- added sox normalization and compander for programs
+  (p.patruno@iperbole.bologna.it)
+- implemented ReplayGain 2.0 loudness normalizer in programs, spot, jingle on
+  upload via rsgain external program and in player via gstreamer
+  (p.patruno@iperbole.bologna.it)
+- try to use ogg as multichannel format; added autochannel_assembler tool
+  (p.patruno@iperbole.bologna.it)
+- fascias multichannel in flac; enable flac upload as alternative to ogg; new
+  version (p.patruno@iperbole.bologna.it)
+- exchange autor and title in programs for autometatraced
+  (p.patruno@iperbole.bologna.it)
+- new release (p.patruno@iperbole.bologna.it)
+- bugs around midnigth (p.patruno@iperbole.bologna.it)
+- django 3 problem with default in Max query (p.patruno@iperbole.bologna.it)
+- better management of enclosure order (p.patruno@iperbole.bologna.it)
+- order enclosure by field and not id (p.patruno@iperbole.bologna.it)
+- better admin for playlists (p.patruno@iperbole.bologna.it)
+- new release (p.patruno@iperbole.bologna.it)
+- better admin (p.patruno@iperbole.bologna.it)
+- check duplicated episode; new release (p.patruno@iperbole.bologna.it)
+- bugs and better admin (p.patruno@iperbole.bologna.it)
+- better admin for schedule (p.patruno@iperbole.bologna.it)
+- bugs and schedule check in form (p.patruno@iperbole.bologna.it)
+- bugs (p.patruno@iperbole.bologna.it)
+- bugsd solved and new release (p.patruno@iperbole.bologna.it)
+- bug (p.patruno@iperbole.bologna.it)
+- new release (p.patruno@iperbole.bologna.it)
+- bugs (p.patruno@iperbole.bologna.it)
+- check user for show author; added permission to overwrite the check
+  (p.patruno@iperbole.bologna.it)
+- tags added for programs, spots and jingle by autoradio with signals now as
+  default in config (p.patruno@iperbole.bologna.it)
+- generate fascia in multichannel mode as wav (ogg have a bug in ffmpeg);
+  overwrite Artist and Title metadata in enclosure; new release
+  (p.patruno@iperbole.bologna.it)
+- new release (p.patruno@iperbole.bologna.it)
+- documentation (p.patruno@iperbole.bologna.it)
+- bug in autoplayergui Artist metadata (p.patruno@iperbole.bologna.it)
+- release 4.0.4 (p.patruno@iperbole.bologna.it)
+- added number of tracks to playlist, autoplayer and autoplayergui
+  (p.patruno@iperbole.bologna.it)
+- better exception management in autoplayergui (p.patruno@iperbole.bologna.it)
+- autoplayergui exit on dbus error (p.patruno@iperbole.bologna.it)
+- better autoplayergui (p.patruno@iperbole.bologna.it)
+- better player; bug in mpris2 interface; bug in config default; neew monor
+  release (p.patruno@iperbole.bologna.it)
+- gui with cursor and bar with timing (p.patruno@iperbole.bologna.it)
+- better autoplayergui (play from current cursor position and bug in config
+  files (p.patruno@iperbole.bologna.it)
+- bugs and support for monochannel fascias: release 4.0.2
+  (p.patruno@iperbole.bologna.it)
+- multichannel local config default to False (p.patruno@iperbole.bologna.it)
+- start to play if not is now called at boot of autoradiod, no any more;
+  multichannel improvements (p.patruno@iperbole.bologna.it)
+- working on channels (p.patruno@iperbole.bologna.it)
+- working on multichannel (p.patruno@iperbole.bologna.it)
+- multichannel in django, player and first step in spot
+  (p.patruno@iperbole.bologna.it)
+- bug in autometatraced (p.patruno@iperbole.bologna.it)
+
 * Tue Nov 18 2025 Paolo Patruno <p.patruno@iperbole.bologna.it> 3.8.4-1
 - release 3.8.4 (p.patruno@iperbole.bologna.it)
 - added multiple icecast servers (p.patruno@iperbole.bologna.it)

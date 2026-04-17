@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
-Version: 4.2.1
-Release: 2
+Version: 4.2.2
+Release: 1
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -222,6 +222,10 @@ rm -rf $RPM_BUILD_ROOT
 #$CHOWN -R $AUTORADIO:$AUTORADIO /var/run/autoradio/
 
 %changelog
+* Fri Apr 17 2026 Paolo Patruno <p.patruno@iperbole.bologna.it> 4.2.2-1
+- 4.2.2 release (p.patruno@iperbole.bologna.it)
+- manage https in playlists (p.patruno@iperbole.bologna.it)
+
 * Sat Apr 11 2026 Paolo Patruno <p.patruno@iperbole.bologna.it> 4.2.1-1
 - 4.2.1 release (p.patruno@iperbole.bologna.it)
 - bug in multichannel ogg channel reorder (p.patruno@iperbole.bologna.it)

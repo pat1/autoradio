@@ -1,7 +1,7 @@
 Summary: radio automation software
 Name: autoradio
 Version: 4.2.1
-Release: 1
+Release: 2
 Source0: %{name}-%{version}.tar.gz
 # tmpfiles.d configuration for the /var/run directory
 #Source1:  %%{name}-tmpfiles.conf
@@ -30,6 +30,10 @@ Requires:rsgain,sox
 Requires: python3-django
 %else
 Requires: python3-django4.2
+%endif
+
+%if %{python3_version_nodots} >= 313 
+Requires: audioop-lts
 %endif
 
 #, python-django-extensions
@@ -96,6 +100,11 @@ desktop-file-install \
     --dir=%{buildroot}%{_datadir}/applications \
     desktop/autoplayergui.desktop
 
+mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/autoradio
+mkdir -p ${RPM_BUILD_ROOT}/%{_sysusersdir}
+cat << EOF > ${RPM_BUILD_ROOT}/%{_sysusersdir}/autoradio.conf
+u autoradio - "Autoradio radio broadcasting automation" %{_datadir}/autoradio
+EOF
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -136,12 +145,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(-,autoradio,autoradio) %dir %{_var}/log/%{name}/
 %attr(-,autoradio,autoradio) %dir %{_var}/run/%{name}/
 
+%{_sysusersdir}/autoradio.conf
+
 %pre
 
-/usr/bin/getent group autoradio >/dev/null || /usr/sbin/groupadd  autoradio
-/usr/bin/getent passwd autoradio >/dev/null || \
-        /usr/sbin/useradd  -g autoradio  -d %{_datadir}/autoradio -M \
-                -c "autoradio user for radio automation software" autoradio
+#/usr/bin/getent group autoradio >/dev/null || /usr/sbin/groupadd  autoradio
+#/usr/bin/getent passwd autoradio >/dev/null || \
+#        /usr/sbin/useradd  -g autoradio  -d %{_datadir}/autoradio -M \
+#                -c "autoradio user for radio automation software" autoradio
 
 #/usr/bin/getent group autoradio >/dev/null || /usr/sbin/groupadd -r autoradio
 #/usr/bin/getent passwd autoradio >/dev/null || \

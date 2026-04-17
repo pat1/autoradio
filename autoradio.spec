@@ -32,7 +32,7 @@ Requires: python3-django
 Requires: python3-django4.2
 %endif
 
-%if %{python3_version_nodots} >= 313 
+%if 0%{?python3_version_nodots} >= 313
 Requires: audioop-lts
 %endif
 

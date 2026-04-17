@@ -78,7 +78,7 @@ def metadata_reader(path):
     
     info = dict()
 
-    if path[:5] == "http:":
+    if path[:5] == "http:" or path[:6] == "https:" :
         info['TIME'] = None
         info['ARTIST'] = "streaming"
         info['ALBUM'] = "streaming"
@@ -208,14 +208,14 @@ class PlaylistEntryFactory(object):
     def is_media_url(self, path):
         """Check file if it is a url.
 
-        The check is based on the prefix thet will be http:
+        The check is based on the prefix, it will be http:
         :param path: filename of the file to check.
         :type path: str
 
         :returns: `True` if url, `False` otherwise.
         :rtype: bool
         """
-        return path[:5] in  ("http:","file:")
+        return path[:5] in  ("http:","file:") or path[:6] == "https:"
     
 
 
